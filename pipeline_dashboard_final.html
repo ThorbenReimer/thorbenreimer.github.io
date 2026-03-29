@@ -437,6 +437,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 
 
+
+
 var today=new Date().toISOString().split('T')[0];
 var todayFmt=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 ['dl1','dl2','dl3','dl-rp'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=todayFmt;});
@@ -849,7 +851,32 @@ function syncDown(){
     .catch(function(){setSyncStatus('err','&#9679; sync fehler');});
 }
 load();updateCounts();
-if(getBinId()){syncDown();}else{setSyncStatus('ok','&#9679; lokal');}
+if(getBinId()){
+  syncDown();
+}else{
+  // Try to find existing bin by searching JSONBin
+  setSyncStatus('ing','&#9679; suche...');
+  fetch('https://api.jsonbin.io/v3/b',{
+    method:'GET',
+    headers:{'X-Master-Key':JBIN_KEY,'X-Bin-Meta':false}
+  })
+  .then(function(r){return r.json();})
+  .then(function(data){
+    if(!data||!data.length){setSyncStatus('ok','&#9679; lokal');return;}
+    // Find bin named 'pipeline-dvag'
+    var found=data.filter(function(b){return b.snippetMeta&&b.snippetMeta.name&&b.snippetMeta.name.indexOf('pipeline')>=0;});
+    if(found.length>0){
+      setBinId(found[0].snippetMeta.id||found[0]._id||found[0].id);
+      syncDown();
+    } else {
+      // Just use first bin
+      var firstId=data[0].snippetMeta?data[0].snippetMeta.id:data[0]._id||data[0].id;
+      if(firstId){setBinId(firstId);syncDown();}
+      else{setSyncStatus('ok','&#9679; lokal');}
+    }
+  })
+  .catch(function(){setSyncStatus('ok','&#9679; lokal');});
+}
 renderHTagBtns();renderHeute();
 function doBackupReminder(){
   var lastBackup=localStorage.getItem('lastBackupDate');
@@ -988,39 +1015,65 @@ function qaSubmit(){
 function mobileSyncDown(){
   var lbl=document.getElementById('mnav-sync-label');
   if(lbl)lbl.textContent='...';
-  var binId=getBinId();
-  if(!binId){
-    if(lbl)lbl.textContent='Sync';
-    alert('Noch kein Cloud-Backup vorhanden. Bitte zuerst auf dem Mac den Sync-Button druecken.');
-    return;
+  setSyncStatus('ing','&#9679; suche...');
+
+  function doSync(binId){
+    fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',{headers:{'X-Master-Key':JBIN_KEY}})
+      .then(function(r){return r.json();})
+      .then(function(res){
+        if(!res.record){
+          setSyncStatus('err','&#9679; fehler');
+          if(lbl)lbl.textContent='Sync';
+          localStorage.removeItem(JBIN_BIN_KEY);
+          alert('Bin nicht gefunden. Bitte nochmal versuchen.');
+          return;
+        }
+        var d=res.record;
+        if(d.stati)stati=d.stati;
+        if(d.kunden)kunden=d.kunden;
+        if(d.nextKId)nextKId=d.nextKId;
+        if(d.nextTId)nextTId=d.nextTId;
+        if(d.defTags)DEF_TAGS=d.defTags;
+        if(d.rpPosts)rpPosts=d.rpPosts;
+        try{localStorage.setItem(SK,JSON.stringify({stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS}));}catch(ex){}
+        try{localStorage.setItem('rp_v1',JSON.stringify(rpPosts));}catch(ex){}
+        updateCounts();
+        if(curView==='alle')renderKunden(sf);
+        if(curView==='heute')renderHeute();
+        if(curView==='pipeline')renderPipeline();
+        if(curView==='redaktion')renderRP();
+        setSyncStatus('ok','&#9679; synchron');
+        if(lbl)lbl.textContent='OK!';
+        setTimeout(function(){if(lbl)lbl.textContent='Sync';},3000);
+        alert(kunden.length+' Kunden geladen!');
+      })
+      .catch(function(){
+        setSyncStatus('err','&#9679; fehler');
+        if(lbl)lbl.textContent='Fehler';
+        setTimeout(function(){if(lbl)lbl.textContent='Sync';},3000);
+      });
   }
-  setSyncStatus('ing','&#9679; laedt...');
-  fetch('https://api.jsonbin.io/v3/b/'+binId+'/latest',{headers:{'X-Master-Key':JBIN_KEY}})
+
+  var binId=getBinId();
+  if(binId){doSync(binId);return;}
+
+  // No bin ID - search automatically
+  fetch('https://api.jsonbin.io/v3/b',{headers:{'X-Master-Key':JBIN_KEY}})
     .then(function(r){return r.json();})
-    .then(function(res){
-      if(!res.record){if(lbl)lbl.textContent='Sync';return;}
-      var d=res.record;
-      if(d.stati)stati=d.stati;
-      if(d.kunden)kunden=d.kunden;
-      if(d.nextKId)nextKId=d.nextKId;
-      if(d.nextTId)nextTId=d.nextTId;
-      if(d.defTags)DEF_TAGS=d.defTags;
-      if(d.rpPosts)rpPosts=d.rpPosts;
-      try{localStorage.setItem(SK,JSON.stringify({stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS}));}catch(ex){}
-      try{localStorage.setItem('rp_v1',JSON.stringify(rpPosts));}catch(ex){}
-      updateCounts();
-      if(curView==='alle')renderKunden(sf);
-      if(curView==='heute')renderHeute();
-      if(curView==='pipeline')renderPipeline();
-      if(curView==='redaktion')renderRP();
-      setSyncStatus('ok','&#9679; synchron');
-      if(lbl)lbl.textContent='OK!';
-      setTimeout(function(){if(lbl)lbl.textContent='Sync';},3000);
+    .then(function(data){
+      if(data&&data.length>0){
+        var b=data[0];
+        var id=b.snippetMeta?b.snippetMeta.id:b._id||b.id;
+        if(id){setBinId(id);doSync(id);return;}
+      }
+      // Still nothing - ask user
+      if(lbl)lbl.textContent='Sync';
+      setSyncStatus('ok','&#9679; lokal');
+      alert('Kein Backup gefunden. Bitte zuerst auf dem Mac den Sync-Button druecken.');
     })
     .catch(function(){
+      if(lbl)lbl.textContent='Sync';
       setSyncStatus('err','&#9679; fehler');
-      if(lbl)lbl.textContent='Fehler';
-      setTimeout(function(){if(lbl)lbl.textContent='Sync';},3000);
     });
 }
 </script>
