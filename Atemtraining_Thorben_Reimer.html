@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atme wie ein Athlet – Thorben Reimer</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body {
+  height: 100%;
+  background: #0d1420;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+.app {
+  background: #161E2E;
+  border-radius: 20px;
+  padding: 32px 28px 28px;
+  color: #fff;
+  width: 420px;
+  max-width: 98vw;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+.logo-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.brand { font-size: 11px; color: #7A9CC0; letter-spacing: 2px; text-transform: uppercase; font-weight: 500; }
+.sound-toggle {
+  background: transparent;
+  border: 1.5px solid #2A3A55;
+  color: #7A9CC0;
+  border-radius: 20px;
+  padding: 5px 13px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.sound-toggle.on { border-color: #378ADD; color: #378ADD; }
+.modes {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 22px;
+  width: 100%;
+}
+.mode-btn {
+  flex: 1;
+  padding: 8px 6px;
+  border-radius: 12px;
+  font-size: 12px;
+  border: 1.5px solid #2A3A55;
+  background: transparent;
+  color: #7A9CC0;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: center;
+  line-height: 1.4;
+}
+.mode-btn.active { background: #378ADD; border-color: #378ADD; color: #fff; }
+.mode-btn small { font-size: 10px; opacity: 0.75; display: block; }
+.circle-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  margin: 0 0 18px;
+}
+.circle-container svg {
+  position: absolute; top: 0; left: 0;
+  width: 100%; height: 100%;
+  transform: rotate(-90deg);
+}
+.inner-display {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  pointer-events: none;
+  width: 160px;
+}
+.phase-label { font-size: 18px; font-weight: 500; color: #fff; letter-spacing: 2px; min-height: 26px; }
+.time-left { font-size: 72px; font-weight: 300; color: #378ADD; line-height: 1; margin: 2px 0; min-width: 90px; display: inline-block; }
+.total-label { font-size: 12px; color: #7A9CC0; letter-spacing: 0.5px; }
+.progress-bar {
+  width: 100%; height: 4px; background: #2A3A55;
+  border-radius: 2px; margin-bottom: 18px; overflow: hidden;
+}
+.progress-fill { height: 100%; background: #378ADD; border-radius: 2px; transition: width 0.1s linear; width: 0%; }
+.controls { display: flex; gap: 10px; margin-bottom: 18px; }
+.ctrl-btn {
+  padding: 11px 28px; border-radius: 24px; font-size: 15px;
+  cursor: pointer; transition: all 0.15s; border: none; font-weight: 500;
+}
+.start-btn { background: #378ADD; color: #fff; min-width: 130px; }
+.start-btn:hover { background: #4a9ee8; }
+.reset-btn { background: #2A3A55; color: #D0DCE8; }
+.reset-btn:hover { background: #334a6a; }
+.stats-row { display: flex; gap: 12px; margin-bottom: 18px; width: 100%; }
+.stat {
+  flex: 1; text-align: center; background: #1E2D45;
+  border-radius: 10px; padding: 10px 8px;
+}
+.stat-val { font-size: 22px; font-weight: 500; color: #378ADD; }
+.stat-lbl { font-size: 10px; color: #7A9CC0; letter-spacing: 0.5px; margin-top: 2px; text-transform: uppercase; }
+.info-box {
+  background: #1E2D45; border-radius: 10px; padding: 13px 16px;
+  width: 100%; font-size: 12.5px; color: #7A9CC0; line-height: 1.7; text-align: center;
+}
+.info-box strong { color: #D0DCE8; }
+.footer { margin-top: 16px; font-size: 11px; color: #2A3A55; letter-spacing: 1px; text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="logo-row">
+    <span class="brand">Atme wie ein Athlet</span>
+    <button id="sound-icon" class="sound-toggle on" onclick="toggleSound()">♪ Ton</button>
+  </div>
+
+  <div class="modes">
+    <button class="mode-btn active" onclick="setMode('resonanz')">
+      Resonanz&shy;atmung<small>4 ein · 6 aus</small>
+    </button>
+    <button class="mode-btn" onclick="setMode('sighing')">
+      Cyclic Sighing<small>2× ein · lang aus</small>
+    </button>
+    <button class="mode-btn" onclick="setMode('478')">
+      4-7-8<small>4 · 7 · 8</small>
+    </button>
+  </div>
+
+  <div class="circle-container">
+    <svg viewBox="0 0 280 280">
+      <circle cx="140" cy="140" r="118" fill="none" stroke="#1E2D45" stroke-width="20"/>
+      <circle cx="140" cy="140" r="118" fill="none" stroke="#2A3A55" stroke-width="20" stroke-dasharray="741" stroke-dashoffset="0"/>
+      <circle id="arc-progress" cx="140" cy="140" r="118" fill="none" stroke="#378ADD" stroke-width="20" stroke-linecap="round" stroke-dasharray="741" stroke-dashoffset="741"/>
+      <circle id="bubble" cx="140" cy="22" r="9" fill="transparent"/>
+    </svg>
+    <div class="inner-display">
+      <div class="phase-label" id="phase-lbl">Bereit</div>
+      <div class="time-left" id="timer-num">–</div>
+      <div class="total-label" id="cycle-info">Runde 0</div>
+    </div>
+  </div>
+
+  <div class="progress-bar">
+    <div class="progress-fill" id="session-bar"></div>
+  </div>
+
+  <div class="controls">
+    <button class="ctrl-btn start-btn" id="start-btn" onclick="toggleStart()">Starten</button>
+    <button class="ctrl-btn reset-btn" onclick="resetTimer()">Reset</button>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat"><div class="stat-val" id="stat-cycles">0</div><div class="stat-lbl">Zyklen</div></div>
+    <div class="stat" style="cursor:pointer;" onclick="if(!running) document.getElementById('goal-row').style.display = document.getElementById('goal-row').style.display==='none'?'flex':'none'">
+      <div class="stat-val" id="stat-min">5:00</div><div class="stat-lbl">Ziel ✎</div>
+    </div>
+    <div class="stat"><div class="stat-val" id="stat-elapsed">0:00</div><div class="stat-lbl">Vergangen</div></div>
+  </div>
+
+  <div id="goal-row" style="display:none; align-items:center; gap:12px; width:100%; margin-bottom:14px; background:#1E2D45; border-radius:10px; padding:12px 16px;">
+    <span style="font-size:12px; color:#7A9CC0; white-space:nowrap;">Zielzeit:</span>
+    <input type="range" id="goal-slider" min="1" max="30" value="5" step="1"
+      style="flex:1; accent-color:#378ADD;"
+      oninput="updateGoal(this.value)">
+    <span id="goal-display" style="font-size:16px; font-weight:500; color:#378ADD; min-width:40px; text-align:right;">5 Min</span>
+  </div>
+
+  <div class="info-box" id="info-box">
+    <strong>Resonanzatmung:</strong> 4 Sek nasal einatmen · 6 Sek durch Mund ausatmen<br>
+    HRV&#8593; · Cortisol&#8595; · Fokus&#8593; · täglich 5 Minuten
+  </div>
+
+  <div class="footer">thorbenreimer.de</div>
+</div>
+
+<script>
+const MODES = {
+  resonanz: {
+    phases: [
+      {name:'EIN', dur:4, color:'#378ADD'},
+      {name:'AUS', dur:6, color:'#7AB8F5'}
+    ],
+    info: '<strong>Resonanzatmung:</strong> 4 Sek nasal einatmen · 6 Sek durch Mund ausatmen<br>HRV&#8593; · Cortisol&#8595; · Fokus&#8593; · täglich 5 Minuten'
+  },
+  sighing: {
+    phases: [
+      {name:'EIN ×1', dur:2, color:'#378ADD'},
+      {name:'EIN ×2', dur:1, color:'#5fa6e8'},
+      {name:'AUS (lang)', dur:6, color:'#7AB8F5'}
+    ],
+    info: '<strong>Cyclic Sighing:</strong> 2× kurz nasal einatmen · lang durch Mund ausatmen<br>Stimmung&#8593; · Cortisol&#8595; · nachgewiesen Stanford RCT'
+  },
+  478: {
+    phases: [
+      {name:'EIN', dur:4, color:'#378ADD'},
+      {name:'HALTEN', dur:7, color:'#A0C8F0'},
+      {name:'AUS', dur:8, color:'#7AB8F5'}
+    ],
+    info: '<strong>4-7-8 Methode:</strong> 4 Sek ein · 7 Sek halten · 8 Sek ausatmen<br>Tiefenentspannung · vor dem Schlafen · Angstreduktion'
+  }
+};
+
+let mode = 'resonanz';
+let running = false;
+let phaseIdx = 0;
+let phaseRemain = 0;
+let cycles = 0;
+let elapsed = 0;
+let interval = null;
+let soundOn = true;
+let audioCtx = null;
+
+let GOAL_SEC = 300;
+const CIRC = 2 * Math.PI * 118;
+
+function updateGoal(mins) {
+  GOAL_SEC = parseInt(mins) * 60;
+  const m = parseInt(mins);
+  document.getElementById('goal-display').textContent = m + ' Min';
+  document.getElementById('stat-min').textContent = m + ':00';
+  resetTimer();
+}
+
+function setMode(m) {
+  if (running) return;
+  mode = m;
+  document.querySelectorAll('.mode-btn').forEach((b, i) => {
+    b.classList.toggle('active', ['resonanz','sighing','478'][i] === m);
+  });
+  document.getElementById('info-box').innerHTML = MODES[m].info;
+  resetTimer();
+}
+
+function getPhases() { return MODES[mode].phases; }
+
+function toggleStart() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  running = !running;
+  document.getElementById('start-btn').textContent = running ? 'Pause' : 'Weiter';
+  if (running) {
+    if (phaseRemain === 0) startPhase(0);
+    interval = setInterval(tick, 100);
+  } else {
+    clearInterval(interval);
+  }
+}
+
+function startPhase(idx) {
+  phaseIdx = idx % getPhases().length;
+  const ph = getPhases()[phaseIdx];
+  phaseRemain = ph.dur * 10;
+  updateArc(1.0, ph.color);
+  document.getElementById('phase-lbl').textContent = ph.name;
+  document.getElementById('arc-progress').style.stroke = ph.color;
+  document.getElementById('bubble').style.fill = ph.color;
+  if (soundOn && audioCtx) playTone(ph.name);
+}
+
+function tick() {
+  elapsed += 0.1;
+  phaseRemain--;
+  const ph = getPhases()[phaseIdx];
+  const frac = phaseRemain / (ph.dur * 10);
+  updateArc(frac, ph.color);
+  document.getElementById('timer-num').textContent = Math.ceil(phaseRemain / 10);
+
+  const pct = Math.min(elapsed / GOAL_SEC * 100, 100);
+  document.getElementById('session-bar').style.width = pct + '%';
+
+  const mins = Math.floor(elapsed / 60);
+  const secs = Math.floor(elapsed % 60);
+  document.getElementById('stat-elapsed').textContent = mins + ':' + String(secs).padStart(2, '0');
+
+  if (phaseRemain <= 0) {
+    const next = phaseIdx + 1;
+    if (next >= getPhases().length) {
+      cycles++;
+      document.getElementById('stat-cycles').textContent = cycles;
+      document.getElementById('cycle-info').textContent = 'Runde ' + cycles;
+    }
+    startPhase(next);
+  }
+
+  if (elapsed >= GOAL_SEC) {
+    clearInterval(interval);
+    running = false;
+    document.getElementById('start-btn').textContent = 'Starten';
+    document.getElementById('phase-lbl').textContent = 'Fertig!';
+    document.getElementById('timer-num').textContent = '✓';
+    document.getElementById('session-bar').style.background = '#4CAF50';
+    if (soundOn && audioCtx) playFinish();
+  }
+}
+
+function updateArc(frac, color) {
+  const offset = CIRC * (1 - frac);
+  const arc = document.getElementById('arc-progress');
+  arc.setAttribute('stroke-dashoffset', offset.toFixed(1));
+  arc.style.stroke = color;
+  const angle = -Math.PI / 2 + (1 - frac) * 2 * Math.PI;
+  const bx = 140 + 118 * Math.cos(angle);
+  const by = 140 + 118 * Math.sin(angle);
+  const b = document.getElementById('bubble');
+  b.setAttribute('cx', bx.toFixed(1));
+  b.setAttribute('cy', by.toFixed(1));
+  b.style.fill = frac > 0.03 ? '#fff' : 'transparent';
+}
+
+function resetTimer() {
+  clearInterval(interval);
+  running = false;
+  phaseIdx = 0; phaseRemain = 0; cycles = 0; elapsed = 0;
+  document.getElementById('start-btn').textContent = 'Starten';
+  document.getElementById('phase-lbl').textContent = 'Bereit';
+  document.getElementById('timer-num').textContent = '–';
+  document.getElementById('cycle-info').textContent = 'Runde 0';
+  document.getElementById('stat-cycles').textContent = '0';
+  document.getElementById('stat-elapsed').textContent = '0:00';
+  document.getElementById('session-bar').style.width = '0%';
+  document.getElementById('session-bar').style.background = '#378ADD';
+  document.getElementById('arc-progress').setAttribute('stroke-dashoffset', CIRC.toFixed(1));
+  document.getElementById('bubble').setAttribute('cx', 140);
+  document.getElementById('bubble').setAttribute('cy', 22);
+  document.getElementById('bubble').style.fill = 'transparent';
+}
+
+function toggleSound() {
+  soundOn = !soundOn;
+  const btn = document.getElementById('sound-icon');
+  btn.textContent = soundOn ? '♪ Ton' : '♪ Stumm';
+  btn.classList.toggle('on', soundOn);
+}
+
+function playTone(phaseName) {
+  if (!audioCtx) return;
+  const osc = audioCtx.createOscillator();
+  const gain = audioCtx.createGain();
+  osc.connect(gain);
+  gain.connect(audioCtx.destination);
+  const now = audioCtx.currentTime;
+  let freq = 440;
+  if (phaseName.startsWith('AUS')) freq = 330;
+  else if (phaseName === 'HALTEN') freq = 528;
+  else if (phaseName === 'EIN ×2') freq = 480;
+  osc.frequency.value = freq;
+  osc.type = 'sine';
+  gain.gain.setValueAtTime(0, now);
+  gain.gain.linearRampToValueAtTime(0.15, now + 0.04);
+  gain.gain.linearRampToValueAtTime(0, now + 0.45);
+  osc.start(now);
+  osc.stop(now + 0.5);
+}
+
+function playFinish() {
+  [392, 440, 523, 659].forEach((freq, i) => {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.connect(gain); gain.connect(audioCtx.destination);
+    const t = audioCtx.currentTime + i * 0.18;
+    osc.frequency.value = freq; osc.type = 'sine';
+    gain.gain.setValueAtTime(0, t);
+    gain.gain.linearRampToValueAtTime(0.18, t + 0.04);
+    gain.gain.linearRampToValueAtTime(0, t + 0.5);
+    osc.start(t); osc.stop(t + 0.6);
+  });
+}
+</script>
+</body>
+</html>
