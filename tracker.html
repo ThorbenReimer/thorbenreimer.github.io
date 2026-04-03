@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="de">
 <head>
 <meta charset="UTF-8">
@@ -67,65 +66,65 @@ const WORKOUTS={
   ]},
 };
 
-const todayKey=()=>new Date().toISOString().split(“T”)[0];
+const todayKey=()=>new Date().toISOString().split("T")[0];
 const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:0;
-const persist=d=>{try{localStorage.setItem(“tr_v2”,JSON.stringify(d))}catch{}};
-const loadSessions=()=>{try{const r=localStorage.getItem(“tr_v2”);return r?JSON.parse(r):[]}catch{return[]}};
+const persist=d=>{try{localStorage.setItem("tr_v2",JSON.stringify(d))}catch{}};
+const loadSessions=()=>{try{const r=localStorage.getItem("tr_v2");return r?JSON.parse(r):[]}catch{return[]}};
 
-let S={view:“home”,activeType:null,sessions:loadSessions(),form:{},saved:false,progResults:{},showProg:{},progressEx:null};
+let S={view:"home",activeType:null,sessions:loadSessions(),form:{},saved:false,progResults:{},showProg:{},progressEx:null};
 const set=p=>{Object.assign(S,p);render()};
 
 const calcProg=(ex,arr,w)=>{
-const r=arr.map(Number).filter(n=>n>0);
-if(r.length<ex.sets)return null;
-if(r.every(x=>x>=ex.targetReps*PROG.INCREASE)){
-if(ex.progType===“kg”){const n=(parseFloat(w)||0)+PROG.KG_STEP;return{level:“increase”,msg:“🚀 Steigern → “+n+” kg”,nextWeight:String(n)}}
-if(ex.progType===“band”){const b=[“leicht”,“mittel”,“stark”];const i=b.findIndex(x=>(w||””).toLowerCase().includes(x));const n=i>=0&&i<2?b[i+1]:null;return{level:“increase”,msg:n?“🚀 Band → “+n:“🚀 Abstand vergrößern”,nextWeight:n||w}}
-return{level:“increase”,msg:“🚀 Wdh-Ziel auf “+(ex.targetReps+2)+” erhöhen”,nextWeight:w}
-}
-if(avg(r)>=ex.targetReps*PROG.POSSIBLE)return{level:“possible”,msg:“📈 Steigerung möglich – nächste Woche”};
-return{level:“ok”,msg:“✓ Gewicht/Niveau halten”};
+  const r=arr.map(Number).filter(n=>n>0);
+  if(r.length<ex.sets)return null;
+  if(r.every(x=>x>=ex.targetReps*PROG.INCREASE)){
+    if(ex.progType==="kg"){const n=(parseFloat(w)||0)+PROG.KG_STEP;return{level:"increase",msg:"🚀 Steigern → "+n+" kg",nextWeight:String(n)}}
+    if(ex.progType==="band"){const b=["leicht","mittel","stark"];const i=b.findIndex(x=>(w||"").toLowerCase().includes(x));const n=i>=0&&i<2?b[i+1]:null;return{level:"increase",msg:n?"🚀 Band → "+n:"🚀 Abstand vergrößern",nextWeight:n||w}}
+    return{level:"increase",msg:"🚀 Wdh-Ziel auf "+(ex.targetReps+2)+" erhöhen",nextWeight:w}
+  }
+  if(avg(r)>=ex.targetReps*PROG.POSSIBLE)return{level:"possible",msg:"📈 Steigerung möglich – nächste Woche"};
+  return{level:"ok",msg:"✓ Gewicht/Niveau halten"};
 };
 
 const tag=(t,c)=>`<span class="tag" style="background:${c}22;color:${c}">${t}</span>`;
-const pbox=p=>{const bg=p.level===“increase”?CI.green+“18”:p.level===“possible”?CI.orange+“18”:CI.sep+“40”;const c=p.level===“increase”?CI.green:p.level===“possible”?CI.orange:CI.muted;return`<div class="prog-box" style="background:${bg};color:${c};border:1px solid ${c}50">${p.msg}</div>`};
+const pbox=p=>{const bg=p.level==="increase"?CI.green+"18":p.level==="possible"?CI.orange+"18":CI.sep+"40";const c=p.level==="increase"?CI.green:p.level==="possible"?CI.orange:CI.muted;return`<div class="prog-box" style="background:${bg};color:${c};border:1px solid ${c}50">${p.msg}</div>`};
 
 const buildData=id=>S.sessions.filter(s=>s.exercises?.[id]).map(s=>{const e=s.exercises[id];const r=(e.sets||[]).map(Number).filter(n=>!isNaN(n)&&n>0);return{date:s.date,label:s.date.slice(5),avg:avg(r),s1:r[0]??null,s2:r[1]??null,s3:r[2]??null,weight:parseFloat(e.weight)||0}}).sort((a,b)=>a.date.localeCompare(b.date));
 
 function svgLine(data,key,color,h){
-h=h||80;const vals=data.map(d=>d[key]).filter(v=>v!=null&&v>0);if(vals.length<2)return’’;
-const mn=Math.min(…vals),mx=Math.max(…vals),rng=mx-mn||1,W=300,H=h;
-const pts=data.filter(d=>d[key]>0).map((d,i,a)=>({x:i/(a.length-1||1)*W,y:H-(d[key]-mn)/rng*(H-10)-5,v:d[key],l:d.label}));
-const path=pts.map((p,i)=>(i?“L”:“M”)+p.x+”,”+p.y).join(” “);
-const dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}"><title>${p.l}: ${p.v}</title></circle>`).join(””);
-const lbs=pts.filter((_,i)=>i===0||i===pts.length-1||pts.length<=5).map(p=>`<text x="${p.x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${p.l}</text>`).join(””);
-return`<svg class="chart" viewBox="0 0 ${W} ${H+18}" height="${H+18}"><path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}${lbs}</svg>`;
+  h=h||80;const vals=data.map(d=>d[key]).filter(v=>v!=null&&v>0);if(vals.length<2)return'';
+  const mn=Math.min(...vals),mx=Math.max(...vals),rng=mx-mn||1,W=300,H=h;
+  const pts=data.filter(d=>d[key]>0).map((d,i,a)=>({x:i/(a.length-1||1)*W,y:H-(d[key]-mn)/rng*(H-10)-5,v:d[key],l:d.label}));
+  const path=pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ");
+  const dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}"><title>${p.l}: ${p.v}</title></circle>`).join("");
+  const lbs=pts.filter((_,i)=>i===0||i===pts.length-1||pts.length<=5).map(p=>`<text x="${p.x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${p.l}</text>`).join("");
+  return`<svg class="chart" viewBox="0 0 ${W} ${H+18}" height="${H+18}"><path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}${lbs}</svg>`;
 }
 
 function svgMulti(data,h){
-h=h||110;const all=[…data.flatMap(d=>[d.s1,d.s2,d.s3,d.avg])].filter(v=>v!=null&&v>0);if(!all.length||data.length<2)return’<div style="color:#7A9CC0;font-size:12px">Mindestens 2 Einheiten nötig.</div>’;
-const mn=Math.min(…all),mx=Math.max(…all),rng=mx-mn||1,W=300,H=h;
-const mkLine=(key,col,dash)=>{
-const pts=data.map((d,i)=>({x:i/(data.length-1)*W,y:H-(((d[key]||0)-mn)/rng)*(H-10)-5,v:d[key]})).filter(p=>p.v>0);
-if(pts.length<2)return’’;
-return`<path d="${pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ")}" fill="none" stroke="${col}" stroke-width="${key==='avg'?2.5:1.5}" stroke-dasharray="${dash||''}" stroke-linecap="round"/>${pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${col}"/>`).join('')}`;
-};
-const lbs=data.filter((*,i)=>i===0||i===data.length-1||data.length<=5).map((d,*,__)=>{const x=(data.indexOf(d)/(data.length-1||1))*W;return`<text x="${x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${d.label}</text>`}).join(’’);
-return`<svg class="chart" viewBox="0 0 ${W} ${H+32}" height="${H+32}">${mkLine('s1',CI.light)}${mkLine('s2',CI.accent)}${mkLine('s3',CI.muted)}${mkLine('avg',CI.green,'5,3')}${lbs}<text x="0" y="${H+28}" fill="${CI.light}" font-size="9">S1</text><text x="18" y="${H+28}" fill="${CI.accent}" font-size="9">S2</text><text x="36" y="${H+28}" fill="${CI.muted}" font-size="9">S3</text><text x="54" y="${H+28}" fill="${CI.green}" font-size="9">⌀</text></svg>`;
+  h=h||110;const all=[...data.flatMap(d=>[d.s1,d.s2,d.s3,d.avg])].filter(v=>v!=null&&v>0);if(!all.length||data.length<2)return'<div style="color:#7A9CC0;font-size:12px">Mindestens 2 Einheiten nötig.</div>';
+  const mn=Math.min(...all),mx=Math.max(...all),rng=mx-mn||1,W=300,H=h;
+  const mkLine=(key,col,dash)=>{
+    const pts=data.map((d,i)=>({x:i/(data.length-1)*W,y:H-(((d[key]||0)-mn)/rng)*(H-10)-5,v:d[key]})).filter(p=>p.v>0);
+    if(pts.length<2)return'';
+    return`<path d="${pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ")}" fill="none" stroke="${col}" stroke-width="${key==='avg'?2.5:1.5}" stroke-dasharray="${dash||''}" stroke-linecap="round"/>${pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${col}"/>`).join('')}`;
+  };
+  const lbs=data.filter((_,i)=>i===0||i===data.length-1||data.length<=5).map((d,_,__)=>{const x=(data.indexOf(d)/(data.length-1||1))*W;return`<text x="${x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${d.label}</text>`}).join('');
+  return`<svg class="chart" viewBox="0 0 ${W} ${H+32}" height="${H+32}">${mkLine('s1',CI.light)}${mkLine('s2',CI.accent)}${mkLine('s3',CI.muted)}${mkLine('avg',CI.green,'5,3')}${lbs}<text x="0" y="${H+28}" fill="${CI.light}" font-size="9">S1</text><text x="18" y="${H+28}" fill="${CI.accent}" font-size="9">S2</text><text x="36" y="${H+28}" fill="${CI.muted}" font-size="9">S3</text><text x="54" y="${H+28}" fill="${CI.green}" font-size="9">⌀</text></svg>`;
 }
 
 function navHtml(active){
-return`<nav class="nav"><button class="nav-btn" style="color:${active==='home'?CI.accent:CI.muted}" onclick="goTo('home')">⊕ Home</button><button class="nav-btn" style="color:${active==='progress'?CI.accent:CI.muted}" onclick="goTo('progress')">↗ Verlauf</button></nav>`;
+  return`<nav class="nav"><button class="nav-btn" style="color:${active==='home'?CI.accent:CI.muted}" onclick="goTo('home')">⊕ Home</button><button class="nav-btn" style="color:${active==='progress'?CI.accent:CI.muted}" onclick="goTo('progress')">↗ Verlauf</button></nav>`;
 }
 
 function renderHome(){
-const today=todayKey();
-const lastOf=t=>[…S.sessions].reverse().find(s=>s.type===t);
-const doneToday=t=>S.sessions.some(s=>s.date===today&&s.type===t);
-const stats=`<div class="card" style="display:flex;margin-bottom:14px"> ${['A','B','C'].map(t=>{const n=S.sessions.filter(s=>s.type===t).length;const c=t==='A'?CI.accent:t==='B'?CI.green:CI.purple;return`<div class="stat"><div class="stat-n" style="color:${c}">${n}</div><div class="stat-l">W-${t}</div></div>`}).join(’<div style="width:1px;background:#2A3A55"></div>’)}
-<div style="width:1px;background:#2A3A55"></div>
-<div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.sessions.length}</div><div class="stat-l">Gesamt</div></div>
-
+  const today=todayKey();
+  const lastOf=t=>[...S.sessions].reverse().find(s=>s.type===t);
+  const doneToday=t=>S.sessions.some(s=>s.date===today&&s.type===t);
+  const stats=`<div class="card" style="display:flex;margin-bottom:14px">
+    ${['A','B','C'].map(t=>{const n=S.sessions.filter(s=>s.type===t).length;const c=t==='A'?CI.accent:t==='B'?CI.green:CI.purple;return`<div class="stat"><div class="stat-n" style="color:${c}">${n}</div><div class="stat-l">W-${t}</div></div>`}).join('<div style="width:1px;background:#2A3A55"></div>')}
+    <div style="width:1px;background:#2A3A55"></div>
+    <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.sessions.length}</div><div class="stat-l">Gesamt</div></div>
   </div>`;
   const cards=['A','B','C'].map(t=>{
     const wo=WORKOUTS[t];const done=doneToday(t);const last=lastOf(t);
@@ -147,74 +146,73 @@ const stats=`<div class="card" style="display:flex;margin-bottom:14px"> ${['A','
 }
 
 function renderWorkout(){
-const wo=WORKOUTS[S.activeType];
-if(S.saved){
-const cards=wo.exercises.map(ex=>{const p=S.progResults[ex.id];if(!p)return’’;const bc=p.level===“increase”?CI.green:p.level===“possible”?CI.orange:CI.sep;return`<div class="card" style="border-left:3px solid ${bc}"><div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div>${pbox(p)}</div>`}).join(’’);
-return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div> <div class="body"><div style="text-align:center;padding:20px 0 16px"><div style="font-size:46px;margin-bottom:8px">💪</div><div style="color:#fff;font-size:18px;font-weight:800;margin-bottom:4px">Einheit gespeichert!</div><div style="color:#7A9CC0;font-size:12px;margin-bottom:16px">Empfehlungen für nächste Einheit:</div></div>${cards}<button class="btn" style="background:${wo.color};margin-top:16px" onclick="goTo('home')">Zurück zur Übersicht</button></div>${navHtml('')}`;
-}
-const exCards=wo.exercises.map(ex=>{
-const e=S.form[ex.id]||{weight:’’,sets:Array(ex.sets).fill(’’)};
-const ra=e.sets.map(Number).filter(n=>n>0);const ar=ra.length?avg(ra):null;
-const lh=ra.length===ex.sets?calcProg(ex,e.sets,e.weight):null;
-const isKg=ex.unit===‘kg’;const isBW=ex.unit===‘BW’;const sp=S.showProg[ex.id];
-const ps=sp&&ex.progressions?`<div class="prog-steps">${ex.progressions.map(p=>`<div class="prog-step"><span style="color:${wo.color}">→</span> ${p}</div>`).join('')}</div>`:’’;
-const wf=!isBW?`<div style="margin-bottom:12px"><label class="lbl">${isKg?'Gewicht (kg)':'Band-Stärke'}</label><input class="inp" type="${isKg?'number':'text'}" inputmode="${isKg?'numeric':'text'}" placeholder="${isKg?(e.weight?'Vorschlag: '+e.weight+'kg':'z.B. 16'):'leicht / mittel / stark'}" value="${e.weight}" oninput="upW('${ex.id}',this.value)">${isKg&&e.weight?`<div style="color:#7A9CC0;font-size:11px;text-align:center;margin-top:3px">Vorschlag: <span style="color:${CI.accent}">${e.weight} kg</span></div>`:''}</div>`:’’;
-const si=`<div class="sets-row">${e.sets.map((v,i)=>{const n=Number(v);const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;return`<div class="set-col"><div class="set-lbl">S${i+1}</div><input class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.targetReps}" value="${v}" oninput="upS('${ex.id}',${i},this.value)"></div>`}).join('')}</div>`;
-const tr=ra.length?`<div class="tags-row">${e.sets.map((v,i)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')}${ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''}</div>`:’’;
-return`<div class="card" style="border-left:3px solid ${wo.color}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">Ziel: ${ex.sets}×${ex.targetReps} ${ex.unit==='Sek'?'Sek':'Wdh'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${ar!==null?`<div style="color:${wo.color};font-weight:800;font-size:18px">⌀${ar}</div>`:''}<button class="btn-sm" style="background:#7A9CC020;color:#7A9CC0;border-color:#2A3A55;font-size:10px;padding:3px 8px" onclick="togP('${ex.id}')">${sp?'▲':'▼ Stufen'}</button></div></div>${ps}${wf}<label class="lbl">Wdh pro Satz</label>${si}${tr}${lh?pbox(lh):''}</div>`;
-}).join(’’);
-return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div>
-
+  const wo=WORKOUTS[S.activeType];
+  if(S.saved){
+    const cards=wo.exercises.map(ex=>{const p=S.progResults[ex.id];if(!p)return'';const bc=p.level==="increase"?CI.green:p.level==="possible"?CI.orange:CI.sep;return`<div class="card" style="border-left:3px solid ${bc}"><div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div>${pbox(p)}</div>`}).join('');
+    return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div>
+    <div class="body"><div style="text-align:center;padding:20px 0 16px"><div style="font-size:46px;margin-bottom:8px">💪</div><div style="color:#fff;font-size:18px;font-weight:800;margin-bottom:4px">Einheit gespeichert!</div><div style="color:#7A9CC0;font-size:12px;margin-bottom:16px">Empfehlungen für nächste Einheit:</div></div>${cards}<button class="btn" style="background:${wo.color};margin-top:16px" onclick="goTo('home')">Zurück zur Übersicht</button></div>${navHtml('')}`;
+  }
+  const exCards=wo.exercises.map(ex=>{
+    const e=S.form[ex.id]||{weight:'',sets:Array(ex.sets).fill('')};
+    const ra=e.sets.map(Number).filter(n=>n>0);const ar=ra.length?avg(ra):null;
+    const lh=ra.length===ex.sets?calcProg(ex,e.sets,e.weight):null;
+    const isKg=ex.unit==='kg';const isBW=ex.unit==='BW';const sp=S.showProg[ex.id];
+    const ps=sp&&ex.progressions?`<div class="prog-steps">${ex.progressions.map(p=>`<div class="prog-step"><span style="color:${wo.color}">→</span> ${p}</div>`).join('')}</div>`:'';
+    const wf=!isBW?`<div style="margin-bottom:12px"><label class="lbl">${isKg?'Gewicht (kg)':'Band-Stärke'}</label><input class="inp" type="${isKg?'number':'text'}" inputmode="${isKg?'numeric':'text'}" placeholder="${isKg?(e.weight?'Vorschlag: '+e.weight+'kg':'z.B. 16'):'leicht / mittel / stark'}" value="${e.weight}" oninput="upW('${ex.id}',this.value)">${isKg&&e.weight?`<div style="color:#7A9CC0;font-size:11px;text-align:center;margin-top:3px">Vorschlag: <span style="color:${CI.accent}">${e.weight} kg</span></div>`:''}</div>`:'';
+    const si=`<div class="sets-row">${e.sets.map((v,i)=>{const n=Number(v);const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;return`<div class="set-col"><div class="set-lbl">S${i+1}</div><input class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.targetReps}" value="${v}" oninput="upS('${ex.id}',${i},this.value)"></div>`}).join('')}</div>`;
+    const tr=ra.length?`<div class="tags-row">${e.sets.map((v,i)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')}${ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''}</div>`:'';
+    return`<div class="card" style="border-left:3px solid ${wo.color}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">Ziel: ${ex.sets}×${ex.targetReps} ${ex.unit==='Sek'?'Sek':'Wdh'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${ar!==null?`<div style="color:${wo.color};font-weight:800;font-size:18px">⌀${ar}</div>`:''}<button class="btn-sm" style="background:#7A9CC020;color:#7A9CC0;border-color:#2A3A55;font-size:10px;padding:3px 8px" onclick="togP('${ex.id}')">${sp?'▲':'▼ Stufen'}</button></div></div>${ps}${wf}<label class="lbl">Wdh pro Satz</label>${si}${tr}${lh?pbox(lh):''}</div>`;
+  }).join('');
+  return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div>
   <div class="body">${exCards}<button class="btn" style="background:${wo.color}" onclick="saveWo()">Einheit speichern ✓</button></div>${navHtml('')}`;
 }
 
 function renderProgress(){
-if(S.progressEx){
-const allEx=[…WORKOUTS.A.exercises,…WORKOUTS.B.exercises,…WORKOUTS.C.exercises];
-const ex=allEx.find(e=>e.id===S.progressEx);
-const wt=Object.keys(WORKOUTS).find(k=>WORKOUTS[k].exercises.find(e=>e.id===S.progressEx));
-const wo=WORKOUTS[wt];const data=buildData(S.progressEx);
-const wc=data.some(d=>d.weight>0)?`<div class="card" style="border-left:3px solid ${wo.color}"><div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Gewicht (kg)</div>${svgLine(data,'weight',wo.color)}</div>`:’’;
-const rc=`<div class="card" style="border-left:3px solid ${wo.color}"><div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Wdh pro Satz + Durchschnitt</div>${svgMulti(data)}</div>`;
-const rows=[…data].reverse().map(d=>`<div class="row"><span style="color:#7A9CC0;font-size:12px">${d.date}</span><div style="display:flex;gap:5px">${[d.s1,d.s2,d.s3].filter(v=>v!==null).map((v,j)=>tag(v,[CI.light,CI.accent,CI.muted][j])).join('')}${tag('⌀'+d.avg,wo.color)}</div>${d.weight>0?`<span style="color:#7A9CC0;font-size:12px">${d.weight}kg</span>`:''}</div>`).join(’’);
-return`<div class="hdr"><button class="back-btn" onclick="set({progressEx:null})">←</button><div style="text-align:center"><div class="hdr-title">${ex?.name||''}</div><div class="hdr-sub">${data.length} Einheiten</div></div><div style="width:30px"></div></div> <div class="body">${data.length<1?'<div style="text-align:center;padding:40px;color:#7A9CC0">Noch keine Daten.</div>':wc+rc+'<span class="lbl" style="margin-top:6px;display:block">Alle Einträge</span>'+rows}</div>${navHtml('progress')}`;
-}
-const cards=[‘A’,‘B’,‘C’].map(t=>{
-const wo=WORKOUTS[t];const has=wo.exercises.some(ex=>buildData(ex.id).length>0);if(!has)return’’;
-return`<div style="margin-top:12px"><span class="lbl" style="color:${wo.color}">${wo.label} · ${wo.subtitle}</span>${wo.exercises.map(ex=>{const data=buildData(ex.id);if(!data.length)return'';const lat=data[data.length-1];const diff=data.length>1?Math.round((lat.avg-data[0].avg)*10)/10:null;return`<div class="card" style="border-left:3px solid ${wo.color};cursor:pointer" onclick="set({progressEx:'${ex.id}'})"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">${data.length} Einh. · ⌀ zuletzt: <span style="color:${wo.color}">${lat.avg}</span>${lat.weight>0?’ · <span style="color:#2A3A55">’+lat.weight+‘kg</span>’:’’}</div></div><div style="display:flex;align-items:center;gap:8px">${diff!==null?tag((diff>0?’+’:’’)+diff+‘⌀’,diff>0?CI.green:diff<0?CI.orange:CI.muted):’’}<span style="color:#7A9CC0;font-size:16px">›</span></div></div></div>`}).join('')}</div>`;
-}).join(’’);
-return`<div class="hdr"><div style="width:30px"></div><div style="text-align:center"><div class="hdr-title">FORTSCHRITT</div><div class="hdr-sub">${S.sessions.length} Einheiten gesamt</div></div><div style="width:30px"></div></div>
-
+  if(S.progressEx){
+    const allEx=[...WORKOUTS.A.exercises,...WORKOUTS.B.exercises,...WORKOUTS.C.exercises];
+    const ex=allEx.find(e=>e.id===S.progressEx);
+    const wt=Object.keys(WORKOUTS).find(k=>WORKOUTS[k].exercises.find(e=>e.id===S.progressEx));
+    const wo=WORKOUTS[wt];const data=buildData(S.progressEx);
+    const wc=data.some(d=>d.weight>0)?`<div class="card" style="border-left:3px solid ${wo.color}"><div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Gewicht (kg)</div>${svgLine(data,'weight',wo.color)}</div>`:'';
+    const rc=`<div class="card" style="border-left:3px solid ${wo.color}"><div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Wdh pro Satz + Durchschnitt</div>${svgMulti(data)}</div>`;
+    const rows=[...data].reverse().map(d=>`<div class="row"><span style="color:#7A9CC0;font-size:12px">${d.date}</span><div style="display:flex;gap:5px">${[d.s1,d.s2,d.s3].filter(v=>v!==null).map((v,j)=>tag(v,[CI.light,CI.accent,CI.muted][j])).join('')}${tag('⌀'+d.avg,wo.color)}</div>${d.weight>0?`<span style="color:#7A9CC0;font-size:12px">${d.weight}kg</span>`:''}</div>`).join('');
+    return`<div class="hdr"><button class="back-btn" onclick="set({progressEx:null})">←</button><div style="text-align:center"><div class="hdr-title">${ex?.name||''}</div><div class="hdr-sub">${data.length} Einheiten</div></div><div style="width:30px"></div></div>
+    <div class="body">${data.length<1?'<div style="text-align:center;padding:40px;color:#7A9CC0">Noch keine Daten.</div>':wc+rc+'<span class="lbl" style="margin-top:6px;display:block">Alle Einträge</span>'+rows}</div>${navHtml('progress')}`;
+  }
+  const cards=['A','B','C'].map(t=>{
+    const wo=WORKOUTS[t];const has=wo.exercises.some(ex=>buildData(ex.id).length>0);if(!has)return'';
+    return`<div style="margin-top:12px"><span class="lbl" style="color:${wo.color}">${wo.label} · ${wo.subtitle}</span>${wo.exercises.map(ex=>{const data=buildData(ex.id);if(!data.length)return'';const lat=data[data.length-1];const diff=data.length>1?Math.round((lat.avg-data[0].avg)*10)/10:null;return`<div class="card" style="border-left:3px solid ${wo.color};cursor:pointer" onclick="set({progressEx:'${ex.id}'})"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">${data.length} Einh. · ⌀ zuletzt: <span style="color:${wo.color}">${lat.avg}</span>${lat.weight>0?' · <span style="color:#2A3A55">'+lat.weight+'kg</span>':''}</div></div><div style="display:flex;align-items:center;gap:8px">${diff!==null?tag((diff>0?'+':'')+diff+'⌀',diff>0?CI.green:diff<0?CI.orange:CI.muted):''}<span style="color:#7A9CC0;font-size:16px">›</span></div></div></div>`}).join('')}</div>`;
+  }).join('');
+  return`<div class="hdr"><div style="width:30px"></div><div style="text-align:center"><div class="hdr-title">FORTSCHRITT</div><div class="hdr-sub">${S.sessions.length} Einheiten gesamt</div></div><div style="width:30px"></div></div>
   <div class="body">${!S.sessions.length?'<div style="text-align:center;padding:60px 20px"><div style="font-size:40px;margin-bottom:12px">📊</div><div style="color:#7A9CC0;font-size:14px">Nach der ersten Einheit erscheinen hier deine Grafiken.</div></div>':cards}</div>${navHtml('progress')}`;
 }
 
 function render(){
-const app=document.getElementById(‘app’);
-if(S.view===‘home’)app.innerHTML=renderHome();
-else if(S.view===‘workout’)app.innerHTML=renderWorkout();
-else if(S.view===‘progress’)app.innerHTML=renderProgress();
+  const app=document.getElementById('app');
+  if(S.view==='home')app.innerHTML=renderHome();
+  else if(S.view==='workout')app.innerHTML=renderWorkout();
+  else if(S.view==='progress')app.innerHTML=renderProgress();
 }
 
 window.goTo=v=>set({view:v,progressEx:null});
 window.startWorkout=t=>{
-const last=[…S.sessions].reverse().find(s=>s.type===t);
-const init={};
-WORKOUTS[t].exercises.forEach(ex=>{const le=last?.exercises?.[ex.id];init[ex.id]={weight:le?.suggestedNextWeight??le?.weight??’’,sets:Array(ex.sets).fill(’’)}});
-set({form:init,activeType:t,saved:false,progResults:{},showProg:{},view:‘workout’});
+  const last=[...S.sessions].reverse().find(s=>s.type===t);
+  const init={};
+  WORKOUTS[t].exercises.forEach(ex=>{const le=last?.exercises?.[ex.id];init[ex.id]={weight:le?.suggestedNextWeight??le?.weight??'',sets:Array(ex.sets).fill('')}});
+  set({form:init,activeType:t,saved:false,progResults:{},showProg:{},view:'workout'});
 };
-window.upW=(id,val)=>{S.form[id]={…S.form[id],weight:val};render()};
-window.upS=(id,i,val)=>{const s=[…S.form[id].sets];s[i]=val;S.form[id]={…S.form[id],sets:s};render()};
-window.togP=id=>{S.showProg={…S.showProg,[id]:!S.showProg[id]};render()};
+window.upW=(id,val)=>{S.form[id]={...S.form[id],weight:val};render()};
+window.upS=(id,i,val)=>{const s=[...S.form[id].sets];s[i]=val;S.form[id]={...S.form[id],sets:s};render()};
+window.togP=id=>{S.showProg={...S.showProg,[id]:!S.showProg[id]};render()};
 window.saveWo=()=>{
-const wo=WORKOUTS[S.activeType];const results={};const enriched={…S.form};
-wo.exercises.forEach(ex=>{const e=S.form[ex.id];const p=calcProg(ex,e.sets,e.weight);results[ex.id]=p;if(p?.nextWeight)enriched[ex.id]={…e,suggestedNextWeight:p.nextWeight}});
-const entry={date:todayKey(),type:S.activeType,exercises:enriched};
-const updated=[…S.sessions.filter(s=>!(s.date===entry.date&&s.type===entry.type)),entry];
-S.sessions=updated;persist(updated);set({progResults:results,saved:true});
+  const wo=WORKOUTS[S.activeType];const results={};const enriched={...S.form};
+  wo.exercises.forEach(ex=>{const e=S.form[ex.id];const p=calcProg(ex,e.sets,e.weight);results[ex.id]=p;if(p?.nextWeight)enriched[ex.id]={...e,suggestedNextWeight:p.nextWeight}});
+  const entry={date:todayKey(),type:S.activeType,exercises:enriched};
+  const updated=[...S.sessions.filter(s=>!(s.date===entry.date&&s.type===entry.type)),entry];
+  S.sessions=updated;persist(updated);set({progResults:results,saved:true});
 };
 
 render();
 </script>
-
 </body>
 </html>
