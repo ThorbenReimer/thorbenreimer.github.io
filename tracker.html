@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Training">
+<title>Performance Tracker</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  body { background: #161E2E; font-family: -apple-system, 'Helvetica Neue', sans-serif; color: #D0DCE8; }
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/recharts/2.8.0/Recharts.js"></script>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect } = React;
+const { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, Legend } = Recharts;
+
+const CI = {
+bg:”#161E2E”, navy:”#1E2D45”, sep:”#2A3A55”,
+accent:”#378ADD”, light:”#7AB8F5”, white:”#FFFFFF”,
+body:”#D0DCE8”, muted:”#7A9CC0”, green:”#4CAF82”, orange:”#F59E0B”, purple:”#A78BFA”,
+};
+
+const PROG = { INCREASE: 1.10, POSSIBLE: 1.05, KG_STEP: 2 };
+
+const WORKOUTS = {
+A: {
+label:“Workout A”, subtitle:“Glutes & Posterior Chain”, color:CI.accent, day:“Mo & Fr”,
+exercises:[
+{ id:“sl_glute_bridge”, name:“Single-Leg Glute Bridge”, sets:3, targetReps:12, unit:“BW”, progType:“reps”,
+progressions:[“BW → Bein gestreckt halten”,”+KH auf Hüfte”,“→ Hip Thrust”] },
+{ id:“clamshell”, name:“Clamshell (Band)”, sets:3, targetReps:12, unit:“Band”, progType:“band”,
+progressions:[“Band leicht → mittel → stark”,”+Gewicht am Knöchel”] },
+{ id:“hip_thrust”, name:“Hip Thrust (KH)”, sets:3, targetReps:12, unit:“kg”, progType:“kg”,
+progressions:[”+2kg wenn alle Sätze ≥13 Wdh”,“→ Barbell Hip Thrust”] },
+{ id:“rdl”, name:“Romanian Deadlift”, sets:3, targetReps:10, unit:“kg”, progType:“kg”,
+progressions:[”+2kg wenn alle Sätze ≥11 Wdh”,“→ Single-Leg RDL”] },
+],
+},
+B: {
+label:“Workout B”, subtitle:“McGill Big Three + ATW”, color:CI.green, day:“Mi”,
+exercises:[
+{ id:“dead_bug”, name:“Dead Bug ①”, sets:3, targetReps:8, unit:“BW”, progType:“reps”,
+progressions:[“5 Sek runter + 2 Sek halten”,“→ mit Band an Armen”,“→ mit KH in Händen”] },
+{ id:“side_plank”, name:“Side Plank ②”, sets:3, targetReps:30, unit:“Sek”, progType:“reps”,
+progressions:[”+Hip Dip (Hüfte ab-/anheben)”,”+Beinheben oben”,“→ Side Plank Row”] },
+{ id:“pallof”, name:“Pallof Press ③”, sets:3, targetReps:10, unit:“Band”, progType:“band”,
+progressions:[“Band leicht → mittel”,“Abstand vergrößern”,“→ Einbeinstand”] },
+{ id:“atw”, name:“Around the World”, sets:3, targetReps:8, unit:“Band”, progType:“band”,
+progressions:[“Band leicht → mittel”,“Tempo 3 Sek pro Kreis”] },
+],
+},
+C: {
+label:“Workout C”, subtitle:“Full Body – Pull & Push”, color:CI.purple, day:“Sa (optional)”,
+exercises:[
+{ id:“pullup”, name:“Pull-ups (Klimmzüge)”, sets:3, targetReps:5, unit:“kg”, progType:“kg”,
+progressions:[“BW (0kg) → KH zwischen Knien (+2kg)”,“→ schrittweise steigern”] },
+{ id:“pushup”, name:“Push-ups”, sets:3, targetReps:15, unit:“BW”, progType:“reps”,
+progressions:[“Standard → Enge Hände”,“→ Archer Push-up”,“→ Einarm”] },
+{ id:“goblet_squat”, name:“Goblet Squat (KH)”, sets:3, targetReps:12, unit:“kg”, progType:“kg”,
+progressions:[”+2kg wenn alle Sätze ≥13 Wdh”,“→ Bulgarian Split Squat”] },
+{ id:“renegade_row”, name:“Renegade Row (KH)”, sets:3, targetReps:8, unit:“kg”, progType:“kg”,
+progressions:[”+2kg schrittweise”,“Tempo 2 Sek hoch, 2 runter”] },
+],
+},
+};
+
+const todayKey = () => new Date().toISOString().split(“T”)[0];
+const avg = (arr) => arr.length ? Math.round(arr.reduce((a,b)=>a+b,0)/arr.length*10)/10 : 0;
+
+const persist = (d) => { try { localStorage.setItem(“tr_thorben_v1”, JSON.stringify(d)); } catch {} };
+const load = () => { try { const r = localStorage.getItem(“tr_thorben_v1”); return r ? JSON.parse(r) : []; } catch { return []; } };
+
+const calcProg = (ex, setsArr, currentWeight) => {
+const reps = setsArr.map(Number).filter(n=>n>0);
+if (reps.length < ex.sets) return null;
+const allOver = reps.every(r => r >= ex.targetReps * PROG.INCREASE);
+const avgOver = avg(reps) >= ex.targetReps * PROG.POSSIBLE;
+if (allOver) {
+if (ex.progType===“kg”) {
+const next = (parseFloat(currentWeight)||0) + PROG.KG_STEP;
+return { level:“increase”, msg:`🚀 Steigern → ${next} kg`, nextWeight:String(next) };
+}
+if (ex.progType===“band”) {
+const bands=[“leicht”,“mittel”,“stark”];
+const idx = bands.findIndex(b=>(currentWeight||””).toLowerCase().includes(b));
+const next = idx>=0&&idx<bands.length-1 ? bands[idx+1] : null;
+return { level:“increase”, msg:next?`🚀 Band → ${next}`:“🚀 Abstand vergrößern”, nextWeight:next||currentWeight };
+}
+return { level:“increase”, msg:`🚀 Wdh-Ziel auf ${ex.targetReps+2} erhöhen`, nextWeight:currentWeight };
+}
+if (avgOver) return { level:“possible”, msg:“📈 Steigerung möglich – nächste Woche” };
+return { level:“ok”, msg:“✓ Gewicht/Niveau halten” };
+};
+
+function App() {
+const [view, setView] = useState(“home”);
+const [activeType, setActiveType] = useState(null);
+const [sessions, setSessions] = useState(() => load());
+const [form, setForm] = useState({});
+const [saved, setSaved] = useState(false);
+const [progResults, setProgResults] = useState({});
+const [progressEx, setProgressEx] = useState(null);
+const [showProg, setShowProg] = useState({});
+
+const lastSession = (type) => […sessions].reverse().find(s=>s.type===type);
+
+const startWorkout = (type) => {
+const last = lastSession(type);
+const init = {};
+WORKOUTS[type].exercises.forEach(ex => {
+const le = last?.exercises?.[ex.id];
+init[ex.id] = { weight: le?.suggestedNextWeight ?? le?.weight ?? “”, sets: Array(ex.sets).fill(””) };
+});
+setForm(init); setActiveType(type); setSaved(false); setProgResults({}); setShowProg({});
+setView(“workout”);
+};
+
+const updateWeight = (id,val) => setForm(f=>({…f,[id]:{…f[id],weight:val}}));
+const updateSet = (id,i,val) => setForm(f=>({…f,[id]:{…f[id],sets:f[id].sets.map((v,j)=>j===i?val:v)}}));
+
+const saveWorkout = () => {
+const wo = WORKOUTS[activeType];
+const results = {};
+const enriched = {…form};
+wo.exercises.forEach(ex => {
+const e = form[ex.id];
+const p = calcProg(ex, e.sets, e.weight);
+results[ex.id] = p;
+if (p?.nextWeight) enriched[ex.id] = {…e, suggestedNextWeight: p.nextWeight};
+});
+const entry = { date:todayKey(), type:activeType, exercises:enriched };
+const updated = […sessions.filter(s=>!(s.date===entry.date&&s.type===entry.type)), entry];
+setSessions(updated); persist(updated); setProgResults(results); setSaved(true);
+};
+
+const buildData = (exId) =>
+sessions.filter(s=>s.exercises?.[exId]).map(s=>{
+const e=s.exercises[exId];
+const r=(e.sets||[]).map(Number).filter(n=>!isNaN(n)&&n>0);
+return { date:s.date, label:s.date.slice(5), avg:avg(r), s1:r[0]??null, s2:r[1]??null, s3:r[2]??null, weight:parseFloat(e.weight)||0 };
+}).sort((a,b)=>a.date.localeCompare(b.date));
+
+const totalSessions = sessions.length;
+const todayDone = (type) => sessions.some(s=>s.date===todayKey()&&s.type===type);
+
+const S = {
+app:    {background:CI.bg,minHeight:“100vh”,color:CI.body,maxWidth:430,margin:“0 auto”},
+hdr:    {background:CI.navy,borderBottom:`1px solid ${CI.sep}`,padding:“14px 18px”,display:“flex”,alignItems:“center”,justifyContent:“space-between”,position:“sticky”,top:0,zIndex:50},
+title:  {color:CI.white,fontSize:16,fontWeight:800,letterSpacing:0.3},
+sub:    {color:CI.muted,fontSize:11,marginTop:1},
+body:   {padding:“14px 18px”,paddingBottom:90},
+card:   (c)=>({background:CI.navy,borderRadius:14,padding:14,marginBottom:10,border:`1px solid ${CI.sep}`,borderLeft:`3px solid ${c||CI.sep}`}),
+label:  {color:CI.muted,fontSize:10,fontWeight:700,letterSpacing:1,textTransform:“uppercase”,marginBottom:5,display:“block”},
+inp:    {background:CI.bg,border:`1px solid ${CI.sep}`,borderRadius:8,padding:“11px”,fontSize:16,color:CI.white,width:“100%”,outline:“none”,textAlign:“center”},
+inpSm:  {background:CI.bg,border:`1px solid ${CI.sep}`,borderRadius:8,padding:“11px 4px”,fontSize:16,color:CI.white,width:“100%”,outline:“none”,textAlign:“center”},
+btn:    (c)=>({background:c,color:CI.white,border:“none”,borderRadius:10,padding:“14px 20px”,fontSize:15,fontWeight:700,cursor:“pointer”,width:“100%”,marginBottom:10}),
+btnSm:  (c)=>({background:`${c}20`,color:c,border:`1px solid ${c}40`,borderRadius:8,padding:“8px 14px”,fontSize:12,fontWeight:700,cursor:“pointer”}),
+nav:    {position:“fixed”,bottom:0,left:“50%”,transform:“translateX(-50%)”,width:“100%”,maxWidth:430,background:CI.navy,borderTop:`1px solid ${CI.sep}`,display:“flex”,zIndex:100,paddingBottom:“env(safe-area-inset-bottom)”},
+navBtn: (a)=>({flex:1,padding:“14px 0”,background:“none”,border:“none”,color:a?CI.accent:CI.muted,fontSize:11,fontWeight:700,cursor:“pointer”,letterSpacing:0.5,textTransform:“uppercase”}),
+tag:    (c)=>({background:`${c}22`,color:c,borderRadius:6,padding:“3px 8px”,fontSize:10,fontWeight:700,display:“inline-block”}),
+stat:   {textAlign:“center”,flex:1},
+statN:  (c)=>({color:c||CI.accent,fontSize:22,fontWeight:800}),
+statL:  {color:CI.muted,fontSize:10,textTransform:“uppercase”,letterSpacing:0.8},
+check:  (c)=>({width:22,height:22,borderRadius:6,border:`2px solid ${c?CI.green:CI.sep}`,background:c?CI.green:“transparent”,display:“flex”,alignItems:“center”,justifyContent:“center”,flexShrink:0}),
+back:   {background:“none”,border:“none”,color:CI.muted,fontSize:22,cursor:“pointer”,padding:0,lineHeight:1},
+progBox:(l)=>({borderRadius:8,padding:“8px 12px”,marginTop:8,fontSize:12,fontWeight:600,background:l===“increase”?`${CI.green}18`:l===“possible”?`${CI.orange}18`:`${CI.sep}40`,color:l===“increase”?CI.green:l===“possible”?CI.orange:CI.muted,border:`1px solid ${l==="increase"?CI.green:l==="possible"?CI.orange:CI.sep}50`}),
+};
+
+const Nav = () => (
+<nav style={S.nav}>
+<button style={S.navBtn(view===“home”)}     onClick={()=>setView(“home”)}>⊕ Home</button>
+<button style={S.navBtn(view===“progress”)} onClick={()=>{setProgressEx(null);setView(“progress”);}}>↗ Verlauf</button>
+</nav>
+);
+
+// HOME
+if (view===“home”) return (
+<div style={S.app}>
+<div style={S.hdr}>
+<div><div style={S.title}>PERFORMANCE PLAN</div><div style={S.sub}>Thorben Reimer · {todayKey()}</div></div>
+<span style={S.tag(CI.accent)}>{totalSessions} Einh.</span>
+</div>
+<div style={S.body}>
+<div style={{…S.card(null),display:“flex”,marginBottom:14}}>
+{[{n:totalSessions,l:“Gesamt”,c:CI.accent},{n:sessions.filter(s=>s.type===“A”).length,l:“W-A”,c:CI.accent},{n:sessions.filter(s=>s.type===“B”).length,l:“W-B”,c:CI.green},{n:sessions.filter(s=>s.type===“C”).length,l:“W-C”,c:CI.purple}].map((st,i)=>(
+<div key={i} style={S.stat}><div style={S.statN(st.c)}>{st.n}</div><div style={S.statL}>{st.l}</div></div>
+))}
+</div>
+
+```
+    <div style={{...S.label,marginBottom:10}}>Training starten</div>
+    {["A","B","C"].map(type=>{
+      const wo=WORKOUTS[type]; const done=todayDone(type); const last=lastSession(type);
+      return (
+        <div key={type} style={S.card(wo.color)}>
+          <div style={{display:"flex",alignItems:"center",gap:10}}>
+            <div style={S.check(done)}>{done&&<span style={{color:CI.white,fontSize:13}}>✓</span>}</div>
+            <div style={{flex:1}}>
+              <div style={{color:CI.white,fontWeight:800,fontSize:15}}>{wo.label}</div>
+              <div style={{color:CI.muted,fontSize:11,marginTop:2}}>
+                {wo.subtitle} · <span style={{color:`${wo.color}bb`}}>{wo.day}</span>
+                {last&&<span style={{color:CI.sep}}> · zuletzt {last.date.slice(5)}</span>}
+              </div>
+            </div>
+            <button onClick={()=>startWorkout(type)} style={S.btnSm(wo.color)}>{done?"Nochmal":"START →"}</button>
+          </div>
+        </div>
+      );
+    })}
+
+    <div style={{background:`${CI.purple}12`,border:`1px solid ${CI.purple}30`,borderRadius:12,padding:"10px 14px",marginTop:4,marginBottom:12}}>
+      <div style={{color:CI.purple,fontSize:11,fontWeight:700}}>🌙 Abends vor dem Fernseher</div>
+      <div style={{color:CI.muted,fontSize:11,marginTop:3}}>Bird Dog · 3×8/Seite · langsam & kontrolliert</div>
+    </div>
+
+    {sessions.length>0&&<>
+      <div style={{...S.label,marginTop:10,marginBottom:8}}>Letzte Einheiten</div>
+      {[...sessions].reverse().slice(0,5).map((s,i)=>(
+        <div key={i} style={{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"9px 0",borderBottom:`1px solid ${CI.sep}`}}>
+          <span style={{color:CI.muted,fontSize:12}}>{s.date}</span>
+          <span style={S.tag(WORKOUTS[s.type].color)}>Workout {s.type}</span>
+        </div>
+      ))}
+    </>}
+  </div>
+  <Nav/>
+</div>
+```
+
+);
+
+// WORKOUT
+if (view===“workout”&&activeType) {
+const wo=WORKOUTS[activeType];
+return (
+<div style={S.app}>
+<div style={S.hdr}>
+<button style={S.back} onClick={()=>setView(“home”)}>←</button>
+<div style={{textAlign:“center”}}><div style={S.title}>{wo.label}</div><div style={S.sub}>{wo.subtitle}</div></div>
+<div style={{width:30}}/>
+</div>
+<div style={S.body}>
+{saved ? (
+<div style={{padding:“10px 0”}}>
+<div style={{textAlign:“center”,padding:“20px 0 16px”}}>
+<div style={{fontSize:46,marginBottom:8}}>💪</div>
+<div style={{color:CI.white,fontSize:18,fontWeight:800,marginBottom:4}}>Einheit gespeichert!</div>
+<div style={{color:CI.muted,fontSize:12,marginBottom:16}}>Nächste Einheit – deine Empfehlungen:</div>
+</div>
+{wo.exercises.map(ex=>{
+const p=progResults[ex.id]; if(!p) return null;
+return (
+<div key={ex.id} style={S.card(p.level===“increase”?CI.green:p.level===“possible”?CI.orange:CI.sep)}>
+<div style={{color:CI.white,fontWeight:700,fontSize:13}}>{ex.name}</div>
+<div style={S.progBox(p.level)}>{p.msg}</div>
+</div>
+);
+})}
+<div style={{marginTop:16}}>
+<button onClick={()=>setView(“home”)} style={S.btn(wo.color)}>Zurück zur Übersicht</button>
+</div>
+</div>
+) : (
+<>
+{wo.exercises.map(ex=>{
+const entry=form[ex.id]||{weight:””,sets:Array(ex.sets).fill(””)};
+const repsArr=entry.sets.map(Number).filter(n=>n>0);
+const avgReps=repsArr.length?avg(repsArr):null;
+const liveHint=repsArr.length===ex.sets?calcProg(ex,entry.sets,entry.weight):null;
+const isKg=ex.unit===“kg”; const isBW=ex.unit===“BW”;
+return (
+<div key={ex.id} style={S.card(wo.color)}>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“flex-start”,marginBottom:10}}>
+<div style={{flex:1}}>
+<div style={{color:CI.white,fontWeight:700,fontSize:14}}>{ex.name}</div>
+<div style={{color:CI.muted,fontSize:11,marginTop:2}}>Ziel: {ex.sets}×{ex.targetReps} {ex.unit===“Sek”?“Sek”:“Wdh”}</div>
+</div>
+<div style={{display:“flex”,flexDirection:“column”,alignItems:“flex-end”,gap:4}}>
+{avgReps!==null&&<div style={{color:wo.color,fontWeight:800,fontSize:18}}>⌀{avgReps}</div>}
+<button onClick={()=>setShowProg(p=>({…p,[ex.id]:!p[ex.id]}))} style={{…S.btnSm(CI.muted),fontSize:10,padding:“3px 8px”}}>
+{showProg[ex.id]?“▲”:“▼ Stufen”}
+</button>
+</div>
+</div>
+{showProg[ex.id]&&ex.progressions&&(
+<div style={{background:`${CI.sep}40`,borderRadius:8,padding:“8px 10px”,marginBottom:10}}>
+{ex.progressions.map((p,i)=>(
+<div key={i} style={{color:CI.muted,fontSize:11,marginBottom:3}}><span style={{color:wo.color}}>→</span> {p}</div>
+))}
+</div>
+)}
+{!isBW&&(
+<div style={{marginBottom:12}}>
+<label style={S.label}>{isKg?“Gewicht (kg)”:“Band-Stärke”}</label>
+<input style={S.inp} type={isKg?“number”:“text”} placeholder={isKg?(entry.weight?`Vorschlag: ${entry.weight}kg`:“z.B. 16”):“leicht / mittel / stark”} value={entry.weight} onChange={e=>updateWeight(ex.id,e.target.value)}/>
+{isKg&&entry.weight&&<div style={{color:CI.muted,fontSize:11,textAlign:“center”,marginTop:3}}>Vorschlag: <span style={{color:CI.accent}}>{entry.weight} kg</span></div>}
+</div>
+)}
+<label style={S.label}>Wdh pro Satz</label>
+<div style={{display:“flex”,gap:8,marginBottom:6}}>
+{entry.sets.map((val,idx)=>{
+const n=Number(val);
+const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*0.8?CI.orange:CI.muted):CI.sep;
+return (
+<div key={idx} style={{flex:1,textAlign:“center”}}>
+<div style={{color:CI.muted,fontSize:10,marginBottom:4}}>S{idx+1}</div>
+<input style={{…S.inpSm,borderColor:bc}} type=“number” inputMode=“numeric” placeholder={String(ex.targetReps)} value={val} onChange={e=>updateSet(ex.id,idx,e.target.value)}/>
+</div>
+);
+})}
+</div>
+{repsArr.length>0&&(
+<div style={{display:“flex”,gap:5,justifyContent:“flex-end”,alignItems:“center”,flexWrap:“wrap”,marginBottom:4}}>
+{entry.sets.map((v,i)=>{const n=Number(v);if(!n)return null;const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*0.8?CI.orange:CI.muted;return <span key={i} style={S.tag(c)}>{v}</span>;})}
+{avgReps&&<><span style={{color:CI.muted,fontSize:12}}>→</span><span style={S.tag(wo.color)}>⌀{avgReps}</span></>}
+</div>
+)}
+{liveHint&&<div style={S.progBox(liveHint.level)}>{liveHint.msg}</div>}
+</div>
+);
+})}
+<button onClick={saveWorkout} style={S.btn(wo.color)}>Einheit speichern ✓</button>
+</>
+)}
+</div>
+<Nav/>
+</div>
+);
+}
+
+// PROGRESS
+if (view===“progress”) {
+const allEx=[…WORKOUTS.A.exercises,…WORKOUTS.B.exercises,…WORKOUTS.C.exercises];
+if (progressEx) {
+const ex=allEx.find(e=>e.id===progressEx);
+const woType=Object.keys(WORKOUTS).find(k=>WORKOUTS[k].exercises.find(e=>e.id===progressEx));
+const wo=WORKOUTS[woType];
+const data=buildData(progressEx);
+return (
+<div style={S.app}>
+<div style={S.hdr}>
+<button style={S.back} onClick={()=>setProgressEx(null)}>←</button>
+<div style={{textAlign:“center”}}><div style={S.title}>{ex?.name}</div><div style={S.sub}>{data.length} Einheiten</div></div>
+<div style={{width:30}}/>
+</div>
+<div style={S.body}>
+{data.length<1?<div style={{textAlign:“center”,padding:40,color:CI.muted}}>Noch keine Daten.</div>:<>
+{data.some(d=>d.weight>0)&&(
+<div style={S.card(wo.color)}>
+<div style={{color:CI.white,fontWeight:700,fontSize:13,marginBottom:10}}>Gewicht (kg)</div>
+<ResponsiveContainer width="100%" height={90}>
+<LineChart data={data}>
+<XAxis dataKey="label" tick={{fill:CI.muted,fontSize:9}} axisLine={false} tickLine={false}/>
+<YAxis hide={true} domain={[“auto”,“auto”]}/>
+<Tooltip contentStyle={{background:CI.navy,border:`1px solid ${CI.sep}`,borderRadius:8,color:CI.white,fontSize:11}} formatter={v=>[`${v}kg`]}/>
+<Line type="monotone" dataKey="weight" stroke={wo.color} strokeWidth={2.5} dot={{fill:wo.color,r:4}}/>
+</LineChart>
+</ResponsiveContainer>
+</div>
+)}
+<div style={S.card(wo.color)}>
+<div style={{color:CI.white,fontWeight:700,fontSize:13,marginBottom:10}}>Wdh pro Satz + Durchschnitt</div>
+<ResponsiveContainer width="100%" height={130}>
+<LineChart data={data}>
+<XAxis dataKey="label" tick={{fill:CI.muted,fontSize:9}} axisLine={false} tickLine={false}/>
+<YAxis hide={true} domain={[“auto”,“auto”]}/>
+<Tooltip contentStyle={{background:CI.navy,border:`1px solid ${CI.sep}`,borderRadius:8,color:CI.white,fontSize:11}}/>
+<Line type="monotone" dataKey="s1" name="S1" stroke={CI.light} strokeWidth={1.5} dot={{r:3}} connectNulls={true}/>
+<Line type="monotone" dataKey="s2" name="S2" stroke={CI.accent} strokeWidth={1.5} dot={{r:3}} connectNulls={true}/>
+<Line type="monotone" dataKey="s3" name="S3" stroke={CI.muted} strokeWidth={1.5} dot={{r:3}} connectNulls={true}/>
+<Line type="monotone" dataKey="avg" name="⌀" stroke={wo.color} strokeWidth={2.5} strokeDasharray="4 2" dot={{fill:wo.color,r:4}}/>
+<Legend wrapperStyle={{fontSize:10,color:CI.muted,paddingTop:6}}/>
+</LineChart>
+</ResponsiveContainer>
+</div>
+<div style={{...S.label,marginTop:6,marginBottom:8}}>Alle Einträge</div>
+{[…data].reverse().map((d,i)=>(
+<div key={i} style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”,padding:“9px 0”,borderBottom:`1px solid ${CI.sep}`}}>
+<span style={{color:CI.muted,fontSize:12}}>{d.date}</span>
+<div style={{display:“flex”,gap:5}}>
+{[d.s1,d.s2,d.s3].filter(v=>v!==null).map((v,j)=><span key={j} style={S.tag(j===0?CI.light:j===1?CI.accent:CI.muted)}>{v}</span>)}
+<span style={S.tag(wo.color)}>⌀{d.avg}</span>
+</div>
+{d.weight>0&&<span style={{color:CI.muted,fontSize:12}}>{d.weight}kg</span>}
+</div>
+))}
+</>}
+</div>
+<Nav/>
+</div>
+);
+}
+return (
+<div style={S.app}>
+<div style={S.hdr}>
+<div style={{width:30}}/>
+<div style={{textAlign:“center”}}><div style={S.title}>FORTSCHRITT</div><div style={S.sub}>{totalSessions} Einheiten gesamt</div></div>
+<div style={{width:30}}/>
+</div>
+<div style={S.body}>
+{totalSessions===0?(
+<div style={{textAlign:“center”,padding:“60px 20px”}}>
+<div style={{fontSize:40,marginBottom:12}}>📊</div>
+<div style={{color:CI.muted,fontSize:14}}>Nach der ersten Einheit erscheinen hier deine Grafiken.</div>
+</div>
+):(
+[“A”,“B”,“C”].map(type=>{
+const wo=WORKOUTS[type];
+const hasData=wo.exercises.some(ex=>buildData(ex.id).length>0);
+if(!hasData) return null;
+return (
+<div key={type}>
+<div style={{...S.label,marginBottom:8,marginTop:12,color:wo.color}}>{wo.label} · {wo.subtitle}</div>
+{wo.exercises.map(ex=>{
+const data=buildData(ex.id); if(!data.length) return null;
+const latest=data[data.length-1];
+const diff=data.length>1?Math.round((latest.avg-data[0].avg)*10)/10:null;
+return (
+<div key={ex.id} style={{…S.card(wo.color),cursor:“pointer”}} onClick={()=>setProgressEx(ex.id)}>
+<div style={{display:“flex”,justifyContent:“space-between”,alignItems:“center”}}>
+<div>
+<div style={{color:CI.white,fontWeight:700,fontSize:13}}>{ex.name}</div>
+<div style={{color:CI.muted,fontSize:11,marginTop:2}}>
+{data.length} Einh. · ⌀ zuletzt: <span style={{color:wo.color}}>{latest.avg}</span>
+{latest.weight>0&&<span style={{color:CI.sep}}> · {latest.weight}kg</span>}
+</div>
+</div>
+<div style={{display:“flex”,alignItems:“center”,gap:8}}>
+{diff!==null&&<span style={S.tag(diff>0?CI.green:diff<0?CI.orange:CI.muted)}>{diff>0?”+”:””}{diff}⌀</span>}
+<span style={{color:CI.muted,fontSize:16}}>›</span>
+</div>
+</div>
+</div>
+);
+})}
+</div>
+);
+})
+)}
+</div>
+<Nav/>
+</div>
+);
+}
+return null;
+}
+
+ReactDOM.createRoot(document.getElementById(“root”)).render(<App/>);
+</script>
+
+</body>
+</html>
