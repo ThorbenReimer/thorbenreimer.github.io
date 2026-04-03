@@ -614,7 +614,7 @@ function renderCoach(){
     </div>
   </div>`:"";
 
-  return`${hdr("Coach Dashboard",`${S.coachData.length} Athleten · ${today}`,"","<button onclick='refreshCoach()' style='background:none;border:none;color:#7A9CC0;font-size:18px;cursor:pointer;padding:4px'>↻</button>")}
+  return`${hdr("Coach Dashboard",`${S.coachData.length} Athleten · ${today}`,"","<div style='display:flex;gap:6px'><button onclick='exportCSV()' style='background:#4CAF8220;border:1px solid #4CAF8240;color:#4CAF82;border-radius:8px;padding:6px 10px;font-size:11px;font-weight:700;cursor:pointer'>↓ CSV</button><button onclick='refreshCoach()' style='background:none;border:none;color:#7A9CC0;font-size:18px;cursor:pointer;padding:4px'>↻</button></div>")}
   <div class="body">
     <div class="card" style="display:flex;margin-bottom:14px">
       <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.coachData.length}</div><div class="stat-l">Athleten</div></div>
@@ -704,6 +704,29 @@ window.saveCoachNoteF=()=>{
   saveCoachNote(S.selectedAthlete,S.coachNoteEdit);
   const updated=S.coachData.map(a=>a.name===S.selectedAthlete?{...a,note:S.coachNoteEdit}:a);
   set({coachData:updated,editingNote:null});
+};
+
+window.exportCSV=()=>{
+  const athletes=getAllAthletes();
+  if(!athletes.length){alert("Keine Daten vorhanden.");return;}
+  const rows=[["Athlet","Datum","Tag","Übung","Satz 1","Satz 2","Satz 3","Durchschnitt","Band/Gewicht","Intensität","Notiz"]];
+  athletes.forEach(a=>{
+    (a.sessions||[]).forEach(s=>{
+      const wo=WORKOUTS[s.type];
+      wo.exercises.forEach(ex=>{
+        const e=s.exercises?.[ex.id];if(!e)return;
+        const sets=e.sets||[];
+        const reps=sets.map(Number).filter(n=>n>0);
+        rows.push([a.name,s.date,wo.label,ex.name,sets[0]||"",sets[1]||"",sets[2]||"",reps.length?avg(reps):"",e.weight||"",s.intensity||"",s.note||""]);
+      });
+    });
+  });
+  const csv=rows.map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;a.download="athleten_export_"+todayKey()+".csv";a.click();
+  URL.revokeObjectURL(url);
 };
 
 render();
