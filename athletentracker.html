@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Athleten Tracker">
+<title>Athleten Tracker · Thorben Reimer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#161E2E;font-family:-apple-system,'Helvetica Neue',sans-serif;color:#D0DCE8;max-width:430px;margin:0 auto;min-height:100vh}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+.hdr{background:#1E2D45;border-bottom:1px solid #2A3A55;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.hdr-logo{height:32px;width:auto}
+.hdr-center{text-align:center;flex:1;padding:0 10px}
+.hdr-title{color:#fff;font-size:15px;font-weight:800;letter-spacing:.3px}
+.hdr-sub{color:#7A9CC0;font-size:10px;margin-top:1px}
+.body{padding:16px 18px 100px}
+.card{background:#1E2D45;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #2A3A55}
+.card-a{border-left:3px solid #378ADD}
+.card-b{border-left:3px solid #4CAF82}
+.lbl{color:#7A9CC0;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;display:block}
+.inp{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:11px 14px;font-size:16px;color:#fff;width:100%;outline:none}
+.inp-sm{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:11px 4px;font-size:16px;color:#fff;width:100%;outline:none;text-align:center}
+.btn{border:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-bottom:10px;color:#fff}
+.btn-sm{border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid}
+.btn-outline{background:transparent;border:1px solid #2A3A55;color:#7A9CC0}
+.tag{border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;display:inline-block}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #2A3A55}
+.stat{flex:1;text-align:center}
+.stat-n{font-size:22px;font-weight:800}
+.stat-l{color:#7A9CC0;font-size:10px;text-transform:uppercase;letter-spacing:.8px}
+.check{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #2A3A55}
+.sets-row{display:flex;gap:8px;margin-bottom:6px}
+.set-col{flex:1;text-align:center}
+.set-lbl{color:#7A9CC0;font-size:10px;margin-bottom:4px}
+.tags-row{display:flex;gap:5px;justify-content:flex-end;align-items:center;flex-wrap:wrap;min-height:22px}
+.back-btn{background:none;border:none;color:#7A9CC0;font-size:22px;cursor:pointer;padding:0;line-height:1}
+.divider{width:1px;background:#2A3A55}
+svg.chart{width:100%;overflow:visible}
+.avatar{width:36px;height:36px;border-radius:18px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:14px;flex-shrink:0}
+.footer{background:#1E2D45;border-top:1px solid #2A3A55;padding:12px 18px;text-align:center;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;padding-bottom:calc(12px + env(safe-area-inset-bottom))}
+.footer-text{color:#7A9CC0;font-size:10px;line-height:1.6}
+.footer-name{color:#7AB8F5;font-weight:700}
+.hero{background:linear-gradient(135deg,#1E2D45 0%,#162338 100%);border:1px solid #2A3A55;border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:-30px;right:-30px;width:120px;height:120px;background:#378ADD08;border-radius:60px}
+.prog-bar-bg{background:#2A3A55;border-radius:4px;height:6px;margin-top:6px}
+.prog-bar-fill{height:6px;border-radius:4px;transition:width .3s}
+.next-tag{background:linear-gradient(135deg,#378ADD20,#4CAF8220);border:1px solid #378ADD40;border-radius:10px;padding:10px 14px;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.emoji-row{display:flex;gap:8px;justify-content:center;margin:16px 0}
+.emoji-btn{background:#1E2D45;border:2px solid #2A3A55;border-radius:12px;padding:12px 20px;font-size:24px;cursor:pointer;transition:all .2s;flex:1;text-align:center}
+.emoji-btn.selected{border-color:#378ADD;background:#378ADD20;transform:scale(1.05)}
+.coach-note{background:#378ADD12;border:1px solid #378ADD40;border-radius:10px;padding:10px 14px;margin-bottom:10px}
+.week-complete{background:linear-gradient(135deg,#4CAF8220,#378ADD20);border:1px solid #4CAF8240;border-radius:14px;padding:20px;text-align:center;margin-bottom:12px}
+/* Exercise info panel */
+.ex-info{background:#161E2E;border:1px solid #2A3A55;border-radius:10px;padding:12px;margin-bottom:10px}
+.ex-info-title{color:#7AB8F5;font-size:11px;font-weight:700;margin-bottom:6px}
+.ex-info-step{color:#D0DCE8;font-size:12px;padding:3px 0;display:flex;gap:6px}
+.ex-info-step::before{content:"→";color:#378ADD;flex-shrink:0}
+.ex-info-prog{color:#7A9CC0;font-size:11px;padding:2px 0;display:flex;gap:6px}
+.ex-info-prog::before{content:"📈";flex-shrink:0;font-size:10px}
+.ex-link{display:inline-flex;align-items:center;gap:5px;color:#378ADD;font-size:11px;font-weight:700;text-decoration:none;background:#378ADD15;border:1px solid #378ADD40;border-radius:6px;padding:4px 10px;margin-top:8px}
+.ex-link:hover{background:#378ADD25}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const CI={bg:"#161E2E",navy:"#1E2D45",sep:"#2A3A55",accent:"#378ADD",light:"#7AB8F5",white:"#FFFFFF",body:"#D0DCE8",muted:"#7A9CC0",green:"#4CAF82",orange:"#F59E0B",red:"#EF4444"};
+const LOGO="https://thorbenreimer.de/TR_logo_transparent.png";
+const COACH_CODE="TENNIS25";
+const PROGRAM_WEEKS=3;
+
+const WORKOUTS={
+  A:{label:"Tag A",subtitle:"Hüfte & Stabilität",color:CI.accent,exercises:[
+    {id:"glute_bridge",name:"Glute Bridge",sets:3,targetReps:15,unit:"BW",
+      tip:"Rücken flach auf Boden, Füße hüftbreit. Hüfte nach oben drücken bis Körper eine gerade Linie bildet. Gesäß oben anspannen, 1 Sek halten.",
+      steps:["Rücken flach auf dem Boden, Knie gebeugt, Füße hüftbreit","Gesäß und Bauch anspannen","Hüfte nach oben drücken – Schultern, Hüfte, Knie in einer Linie","1 Sek oben halten, langsam absenken"],
+      progressions:["Beide Beine → ein Bein gestreckt (Single-Leg)","Mit Kurzhantel auf Hüfte","→ Hip Thrust (Schultern auf Bank)"],
+      video:"https://www.youtube.com/results?search_query=glute+bridge+anleitung+deutsch"},
+    {id:"clamshell",name:"Clamshell (Band)",sets:3,targetReps:12,unit:"Band",
+      tip:"Seitlich auf Boden, Hüfte 45° gebeugt. Band oberhalb der Knie. Oberes Knie öffnen wie eine Muschel – Füße zusammen lassen.",
+      steps:["Seitlich liegen, Hüfte ca. 45° gebeugt, Band oberhalb der Knie","Füße übereinander lassen","Oberes Knie so weit öffnen wie möglich – Becken nicht kippen","Langsam zurück"],
+      progressions:["Leichtes Band → mittleres Band → starkes Band","+ Gewichtsmanschette am Knöchel","→ Seitlich stehend mit Band"],
+      video:"https://www.youtube.com/results?search_query=clamshell+übung+band+deutsch"},
+    {id:"side_plank",name:"Side Plank",sets:3,targetReps:30,unit:"Sek",
+      tip:"Auf Unterarm stützen, Körper bildet eine gerade Linie von Kopf bis Fuß. Hüfte nicht absinken lassen.",
+      steps:["Auf Unterarm stützen, Ellbogen unter Schulter","Füße übereinander oder leicht versetzt","Hüfte anheben – Körper gerade wie ein Brett","Bauch und Gesäß anspannen"],
+      progressions:["Knie abgesetzt (leichter) → Füße gestreckt","+ Hip Dip (Hüfte ab-/anheben)","+ Beinheben oben","→ Side Plank mit Rotation"],
+      video:"https://www.youtube.com/results?search_query=side+plank+richtig+ausführen+deutsch"},
+    {id:"hip_abduction",name:"Hip Abduction",sets:3,targetReps:15,unit:"BW",
+      tip:"Seitlich auf Boden liegen. Oberes Bein gestreckt langsam heben und kontrolliert senken. Hüfte bleibt stabil.",
+      steps:["Seitlich liegen, untere Hüfte auf dem Boden","Oberes Bein gestreckt (Fuß leicht nach oben zeigen)","Bein langsam heben (ca. 45°)","Kontrolliert absenken – nicht aufsetzen"],
+      progressions:["BW → Band oberhalb der Knie","→ Stehend seitlich mit Band","→ Maschine im Studio"],
+      video:"https://www.youtube.com/results?search_query=hip+abduction+seitliches+beinheben+deutsch"},
+  ]},
+  B:{label:"Tag B",subtitle:"Core & Anti-Rotation",color:CI.green,exercises:[
+    {id:"dead_bug",name:"Dead Bug",sets:3,targetReps:8,unit:"BW",
+      tip:"Rücken FLACH auf Boden – keine Lücke unter der Lendenwirbelsäule. Gegenüberliegende Arm-Bein-Kombination langsam strecken und zurück.",
+      steps:["Rücken flach auf Boden, Arme senkrecht nach oben, Beine 90°","LWS aktiv in den Boden drücken – keine Lücke!","Rechten Arm + linkes Bein gleichzeitig langsam strecken","5 Sek halten, zurück. Seite wechseln"],
+      progressions:["Nur Beine bewegen (Arme oben halten)","Arm + Bein gleichzeitig","+ Widerstandsband an den Armen","→ Mit Kurzhantel in den Händen"],
+      video:"https://www.youtube.com/results?search_query=dead+bug+übung+anleitung+deutsch"},
+    {id:"pallof",name:"Pallof Press",sets:3,targetReps:10,unit:"Band",
+      tip:"Band seitlich am Türrahmen befestigen (Brusthöhe). Beide Hände vor die Brust, Bauch anspannen, Arme nach vorne drücken. Oberkörper dreht sich NICHT mit.",
+      steps:["Band auf Brusthöhe seitlich am Türrahmen/Pfosten","Seitlich hinstellen, Spannung im Band","Hände vor die Brust greifen, Bauch anspannen","Arme langsam nach vorne drücken – Körper bleibt stabil","Kurz halten, zurück"],
+      progressions:["Leichtes Band → mittleres Band","Abstand zum Ankerpunkt vergrößern","→ Im Einbeinstand","→ Mit Rotation des Oberkörpers"],
+      video:"https://www.youtube.com/results?search_query=pallof+press+band+anleitung+deutsch"},
+    {id:"atw",name:"Around the World",sets:3,targetReps:8,unit:"Band",
+      tip:"Band auf Brusthöhe, beide Hände greifen. Arme in einem großen Kreis bewegen – Rumpf bleibt absolut stabil und dreht nicht mit.",
+      steps:["Band auf Brusthöhe seitlich befestigen","Beide Hände am Band, Arme leicht gebeugt","Großen Kreis mit den Armen beschreiben (wie ein Lenkrad drehen)","Rumpf stabil halten – kein Mitdrehen!","Richtung wechseln"],
+      progressions:["Leichtes Band → mittleres Band","Tempo verlangsamen (3 Sek pro Kreis)","→ Im Einbeinstand"],
+      video:"https://www.youtube.com/results?search_query=around+the+world+band+core+übung"},
+    {id:"side_plank_dip",name:"Side Plank Hip Dip",sets:3,targetReps:12,unit:"BW",
+      tip:"Aus dem Side Plank die Hüfte kontrolliert absenken und wieder anheben. Volle Bewegungsamplitude nutzen.",
+      steps:["Side Plank Position einnehmen (Unterarm oder Hand)","Hüfte kontrolliert Richtung Boden absenken","Wieder nach oben drücken – über die Ausgangslinie","Langsam und kontrolliert – kein Schwung"],
+      progressions:["Knie abgesetzt (leichter)","Volle Streckung","+ Band oberhalb der Knie","→ Mit Gewicht auf der Hüfte"],
+      video:"https://www.youtube.com/results?search_query=side+plank+hip+dip+anleitung+deutsch"},
+  ]},
+};
+
+const todayKey=()=>new Date().toISOString().split("T")[0];
+const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:0;
+const fmt=d=>d.slice(5);
+const tag=(t,c)=>`<span class="tag" style="background:${c}22;color:${c}">${t}</span>`;
+
+const saveAthlete=(name,data)=>{try{localStorage.setItem("at_"+name,JSON.stringify(data))}catch{}};
+const loadAthlete=name=>{try{const r=localStorage.getItem("at_"+name);return r?JSON.parse(r):{sessions:[],note:""}}catch{return{sessions:[],note:""}}};
+const saveCoachNote=(name,note)=>{const d=loadAthlete(name);d.note=note;saveAthlete(name,d)};
+const getAllAthletes=()=>{
+  const names=[];
+  for(let i=0;i<localStorage.length;i++){
+    const k=localStorage.key(i);
+    if(k&&k.startsWith("at_"))names.push(k.replace("at_",""));
+  }
+  return names.map(name=>{const d=loadAthlete(name);return{name,sessions:d.sessions||[],note:d.note||""}});
+};
+
+const PROG={INCREASE:1.10,POSSIBLE:1.05};
+
+// Calculate progression suggestion per exercise
+function calcProg(ex, setsArr, currentLevel){
+  const reps=setsArr.map(Number).filter(n=>n>0);
+  if(reps.length<ex.sets)return null;
+  const allOver=reps.every(r=>r>=ex.targetReps*PROG.INCREASE);
+  const avgOver=(reps.reduce((a,b)=>a+b,0)/reps.length)>=ex.targetReps*PROG.POSSIBLE;
+
+  if(allOver){
+    if(ex.unit==="Band"){
+      const bands=["leicht","mittel","stark"];
+      const cur=(currentLevel||"").toLowerCase();
+      const idx=bands.findIndex(b=>cur.includes(b));
+      const next=idx>=0&&idx<2?bands[idx+1]:null;
+      return{level:"increase",msg:next?"🚀 Nächste Stufe: Band "+next:"🚀 Abstand zum Ankerpunkt vergrößern",nextLevel:next||currentLevel};
+    }
+    if(ex.unit==="Sek"){
+      const curSek=parseInt(currentLevel)||ex.targetReps;
+      const next=curSek+10;
+      return{level:"increase",msg:"🚀 Haltezeit erhöhen: "+next+" Sekunden",nextLevel:String(next)};
+    }
+    if(ex.unit==="BW"){
+      const prog=ex.progressions[1]||ex.progressions[0];
+      return{level:"increase",msg:"🚀 Nächste Stufe: "+prog,nextLevel:"progression_"+ex.id};
+    }
+  }
+  if(avgOver)return{level:"possible",msg:"📈 Steigerung möglich – nächste Woche versuchen"};
+  return{level:"ok",msg:"✓ Niveau halten"};
+}
+
+const getNextDay=sessions=>{
+  if(!sessions.length)return"A";
+  return [...sessions].reverse()[0].type==="A"?"B":"A";
+};
+const getProgramWeek=sessions=>{
+  if(!sessions.length)return 1;
+  const days=Math.floor((new Date(todayKey())-new Date(sessions[0].date))/(1000*60*60*24));
+  return Math.min(Math.floor(days/7)+1,PROGRAM_WEEKS);
+};
+const isProgramComplete=sessions=>getProgramWeek(sessions)>PROGRAM_WEEKS&&sessions.length>=PROGRAM_WEEKS*4;
+
+let S={
+  screen:"start",athleteName:"",nameInput:"",activeType:null,
+  form:{},mySessions:[],myNote:"",progResults:{},
+  coachInput:"",coachData:[],coachError:"",selectedAthlete:null,
+  showInfo:{},intensity:null,sessionNote:"",coachNoteEdit:"",editingNote:null
+};
+const set=p=>{Object.assign(S,p);render()};
+
+// ── INPUT FIX: Update only tags-row without full re-render ──
+function refreshTagsRow(exId){
+  const wo=WORKOUTS[S.activeType];if(!wo)return;
+  const ex=wo.exercises.find(e=>e.id===exId);if(!ex)return;
+  const e=S.form[exId];
+  const ra=e.sets.map(Number).filter(n=>n>0);
+  const ar=ra.length?avg(ra):null;
+  const el=document.getElementById("tags_"+exId);
+  if(!el)return;
+  const woColor=wo.color;
+  el.innerHTML=ra.length?`
+    ${e.sets.map((v,i)=>{const n=Number(v);if(!n)return"";const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join("")}
+    ${ar?"<span style='color:#7A9CC0;font-size:12px'>→</span>"+tag("⌀"+ar,woColor):""}
+  `:"";
+  // Update avg display
+  const avgEl=document.getElementById("avg_"+exId);
+  if(avgEl)avgEl.textContent=ar!==null?"⌀"+ar:"";
+  // Update input border colors
+  e.sets.forEach((v,i)=>{
+    const inp=document.getElementById("set_"+exId+"_"+i);
+    if(!inp)return;
+    const n=Number(v);
+    inp.style.borderColor=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;
+  });
+}
+
+function svgLine(data,key,color){
+  const vals=data.map(d=>d[key]).filter(v=>v!=null&&v>0);if(vals.length<2)return"";
+  const mn=Math.min(...vals),mx=Math.max(...vals),rng=mx-mn||1,W=280,H=60;
+  const pts=data.filter(d=>d[key]>0).map((d,i,a)=>({x:i/(a.length-1||1)*W,y:H-(d[key]-mn)/rng*(H-10)-5,v:d[key],l:d.label}));
+  const path=pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ");
+  const dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}"/>`).join("");
+  const lbs=pts.filter((_,i)=>i===0||i===pts.length-1).map(p=>`<text x="${p.x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${p.l}</text>`).join("");
+  return`<svg class="chart" viewBox="0 0 ${W} ${H+18}" height="${H+18}"><path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>${dots}${lbs}</svg>`;
+}
+
+function buildData(sessions,exId){
+  return sessions.filter(s=>s.exercises&&s.exercises[exId]).map(s=>{
+    const e=s.exercises[exId];
+    const r=(e.sets||[]).map(Number).filter(n=>!isNaN(n)&&n>0);
+    return{date:s.date,label:fmt(s.date),avg:avg(r)};
+  }).sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+function footer(){
+  return`<div class="footer"><div class="footer-text">
+    <span class="footer-name">Thorben Reimer</span> · Firmenkundenberater & Performance Coach<br>
+    0151 56 165 578 · <a href="mailto:Thorben.Reimer@dvag.de" style="color:#378ADD;text-decoration:none">Thorben.Reimer@dvag.de</a> · <a href="https://instagram.com/coachthorben" style="color:#378ADD;text-decoration:none">@coachthorben</a>
+  </div></div>`;
+}
+
+function hdr(title,sub,back,extra){
+  return`<div class="hdr">
+    ${back?`<button class="back-btn" onclick="${back}">←</button>`:`<img src="${LOGO}" class="hdr-logo" onerror="this.style.display='none'">`}
+    <div class="hdr-center"><div class="hdr-title">${title}</div>${sub?`<div class="hdr-sub">${sub}</div>`:""}</div>
+    ${extra||`<div style="width:${back?30:40}px"></div>`}
+  </div>`;
+}
+
+// ── SCREENS ──
+function renderStart(){
+  if(!S.athleteName){
+    return`${hdr("ATHLETEN TRACKER","3-Wochen Performance Programm")}
+    <div class="body">
+      <div class="hero">
+        <div style="font-size:40px;margin-bottom:8px">🏋️</div>
+        <div style="color:#fff;font-size:20px;font-weight:800;margin-bottom:4px">Performance Training</div>
+        <div style="color:#7A9CC0;font-size:12px">Entwickelt von Thorben Reimer<br>Performance Coach & Bewegungsexperte</div>
+      </div>
+      <label class="lbl">Dein Name</label>
+      <input class="inp" style="margin-bottom:12px;font-size:17px" placeholder="z.B. Max Mustermann" value="${S.nameInput}" oninput="S.nameInput=this.value" onkeydown="if(event.key==='Enter'&&S.nameInput.trim())startAthlete()">
+      <button class="btn" style="background:${CI.accent}" onclick="startAthlete()">Training starten →</button>
+      <button class="btn btn-outline" onclick="set({screen:'coachLogin'})">Coach-Ansicht</button>
+    </div>${footer()}`;
+  }
+
+  const today=todayKey();
+  const nextDay=getNextDay(S.mySessions);
+  const nextWo=WORKOUTS[nextDay];
+  const doneToday=t=>S.mySessions.some(s=>s.date===today&&s.type===t);
+  const week=getProgramWeek(S.mySessions);
+  const weekProg=Math.min((S.mySessions.length/(PROGRAM_WEEKS*4))*100,100);
+  const complete=isProgramComplete(S.mySessions);
+
+  const coachNote=S.myNote?`<div class="coach-note">
+    <div style="color:#7AB8F5;font-size:11px;font-weight:700;margin-bottom:4px">💬 Nachricht von Thorben</div>
+    <div style="color:#D0DCE8;font-size:13px">${S.myNote}</div>
+  </div>`:"";
+
+  if(complete)return`${hdr("ATHLETEN TRACKER","Thorben Reimer")}
+  <div class="body">
+    <div class="week-complete">
+      <div style="font-size:50px;margin-bottom:10px">🏆</div>
+      <div style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px">Programm abgeschlossen!</div>
+      <div style="color:#7A9CC0;font-size:13px;margin-bottom:4px">Fantastisch, ${S.athleteName}!</div>
+      <div style="color:#7A9CC0;font-size:12px">${S.mySessions.length} Einheiten in ${PROGRAM_WEEKS} Wochen</div>
+    </div>
+    ${coachNote}
+    <div class="card" style="text-align:center;padding:20px">
+      <div style="color:#7A9CC0;font-size:13px;margin-bottom:12px">Möchtest du das Programm wiederholen?</div>
+      <button class="btn" style="background:${CI.accent}" onclick="set({mySessions:[],screen:'start'})">Neu starten</button>
+    </div>
+  </div>${footer()}`;
+
+  const nextSuggestion=`<div class="next-tag">
+    <div style="font-size:24px">${nextDay==="A"?"🔵":"🟢"}</div>
+    <div style="flex:1">
+      <div style="color:#fff;font-weight:700;font-size:14px">Als nächstes: ${nextWo.label}</div>
+      <div style="color:#7A9CC0;font-size:11px">${nextWo.subtitle}</div>
+    </div>
+    <button class="btn-sm" style="background:${nextWo.color}20;color:${nextWo.color};border-color:${nextWo.color}40" onclick="startWorkout('${nextDay}')">START →</button>
+  </div>`;
+
+  const cards=["A","B"].map(t=>{
+    const wo=WORKOUTS[t];const done=doneToday(t);
+    const lastS=[...S.mySessions].reverse().find(s=>s.type===t);
+    const cs=done?`background:${CI.green};border-color:${CI.green}`:"border-color:#2A3A55";
+    const isNext=t===nextDay;
+    return`<div class="card card-${t.toLowerCase()}" style="${isNext?"":"opacity:0.7"}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="check" style="${cs}">${done?"<span style='color:#fff;font-size:13px'>✓</span>":""}</div>
+        <div style="flex:1">
+          <div style="color:#fff;font-weight:800;font-size:15px">${wo.label}${isNext?" <span style='color:"+wo.color+";font-size:11px'>← jetzt</span>":""}</div>
+          <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${wo.subtitle}${lastS?` · zuletzt ${fmt(lastS.date)}${lastS.intensity?" "+lastS.intensity:""}`:""}</div>
+        </div>
+        <button class="btn-sm" style="background:${wo.color}20;color:${wo.color};border-color:${wo.color}40" onclick="startWorkout('${t}')">${done?"Nochmal":"START"}</button>
+      </div>
+    </div>`;
+  }).join("");
+
+  const recent=S.mySessions.length?`<div style="margin-top:16px">
+    <span class="lbl">Letzte Einheiten</span>
+    ${[...S.mySessions].reverse().slice(0,5).map(s=>{
+      const total=Object.values(s.exercises||{}).reduce((sum,ex)=>{const r=(ex.sets||[]).map(Number).filter(n=>n>0);return sum+r.reduce((a,b)=>a+b,0)},0);
+      return`<div class="row">
+        <span style="color:#7A9CC0;font-size:12px">${s.date}</span>
+        <span style="color:#D0DCE8;font-size:12px">${total} Wdh ${s.intensity||""}</span>
+        ${tag(WORKOUTS[s.type].label,WORKOUTS[s.type].color)}
+      </div>${s.note?`<div style="color:#7A9CC0;font-size:11px;padding:3px 0 6px;font-style:italic">"${s.note}"</div>`:""}`;
+    }).join("")}
+  </div>`:"";
+
+  return`${hdr("ATHLETEN TRACKER",S.athleteName+" · "+today,"","<button class='btn-sm' style='background:#2A3A55;color:#7A9CC0;border-color:#2A3A55;font-size:10px' onclick=\"set({athleteName:'',nameInput:'',mySessions:[],myNote:''})\">↩</button>")}
+  <div class="body">
+    <div class="card" style="margin-bottom:14px">
+      <div style="display:flex;margin-bottom:10px">
+        <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.mySessions.length}</div><div class="stat-l">Einheiten</div></div>
+        <div class="divider"></div>
+        <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.mySessions.filter(s=>s.type==="A").length}</div><div class="stat-l">Tag A</div></div>
+        <div class="divider"></div>
+        <div class="stat"><div class="stat-n" style="color:${CI.green}">${S.mySessions.filter(s=>s.type==="B").length}</div><div class="stat-l">Tag B</div></div>
+        <div class="divider"></div>
+        <div class="stat"><div class="stat-n" style="color:${CI.light}">W${week}</div><div class="stat-l">Woche</div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:4px">
+        <span style="color:#7A9CC0;font-size:11px">${PROGRAM_WEEKS}-Wochen Programm</span>
+        <span style="color:#7AB8F5;font-size:11px;font-weight:700">${Math.round(weekProg)}%</span>
+      </div>
+      <div class="prog-bar-bg"><div class="prog-bar-fill" style="width:${weekProg}%;background:${CI.accent}"></div></div>
+    </div>
+    ${coachNote}${nextSuggestion}
+    <span class="lbl">Alle Trainingstage</span>
+    ${cards}${recent}
+  </div>${footer()}`;
+}
+
+function renderWorkout(){
+  const wo=WORKOUTS[S.activeType];
+  if(S.saved){
+    const progCards=Object.entries(S.progResults).map(([exId,p])=>{
+      if(!p||p.level==="ok")return"";
+      const wo=WORKOUTS[S.activeType];
+      const ex=wo.exercises.find(e=>e.id===exId);
+      const bc=p.level==="increase"?CI.green:CI.orange;
+      return`<div class="card" style="border-left:3px solid ${bc};margin-bottom:8px">
+        <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:4px">${ex.name}</div>
+        <div style="background:${bc}18;border:1px solid ${bc}40;border-radius:8px;padding:8px 10px;font-size:12px;font-weight:600;color:${bc}">${p.msg}</div>
+      </div>`;
+    }).join("");
+    return`${hdr(wo.label+" · Abgeschlossen",wo.subtitle)}
+    <div class="body">
+      <div style="text-align:center;padding:20px 0 16px">
+        <div style="font-size:50px;margin-bottom:12px">💪</div>
+        <div style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px">Stark, ${S.athleteName}!</div>
+        <div style="color:#7A9CC0;font-size:13px;margin-bottom:20px">Wie war die Intensität heute?</div>
+      </div>
+      <div class="emoji-row">
+        ${[["😅","Leicht"],["💪","Gut"],["🔥","Intensiv"]].map(([e,l])=>`
+          <button class="emoji-btn${S.intensity===e?" selected":""}" onclick="set({intensity:'${e}'})">
+            <div>${e}</div><div style="font-size:10px;color:#7A9CC0;margin-top:4px">${l}</div>
+          </button>`).join("")}
+      </div>
+      ${progCards?`<div style="margin-bottom:16px"><span class="lbl">Progression für nächste Einheit</span>${progCards}</div>`:""}
+      <div style="margin-bottom:16px">
+        <label class="lbl">Notiz (optional)</label>
+        <input class="inp" id="session_note_inp" placeholder="z.B. Knie etwas empfindlich heute..." value="${S.sessionNote||""}" oninput="S.sessionNote=this.value">
+      </div>
+      <button class="btn" style="background:${wo.color}" onclick="finalSave()">Speichern & weiter ✓</button>
+    </div>${footer()}`;
+  }
+
+  const exCards=wo.exercises.map(ex=>{
+    const e=S.form[ex.id]||{sets:Array(ex.sets).fill(""),weight:""};
+    const ra=e.sets.map(Number).filter(n=>n>0);
+    const ar=ra.length?avg(ra):null;
+    const isBand=ex.unit==="Band";
+    const showInfo=S.showInfo[ex.id];
+
+    const wf=isBand?`<div style="margin-bottom:10px">
+      <label class="lbl">Band-Stärke</label>
+      <input class="inp" id="w_${ex.id}" type="text" placeholder="${e.weight?'Vorschlag: '+e.weight:'leicht / mittel / stark'}" value="${e.weight||""}" oninput="upW('${ex.id}',this.value)">
+      ${e.weight?`<div style="color:#7A9CC0;font-size:11px;text-align:center;margin-top:3px">Vorschlag aus letzter Einheit: <span style="color:${CI.accent}">${e.weight}</span></div>`:""}
+    </div>`:"";
+
+    const si=`<div class="sets-row">${e.sets.map((v,i)=>{
+      const n=Number(v);
+      const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;
+      return`<div class="set-col">
+        <div class="set-lbl">S${i+1}</div>
+        <input class="inp-sm" id="set_${ex.id}_${i}" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.targetReps}" value="${v}" oninput="upS('${ex.id}',${i},this.value)">
+      </div>`;
+    }).join("")}</div>`;
+
+    const infoPanel=showInfo?`<div class="ex-info">
+      <div class="ex-info-title">📋 Ausführung</div>
+      ${ex.steps.map(s=>`<div class="ex-info-step">${s}</div>`).join("")}
+      <div class="ex-info-title" style="margin-top:10px">Progression</div>
+      ${ex.progressions.map(p=>`<div class="ex-info-prog">${p}</div>`).join("")}
+      <div><a href="${ex.video}" target="_blank" class="ex-link">▶ Video-Anleitung auf YouTube</a></div>
+    </div>`:"";
+
+    const bwProgHint=ex.unit==="BW"&&e.targetLevel&&e.targetLevel.startsWith("progression_")
+      ?`<div style="background:${CI.green}18;border:1px solid ${CI.green}40;border-radius:8px;padding:6px 10px;margin-bottom:10px;color:${CI.green};font-size:11px;font-weight:600">🚀 Nächste Stufe: ${ex.progressions[1]||ex.progressions[0]}</div>`
+      :"";
+
+    return`<div class="card card-${S.activeType.toLowerCase()}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px">
+        <div style="flex:1">
+          <div style="color:#fff;font-weight:700;font-size:14px">${ex.name}</div>
+          <div style="color:#7A9CC0;font-size:11px;margin-top:2px">Ziel: ${ex.sets}×${ex.targetReps} ${ex.unit==="Sek"?"Sek":"Wdh"}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px">
+          <span id="avg_${ex.id}" style="color:${wo.color};font-weight:800;font-size:18px">${ar!==null?"⌀"+ar:""}</span>
+          <button onclick="toggleInfo('${ex.id}')" style="background:${showInfo?wo.color+"30":CI.sep+"40"};border:1px solid ${showInfo?wo.color+"60":"transparent"};border-radius:6px;padding:4px 8px;color:${showInfo?wo.color:CI.muted};font-size:10px;cursor:pointer">${showInfo?"▲":"💡 Info"}</button>
+        </div>
+      </div>
+      ${bwProgHint}
+      ${infoPanel}
+      ${wf}
+      <label class="lbl">Wdh pro Satz</label>
+      ${si}
+      <div id="tags_${ex.id}" class="tags-row">${ra.length?`
+        ${e.sets.map((v,i)=>{const n=Number(v);if(!n)return"";const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join("")}
+        ${ar?"<span style='color:#7A9CC0;font-size:12px'>→</span>"+tag("⌀"+ar,wo.color):""}
+      `:""}</div>
+    </div>`;
+  }).join("");
+
+  return`${hdr(wo.label+" · "+S.athleteName,wo.subtitle,"set({screen:'start'})")}
+  <div class="body">
+    ${exCards}
+    <button class="btn" style="background:${wo.color}" onclick="workoutDone()">Fertig – Intensität eintragen →</button>
+  </div>${footer()}`;
+}
+
+function renderCoachLogin(){
+  return`${hdr("Coach-Zugang","Thorben Reimer","set({screen:'start'})")}
+  <div class="body" style="padding-top:24px">
+    <div class="hero" style="margin-bottom:20px">
+      <img src="${LOGO}" style="height:50px;margin-bottom:10px" onerror="this.style.display='none'">
+      <div style="color:#fff;font-size:17px;font-weight:800">Coach Dashboard</div>
+      <div style="color:#7A9CC0;font-size:12px">Performance Tracking · Athleten</div>
+    </div>
+    <label class="lbl">Coach-Code</label>
+    <input class="inp" type="password" style="text-align:center;letter-spacing:4px;font-size:18px;margin-bottom:12px" placeholder="••••••••" value="${S.coachInput}" oninput="S.coachInput=this.value" onkeydown="if(event.key==='Enter')coachLogin()">
+    ${S.coachError?`<div style="color:${CI.red};font-size:12px;text-align:center;margin-bottom:10px">${S.coachError}</div>`:""}
+    <button class="btn" style="background:${CI.accent}" onclick="coachLogin()">Einloggen →</button>
+    <button class="btn btn-outline" onclick="set({screen:'start'})">Zurück</button>
+  </div>${footer()}`;
+}
+
+function renderCoach(){
+  if(S.selectedAthlete){
+    const athlete=S.coachData.find(a=>a.name===S.selectedAthlete);
+    const sessions=athlete?athlete.sessions:[];
+    const week=getProgramWeek(sessions);
+    const editing=S.editingNote===S.selectedAthlete;
+
+    const coachNoteSection=`<div class="coach-note" style="margin-bottom:12px">
+      <div style="color:#7AB8F5;font-size:11px;font-weight:700;margin-bottom:6px">💬 Deine Nachricht an ${S.selectedAthlete}</div>
+      ${editing?`
+        <textarea class="inp" id="coach_note_ta" rows="3" style="resize:none;font-size:13px" oninput="S.coachNoteEdit=this.value">${S.coachNoteEdit}</textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn-sm" style="background:${CI.accent};color:#fff;border-color:${CI.accent};flex:1" onclick="saveCoachNoteF()">Speichern</button>
+          <button class="btn-sm" style="background:transparent;color:#7A9CC0;border-color:#2A3A55;flex:1" onclick="set({editingNote:null})">Abbrechen</button>
+        </div>`:`
+        <div style="color:#D0DCE8;font-size:13px;min-height:24px">${athlete.note||"<span style='color:#2A3A55'>Noch keine Nachricht</span>"}</div>
+        <button class="btn-sm" style="background:#378ADD20;color:#7AB8F5;border-color:#378ADD40;margin-top:8px" onclick="set({editingNote:'${S.selectedAthlete}',coachNoteEdit:'${(athlete.note||"").replace(/'/g,"")}'})">✏️ Bearbeiten</button>`}
+    </div>`;
+
+    const sessionRows=[...sessions].reverse().map(s=>{
+      const total=Object.values(s.exercises||{}).reduce((sum,ex)=>{const r=(ex.sets||[]).map(Number).filter(n=>n>0);return sum+r.reduce((a,b)=>a+b,0)},0);
+      return`<div class="row">
+        <span style="color:#7A9CC0;font-size:12px">${s.date}</span>
+        <span style="color:#D0DCE8;font-size:12px">${total} Wdh ${s.intensity||""} ${s.note?"📝":""}</span>
+        ${tag(WORKOUTS[s.type].label,WORKOUTS[s.type].color)}
+      </div>${s.note?`<div style="color:#7A9CC0;font-size:11px;padding:3px 0 6px;font-style:italic">"${s.note}"</div>`:""}`;
+    }).join("");
+
+    const charts=["A","B"].map(t=>{
+      const wo=WORKOUTS[t];
+      if(!sessions.some(s=>s.type===t))return"";
+      return`<div style="margin-top:12px">
+        <span class="lbl" style="color:${wo.color}">${wo.label} · ${wo.subtitle}</span>
+        ${wo.exercises.map(ex=>{
+          const data=buildData(sessions,ex.id);if(!data.length)return"";
+          const latest=data[data.length-1];
+          return`<div class="card card-${t.toLowerCase()}">
+            <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:6px">${ex.name}</div>
+            <div style="color:#7A9CC0;font-size:11px;margin-bottom:8px">${data.length} Einh. · ⌀ zuletzt: <span style="color:${wo.color}">${latest.avg}</span></div>
+            ${data.length>=2?svgLine(data,"avg",wo.color):"<div style='color:#7A9CC0;font-size:11px'>Mehr Einheiten nötig</div>"}
+          </div>`;
+        }).join("")}
+      </div>`;
+    }).join("");
+
+    return`${hdr(S.selectedAthlete,`${sessions.length} Einheiten · W${week}/${PROGRAM_WEEKS}`,"set({selectedAthlete:null,editingNote:null})")}
+    <div class="body">
+      ${coachNoteSection}
+      <span class="lbl">Sessions</span>
+      ${sessionRows||"<div style='color:#7A9CC0;padding:10px 0'>Noch keine Einheiten.</div>"}
+      ${charts}
+    </div>${footer()}`;
+  }
+
+  const today=todayKey();
+  const d=new Date();d.setDate(d.getDate()-6);
+  const weekAgo=d.toISOString().split("T")[0];
+  const sorted=[...S.coachData].sort((a,b)=>{
+    const la=[...a.sessions].reverse()[0];const lb=[...b.sessions].reverse()[0];
+    if(!la)return 1;if(!lb)return -1;
+    return lb.date.localeCompare(la.date);
+  });
+
+  const athleteCards=sorted.length?sorted.map(a=>{
+    const trainedToday=a.sessions.some(s=>s.date===today);
+    const thisWeek=a.sessions.filter(s=>s.date>=weekAgo).length;
+    const last=[...a.sessions].reverse()[0];
+    const bc=trainedToday?CI.green:CI.sep;
+    const week=getProgramWeek(a.sessions);
+    return`<div class="card" style="border-left:3px solid ${bc};cursor:pointer" onclick="set({selectedAthlete:'${a.name}',editingNote:null})">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="avatar" style="background:${bc}30;border:2px solid ${bc}">${a.name[0].toUpperCase()}</div>
+          <div>
+            <div style="color:#fff;font-weight:700;font-size:14px">${a.name}${a.note?" 💬":""}</div>
+            <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${a.sessions.length} Einh. · W${week}/${PROGRAM_WEEKS} · 7T: <span style="color:${thisWeek>=3?CI.green:thisWeek>=1?CI.orange:CI.red}">${thisWeek}×</span>${last&&last.intensity?" · "+last.intensity:""}</div>
+          </div>
+        </div>
+        <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+          ${tag(trainedToday?"Heute ✓":"–",trainedToday?CI.green:CI.muted)}
+          ${last?`<span style="color:#7A9CC0;font-size:10px">${fmt(last.date)}</span>`:""}
+        </div>
+      </div>
+    </div>`;
+  }).join(""):`<div style="text-align:center;padding:40px 20px">
+    <div style="font-size:40px;margin-bottom:12px">👥</div>
+    <div style="color:#7A9CC0;font-size:14px">Noch keine Athleten-Daten.</div>
+  </div>`;
+
+  return`${hdr("Coach Dashboard",`${S.coachData.length} Athleten · ${today}`,"","<button onclick='refreshCoach()' style='background:none;border:none;color:#7A9CC0;font-size:18px;cursor:pointer;padding:4px'>↻</button>")}
+  <div class="body">
+    <div class="card" style="display:flex;margin-bottom:14px">
+      <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.coachData.length}</div><div class="stat-l">Athleten</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="stat-n" style="color:${CI.green}">${S.coachData.filter(a=>a.sessions.some(s=>s.date===today)).length}</div><div class="stat-l">Heute</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="stat-n" style="color:${CI.orange}">${S.coachData.reduce((s,a)=>s+a.sessions.length,0)}</div><div class="stat-l">Einh. gesamt</div></div>
+    </div>
+    <span class="lbl" style="margin-bottom:10px">Athleten · zuletzt aktiv</span>
+    ${athleteCards}
+  </div>${footer()}`;
+}
+
+function render(){
+  const app=document.getElementById("app");
+  if(S.screen==="start")app.innerHTML=renderStart();
+  else if(S.screen==="workout")app.innerHTML=renderWorkout();
+  else if(S.screen==="coachLogin")app.innerHTML=renderCoachLogin();
+  else if(S.screen==="coach")app.innerHTML=renderCoach();
+}
+
+// ── EVENT HANDLERS ──
+window.startAthlete=()=>{
+  if(!S.nameInput.trim())return;
+  const name=S.nameInput.trim();
+  const data=loadAthlete(name);
+  set({athleteName:name,mySessions:data.sessions||[],myNote:data.note||"",screen:"start"});
+};
+window.startWorkout=t=>{
+  const last=[...S.mySessions].reverse().find(s=>s.type===t);
+  const init={};
+  WORKOUTS[t].exercises.forEach(ex=>{
+    const lastEx=last?.exercises?.[ex.id];
+    // Use suggested next level if available, else last weight
+    const preWeight=lastEx?.suggestedNext&&!lastEx.suggestedNext.startsWith("progression_")
+      ?lastEx.suggestedNext
+      :(lastEx?.weight||"");
+    init[ex.id]={sets:Array(ex.sets).fill(""),weight:preWeight,targetLevel:lastEx?.suggestedNext||""};
+  });
+  set({form:init,activeType:t,saved:false,intensity:null,sessionNote:"",progResults:{},screen:"workout",showInfo:{}});
+};
+
+// INPUT FIX: Don't call render() – only update DOM directly
+window.upW=(id,val)=>{
+  S.form[id]={...S.form[id],weight:val};
+  // No render() – input keeps focus
+};
+window.upS=(id,i,val)=>{
+  const s=[...S.form[id].sets];
+  s[i]=val;
+  S.form[id]={...S.form[id],sets:s};
+  refreshTagsRow(id); // Only update tags & border colors
+};
+
+window.toggleInfo=id=>{
+  S.showInfo={...S.showInfo,[id]:!S.showInfo[id]};
+  render();
+};
+window.workoutDone=()=>{
+  const wo=WORKOUTS[S.activeType];
+  const results={};
+  const enriched={...S.form};
+  wo.exercises.forEach(ex=>{
+    const e=S.form[ex.id];
+    const p=calcProg(ex,e.sets,e.weight||e.targetLevel||"");
+    results[ex.id]=p;
+    if(p&&p.nextLevel)enriched[ex.id]={...e,suggestedNext:p.nextLevel};
+  });
+  set({saved:true,progResults:results,form:enriched});
+};
+window.finalSave=()=>{
+  const session={date:todayKey(),type:S.activeType,exercises:S.form,intensity:S.intensity||"",note:S.sessionNote||""};
+  const updated=[...S.mySessions.filter(s=>!(s.date===session.date&&s.type===session.type)),session];
+  const data=loadAthlete(S.athleteName);
+  data.sessions=updated;
+  saveAthlete(S.athleteName,data);
+  set({mySessions:updated,screen:"start",saved:false,intensity:null,sessionNote:""});
+};
+window.coachLogin=()=>{
+  if(S.coachInput===COACH_CODE)set({coachError:"",coachData:getAllAthletes(),screen:"coach"});
+  else set({coachError:"Falscher Code."});
+};
+window.refreshCoach=()=>set({coachData:getAllAthletes()});
+window.saveCoachNoteF=()=>{
+  saveCoachNote(S.selectedAthlete,S.coachNoteEdit);
+  const updated=S.coachData.map(a=>a.name===S.selectedAthlete?{...a,note:S.coachNoteEdit}:a);
+  set({coachData:updated,editingNote:null});
+};
+
+render();
+</script>
+</body>
+</html>
