@@ -159,8 +159,8 @@ function renderWorkout(){
     const isKg=ex.unit==='kg';const isBW=ex.unit==='BW';const sp=S.showProg[ex.id];
     const ps=sp&&ex.progressions?`<div class="prog-steps">${ex.progressions.map(p=>`<div class="prog-step"><span style="color:${wo.color}">→</span> ${p}</div>`).join('')}</div>`:'';
     const wf=!isBW?`<div style="margin-bottom:12px"><label class="lbl">${isKg?'Gewicht (kg)':'Band-Stärke'}</label><input class="inp" type="${isKg?'number':'text'}" inputmode="${isKg?'numeric':'text'}" placeholder="${isKg?(e.weight?'Vorschlag: '+e.weight+'kg':'z.B. 16'):'leicht / mittel / stark'}" value="${e.weight}" oninput="upW('${ex.id}',this.value)">${isKg&&e.weight?`<div style="color:#7A9CC0;font-size:11px;text-align:center;margin-top:3px">Vorschlag: <span style="color:${CI.accent}">${e.weight} kg</span></div>`:''}</div>`:'';
-    const si=`<div class="sets-row">${e.sets.map((v,i)=>{const n=Number(v);const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;return`<div class="set-col"><div class="set-lbl">S${i+1}</div><input class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.targetReps}" value="${v}" oninput="upS('${ex.id}',${i},this.value)"></div>`}).join('')}</div>`;
-    const tr=ra.length?`<div class="tags-row">${e.sets.map((v,i)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')}${ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''}</div>`:'';
+    const si=`<div class="sets-row">${e.sets.map((v,i)=>{const n=Number(v);const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;return`<div class="set-col"><div class="set-lbl">S${i+1}</div><input id="set_${ex.id}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.targetReps}" value="${v}" oninput="upS('${ex.id}',${i},this.value)"></div>`}).join('')}</div>`;
+    const tr=ra.length?`<div id="tags_${ex.id}" class="tags-row">${e.sets.map((v,i)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')}${ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''}</div>`:`<div id="tags_${ex.id}" class="tags-row"></div>`;
     return`<div class="card" style="border-left:3px solid ${wo.color}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">Ziel: ${ex.sets}×${ex.targetReps} ${ex.unit==='Sek'?'Sek':'Wdh'}</div></div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${ar!==null?`<div style="color:${wo.color};font-weight:800;font-size:18px">⌀${ar}</div>`:''}<button class="btn-sm" style="background:#7A9CC020;color:#7A9CC0;border-color:#2A3A55;font-size:10px;padding:3px 8px" onclick="togP('${ex.id}')">${sp?'▲':'▼ Stufen'}</button></div></div>${ps}${wf}<label class="lbl">Wdh pro Satz</label>${si}${tr}${lh?pbox(lh):''}</div>`;
   }).join('');
   return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div>
@@ -201,8 +201,24 @@ window.startWorkout=t=>{
   WORKOUTS[t].exercises.forEach(ex=>{const le=last?.exercises?.[ex.id];init[ex.id]={weight:le?.suggestedNextWeight??le?.weight??'',sets:Array(ex.sets).fill('')}});
   set({form:init,activeType:t,saved:false,progResults:{},showProg:{},view:'workout'});
 };
-window.upW=(id,val)=>{S.form[id]={...S.form[id],weight:val};render()};
-window.upS=(id,i,val)=>{const s=[...S.form[id].sets];s[i]=val;S.form[id]={...S.form[id],sets:s};render()};
+window.upW=(id,val)=>{S.form[id]={...S.form[id],weight:val}};
+window.upS=(id,i,val)=>{
+  const s=[...S.form[id].sets];s[i]=val;S.form[id]={...S.form[id],sets:s};
+  // Update only colors and tags without full re-render
+  const wo=WORKOUTS[S.activeType];if(!wo)return;
+  const ex=wo.exercises.find(e=>e.id===id);if(!ex)return;
+  const e=S.form[id];
+  const ra=e.sets.map(Number).filter(n=>n>0);
+  const ar=ra.length?avg(ra):null;
+  e.sets.forEach((v,j)=>{
+    const inp=document.getElementById('set_'+id+'_'+j);if(!inp)return;
+    const n=Number(v);
+    inp.style.borderColor=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;
+  });
+  const tr=document.getElementById('tags_'+id);
+  if(tr)tr.innerHTML=ra.length?e.sets.map((v,j)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')+(ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''):'';
+  const avgEl=document.getElementById('avg_'+id);if(avgEl)avgEl.textContent=ar!==null?'⌀'+ar:'';
+};
 window.togP=id=>{S.showProg={...S.showProg,[id]:!S.showProg[id]};render()};
 window.saveWo=()=>{
   const wo=WORKOUTS[S.activeType];const results={};const enriched={...S.form};
