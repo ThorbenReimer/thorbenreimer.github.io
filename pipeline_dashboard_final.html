@@ -198,6 +198,14 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .rp-rhythm-txt{font-size:13px;color:var(--text)}
 .rp-reminder{background:#E6F1FB;border-left:3px solid #378ADD;border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:13px;color:#0C447C;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
 
+
+.pot-inp{font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none}
+.pot-inp:focus{border-color:var(--c-link)}
+#pipeline-tbody tr{border-top:0.5px solid var(--border)}
+#pipeline-tbody tr:hover{background:var(--surface2)}
+#potkunden-tbody tr{border-top:0.5px solid var(--border)}
+#potkunden-tbody tr:hover{background:var(--surface2)}
+
 @media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{display:none}.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
 
 .rp-mtab{font-family:var(--font);font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;border:0.5px solid var(--border-md);background:transparent;color:var(--muted);cursor:pointer;transition:all .12s}
@@ -249,6 +257,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <button class="nav-item" id="nav-tags" onclick="goView('tags')">
     <span class="nav-left"><span style="font-size:14px">&#127991;</span> Nach Tag</span>
     <span class="nav-count" id="cnt-tags">-</span>
+  </button>
+  <button class="nav-item" id="nav-umsatz" onclick="goView('umsatz')">
+    <span class="nav-left"><span style="font-size:14px">💰</span> Umsatz</span>
+    <span class="nav-count" id="cnt-umsatz">-</span>
   </button>
   <button class="nav-item" id="nav-pipeline" onclick="goView('pipeline')">
     <span class="nav-left"><span style="font-size:14px">&#128202;</span> Pipeline</span>
@@ -317,6 +329,73 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div class="rp-rhythm-row"><span class="rp-rhythm-week">Woche 2</span><span class="rp-rhythm-txt">Analogie Sport &amp; Finanzen — beide Zielgruppen</span></div>
       <div class="rp-rhythm-row"><span class="rp-rhythm-week">Woche 3</span><span class="rp-rhythm-txt">Firmenkunden-Thema — gezielt</span></div>
       <div class="rp-rhythm-row"><span class="rp-rhythm-week">Woche 4</span><span class="rp-rhythm-txt">Privatkunden-Thema — gezielt</span></div>
+    </div>
+  </div>
+
+  
+  <div id="view-umsatz" style="display:none">
+    <div class="page-header">
+      <h2>Umsatz & Pipeline</h2>
+      <span class="page-date" id="dl-umsatz"></span>
+    </div>
+
+    <!-- Monatsumsatz -->
+    <div style="margin-bottom:1.5rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <h3 style="font-size:14px;font-weight:600;color:var(--text)">Monatsumsatz (Einheiten)</h3>
+        <button onclick="addMonatUmsatz()" class="btn-dark" style="font-size:12px;padding:5px 12px">📝 Umsatz pflegen</button>
+      </div>
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem">
+        <canvas id="umsatzChart" height="120"></canvas>
+      </div>
+      <div id="umsatz-monat-editor" style="display:none;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);margin-top:8px"></div>
+      <div id="umsatz-jahres-sum" style="margin-top:.5rem;font-size:13px;color:var(--muted);text-align:right"></div>
+    </div>
+
+    <!-- Aktive Pipeline -->
+    <div style="margin-bottom:1.5rem">
+      <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:.75rem">
+        Aktive Pipeline <span style="font-weight:400;color:var(--muted);font-size:12px">(Status: Neu / Analyse / Angebot)</span>
+      </h3>
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:13px" id="pipeline-table">
+          <thead>
+            <tr style="background:var(--surface2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">
+              <th style="padding:8px 12px;text-align:left;font-weight:500">Kunde</th>
+              <th style="padding:8px 12px;text-align:left;font-weight:500">Status</th>
+              <th style="padding:8px 12px;text-align:right;font-weight:500">Potenzial (EH)</th>
+              <th style="padding:8px 12px;text-align:left;font-weight:500">Notiz</th>
+            </tr>
+          </thead>
+          <tbody id="pipeline-tbody"></tbody>
+          <tfoot id="pipeline-tfoot"></tfoot>
+        </table>
+      </div>
+    </div>
+
+    <!-- Potentialkunden -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <h3 style="font-size:14px;font-weight:600;color:var(--text)">Potentialkunden & Warteliste</h3>
+        <button onclick="addPotKunde()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufügen</button>
+      </div>
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead>
+            <tr style="background:var(--surface2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">
+              <th style="padding:8px 12px;text-align:left;font-weight:500">Name</th>
+              <th style="padding:8px 12px;text-align:left;font-weight:500">Zeitraum</th>
+              <th style="padding:8px 12px;text-align:right;font-weight:500">Potenzial (EH)</th>
+              <th style="padding:8px 12px;text-align:left;font-weight:500">Notiz</th>
+              <th style="padding:8px 12px;width:40px"></th>
+            </tr>
+          </thead>
+          <tbody id="potkunden-tbody"></tbody>
+        </table>
+        <div id="potkunden-empty" style="padding:16px;text-align:center;color:var(--muted);font-size:13px;display:none">
+          Noch keine Potentialkunden eingetragen.
+        </div>
+      </div>
     </div>
   </div>
 
@@ -396,6 +475,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+
+
+
+
 var today=new Date().toISOString().split('T')[0];
 var todayFmt=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 ['dl1','dl2','dl3','dl-rp'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=todayFmt;});
@@ -910,17 +993,18 @@ function updateCounts(){
 }
 function goView(v){
   sf=null;curView=v;
-  ['heute','redaktion','tags','pipeline','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n===v?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
+  ['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n===v?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
   renderSB();
   if(v==='pipeline')renderPipeline();
+  else if(v==='umsatz'){renderUmsatz();}
   else if(v==='alle'){document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);}
   else if(v==='tags')renderTagView();
   else if(v==='redaktion')renderRP();
   else renderHeute();
   updateCounts();
 }
-function goFilter(s){sf=s;curView='alle';['heute','redaktion','tags','pipeline','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.remove('active');});renderSB();document.getElementById('alle-title').textContent=getSt(s).label;renderKunden(s);}
-function goKunde(kid){sf=null;curView='alle';['heute','redaktion','tags','pipeline','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n==='alle');});renderSB();document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);setTimeout(function(){var e=document.getElementById('kunde-'+kid);if(e){e.scrollIntoView({behavior:'smooth',block:'center'});openCards[kid]=true;renderKunden(null);}},100);}
+function goFilter(s){sf=s;curView='alle';['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.remove('active');});renderSB();document.getElementById('alle-title').textContent=getSt(s).label;renderKunden(s);}
+function goKunde(kid){sf=null;curView='alle';['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n==='alle');});renderSB();document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);setTimeout(function(){var e=document.getElementById('kunde-'+kid);if(e){e.scrollIntoView({behavior:'smooth',block:'center'});openCards[kid]=true;renderKunden(null);}},100);}
 function setHFilter(type,val){
   if(type==='prio'){hPrioF=val;['all','1','2','3','4'].forEach(function(v){var el=document.getElementById('fp-'+v);if(el)el.classList.toggle('active',v===val);});}
   else{hTagF=val;var ab=document.getElementById('ft-all');if(ab)ab.classList.toggle('active',val==='all');var bs=document.querySelectorAll('.htagbtn');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('active',bs[i].getAttribute('data-t')===val);}
@@ -1272,6 +1356,262 @@ doBackupReminder();
 window.addEventListener('beforeunload',function(){
   try{var data={stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,rpPosts:rpPosts,exportedAt:new Date().toISOString()};localStorage.setItem('autoBackup',JSON.stringify(data));localStorage.setItem('autoBackupDate',today);}catch(e){}
 });
+// ── UMSATZ MODULE ──────────────────────────────────────────────────
+var UMSATZ_KEY = 'umsatz_v1';
+var POTKUNDEN_KEY = 'potkunden_v1';
+var umsatzData = [];   // [{monat:'2026-01', einheiten:45.5}, ...]
+var potKunden = [];    // [{id,name,zeitraum,einheiten,notiz}, ...]
+var nextPotId = 1;
+var umsatzChartInst = null;
+
+function loadUmsatz(){
+  try{
+    var u=JSON.parse(localStorage.getItem(UMSATZ_KEY));
+    if(u&&u.data)umsatzData=u.data;
+    if(u&&u.potKunden)potKunden=u.potKunden;
+    if(u&&u.nextPotId)nextPotId=u.nextPotId;
+  }catch(e){}
+}
+
+function saveUmsatz(){
+  try{
+    localStorage.setItem(UMSATZ_KEY,JSON.stringify({
+      data:umsatzData,potKunden:potKunden,nextPotId:nextPotId
+    }));
+  }catch(e){}
+}
+
+function renderUmsatz(){
+  // Date label
+  var dl=document.getElementById('dl-umsatz');
+  if(dl)dl.textContent=todayFmt;
+
+  renderUmsatzChart();
+  renderPipelineTable();
+  renderPotKunden();
+
+  // Count offene pipeline
+  var pipeCount=kunden.filter(function(k){
+    return k.status==='neu'||k.status==='analyse'||k.status==='angebot';
+  }).length;
+  var el=document.getElementById('cnt-umsatz');
+  if(el)el.textContent=pipeCount||'-';
+}
+
+function renderUmsatzChart(){
+  var ctx=document.getElementById('umsatzChart');
+  if(!ctx)return;
+
+  // Build last 12 months
+  var months=[];
+  var d=new Date();
+  for(var i=11;i>=0;i--){
+    var dd=new Date(d.getFullYear(),d.getMonth()-i,1);
+    var key=dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0');
+    var lbl=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][dd.getMonth()]+' '+String(dd.getFullYear()).slice(2);
+    var found=umsatzData.filter(function(u){return u.monat===key;})[0];
+    months.push({key:key,lbl:lbl,val:found?found.einheiten:0});
+  }
+
+  var curKey=today.slice(0,7);
+  var colors=months.map(function(m){
+    return m.key===curKey?'#378ADD':'rgba(55,138,221,0.4)';
+  });
+
+  var jahresSum=months.reduce(function(s,m){return s+m.val;},0);
+  var avgVal=months.filter(function(m){return m.val>0;});
+  var avg=avgVal.length>0?(jahresSum/avgVal.length):0;
+  var sumEl=document.getElementById('umsatz-jahres-sum');
+  if(sumEl)sumEl.innerHTML='<span style="margin-right:24px">12-Monats-Summe: <strong>'+jahresSum.toFixed(1)+'</strong> EH</span>'+'<span>Ø Monatsdurchschnitt: <strong style="color:var(--c-link)">'+avg.toFixed(1)+'</strong> EH</span>';
+
+  if(umsatzChartInst)umsatzChartInst.destroy();
+  var muted=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
+  umsatzChartInst=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:months.map(function(m){return m.lbl;}),
+      datasets:[{
+        data:months.map(function(m){return m.val;}),
+        backgroundColor:colors,
+        borderRadius:4,
+        borderSkipped:false
+      }]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(2)+' €';}}}},
+      scales:{
+        y:{beginAtZero:true,ticks:{color:muted,font:{size:11},callback:function(v){return v+' €';}},grid:{color:'rgba(136,135,128,0.1)'}},
+        x:{ticks:{color:muted,font:{size:11}},grid:{display:false}}
+      }
+    }
+  });
+}
+
+function addMonatUmsatz(){
+  var container=document.getElementById('umsatz-monat-editor');
+  if(!container)return;
+  container.style.display=container.style.display==='none'?'block':'none';
+  if(container.style.display==='block')renderMonatEditor();
+}
+function renderMonatEditor(){
+  var container=document.getElementById('umsatz-monat-editor');
+  if(!container)return;
+  var months=[];
+  var d=new Date();
+  for(var i=11;i>=0;i--){
+    var dd=new Date(d.getFullYear(),d.getMonth()-i,1);
+    var key=dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0');
+    var lbl=['Jan','Feb','Mrz','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][dd.getMonth()]+' '+dd.getFullYear();
+    var found=umsatzData.filter(function(u){return u.monat===key;})[0];
+    months.push({key:key,lbl:lbl,val:found?found.einheiten:0});
+  }
+  container.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:12px">'
+    +months.map(function(m){
+      var isCur=m.key===today.slice(0,7);
+      return '<div style="background:var(--surface2);border-radius:var(--radius);padding:8px 10px;border:0.5px solid '+(isCur?'#378ADD':'var(--border)')+'">'
+        +'<div style="font-size:11px;color:'+(isCur?'#378ADD':'var(--muted)')+';margin-bottom:4px;font-weight:'+(isCur?'600':'400')+'">'+(isCur?'▶ ':'')+m.lbl+'</div>'
+        +'<div style="display:flex;align-items:center;gap:4px">'
+        +'<input type="number" step="0.1" min="0" value="'+m.val+'" data-monat="'+m.key+'" '
+        +'onchange="saveMonatVal(this)" '
+        +'style="width:72px;font-family:var(--mono);font-size:14px;font-weight:600;padding:4px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none">'
+        +'<span style="font-size:11px;color:var(--muted)">€</span>'
+        +'</div>'
+        +'</div>';
+    }).join('')
+    +'</div>';
+}
+function saveMonatVal(inp){
+  var monat=inp.getAttribute('data-monat');
+  var num=parseFloat(inp.value)||0;
+  var found=umsatzData.filter(function(u){return u.monat===monat;})[0];
+  if(found){
+    umsatzData=umsatzData.map(function(u){return u.monat===monat?{monat:monat,einheiten:num}:u;});
+  }else{
+    umsatzData.push({monat:monat,einheiten:num});
+  }
+  saveUmsatz();
+  renderUmsatzChart();
+}
+
+function renderPipelineTable(){
+  var tbody=document.getElementById('pipeline-tbody');
+  var tfoot=document.getElementById('pipeline-tfoot');
+  if(!tbody)return;
+
+  var pipeKunden=kunden.filter(function(k){
+    return k.status==='neu'||k.status==='analyse'||k.status==='angebot';
+  }).sort(function(a,b){return a.name.localeCompare(b.name);});
+
+  var totalPot=0;
+  tbody.innerHTML=pipeKunden.map(function(k){
+    var s=getSt(k.status);
+    var pot=k.umsatzPot||0;
+    totalPot+=pot;
+    return '<tr>'
+      +'<td style="padding:8px 12px;font-weight:500">'+k.name+'</td>'
+      +'<td style="padding:8px 12px"><span style="font-size:11px;padding:2px 8px;border-radius:20px;background:'+s.color+'22;color:'+s.color+'">'+s.label+'</span></td>'
+      +'<td style="padding:8px 12px;text-align:right">'
+      +'<input type="number" step="0.1" min="0" value="'+pot+'" '
+      +'onchange="updPipelinePot('+k.id+',this.value)" '
+      +'style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none">'
+      +'</td>'
+      +'<td style="padding:8px 12px;color:var(--muted);font-size:12px">'
+      +'<input class="pot-inp" style="width:100%;max-width:200px;font-size:12px;padding:3px 8px" '
+      +'value="'+(k.umsatzNotiz||'')+'" placeholder="Notiz..." '
+      +'onchange="updPipelineNotiz('+k.id+',this.value)">'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+
+  if(pipeKunden.length===0){
+    tbody.innerHTML='<tr><td colspan="4" style="padding:16px;text-align:center;color:var(--muted)">Keine Kunden in Pipeline.</td></tr>';
+  }
+
+  tfoot.innerHTML='<tr style="background:var(--surface2);font-weight:600">'
+    +'<td colspan="2" style="padding:8px 12px;font-size:13px">Gesamt Potenzial</td>'
+    +'<td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:var(--c-link)">'+totalPot.toFixed(1)+' EH</td>'
+    +'<td></td></tr>';
+}
+
+function updPipelinePot(kid,val){
+  var num=parseFloat(val)||0;
+  kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzPot:num}):k;});
+  save();
+  var tfoot2=document.getElementById('pipeline-tfoot');
+  if(tfoot2){
+    var total2=kunden.filter(function(k){return k.status==='neu'||k.status==='analyse'||k.status==='angebot';})
+      .reduce(function(s,k){return s+(k.umsatzPot||0);},0);
+    tfoot2.innerHTML='<tr style="background:var(--surface2);font-weight:600">'
+      +'<td colspan="2" style="padding:8px 12px;font-size:13px">Gesamt Potenzial</td>'
+      +'<td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:var(--c-link)">'+total2.toFixed(1)+' EH</td>'
+      +'<td></td></tr>';
+  }
+}
+
+function updPipelineNotiz(kid,val){
+  kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzNotiz:val}):k;});
+  save();
+}
+
+function renderPotKunden(){
+  var tbody=document.getElementById('potkunden-tbody');
+  var empty=document.getElementById('potkunden-empty');
+  if(!tbody)return;
+
+  if(potKunden.length===0){
+    tbody.innerHTML='';
+    if(empty)empty.style.display='block';
+    return;
+  }
+  if(empty)empty.style.display='none';
+
+  tbody.innerHTML=potKunden.map(function(p){
+    return '<tr>'
+      +'<td style="padding:8px 12px;font-weight:500">'
+      +'<input class="pot-inp" value="'+p.name+'" onchange="updPotKunde('+p.id+',\'name\',this.value)" style="width:140px">'
+      +'</td>'
+      +'<td style="padding:8px 12px">'
+      +'<input class="pot-inp" value="'+(p.zeitraum||'')+'" placeholder="z.B. Q3 2026" onchange="updPotKunde('+p.id+',\'zeitraum\',this.value)" style="width:100px">'
+      +'</td>'
+      +'<td style="padding:8px 12px;text-align:right">'
+      +'<input type="number" step="0.1" min="0" value="'+(p.einheiten||0)+'" onchange="updPotKunde('+p.id+',\'einheiten\',parseFloat(this.value)||0)" style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none">'
+      +'</td>'
+      +'<td style="padding:8px 12px">'
+      +'<input class="pot-inp" value="'+(p.notiz||'')+'" placeholder="Notiz..." onchange="updPotKunde('+p.id+',\'notiz\',this.value)" style="width:100%;max-width:200px;font-size:12px">'
+      +'</td>'
+      +'<td style="padding:8px 12px;text-align:center">'
+      +'<button onclick="delPotKunde('+p.id+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px" title="Löschen">×</button>'
+      +'</td>'
+      +'</tr>';
+  }).join('');
+}
+
+function addPotKunde(){
+  var name=prompt('Name des Potentialkunden:');
+  if(!name||!name.trim())return;
+  potKunden.push({id:nextPotId++,name:name.trim(),zeitraum:'',einheiten:0,notiz:''});
+  saveUmsatz();
+  renderPotKunden();
+}
+
+function updPotKunde(id,field,val){
+  potKunden=potKunden.map(function(p){
+    if(p.id!==id)return p;
+    var upd={};upd[field]=val;
+    return Object.assign({},p,upd);
+  });
+  saveUmsatz();
+}
+
+function delPotKunde(id){
+  if(!confirm('Eintrag löschen?'))return;
+  potKunden=potKunden.filter(function(p){return p.id!==id;});
+  saveUmsatz();
+  renderPotKunden();
+}
+// ── END UMSATZ MODULE ──────────────────────────────────────────────
 </script>
 </body>
 </html>
