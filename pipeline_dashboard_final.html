@@ -342,7 +342,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <!-- Monatsumsatz -->
     <div style="margin-bottom:1.5rem">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h3 style="font-size:14px;font-weight:600;color:var(--text)">Monatsumsatz (Einheiten)</h3>
+        <h3 style="font-size:14px;font-weight:600;color:var(--text)">Monatsumsatz</h3>
         <button onclick="addMonatUmsatz()" class="btn-dark" style="font-size:12px;padding:5px 12px">📝 Umsatz pflegen</button>
       </div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem">
@@ -475,6 +475,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+
 
 
 
@@ -1418,11 +1419,15 @@ function renderUmsatzChart(){
     return m.key===curKey?'#378ADD':'rgba(55,138,221,0.4)';
   });
 
-  var jahresSum=months.reduce(function(s,m){return s+m.val;},0);
+  // Jahressumme = nur aktuelles Kalenderjahr
+  var curYear=today.slice(0,4);
+  var jahresSum=months.filter(function(m){return m.key.slice(0,4)===curYear;})
+    .reduce(function(s,m){return s+m.val;},0);
+  // Durchschnitt = letzte 12 Monate (nur Monate mit Einträgen)
   var avgVal=months.filter(function(m){return m.val>0;});
-  var avg=avgVal.length>0?(jahresSum/avgVal.length):0;
+  var avg=avgVal.length>0?(months.reduce(function(s,m){return s+m.val;},0)/avgVal.length):0;
   var sumEl=document.getElementById('umsatz-jahres-sum');
-  if(sumEl)sumEl.innerHTML='<span style="margin-right:24px">12-Monats-Summe: <strong>'+jahresSum.toFixed(1)+'</strong> EH</span>'+'<span>Ø Monatsdurchschnitt: <strong style="color:var(--c-link)">'+avg.toFixed(1)+'</strong> EH</span>';
+  if(sumEl)sumEl.innerHTML='<span style="margin-right:24px">'+curYear+'-Summe: <strong>'+jahresSum.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</strong> €</span>'+'<span>Ø Monatsdurchschnitt (12 M.): <strong style="color:var(--c-link)">'+avg.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</strong> €</span>';
 
   if(umsatzChartInst)umsatzChartInst.destroy();
   var muted=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
