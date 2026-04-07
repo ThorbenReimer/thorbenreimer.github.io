@@ -278,6 +278,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div id="h-overdue"></div><div id="h-today"></div><div id="h-upcoming"></div>
     <p id="h-empty" style="color:var(--muted);font-size:14px;display:none">Keine Aufgaben fuer diesen Filter.</p>
+    <div id="h-redaktion"></div>
   </div>
 
   <!-- ── REDAKTIONSPLAN VIEW ── -->
@@ -957,6 +958,34 @@ function renderHeute(){
   document.getElementById('h-today').innerHTML=td.length?'<div class=today-sec><h3>Heute</h3>'+td.map(function(t){return mkI(t,'bar-td');}).join('')+'</div>':'';
   document.getElementById('h-upcoming').innerHTML=up.length?'<div class=today-sec><h3>Demnaechst</h3>'+up.map(function(t){return mkI(t,'');}).join('')+'</div>':'';
   document.getElementById('h-empty').style.display=(!od.length&&!td.length&&!up.length)?'':'none';
+  // ── Redaktionsplan Posts heute ──
+  var rpToday=rpPosts.filter(function(p){return p.datum===today&&!p.done;});
+  var rpEl=document.getElementById('h-redaktion');
+  if(rpEl){
+    if(rpToday.length){
+      var kanal={'insta':'📸 Instagram','wa':'💬 WhatsApp','li':'💼 LinkedIn','story':'📖 Story'};
+      rpEl.innerHTML='<div class=today-sec style="margin-top:1rem">'
+        +'<h3 style="display:flex;align-items:center;gap:8px">📅 Social Media heute'
+        +'<span style="font-size:11px;font-weight:400;color:var(--muted);font-family:var(--mono)">'+rpToday.length+' Post'+(rpToday.length>1?'s':'')+'</span></h3>'
+        +rpToday.map(function(p){
+          var badges=(p.kanalTypes||[]).map(function(k){
+            var col=k==='insta'?'#C13584':k==='wa'?'#128C7E':k==='story'?'#185FA5':'#0A66C2';
+            return'<span style="font-size:10px;padding:1px 7px;border-radius:20px;background:'+col+'22;color:'+col+';font-weight:500">'+(kanal[k]||k)+'</span>';
+          }).join(' ');
+          return'<div style="display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);margin-bottom:6px;cursor:pointer" onclick="goView(\'redaktion\')">'
+            +'<input type=checkbox onclick="event.stopPropagation();toggleRP('+p.id+',this)" />'
+            +'<div style="flex:1;min-width:0">'
+            +'<div style="font-size:13px;font-weight:500">'+p.title+'</div>'
+            +'<div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">'+badges+'</div>'
+            +'</div>'
+            +'<span style="font-size:11px;color:var(--muted);font-family:var(--mono)">'+p.zeit+' Uhr</span>'
+            +'</div>';
+        }).join('')
+        +'</div>';
+    } else {
+      rpEl.innerHTML='';
+    }
+  }
   renderHTagBtns();
 }
 function renderTagView(){
