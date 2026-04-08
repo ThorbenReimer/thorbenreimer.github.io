@@ -198,14 +198,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .rp-rhythm-txt{font-size:13px;color:var(--text)}
 .rp-reminder{background:#E6F1FB;border-left:3px solid #378ADD;border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:13px;color:#0C447C;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
 
-
 .pot-inp{font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none}
-.pot-inp:focus{border-color:var(--c-link)}
-#pipeline-tbody tr{border-top:0.5px solid var(--border)}
-#pipeline-tbody tr:hover{background:var(--surface2)}
-#potkunden-tbody tr{border-top:0.5px solid var(--border)}
-#potkunden-tbody tr:hover{background:var(--surface2)}
-
 @media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{display:none}.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
 
 .rp-mtab{font-family:var(--font);font-size:12px;font-weight:500;padding:5px 14px;border-radius:20px;border:0.5px solid var(--border-md);background:transparent;color:var(--muted);cursor:pointer;transition:all .12s}
@@ -290,7 +283,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     </div>
     <div id="h-overdue"></div><div id="h-today"></div><div id="h-upcoming"></div>
     <p id="h-empty" style="color:var(--muted);font-size:14px;display:none">Keine Aufgaben fuer diesen Filter.</p>
-    <div id="h-redaktion"></div>
   </div>
 
   <!-- ── REDAKTIONSPLAN VIEW ── -->
@@ -334,16 +326,11 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
   
   <div id="view-umsatz" style="display:none">
-    <div class="page-header">
-      <h2>Umsatz & Pipeline</h2>
-      <span class="page-date" id="dl-umsatz"></span>
-    </div>
-
-    <!-- Monatsumsatz -->
+    <div class="page-header"><h2>Umsatz & Pipeline</h2><span class="page-date" id="dl-umsatz"></span></div>
     <div style="margin-bottom:1.5rem">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h3 style="font-size:14px;font-weight:600;color:var(--text)">Monatsumsatz</h3>
-        <button onclick="addMonatUmsatz()" class="btn-dark" style="font-size:12px;padding:5px 12px">📝 Umsatz pflegen</button>
+        <h3 style="font-size:14px;font-weight:600">Monatsumsatz</h3>
+        <button onclick="toggleMonatEditor()" class="btn-dark" style="font-size:12px;padding:5px 12px">Umsatz pflegen</button>
       </div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem">
         <canvas id="umsatzChart" height="120"></canvas>
@@ -351,21 +338,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div id="umsatz-monat-editor" style="display:none;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);margin-top:8px"></div>
       <div id="umsatz-jahres-sum" style="margin-top:.5rem;font-size:13px;color:var(--muted);text-align:right"></div>
     </div>
-
-    <!-- Aktive Pipeline -->
     <div style="margin-bottom:1.5rem">
-      <h3 style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:.75rem">
-        Aktive Pipeline <span style="font-weight:400;color:var(--muted);font-size:12px">(Status: Neu / Analyse / Angebot)</span>
-      </h3>
+      <h3 style="font-size:14px;font-weight:600;margin-bottom:.75rem">Aktive Pipeline</h3>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
-        <table style="width:100%;border-collapse:collapse;font-size:13px" id="pipeline-table">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
           <thead>
             <tr style="background:var(--surface2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">
-              <th style="padding:8px 12px;text-align:left;font-weight:500">Kunde</th>
-              <th style="padding:8px 12px;text-align:left;font-weight:500">Status ändern</th>
-              <th style="padding:8px 12px;text-align:right;font-weight:500;color:#378ADD">Sicher (EH)<br><span style="font-size:10px;font-weight:400">Angebot</span></th>
-              <th style="padding:8px 12px;text-align:right;font-weight:500;color:#639922">Möglich (EH)<br><span style="font-size:10px;font-weight:400">Neu / Analyse</span></th>
-              <th style="padding:8px 12px;text-align:left;font-weight:500">Notiz</th>
+              <th style="padding:8px 12px;text-align:left">Kunde</th>
+              <th style="padding:8px 12px;text-align:left">Status</th>
+              <th style="padding:8px 12px;text-align:right;color:#378ADD">Sicher EH</th>
+              <th style="padding:8px 12px;text-align:right;color:#639922">Moeglich EH</th>
+              <th style="padding:8px 12px;text-align:left">Monat</th>
+              <th style="padding:8px 12px;text-align:left">Notiz</th>
             </tr>
           </thead>
           <tbody id="pipeline-tbody"></tbody>
@@ -373,30 +357,25 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </table>
       </div>
     </div>
-
-    <!-- Potentialkunden -->
     <div>
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
-        <h3 style="font-size:14px;font-weight:600;color:var(--text)">Potentialkunden & Warteliste</h3>
-        <button onclick="addPotKunde()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufügen</button>
+        <h3 style="font-size:14px;font-weight:600">Potentialkunden</h3>
+        <button onclick="addPotKunde()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufuegen</button>
       </div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
         <table style="width:100%;border-collapse:collapse;font-size:13px">
           <thead>
-            <tr style="background:var(--surface2);color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em">
-              <th style="padding:8px 12px;text-align:left;font-weight:500">Name</th>
-              <th style="padding:8px 12px;text-align:left;font-weight:500">Zeitraum</th>
-              <th style="padding:8px 12px;text-align:right;font-weight:500;color:#378ADD">Sicher (EH)<br><span style="font-size:10px;font-weight:400">Angebot</span></th>
-              <th style="padding:8px 12px;text-align:right;font-weight:500;color:#639922">Möglich (EH)<br><span style="font-size:10px;font-weight:400">Neu / Analyse</span></th>
-              <th style="padding:8px 12px;text-align:left;font-weight:500">Notiz</th>
+            <tr style="background:var(--surface2);color:var(--muted);font-size:11px;text-transform:uppercase">
+              <th style="padding:8px 12px;text-align:left">Name</th>
+              <th style="padding:8px 12px;text-align:left">Zeitraum</th>
+              <th style="padding:8px 12px;text-align:right">Potenzial EH</th>
+              <th style="padding:8px 12px;text-align:left">Notiz</th>
               <th style="padding:8px 12px;width:40px"></th>
             </tr>
           </thead>
           <tbody id="potkunden-tbody"></tbody>
         </table>
-        <div id="potkunden-empty" style="padding:16px;text-align:center;color:var(--muted);font-size:13px;display:none">
-          Noch keine Potentialkunden eingetragen.
-        </div>
+        <div id="potkunden-empty" style="padding:16px;text-align:center;color:var(--muted);font-size:13px;display:none">Noch keine Potentialkunden.</div>
       </div>
     </div>
   </div>
@@ -480,13 +459,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 
 
-
-
-
-
-
-
-
 var today=new Date().toISOString().split('T')[0];
 var todayFmt=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 ['dl1','dl2','dl3','dl-rp'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=todayFmt;});
@@ -500,196 +472,8 @@ var selected={},openCards={};
 var hPrioF='all',hTagF='all';
 
 // ── REDAKTIONSPLAN DATA ──
-var DEF_POSTS=[
-  {id:1,title:'Provokation — Einstieg',zielgruppe:'beide',typ:'Provokation',
-   kachel:'Du trainierst 3x die Woche.\n\nDeine Finanzen — <seit Jahren nicht.>',
-   datum:'2026-04-01',zeit:'07:00',done:true,kanalTypes:['insta','wa'],
-   caption:'Ein Athlet, der nur trainiert aber nie regeneriert — bricht zusammen.\n\nEin Mensch, der nur arbeitet aber nie in seine Finanzen investiert — auch.\n\nBeides braucht System. Beides braucht einen Plan.\n\nIch mache aus Unternehmern Finanzathleten.\n\nSchreib mir einfach kurz. 👇',
-   hashtags:'#Finanzathlet #Firmenkundenberater #PerformanceCoaching #Vermögensaufbau #Finanzberatung #MindsetUndGeld #Mittelstand #GeldUndLeistung #FinanzielleFreiheit #coachthorben',
-   captionLI:'Ich treffe fast täglich Menschen, die hart arbeiten — und trotzdem das Gefühl haben, finanziell nicht voranzukommen.\n\nNicht weil das Geld fehlt. Sondern weil das System fehlt.\n\nIm Sport kenne ich das genauso: Ein Athlet ohne System stagniert — egal wie viel Talent er mitbringt.\n\nIch bin Firmenkundenberater bei der DVAG und Performance Coach. Ich verbinde beide Welten — weil sie zusammengehören.\n\nWenn dich das anspricht: Ich bin hier. 👋',
-   canva:['Instagram-Vorlage öffnen','Hintergrund #161e2e, Text weiß, "seit Jahren nicht" in Blau #378ADD','Logo unten rechts, Name unten links','Als PNG exportieren → Post1_Insta.png']},
-  {id:2,title:'Vorstellung — Wer bin ich?',zielgruppe:'beide',typ:'Persönlich',
-   kachel:'Bewegung.\nFinanzen.\n<Beides ist Training.>',
-   datum:'2026-04-08',zeit:'07:00',done:true,kanalTypes:['insta','wa'],
-   caption:'Hi, ich bin Thorben.\n\nVermögensberater. Finanzcoach. Performance-Coach.\n\nIch arbeite mit Unternehmern und Privatpersonen — und verbinde zwei Welten, die eigentlich zusammengehören: körperliche und finanzielle Leistungsfähigkeit.\n\nWas mich antreibt: Die besten Athleten der Welt haben eines gemeinsam — ein System. Einen Plan. Jemanden, der sie begleitet.\n\nGenau das bringe ich in die Finanzberatung.\n\nWenn dich das anspricht — ich bin hier. 👋',
-   hashtags:'#Vorstellung #Finanzcoach #PerformanceCoach #Firmenkundenberater #Finanzathlet #coachthorben #Aichtal #Stuttgart #KörperUndKapital #MeinWeg',
-   captionLI:'Ich werde oft gefragt, was mich antreibt.\n\nDie ehrliche Antwort: Ich habe in 20 Jahren Sport gesehen, was passiert wenn Menschen ein System haben — und was passiert wenn nicht.\n\nDas Gleiche erlebe ich täglich in der Finanzberatung.\n\nWer ein System hat, baut auf. Wer keins hat, tritt auf der Stelle — egal wie viel er verdient.\n\nIch mache aus Menschen Finanzathleten. 💪',
-   canva:['Instagram-Vorlage öffnen','Text: Bewegung. / Finanzen. / Beides ist Training.','Letzten Satz in Blau #378ADD','Export → Post2_Insta.png | WA: gleicher Text + Tagline'],
-   taglineWA:'Dein Plan. Dein Tempo. Dein Ergebnis.',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.','Export → Post2_WA.png']},
-  {id:3,title:'Analogie — Zinseszins & Training',zielgruppe:'beide',typ:'Analogie',
-   kachel:'Zinseszins.\nCompound-Effekt im Training.\n\n<Dasselbe Prinzip.>',
-   datum:'2026-04-15',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
-   caption:'10 Liegestütze täglich — nach einer Woche siehst du nichts.\nNach einem Jahr bist du ein anderer Mensch.\n\n100 € monatlich investiert — nach einem Jahr kaum messbar.\nNach 20 Jahren? Lebensverändernd.\n\nBeide Systeme funktionieren nur mit einem: Konsequenz über Zeit.\n\nWer das versteht, denkt anders über Geld.\nWer das lebt, baut echtes Vermögen auf.\n\nIch arbeite mit Menschen, die beides wollen. 🎯\nLink in der Bio für ein erstes Gespräch.',
-   hashtags:'#Zinseszins #Vermögensaufbau #Finanzathlet #CompoundEffect #Investieren #LangfristigDenken #FinanzielleFreiheit #PerformanceMindset #coachthorben #Mittelstand',
-   captionLI:'Ein Gedanke aus meiner täglichen Arbeit:\n\n100 € monatlich investiert klingen nach wenig. Nach 20 Jahren mit Zinseszins? Lebensverändernd.\n\nDas Prinzip kennen wir aus dem Sport: Wer täglich 20 Minuten trainiert, verändert sich. Nicht sofort — aber unaufhaltsam.\n\nKonsequenz über Zeit schlägt jede Einmalmaßnahme.\n\nWelches System hast du für deine Finanzen?',
-   canva:['Instagram-Vorlage öffnen','Text ersetzen, Dasselbe Prinzip. in Blau #378ADD','Optional: Aufwärtspfeil als Element','Export → Post3_Insta.png | WA: gleicher Text + Tagline'],
-   taglineWA:'Firmenkundenberater & Finanzcoach',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Firmenkundenberater & Finanzcoach','Export → Post3_WA.png']},
-  {id:4,title:'Firmenkunden — Team als Kapital',zielgruppe:'firma',typ:'Expertise',
-   kachel:'Dein Team ist dein\ngrößtes Kapital.\n\n<Schützt du es auch so?>',
-   datum:'2026-04-22',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
-   caption:'Als Unternehmer trägst du Verantwortung.\n\nFür dein Business. Für deine Mitarbeiter. Für deine Familie.\n\nUnd trotzdem: Die meisten Unternehmer haben ihre eigene Absicherung, ihre Liquidität und ihre Altersvorsorge nicht wirklich im Griff.\n\nNicht weil sie es nicht wollen — sondern weil niemand das Ganze zusammendenkt.\n\nGenau das ist meine Arbeit.\n\nInteresse? Schreib mir kurz oder buch direkt einen Termin. 👇',
-   hashtags:'#Firmenkunden #Unternehmer #Mittelstand #Geschäftsführer #Absicherung #Altersvorsorge #Finanzberatung #Firmenkundenberater #coachthorben #Liquidität',
-   captionLI:'Eine Beobachtung aus vielen Gesprächen mit Unternehmern:\n\nDie meisten haben ihre eigene Absicherung, ihre Liquidität und ihre Altersvorsorge nicht wirklich im Griff.\n\nNicht weil sie es nicht wollen. Sondern weil niemand das Ganze zusammendenkt.\n\nGenau das ist meine Arbeit als Firmenkundenberater: Ich denke das Ganze zusammen — für Geschäftsführer und Inhaber im Mittelstand.\n\nWann hast du zuletzt das große Bild angeschaut?',
-   canva:['Instagram-Vorlage öffnen','Text: Dein Team ist dein größtes Kapital. / Schützt du es auch so?','Letzten Satz in Blau #378ADD','Export → Post4_Insta.png | WA: Tagline = Firmenkundenberater & Finanzcoach'],
-   taglineWA:'@coachthorben',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: @coachthorben','Export → Post4_WA.png']},
-  {id:5,title:'Privatkunden — Gehalt vs. Vermögen',zielgruppe:'privat',typ:'Expertise',
-   kachel:'Dein Gehalt ist nicht\ndein Vermögen.\n\n<Der Unterschied zählt.>',
-   datum:'2026-04-29',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
-   caption:'Viele verdienen gut.\n\nAber am Ende des Monats bleibt wenig übrig. Die Altersvorsorge ist unklar. Der Wohntraum bleibt Traum.\n\nDas ist kein Versagen. Das ist fehlende Struktur.\n\nWer im Sport keine Struktur hat, kommt nicht voran — egal wie viel Talent er mitbringt.\n\nMit Geld ist es genauso.\n\nIch helfe Privatpersonen, ein System aufzubauen das wirklich zu ihrem Leben passt.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪',
-   hashtags:'#Privatkunden #Vermögensaufbau #FinanzielleFreiheit #Altersvorsorge #Finanzcoach #Finanzathlet #GeldMitSystem #coachthorben #Absicherung #Ruhestand',
-   captionLI:'Viele meiner Kunden verdienen gut. Sehr gut sogar.\n\nUnd trotzdem: Am Ende des Monats bleibt wenig übrig. Die Altersvorsorge ist unklar. Der Wohntraum bleibt Traum.\n\nDas ist kein Versagen — das ist fehlende Struktur.\n\nIm Sport: Talent ohne Trainingsplan kommt nicht ans Ziel. Mit Geld ist es genauso.\n\nDein Plan. Dein Tempo. Dein Ergebnis.',
-   canva:['Instagram-Vorlage öffnen','Text: Dein Gehalt ist nicht dein Vermögen. / Der Unterschied zählt.','Letzten Satz in Blau #378ADD','Export → Post5_Insta.png | WA: Tagline = Dein Plan. Dein Tempo. Dein Ergebnis.'],
-   taglineWA:'Dein Plan. Dein Tempo. Dein Ergebnis.',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.','Export → Post5_WA.png']},
-  {id:6,title:'Mai Post 1 — Provokation',zielgruppe:'beide',typ:'Provokation',
-   kachel:'Du planst deinen Urlaub.\nDeine Rente —\n<noch nicht.>',
-   datum:'2026-05-06',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
-   caption:'Für den Urlaub: Flüge gebucht, Hotel reserviert, Koffer gepackt.\n\nFür die Rente: Irgendwann. Mal schauen. Wird schon.\n\nDer Unterschied zwischen beidem? Beim Urlaub weißt du wann er ist.\n\nBei der Rente auch — und trotzdem warten die meisten.\n\nIch helfe dir, das zu ändern. Ohne Druck. Mit Plan.\n\nLink in der Bio. 👇',
-   hashtags:'#Altersvorsorge #Ruhestand #Finanzathlet #Finanzplanung #coachthorben #Vorsorge #Mittelstand #FinanzielleFreiheit #Finanzcoach #Vermögensaufbau',
-   captionLI:'Warum planen wir unseren Urlaub auf den Tag genau — aber nicht unseren Ruhestand?\n\nBeim Urlaub wissen wir: wann er beginnt, wie lange er geht, was er kostet.\n\nBei der Rente? Wir wissen nur den möglichen Startpunkt.\n\nProf. Dr. Jochen Ruß vom Institut für Finanz- und Aktuarwissenschaften der Uni Ulm nennt das das Langlebigkeitsrisiko — eines der am meisten unterschätzten finanziellen Risiken.\n\nIch helfe dabei, das zu lösen. Ohne Druck. Mit Plan.',
-   canva:['Instagram-Vorlage öffnen','Text: Du planst deinen Urlaub. / Deine Rente — / noch nicht.','noch nicht. in Blau #378ADD','Export → Post6_Insta.png'],
-   taglineWA:'@coachthorben',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: @coachthorben','Export → Post6_WA.png']},
-  {id:7,title:'Mai Post 2 — Sport-Parallele',zielgruppe:'beide',typ:'Analogie',
-   kachel:'Kein Athlet trainiert\nohne Ziel.\n<Was ist deins?>',
-   datum:'2026-05-13',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
-   caption:'Ein Sprinter weiß: 100m in 10,5 Sekunden.\nEin Marathonläufer weiß: unter 3 Stunden.\n\nBeide trainieren auf ein konkretes Ziel hin.\n\nIn den Finanzen? Die meisten trainieren ins Blaue.\nKein Ziel. Kein Plan. Kein System.\n\nWas wäre dein finanzielles Ziel wenn du es konkret nennen müsstest?\n\nSchreib es in die Kommentare — ich bin gespannt. 👇',
-   hashtags:'#Finanzathlet #Ziele #Finanzplanung #coachthorben #PerformanceMindset #Vermögensaufbau #Finanzcoach #Sport #Motivation #Erfolg',
-   captionLI:'Ein Sprinter weiß: 100m in 10,5 Sekunden.\nEin Marathonläufer weiß: unter 3 Stunden.\n\nBeide trainieren auf ein konkretes Ziel. Jeden Tag. Mit System.\n\nIn der Finanzberatung erlebe ich das Gegenteil: Die meisten Menschen haben kein konkretes finanzielles Ziel. Kein Datum. Keine Zahl. Kein Plan.\n\nWas ist dein finanzielles Ziel, wenn du es konkret nennen müsstest?\n\nSchreib es in die Kommentare — ich antworte jedem.',
-   canva:['Instagram-Vorlage öffnen','Text: Kein Athlet trainiert ohne Ziel. / Was ist deins?','Was ist deins? in Blau #378ADD','Export → Post7_Insta.png'],
-   taglineWA:'Was ist dein finanzielles Ziel?',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Was ist dein finanzielles Ziel?','Export → Post7_WA.png']},
-  {id:8,title:'Mai Post 3 — Firmenkunden',zielgruppe:'firma',typ:'Expertise',
-   kachel:'Liquidität ist\ndie Luft zum Atmen.\n<Hast du genug davon?>',
-   datum:'2026-05-20',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
-   caption:'Viele Unternehmen sind profitabel — und trotzdem knapp.\n\nDas Paradox der Liquidität: Geld ist da, aber nicht verfügbar. Rechnungen kommen, aber der Puffer fehlt.\n\nWie ein Sportler, der topfit ist — aber vergessen hat zu trinken.\n\nIch helfe Firmenkunden, Liquidität als aktives Steuerungsinstrument zu nutzen.\n\nKurzes Gespräch gefällig? Link in der Bio. 👇',
-   hashtags:'#Liquidität #Firmenkunden #Unternehmer #Mittelstand #Firmenkundenberater #Finanzberatung #coachthorben #Cashflow #Geschäftsführer #Absicherung',
-   captionLI:'Liquidität ist das Thema das ich bei Firmenkunden am häufigsten unterschätzt sehe.\n\nDas Paradox: Viele Unternehmen sind profitabel — und trotzdem knapp.\n\nWie ein Sportler der topfit ist — aber vergessen hat zu trinken.\n\nLiquidität ist kein Zufallsprodukt. Sie ist ein aktives Steuerungsinstrument — wenn man sie als solches behandelt.\n\nWie ist das bei dir aufgestellt?',
-   canva:['Instagram-Vorlage öffnen','Text: Liquidität ist die Luft zum Atmen. / Hast du genug davon?','Letzten Satz in Blau #378ADD','Export → Post8_Insta.png'],
-   taglineWA:'Firmenkundenberater & Finanzcoach',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Firmenkundenberater & Finanzcoach','Export → Post8_WA.png']},
-  {id:9,title:'Mai Post 4 — Privatkunden',zielgruppe:'privat',typ:'Expertise',
-   kachel:'Absicherung ist\nkein Luxus.\n<Es ist dein Fundament.>',
-   datum:'2026-05-27',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
-   caption:'Stell dir vor du trainierst monatelang für einen Marathon.\n\nUnd dann brichst du dir kurz davor das Bein.\nKein Backup. Kein Plan B. Alles vorbei.\n\nGenau das passiert finanziell ohne Absicherung.\n\nBerufsunfähigkeit. Krankheit. Unfall.\nDas Leben passiert — bist du vorbereitet?\n\nIch helfe Privatpersonen, ihr Fundament zu sichern bevor sie in den Aufbau gehen.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪',
-   hashtags:'#Absicherung #Berufsunfähigkeit #Privatkunden #Finanzcoach #Finanzathlet #coachthorben #Vorsorge #FinanzielleFreiheit #Fundament #Gesundheit',
-   captionLI:'Stell dir vor, du trainierst monatelang für einen Marathon — und brichst dir kurz davor das Bein.\n\nGenau das passiert finanziell ohne Absicherung. Täglich.\n\nDie häufigste Reaktion: Mir wird das schon nicht passieren.\nDie zweithäufigste: Ich kümmere mich — irgendwann.\n\nIch helfe Unternehmern und Privatpersonen, ihr Fundament zu sichern bevor sie in den Aufbau gehen.\n\nDein Plan. Dein Tempo. Dein Ergebnis.',
-   canva:['Instagram-Vorlage öffnen','Text: Absicherung ist kein Luxus. / Es ist dein Fundament.','Letzten Satz in Blau #378ADD','Export → Post9_Insta.png'],
-   taglineWA:'Dein Plan. Dein Tempo. Dein Ergebnis.',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.','Export → Post9_WA.png']},
-  {id:10,title:'Mai Post 5 — Story/Persönlich',zielgruppe:'beide',typ:'Persönlich',
-   kachel:'Warum ich tue,\nwas ich tue.\n<Weil beides zählt.>',
-   datum:'2026-06-03',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
-   caption:'Ich bin nicht Finanzberater geworden weil ich Zahlen liebe.\n\nIch bin es geworden weil ich gesehen habe, was passiert wenn Menschen kein System haben.\n\nIn 20 Jahren Sport habe ich erlebt: Wer ein System hat, wächst. Wer keins hat, stagniert.\n\nIm Sport wie in den Finanzen.\n\nDeshalb tue ich beides. Und deshalb gehe ich keine Kompromisse ein.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪',
-   hashtags:'#ÜberMich #Finanzathlet #PerformanceCoach #Finanzcoach #coachthorben #Warum #MeinWeg #Motivation #KörperUndKapital #Vermögensaufbau',
-   captionLI:'Ich bin nicht Finanzberater geworden weil ich Zahlen liebe.\n\nIch bin es geworden weil ich gesehen habe, was passiert wenn Menschen kein System haben.\n\nIn 20 Jahren Sport habe ich erlebt: Wer ein System hat, wächst. Wer keins hat, stagniert.\n\nIn der Finanzberatung ist es genauso.\n\nDeshalb verbinde ich beide Welten — weil körperliche und finanzielle Leistungsfähigkeit zusammengehören.\n\nIch mache aus Menschen Finanzathleten. Das ist mein Warum.',
-   canva:['Instagram-Vorlage öffnen','Text: Warum ich tue, was ich tue. / Weil beides zählt.','Weil beides zählt. in Blau #378ADD','Export → Post10_Insta.png'],
-   taglineWA:'@coachthorben',
-   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: @coachthorben','Export Post10_WA.png']},
-  {id:101,title:'Story - Ankuendigung Post 2',zielgruppe:'beide',typ:'Story',kanalTypes:['story'],
-   kachel:'Neues im Feed 👆',datum:'2026-04-08',zeit:'07:00',done:false,
-   caption:'Neues von mir 👆\nKurze Vorstellung wer ich bin und was mich antreibt.',
-   canva:['Story in Instagram erstellen','Text + Pfeil-Sticker nach oben','Foto von dir als Hintergrund']},
-  {id:102,title:'Story - Umfrage Woche 1',zielgruppe:'beide',typ:'Story',kanalTypes:['story'],
-   kachel:'Finanzen im Griff?',datum:'2026-04-07',zeit:'11:30',done:false,
-   caption:'Hast du das Gefuehl, deine Finanzen im Griff zu haben?\n→ Umfrage-Sticker: "Ja, laeuft!" / "Ausbaufaehig..."',
-   canva:['Story in Instagram erstellen','Dunkles Foto als Hintergrund','Umfrage-Sticker hinzufuegen']},
-  {id:103,title:'Story - Gedanke Woche 2',zielgruppe:'beide',typ:'Story',kanalTypes:['story'],
-   kachel:'10 Liegestuetze taeglich.',datum:'2026-04-11',zeit:'19:00',done:false,
-   caption:'10 Liegestuetze taeglich.\nHeute siehst du nichts.\nIn einem Jahr bist du ein anderer Mensch.\n\nMit 100 EUR monatlich ist es genauso.',
-   canva:['Foto vom Training oder Schreibtisch','Text-Sticker drauf','Fertig in 2 Min.']},
-  {id:104,title:'Story - Umfrage Firmenkunden',zielgruppe:'firma',typ:'Story',kanalTypes:['story'],
-   kachel:'Groesstes Unternehmer-Thema?',datum:'2026-04-14',zeit:'11:30',done:false,
-   caption:'Was ist gerade dein groesstes Thema?\n→ Umfrage: "Liquiditaet" / "Mitarbeiter absichern"',
-   canva:['Story in Instagram erstellen','Umfrage-Sticker mit beiden Optionen']},
-  {id:105,title:'Story - Hinter den Kulissen',zielgruppe:'beide',typ:'Story',kanalTypes:['story'],
-   kachel:'Woche im Rueckblick.',datum:'2026-04-25',zeit:'19:00',done:false,
-   caption:'Woche mit 4 Gespraechen.\nImmer dasselbe Thema: kein System.\nDas ist loesbar. Das ist mein Job.\n\nHabt ein gutes Wochenende 👋',
-   canva:['Selfie im Auto, beim Kaffee, oder Text-Story','Text-Sticker drauf','Fertig in 30 Sek.']},
-  {id:11,title:'Altersvorsorgedepot - Die News',zielgruppe:'beide',typ:'Aktuelles',kanalTypes:['insta','wa'],
-   kachel:'Private Altersvorsorge.\nDer Bundestag hat entschieden.\n\n<Was das fuer dich bedeutet.>',
-   datum:'2026-09-02',zeit:'07:00',done:false,
-   caption:'Am 27. Maerz 2026 hat der Bundestag das Altersvorsorgereformgesetz beschlossen.\n\nAb 2027 gibt es ein neues Produkt: das Altersvorsorgedepot.\n\nWas neu moeglich wird:\n→ Kapitalmarktorientiertes Sparen - staatlich gefoerdert\n→ Flexible Ausgestaltung je nach Sicherheitsbeduerfnis\n→ Weniger Kosten, mehr Transparenz\n→ Fruehstart-Rente: der Staat zahlt ab 6 Jahren fuer Kinder ein\n\nBestehende Vertraege laufen unveraendert weiter - kein Handlungszwang.\n\nLink in der Bio. 👇',
-   hashtags:'#Altersvorsorge #Altersvorsorgedepot #Rentenreform #Ruhestand #Finanzcoach #coachthorben #Finanzathlet #Privatvorsorge #Bundestag2026 #Vorsorge',
-   canva:['Instagram-Vorlage oeffnen','Text anpassen','Letzten Satz in Blau #378ADD','Export Post11_Insta.png'],
-   taglineWA:'@coachthorben',canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext','Graue Zeile unten: @coachthorben','Export Post11_WA.png']},
-  {id:12,title:'Altersvorsorgedepot - Bestandskunden',zielgruppe:'privat',typ:'Aktuelles',kanalTypes:['insta','wa'],
-   kachel:'Du hast einen Riester-Vertrag.\n\n<Was aendert sich fuer dich?>',
-   datum:'2026-09-09',zeit:'07:00',done:false,
-   caption:'Die Reform ist beschlossen.\n\nDeine Antwort: Nichts aendert sich - wenn du nichts tust.\n\nBestehende Vertraege laufen weiter. Bestandsschutz gilt.\n\nGleichzeitig oeffnet die Reform neue Moeglichkeiten.\n\nIch schaue mir das gerne mit dir an.\nKostenlos. Unverbindlich. Ohne Druck.\nLink in der Bio. 👇',
-   hashtags:'#Riester #Altersvorsorgedepot #Altersvorsorge #Rentenreform #Finanzcoach #coachthorben #Ruhestand #Privatvorsorge #Finanzathlet #Beratung',
-   canva:['Instagram-Vorlage oeffnen','Text anpassen','Letzten Satz in Blau #378ADD','Export Post12_Insta.png'],
-   taglineWA:'Firmenkundenberater & Finanzcoach',canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext','Graue Zeile: Firmenkundenberater & Finanzcoach','Export Post12_WA.png']},
-  {id:13,title:'Altersvorsorgedepot - Depot neu',zielgruppe:'beide',typ:'Aktuelles',kanalTypes:['insta','wa'],
-   kachel:'Kapitalmarkt.\nStaatlich gefoerdert.\n\n<Ab 2027 Realitaet.>',
-   datum:'2026-09-16',zeit:'07:00',done:false,
-   caption:'Das neue Altersvorsorgedepot denkt private Vorsorge neu.\n\nFuer jeden eingezahlten Euro bis 1.200 EUR gibt es 30 Cent vom Staat.\n\nDazu: flexible Anlage in kapitalmarktorientierten Fonds.\n\nDas Depot ist ein Werkzeug. Ob es das richtige fuer dich ist, klaeren wir gemeinsam.\nLink in der Bio. 👇',
-   hashtags:'#Altersvorsorgedepot #Altersvorsorge #Vermoegensaufbau #Rentenreform #Finanzcoach #coachthorben #Finanzathlet #Staatlichgefoerdert #Ruhestand #Vorsorge',
-   canva:['Instagram-Vorlage oeffnen','Text anpassen','Letzten Satz in Blau #378ADD','Export Post13_Insta.png'],
-   taglineWA:'@coachthorben',canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext','Graue Zeile: @coachthorben','Export Post13_WA.png']},
-  {id:14,title:'Altersvorsorgedepot - Firmenkunden',zielgruppe:'firma',typ:'Aktuelles',kanalTypes:['insta','wa'],
-   kachel:'Die Altersvorsorge-Reform.\n\n<Was Unternehmer jetzt wissen sollten.>',
-   datum:'2026-09-23',zeit:'07:00',done:false,
-   caption:'Die Reform betrifft nicht nur Privatpersonen.\n\nAls Unternehmer traegst du Verantwortung - auch fuer deine Mitarbeiter.\n\nWas die Reform oeffnet:\n→ Neue Moeglichkeiten in der bAV\n→ Altersvorsorgedepot als Mitarbeiter-Benefit\n→ Fruehstart-Rente als Gesprachsthema mit jungen Mitarbeitern\n\nKurzes Gespraech? Link in der Bio. 👇',
-   hashtags:'#Firmenkunden #Unternehmer #BetrieblicheAltersvorsorge #Altersvorsorgedepot #Rentenreform #Firmenkundenberater #coachthorben #Mittelstand #Mitarbeiterbenefit #Geschaeftsfuehrer',
-   canva:['Instagram-Vorlage oeffnen','Text anpassen','Letzten Satz in Blau #378ADD','Export Post14_Insta.png'],
-   taglineWA:'Firmenkundenberater & Finanzcoach',canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext','Graue Zeile: Firmenkundenberater & Finanzcoach','Export Post14_WA.png']},
-  {id:20,title:'LinkedIn — Vorstellungspost',zielgruppe:'beide',typ:'Persönlich',
-   kachel:'Sport und Business\nticken gleich.\n<Aus Unternehmern mache ich Finanzathleten.>',
-   datum:'2026-04-08',zeit:'08:00',done:false,kanalTypes:['li'],
-   caption:'',
-   captionLI:'Sport und Business ticken gleich.\n\nWer als Athlet keine Klarheit hat, trainiert ins Leere. Wer als Unternehmer keine Klarheit hat – auch.\n\nWer im Sport nicht regeneriert, bricht irgendwann ein. Wer im Business nicht regeneriert – auch.\n\nGenau deshalb bringe ich die Methoden des Leistungssports in den Mittelstand. Als Firmenkundenberater & Performance Coach mache ich aus Unternehmern Finanzathleten – Menschen die ihren Kopf, ihren Körper und ihre Finanzen als Einheit trainieren.\n\nMeine Überzeugung: Wer sich selbst gut führt, führt auch sein Unternehmen besser.\n\nHier findest du:\n→ Performance-Impulse für Unternehmer & Führungskräfte\n→ Den Blick des Coaches auf Finanzen, Energie & Klarheit\n→ Mein wöchentliches Format „In Bewegung"\n\nIch freue mich auf den Austausch.\nThorben Reimer · Firmenkundenberater & Performance Coach',
-   hashtags:'#Finanzathlet #PerformanceCoaching #Mittelstand #Firmenkundenberater #InBewegung #coachthorben',
-   canva:['LinkedIn-Post erstellen','Text aus captionLI einfügen','Professionelles Foto anhängen (optional)']},
-  {id:21,title:'Instagram — Sport-Impuls: Atmung & Fokus',zielgruppe:'beide',typ:'Expertise',
-   kachel:'5 Minuten atmen.\n\n<Klarer Kopf. Bessere Entscheidungen.>',
-   datum:'2026-04-10',zeit:'07:00',done:false,kanalTypes:['insta','story'],
-   caption:'Wusstest du? Schon 5 Minuten bewusstes Atmen verändern dein Nervensystem.\n\nWeniger Cortisol. Mehr Fokus. Bessere Entscheidungen.\n\nDas ist keine Meditation. Das ist Leistungssport-Methodik.\n\nDie Profis nutzen es. Unternehmer können es auch.\n\nIch zeige dir wie – bei meiner nächsten Expertenrunde. Link in der Bio. 👇',
-   hashtags:'#Atmung #Fokus #PerformanceCoaching #Finanzathlet #Mittelstand #coachthorben #Leistungssport',
-   canva:['Instagram-Vorlage öffnen','Text: 5 Minuten atmen. / Klarer Kopf. Bessere Entscheidungen.','Letzter Satz in Blau #378ADD','Export Insta_Atmung.png']},
-  {id:22,title:'LinkedIn — In Bewegung #1',zielgruppe:'beide',typ:'Persönlich',
-   kachel:'In Bewegung.\nSport ist der Anlass.\n<Mensch ist das Ziel.>',
-   datum:'2026-04-14',zeit:'08:00',done:false,kanalTypes:['li'],
-   caption:'',
-   captionLI:'Jede Woche treffe ich einen Menschen den ich noch nicht kenne.\n\nKein Pitch. Keine Agenda. Einfach kennenlernen.\n\nDiese Woche: [nach dem Treffen ergänzen]\n\nWas ich mitgenommen habe: [Erkenntnis ergänzen]\n\nSport ist der Anlass. Mensch ist das Ziel.\n\n#InBewegung – mein wöchentliches Format.',
-   hashtags:'#InBewegung #Netzwerk #Kennenlernen #PerformanceCoaching #Finanzathlet #coachthorben',
-   canva:['LinkedIn-Post erstellen','Text nach dem Treffen personalisieren','Optional: Foto vom Treffen']},
-  {id:23,title:'Instagram — Behind the Scenes',zielgruppe:'beide',typ:'Persönlich',
-   kachel:'Wer ist Thorben?\n\n<Hinter den Kulissen.>',
-   datum:'2026-04-16',zeit:'07:00',done:false,kanalTypes:['insta','story'],
-   caption:'Ich bin Firmenkundenberater. Performance Coach. Trainer. Dozent. Papa.\n\nIm Sport habe ich gelernt: Wer du bist, bestimmt wie du performst.\n\nDas gilt im Training. Das gilt im Business. Das gilt in den Finanzen.\n\nDeswegen zeige ich hier nicht nur Zahlen und Tipps – sondern auch wer dahinter steckt.\n\nWillkommen hinter den Kulissen. 👋',
-   hashtags:'#BehindTheScenes #Authentisch #Finanzathlet #PerformanceCoach #coachthorben #Vorstellung',
-   canva:['Persönliches Foto verwenden','Text aus caption einfügen','Export Insta_BTS.png']},
-  {id:24,title:'LinkedIn — Performance-Impuls',zielgruppe:'beide',typ:'Expertise',
-   kachel:'Was Athleten und\nUnternehmer gemeinsam haben.\n<Beides braucht System.>',
-   datum:'2026-04-22',zeit:'08:00',done:false,kanalTypes:['li'],
-   caption:'',
-   captionLI:'Ein Athlet ohne Trainingsplan trainiert ins Leere.\nEin Unternehmer ohne Finanzplan arbeitet ins Leere.\n\nBeide arbeiten hart. Beide haben Ziele. Aber ohne System kommen beide nicht ans Ziel.\n\nWas die Besten gemeinsam haben:\n→ Klares Ziel\n→ Messbarer Plan\n→ Jemand der ehrlich Feedback gibt\n→ Konsequenz über Zeit\n\nIch bringe diese Methodik in die Finanzberatung. Jeden Tag.\n\nWas ist dein System?',
-   hashtags:'#PerformanceCoaching #Finanzathlet #Mittelstand #Firmenkundenberater #System #coachthorben',
-   canva:['LinkedIn-Post erstellen','Text aus captionLI einfügen']},
-  {id:25,title:'Instagram — In Bewegung #1 Reel',zielgruppe:'beide',typ:'Persönlich',
-   kachel:'In Bewegung #1.\nSport ist der Anlass.\n<Mensch ist das Ziel.>',
-   datum:'2026-04-24',zeit:'07:00',done:false,kanalTypes:['insta','story'],
-   caption:'Diese Woche habe ich jemand Neues kennengelernt.\n\nKein Pitch. Kein Termin. Einfach ein Gespräch.\n\nWas ich mitgenommen habe: [nach Treffen ergänzen]\n\nMein Format „In Bewegung": Jede Woche lerne ich einen neuen Menschen kennen – beim Laufen, Tennis, Radfahren oder Kaffee.\n\nSport ist der Anlass. Mensch ist das Ziel.\n\n→ Willst du dabei sein? Schreib mir. 👇',
-   hashtags:'#InBewegung #Netzwerk #Sport #Kennenlernen #Finanzathlet #coachthorben #Laufen #Tennis',
-   canva:['Kurzes Reel 15-30 Sek vom Sport oder Treffen','Text-Overlay: In Bewegung #1','Export als Reel']},
-  {id:26,title:'LinkedIn — Einladung Expertenrunde',zielgruppe:'firma',typ:'Expertise',
-   kachel:'Atme 5 Minuten –\nführe 5 Stunden klarer.\n<Einladung zur Expertenrunde.>',
-   datum:'2026-04-28',zeit:'08:00',done:false,kanalTypes:['li'],
-   caption:'',
-   captionLI:'Stell dir vor, du triffst täglich 3-5 Entscheidungen die dein Unternehmen direkt beeinflussen.\n\nJetzt stell dir vor: Du triffst sie aus einem Zustand der Klarheit – nicht aus Stress.\n\nGenau das ist das Thema meiner nächsten Expertenrunde:\n„Atme 5 Minuten – führe 5 Stunden klarer"\n\nKostenlos. Online. Max. 5 Teilnehmer.\n\nDatum: [Datum einfügen]\nInteresse? Kurze Nachricht genügt. 👇',
-   hashtags:'#Expertenrunde #Atmung #Führung #Mittelstand #PerformanceCoaching #Firmenkundenberater #coachthorben',
-   canva:['LinkedIn-Post erstellen','Datum der Expertenrunde einfügen']},
-  {id:27,title:'Instagram — Teaser Tennis-Workshop',zielgruppe:'beide',typ:'Expertise',
-   kachel:'Tennis Performance Workshop.\nSportschule Kidash.\n<Dein Wochenende. Dein Durchbruch.>',
-   datum:'2026-04-30',zeit:'07:00',done:false,kanalTypes:['insta','story'],
-   caption:'Stell dir vor: Ein Wochenende das alles verändert.\n\nAtmung. Bewegung. Mentale Stärke. Ernährung.\nAlles was ein Tennisspieler wirklich braucht – in 2,5 Tagen.\n\nTennis Performance Workshop\n📍 Sportschule Kidash\n📅 Datum folgt\n💶 449 €/Teilnehmer\n\nMax. 15 Plätze. Interesse? Jetzt melden → Link in der Bio. 👇',
-   hashtags:'#TennisWorkshop #TennisPerformance #SportschuleKidash #PerformanceCoaching #coachthorben #Tennis #Athleten',
-   canva:['Instagram-Vorlage öffnen','Text: Tennis Performance Workshop / Sportschule Kidash','Blauer Akzent #378ADD','Export Insta_TennisWorkshop.png']}
-];
+var DEF_POSTS=[{"id":1,"title":"Provokation — Einstieg","zielgruppe":"beide","typ":"Provokation","kachel":"Du trainierst 3x die Woche.\n\nDeine Finanzen — <seit Jahren nicht.>","datum":"2026-03-29","zeit":"07:00","done":true,"kanalTypes":["insta","wa"],"caption":"Ein Athlet, der nur trainiert aber nie regeneriert — bricht zusammen.\n\nEin Mensch, der nur arbeitet aber nie in seine Finanzen investiert — auch.\n\nBeides braucht System. Beides braucht einen Plan.\n\nIch mache aus Unternehmern Finanzathleten.\n\nSchreib mir einfach kurz. 👇","hashtags":"#Finanzathlet #Firmenkundenberater #PerformanceCoaching #Vermögensaufbau #Finanzberatung #MindsetUndGeld #Mittelstand #GeldUndLeistung #FinanzielleFreiheit #coachthorben","captionLI":"Ich treffe fast täglich Menschen, die hart arbeiten — und trotzdem das Gefühl haben, finanziell nicht voranzukommen.\n\nNicht weil das Geld fehlt. Sondern weil das System fehlt.\n\nIm Sport kenne ich das genauso: Ein Athlet ohne System stagniert — egal wie viel Talent er mitbringt.\n\nIch bin Firmenkundenberater bei der DVAG und Performance Coach. Ich verbinde beide Welten — weil sie zusammengehören.\n\nWenn dich das anspricht: Ich bin hier. 👋","canva":["Instagram-Vorlage öffnen","Hintergrund #161e2e, Text weiß, \"seit Jahren nicht\" in Blau #378ADD","Logo unten rechts, Name unten links","Als PNG exportieren → Post1_Insta.png"],"kanal":"Instagram + WhatsApp","doneInsta":true,"doneWa":true},{"id":2,"title":"Vorstellung — Wer bin ich?","zielgruppe":"beide","typ":"Persoenlich","kachel":"Bewegung.\nFinanzen.\n<Beides ist Training.>","datum":"2026-04-03","zeit":"07:00","done":true,"kanalTypes":["insta","wa"],"caption":"Hi, ich bin Thorben.\n\nVermögensberater. Finanzcoach. Performance-Coach.\n\nIch arbeite mit Unternehmern und Privatpersonen — und verbinde zwei Welten, die eigentlich zusammengehören: körperliche und finanzielle Leistungsfähigkeit.\n\nWas mich antreibt: Die besten Athleten der Welt haben eines gemeinsam — ein System. Einen Plan. Jemanden, der sie begleitet.\n\nGenau das bringe ich in die Finanzberatung.\n\nWenn dich das anspricht — ich bin hier. 👋","hashtags":"#Vorstellung #Finanzcoach #PerformanceCoach #Firmenkundenberater #Finanzathlet #coachthorben #Aichtal #Stuttgart #KörperUndKapital #MeinWeg","captionLI":"Ich werde oft gefragt, was mich antreibt.\n\nDie ehrliche Antwort: Ich habe in 20 Jahren Sport gesehen, was passiert wenn Menschen ein System haben — und was passiert wenn nicht.\n\nDas Gleiche erlebe ich täglich in der Finanzberatung.\n\nWer ein System hat, baut auf. Wer keins hat, tritt auf der Stelle — egal wie viel er verdient.\n\nIch mache aus Menschen Finanzathleten. 💪","canva":["Instagram-Vorlage öffnen","Text: Bewegung. / Finanzen. / Beides ist Training.","Letzten Satz in Blau #378ADD","Export → Post2_Insta.png | WA: gleicher Text + Tagline"],"taglineWA":"Dein Plan. Dein Tempo. Dein Ergebnis.","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.","Export → Post2_WA.png"],"kanal":"Instagram + WhatsApp","done_channels":{"insta":true,"wa":true,"li":true},"doneInsta":true,"doneWa":true},{"id":102,"title":"Story - Umfrage Woche 1","zielgruppe":"beide","typ":"Story","kanalTypes":["story"],"kachel":"Finanzen im Griff?","datum":"2026-04-07","zeit":"11:30","done":true,"caption":"Hast du das Gefuehl, deine Finanzen im Griff zu haben?\n→ Umfrage-Sticker: \"Ja, laeuft!\" / \"Ausbaufaehig...\"","canva":["Story in Instagram erstellen","Dunkles Foto als Hintergrund","Umfrage-Sticker hinzufuegen"],"done_channels":{"story":true},"doneInsta":false,"doneWa":false,"doneStory":true},{"id":3,"title":"Analogie — Zinseszins & Training","zielgruppe":"beide","typ":"Analogie","kachel":"Zinseszins.\nCompound-Effekt im Training.\n\n<Dasselbe Prinzip.>","datum":"2026-04-08","zeit":"07:00","done":true,"kanalTypes":["insta","wa","li"],"caption":"10 Liegestütze täglich — nach einer Woche siehst du nichts.\nNach einem Jahr bist du ein anderer Mensch.\n\n100 € monatlich investiert — nach einem Jahr kaum messbar.\nNach 20 Jahren? Lebensverändernd.\n\nBeide Systeme funktionieren nur mit einem: Konsequenz über Zeit.\n\nWer das versteht, denkt anders über Geld.\nWer das lebt, baut echtes Vermögen auf.\n\nIch arbeite mit Menschen, die beides wollen. 🎯\nLink in der Bio für ein erstes Gespräch.","hashtags":"#Zinseszins #Vermögensaufbau #Finanzathlet #CompoundEffect #Investieren #LangfristigDenken #FinanzielleFreiheit #PerformanceMindset #coachthorben #Mittelstand","captionLI":"Ein Gedanke aus meiner täglichen Arbeit:\n\n100 € monatlich investiert klingen nach wenig. Nach 20 Jahren mit Zinseszins? Lebensverändernd.\n\nDas Prinzip kennen wir aus dem Sport: Wer täglich 20 Minuten trainiert, verändert sich. Nicht sofort — aber unaufhaltsam.\n\nKonsequenz über Zeit schlägt jede Einmalmaßnahme.\n\nWelches System hast du für deine Finanzen?","canva":["Instagram-Vorlage öffnen","Text ersetzen, Dasselbe Prinzip. in Blau #378ADD","Optional: Aufwärtspfeil als Element","Export → Post3_Insta.png | WA: gleicher Text + Tagline"],"taglineWA":"Firmenkundenberater & Finanzcoach","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: Firmenkundenberater & Finanzcoach","Export → Post3_WA.png"],"kanal":"Instagram + WhatsApp","done_channels":{"insta":true,"wa":true,"li":true},"doneInsta":true,"doneWa":true},{"id":101,"title":"Story - Ankuendigung Post 2","zielgruppe":"beide","typ":"Story","kanalTypes":["story"],"kachel":"Neues im Feed 👆","datum":"2026-04-08","zeit":"07:00","done":true,"caption":"Neues von mir 👆\nKurze Vorstellung wer ich bin und was mich antreibt.","canva":["Story in Instagram erstellen","Text + Pfeil-Sticker nach oben","Foto von dir als Hintergrund"],"doneInsta":false,"doneWa":false,"doneStory":true},{"id":20,"title":"LinkedIn — Vorstellungspost","zielgruppe":"beide","typ":"Persönlich","kachel":"Sport und Business\nticken gleich.\n<Aus Unternehmern mache ich Finanzathleten.>","datum":"2026-04-09","zeit":"08:00","done":false,"kanalTypes":["li"],"caption":"","captionLI":"Sport und Business ticken gleich.\n\nWer als Athlet keine Klarheit hat, trainiert ins Leere. Wer als Unternehmer keine Klarheit hat – auch.\n\nWer im Sport nicht regeneriert, bricht irgendwann ein. Wer im Business nicht regeneriert – auch.\n\nGenau deshalb bringe ich die Methoden des Leistungssports in den Mittelstand. Als Firmenkundenberater & Performance Coach mache ich aus Unternehmern Finanzathleten – Menschen die ihren Kopf, ihren Körper und ihre Finanzen als Einheit trainieren.\n\nMeine Überzeugung: Wer sich selbst gut führt, führt auch sein Unternehmen besser.\n\nHier findest du:\n→ Performance-Impulse für Unternehmer & Führungskräfte\n→ Den Blick des Coaches auf Finanzen, Energie & Klarheit\n→ Mein wöchentliches Format „In Bewegung\"\n\nIch freue mich auf den Austausch.\nThorben Reimer · Firmenkundenberater & Performance Coach","hashtags":"#Finanzathlet #PerformanceCoaching #Mittelstand #Firmenkundenberater #InBewegung #coachthorben","canva":["LinkedIn-Post erstellen","Text aus captionLI einfügen","Professionelles Foto anhängen (optional)"]},{"id":21,"title":"Instagram — Sport-Impuls: Atmung & Fokus","zielgruppe":"beide","typ":"Expertise","kachel":"5 Minuten atmen.\n\n<Klarer Kopf. Bessere Entscheidungen.>","datum":"2026-04-10","zeit":"07:00","done":false,"kanalTypes":["insta","story"],"caption":"Wusstest du? Schon 5 Minuten bewusstes Atmen verändern dein Nervensystem.\n\nWeniger Cortisol. Mehr Fokus. Bessere Entscheidungen.\n\nDas ist keine Meditation. Das ist Leistungssport-Methodik.\n\nDie Profis nutzen es. Unternehmer können es auch.\n\nIch zeige dir wie – bei meiner nächsten Expertenrunde. Link in der Bio. 👇","hashtags":"#Atmung #Fokus #PerformanceCoaching #Finanzathlet #Mittelstand #coachthorben #Leistungssport","canva":["Instagram-Vorlage öffnen","Text: 5 Minuten atmen. / Klarer Kopf. Bessere Entscheidungen.","Letzter Satz in Blau #378ADD","Export Insta_Atmung.png"],"done_channels":{"insta":true},"doneInsta":true,"doneWa":false},{"id":103,"title":"Story - Gedanke Woche 2","zielgruppe":"beide","typ":"Story","kanalTypes":["story"],"kachel":"10 Liegestuetze taeglich.","datum":"2026-04-11","zeit":"19:00","done":false,"caption":"10 Liegestuetze taeglich.\nHeute siehst du nichts.\nIn einem Jahr bist du ein anderer Mensch.\n\nMit 100 EUR monatlich ist es genauso.","canva":["Foto vom Training oder Schreibtisch","Text-Sticker drauf","Fertig in 2 Min."]},{"id":104,"title":"Story - Umfrage Firmenkunden","zielgruppe":"firma","typ":"Story","kanalTypes":["story"],"kachel":"Groesstes Unternehmer-Thema?","datum":"2026-04-14","zeit":"11:30","done":false,"caption":"Was ist gerade dein groesstes Thema?\n→ Umfrage: \"Liquiditaet\" / \"Mitarbeiter absichern\"","canva":["Story in Instagram erstellen","Umfrage-Sticker mit beiden Optionen"]},{"id":22,"title":"LinkedIn — In Bewegung #1","zielgruppe":"beide","typ":"Persönlich","kachel":"In Bewegung.\nSport ist der Anlass.\n<Mensch ist das Ziel.>","datum":"2026-04-14","zeit":"08:00","done":false,"kanalTypes":["li"],"caption":"","captionLI":"Jede Woche treffe ich einen Menschen den ich noch nicht kenne.\n\nKein Pitch. Keine Agenda. Einfach kennenlernen.\n\nDiese Woche: [nach dem Treffen ergänzen]\n\nWas ich mitgenommen habe: [Erkenntnis ergänzen]\n\nSport ist der Anlass. Mensch ist das Ziel.\n\n#InBewegung – mein wöchentliches Format.","hashtags":"#InBewegung #Netzwerk #Kennenlernen #PerformanceCoaching #Finanzathlet #coachthorben","canva":["LinkedIn-Post erstellen","Text nach dem Treffen personalisieren","Optional: Foto vom Treffen"]},{"id":4,"title":"Firmenkunden — Team als Kapital","zielgruppe":"firma","typ":"Expertise","kachel":"Dein Team ist dein\ngroesstes Kapital.\n\n<Schuetzt du es auch so?>","datum":"2026-04-15","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Als Unternehmer trägst du Verantwortung.\n\nFür dein Business. Für deine Mitarbeiter. Für deine Familie.\n\nUnd trotzdem: Die meisten Unternehmer haben ihre eigene Absicherung, ihre Liquidität und ihre Altersvorsorge nicht wirklich im Griff.\n\nNicht weil sie es nicht wollen — sondern weil niemand das Ganze zusammendenkt.\n\nGenau das ist meine Arbeit.\n\nInteresse? Schreib mir kurz oder buch direkt einen Termin. 👇","hashtags":"#Firmenkunden #Unternehmer #Mittelstand #Geschäftsführer #Absicherung #Altersvorsorge #Finanzberatung #Firmenkundenberater #coachthorben #Liquidität","captionLI":"Eine Beobachtung aus vielen Gesprächen mit Unternehmern:\n\nDie meisten haben ihre eigene Absicherung, ihre Liquidität und ihre Altersvorsorge nicht wirklich im Griff.\n\nNicht weil sie es nicht wollen. Sondern weil niemand das Ganze zusammendenkt.\n\nGenau das ist meine Arbeit als Firmenkundenberater: Ich denke das Ganze zusammen — für Geschäftsführer und Inhaber im Mittelstand.\n\nWann hast du zuletzt das große Bild angeschaut?","canva":["Instagram-Vorlage öffnen","Text: Dein Team ist dein größtes Kapital. / Schützt du es auch so?","Letzten Satz in Blau #378ADD","Export → Post4_Insta.png | WA: Tagline = Firmenkundenberater & Finanzcoach"],"taglineWA":"@coachthorben","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: @coachthorben","Export → Post4_WA.png"],"kanal":"Instagram + WhatsApp","done_channels":{"insta":true}},{"id":23,"title":"Instagram — Behind the Scenes","zielgruppe":"beide","typ":"Persönlich","kachel":"Wer ist Thorben?\n\n<Hinter den Kulissen.>","datum":"2026-04-16","zeit":"07:00","done":false,"kanalTypes":["insta","story"],"caption":"Ich bin Firmenkundenberater. Performance Coach. Trainer. Dozent. Papa.\n\nIm Sport habe ich gelernt: Wer du bist, bestimmt wie du performst.\n\nDas gilt im Training. Das gilt im Business. Das gilt in den Finanzen.\n\nDeswegen zeige ich hier nicht nur Zahlen und Tipps – sondern auch wer dahinter steckt.\n\nWillkommen hinter den Kulissen. 👋","hashtags":"#BehindTheScenes #Authentisch #Finanzathlet #PerformanceCoach #coachthorben #Vorstellung","canva":["Persönliches Foto verwenden","Text aus caption einfügen","Export Insta_BTS.png"]},{"id":5,"title":"Privatkunden — Gehalt vs. Vermoegen","zielgruppe":"privat","typ":"Expertise","kachel":"Dein Gehalt ist nicht\ndein Vermoegen.\n\n<Der Unterschied zaehlt.>","datum":"2026-04-22","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Viele verdienen gut.\n\nAber am Ende des Monats bleibt wenig übrig. Die Altersvorsorge ist unklar. Der Wohntraum bleibt Traum.\n\nDas ist kein Versagen. Das ist fehlende Struktur.\n\nWer im Sport keine Struktur hat, kommt nicht voran — egal wie viel Talent er mitbringt.\n\nMit Geld ist es genauso.\n\nIch helfe Privatpersonen, ein System aufzubauen das wirklich zu ihrem Leben passt.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪","hashtags":"#Privatkunden #Vermögensaufbau #FinanzielleFreiheit #Altersvorsorge #Finanzcoach #Finanzathlet #GeldMitSystem #coachthorben #Absicherung #Ruhestand","captionLI":"Viele meiner Kunden verdienen gut. Sehr gut sogar.\n\nUnd trotzdem: Am Ende des Monats bleibt wenig übrig. Die Altersvorsorge ist unklar. Der Wohntraum bleibt Traum.\n\nDas ist kein Versagen — das ist fehlende Struktur.\n\nIm Sport: Talent ohne Trainingsplan kommt nicht ans Ziel. Mit Geld ist es genauso.\n\nDein Plan. Dein Tempo. Dein Ergebnis.","canva":["Instagram-Vorlage öffnen","Text: Dein Gehalt ist nicht dein Vermögen. / Der Unterschied zählt.","Letzten Satz in Blau #378ADD","Export → Post5_Insta.png | WA: Tagline = Dein Plan. Dein Tempo. Dein Ergebnis."],"taglineWA":"Dein Plan. Dein Tempo. Dein Ergebnis.","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.","Export → Post5_WA.png"],"kanal":"Instagram + WhatsApp","done_channels":{"insta":true}},{"id":24,"title":"LinkedIn — Performance-Impuls","zielgruppe":"beide","typ":"Expertise","kachel":"Was Athleten und\nUnternehmer gemeinsam haben.\n<Beides braucht System.>","datum":"2026-04-22","zeit":"08:00","done":false,"kanalTypes":["li"],"caption":"","captionLI":"Ein Athlet ohne Trainingsplan trainiert ins Leere.\nEin Unternehmer ohne Finanzplan arbeitet ins Leere.\n\nBeide arbeiten hart. Beide haben Ziele. Aber ohne System kommen beide nicht ans Ziel.\n\nWas die Besten gemeinsam haben:\n→ Klares Ziel\n→ Messbarer Plan\n→ Jemand der ehrlich Feedback gibt\n→ Konsequenz über Zeit\n\nIch bringe diese Methodik in die Finanzberatung. Jeden Tag.\n\nWas ist dein System?","hashtags":"#PerformanceCoaching #Finanzathlet #Mittelstand #Firmenkundenberater #System #coachthorben","canva":["LinkedIn-Post erstellen","Text aus captionLI einfügen"]},{"id":25,"title":"Instagram — In Bewegung #1 Reel","zielgruppe":"beide","typ":"Persönlich","kachel":"In Bewegung #1.\nSport ist der Anlass.\n<Mensch ist das Ziel.>","datum":"2026-04-24","zeit":"07:00","done":false,"kanalTypes":["insta","story"],"caption":"Diese Woche habe ich jemand Neues kennengelernt.\n\nKein Pitch. Kein Termin. Einfach ein Gespräch.\n\nWas ich mitgenommen habe: [nach Treffen ergänzen]\n\nMein Format „In Bewegung\": Jede Woche lerne ich einen neuen Menschen kennen – beim Laufen, Tennis, Radfahren oder Kaffee.\n\nSport ist der Anlass. Mensch ist das Ziel.\n\n→ Willst du dabei sein? Schreib mir. 👇","hashtags":"#InBewegung #Netzwerk #Sport #Kennenlernen #Finanzathlet #coachthorben #Laufen #Tennis","canva":["Kurzes Reel 15-30 Sek vom Sport oder Treffen","Text-Overlay: In Bewegung #1","Export als Reel"]},{"id":105,"title":"Story - Hinter den Kulissen","zielgruppe":"beide","typ":"Story","kanalTypes":["story"],"kachel":"Woche im Rueckblick.","datum":"2026-04-25","zeit":"19:00","done":false,"caption":"Woche mit 4 Gespraechen.\nImmer dasselbe Thema: kein System.\nDas ist loesbar. Das ist mein Job.\n\nHabt ein gutes Wochenende 👋","canva":["Selfie im Auto, beim Kaffee, oder Text-Story","Text-Sticker drauf","Fertig in 30 Sek."]},{"id":26,"title":"LinkedIn — Einladung Expertenrunde","zielgruppe":"firma","typ":"Expertise","kachel":"Atme 5 Minuten –\nführe 5 Stunden klarer.\n<Einladung zur Expertenrunde.>","datum":"2026-04-28","zeit":"08:00","done":false,"kanalTypes":["li"],"caption":"","captionLI":"Stell dir vor, du triffst täglich 3-5 Entscheidungen die dein Unternehmen direkt beeinflussen.\n\nJetzt stell dir vor: Du triffst sie aus einem Zustand der Klarheit – nicht aus Stress.\n\nGenau das ist das Thema meiner nächsten Expertenrunde:\n„Atme 5 Minuten – führe 5 Stunden klarer\"\n\nKostenlos. Online. Max. 5 Teilnehmer.\n\nDatum: [Datum einfügen]\nInteresse? Kurze Nachricht genügt. 👇","hashtags":"#Expertenrunde #Atmung #Führung #Mittelstand #PerformanceCoaching #Firmenkundenberater #coachthorben","canva":["LinkedIn-Post erstellen","Datum der Expertenrunde einfügen"]},{"id":27,"title":"Instagram — Teaser Tennis-Workshop","zielgruppe":"beide","typ":"Expertise","kachel":"Tennis Performance Workshop.\nSportschule Kidash.\n<Dein Wochenende. Dein Durchbruch.>","datum":"2026-04-30","zeit":"07:00","done":false,"kanalTypes":["insta","story"],"caption":"Stell dir vor: Ein Wochenende das alles verändert.\n\nAtmung. Bewegung. Mentale Stärke. Ernährung.\nAlles was ein Tennisspieler wirklich braucht – in 2,5 Tagen.\n\nTennis Performance Workshop\n📍 Sportschule Kidash\n📅 Datum folgt\n💶 449 €/Teilnehmer\n\nMax. 15 Plätze. Interesse? Jetzt melden → Link in der Bio. 👇","hashtags":"#TennisWorkshop #TennisPerformance #SportschuleKidash #PerformanceCoaching #coachthorben #Tennis #Athleten","canva":["Instagram-Vorlage öffnen","Text: Tennis Performance Workshop / Sportschule Kidash","Blauer Akzent #378ADD","Export Insta_TennisWorkshop.png"]},{"id":6,"title":"Mai Post 1 — Provokation","zielgruppe":"beide","typ":"Provokation","kachel":"Du planst deinen Urlaub.\nDeine Rente —\n<noch nicht.>","datum":"2026-05-06","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Für den Urlaub: Flüge gebucht, Hotel reserviert, Koffer gepackt.\n\nFür die Rente: Irgendwann. Mal schauen. Wird schon.\n\nDer Unterschied zwischen beidem? Beim Urlaub weißt du wann er ist.\n\nBei der Rente auch — und trotzdem warten die meisten.\n\nIch helfe dir, das zu ändern. Ohne Druck. Mit Plan.\n\nLink in der Bio. 👇","hashtags":"#Altersvorsorge #Ruhestand #Finanzathlet #Finanzplanung #coachthorben #Vorsorge #Mittelstand #FinanzielleFreiheit #Finanzcoach #Vermögensaufbau","captionLI":"Warum planen wir unseren Urlaub auf den Tag genau — aber nicht unseren Ruhestand?\n\nBeim Urlaub wissen wir: wann er beginnt, wie lange er geht, was er kostet.\n\nBei der Rente? Wir wissen nur den möglichen Startpunkt.\n\nProf. Dr. Jochen Ruß vom Institut für Finanz- und Aktuarwissenschaften der Uni Ulm nennt das das Langlebigkeitsrisiko — eines der am meisten unterschätzten finanziellen Risiken.\n\nIch helfe dabei, das zu lösen. Ohne Druck. Mit Plan.","canva":["Instagram-Vorlage öffnen","Text: Du planst deinen Urlaub. / Deine Rente — / noch nicht.","noch nicht. in Blau #378ADD","Export → Post6_Insta.png"],"taglineWA":"@coachthorben","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: @coachthorben","Export → Post6_WA.png"]},{"id":7,"title":"Mai Post 2 — Sport-Parallele","zielgruppe":"beide","typ":"Analogie","kachel":"Kein Athlet trainiert\nohne Ziel.\n<Was ist deins?>","datum":"2026-05-13","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Ein Sprinter weiß: 100m in 10,5 Sekunden.\nEin Marathonläufer weiß: unter 3 Stunden.\n\nBeide trainieren auf ein konkretes Ziel hin.\n\nIn den Finanzen? Die meisten trainieren ins Blaue.\nKein Ziel. Kein Plan. Kein System.\n\nWas wäre dein finanzielles Ziel wenn du es konkret nennen müsstest?\n\nSchreib es in die Kommentare — ich bin gespannt. 👇","hashtags":"#Finanzathlet #Ziele #Finanzplanung #coachthorben #PerformanceMindset #Vermögensaufbau #Finanzcoach #Sport #Motivation #Erfolg","captionLI":"Ein Sprinter weiß: 100m in 10,5 Sekunden.\nEin Marathonläufer weiß: unter 3 Stunden.\n\nBeide trainieren auf ein konkretes Ziel. Jeden Tag. Mit System.\n\nIn der Finanzberatung erlebe ich das Gegenteil: Die meisten Menschen haben kein konkretes finanzielles Ziel. Kein Datum. Keine Zahl. Kein Plan.\n\nWas ist dein finanzielles Ziel, wenn du es konkret nennen müsstest?\n\nSchreib es in die Kommentare — ich antworte jedem.","canva":["Instagram-Vorlage öffnen","Text: Kein Athlet trainiert ohne Ziel. / Was ist deins?","Was ist deins? in Blau #378ADD","Export → Post7_Insta.png"],"taglineWA":"Was ist dein finanzielles Ziel?","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: Was ist dein finanzielles Ziel?","Export → Post7_WA.png"]},{"id":8,"title":"Mai Post 3 — Firmenkunden","zielgruppe":"firma","typ":"Expertise","kachel":"Liquidität ist\ndie Luft zum Atmen.\n<Hast du genug davon?>","datum":"2026-05-20","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Viele Unternehmen sind profitabel — und trotzdem knapp.\n\nDas Paradox der Liquidität: Geld ist da, aber nicht verfügbar. Rechnungen kommen, aber der Puffer fehlt.\n\nWie ein Sportler, der topfit ist — aber vergessen hat zu trinken.\n\nIch helfe Firmenkunden, Liquidität als aktives Steuerungsinstrument zu nutzen.\n\nKurzes Gespräch gefällig? Link in der Bio. 👇","hashtags":"#Liquidität #Firmenkunden #Unternehmer #Mittelstand #Firmenkundenberater #Finanzberatung #coachthorben #Cashflow #Geschäftsführer #Absicherung","captionLI":"Liquidität ist das Thema das ich bei Firmenkunden am häufigsten unterschätzt sehe.\n\nDas Paradox: Viele Unternehmen sind profitabel — und trotzdem knapp.\n\nWie ein Sportler der topfit ist — aber vergessen hat zu trinken.\n\nLiquidität ist kein Zufallsprodukt. Sie ist ein aktives Steuerungsinstrument — wenn man sie als solches behandelt.\n\nWie ist das bei dir aufgestellt?","canva":["Instagram-Vorlage öffnen","Text: Liquidität ist die Luft zum Atmen. / Hast du genug davon?","Letzten Satz in Blau #378ADD","Export → Post8_Insta.png"],"taglineWA":"Firmenkundenberater & Finanzcoach","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: Firmenkundenberater & Finanzcoach","Export → Post8_WA.png"]},{"id":9,"title":"Mai Post 4 — Privatkunden","zielgruppe":"privat","typ":"Expertise","kachel":"Absicherung ist\nkein Luxus.\n<Es ist dein Fundament.>","datum":"2026-05-27","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Stell dir vor du trainierst monatelang für einen Marathon.\n\nUnd dann brichst du dir kurz davor das Bein.\nKein Backup. Kein Plan B. Alles vorbei.\n\nGenau das passiert finanziell ohne Absicherung.\n\nBerufsunfähigkeit. Krankheit. Unfall.\nDas Leben passiert — bist du vorbereitet?\n\nIch helfe Privatpersonen, ihr Fundament zu sichern bevor sie in den Aufbau gehen.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪","hashtags":"#Absicherung #Berufsunfähigkeit #Privatkunden #Finanzcoach #Finanzathlet #coachthorben #Vorsorge #FinanzielleFreiheit #Fundament #Gesundheit","captionLI":"Stell dir vor, du trainierst monatelang für einen Marathon — und brichst dir kurz davor das Bein.\n\nGenau das passiert finanziell ohne Absicherung. Täglich.\n\nDie häufigste Reaktion: Mir wird das schon nicht passieren.\nDie zweithäufigste: Ich kümmere mich — irgendwann.\n\nIch helfe Unternehmern und Privatpersonen, ihr Fundament zu sichern bevor sie in den Aufbau gehen.\n\nDein Plan. Dein Tempo. Dein Ergebnis.","canva":["Instagram-Vorlage öffnen","Text: Absicherung ist kein Luxus. / Es ist dein Fundament.","Letzten Satz in Blau #378ADD","Export → Post9_Insta.png"],"taglineWA":"Dein Plan. Dein Tempo. Dein Ergebnis.","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.","Export → Post9_WA.png"]},{"id":10,"title":"Mai Post 5 — Story/Persönlich","zielgruppe":"beide","typ":"Persönlich","kachel":"Warum ich tue,\nwas ich tue.\n<Weil beides zählt.>","datum":"2026-06-03","zeit":"07:00","done":false,"kanalTypes":["insta","wa","li"],"caption":"Ich bin nicht Finanzberater geworden weil ich Zahlen liebe.\n\nIch bin es geworden weil ich gesehen habe, was passiert wenn Menschen kein System haben.\n\nIn 20 Jahren Sport habe ich erlebt: Wer ein System hat, wächst. Wer keins hat, stagniert.\n\nIm Sport wie in den Finanzen.\n\nDeshalb tue ich beides. Und deshalb gehe ich keine Kompromisse ein.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪","hashtags":"#ÜberMich #Finanzathlet #PerformanceCoach #Finanzcoach #coachthorben #Warum #MeinWeg #Motivation #KörperUndKapital #Vermögensaufbau","captionLI":"Ich bin nicht Finanzberater geworden weil ich Zahlen liebe.\n\nIch bin es geworden weil ich gesehen habe, was passiert wenn Menschen kein System haben.\n\nIn 20 Jahren Sport habe ich erlebt: Wer ein System hat, wächst. Wer keins hat, stagniert.\n\nIn der Finanzberatung ist es genauso.\n\nDeshalb verbinde ich beide Welten — weil körperliche und finanzielle Leistungsfähigkeit zusammengehören.\n\nIch mache aus Menschen Finanzathleten. Das ist mein Warum.","canva":["Instagram-Vorlage öffnen","Text: Warum ich tue, was ich tue. / Weil beides zählt.","Weil beides zählt. in Blau #378ADD","Export → Post10_Insta.png"],"taglineWA":"@coachthorben","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext wie Instagram","Graue Zeile unten: @coachthorben","Export Post10_WA.png"]},{"id":11,"title":"Altersvorsorgedepot - Die News","zielgruppe":"beide","typ":"Aktuelles","kanalTypes":["insta","wa"],"kachel":"Private Altersvorsorge.\nDer Bundestag hat entschieden.\n\n<Was das fuer dich bedeutet.>","datum":"2026-09-02","zeit":"07:00","done":false,"caption":"Am 27. Maerz 2026 hat der Bundestag das Altersvorsorgereformgesetz beschlossen.\n\nAb 2027 gibt es ein neues Produkt: das Altersvorsorgedepot.\n\nWas neu moeglich wird:\n→ Kapitalmarktorientiertes Sparen - staatlich gefoerdert\n→ Flexible Ausgestaltung je nach Sicherheitsbeduerfnis\n→ Weniger Kosten, mehr Transparenz\n→ Fruehstart-Rente: der Staat zahlt ab 6 Jahren fuer Kinder ein\n\nBestehende Vertraege laufen unveraendert weiter - kein Handlungszwang.\n\nLink in der Bio. 👇","hashtags":"#Altersvorsorge #Altersvorsorgedepot #Rentenreform #Ruhestand #Finanzcoach #coachthorben #Finanzathlet #Privatvorsorge #Bundestag2026 #Vorsorge","canva":["Instagram-Vorlage oeffnen","Text anpassen","Letzten Satz in Blau #378ADD","Export Post11_Insta.png"],"taglineWA":"@coachthorben","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext","Graue Zeile unten: @coachthorben","Export Post11_WA.png"]},{"id":12,"title":"Altersvorsorgedepot - Bestandskunden","zielgruppe":"privat","typ":"Aktuelles","kanalTypes":["insta","wa"],"kachel":"Du hast einen Riester-Vertrag.\n\n<Was aendert sich fuer dich?>","datum":"2026-09-09","zeit":"07:00","done":false,"caption":"Die Reform ist beschlossen.\n\nDeine Antwort: Nichts aendert sich - wenn du nichts tust.\n\nBestehende Vertraege laufen weiter. Bestandsschutz gilt.\n\nGleichzeitig oeffnet die Reform neue Moeglichkeiten.\n\nIch schaue mir das gerne mit dir an.\nKostenlos. Unverbindlich. Ohne Druck.\nLink in der Bio. 👇","hashtags":"#Riester #Altersvorsorgedepot #Altersvorsorge #Rentenreform #Finanzcoach #coachthorben #Ruhestand #Privatvorsorge #Finanzathlet #Beratung","canva":["Instagram-Vorlage oeffnen","Text anpassen","Letzten Satz in Blau #378ADD","Export Post12_Insta.png"],"taglineWA":"Firmenkundenberater & Finanzcoach","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext","Graue Zeile: Firmenkundenberater & Finanzcoach","Export Post12_WA.png"]},{"id":13,"title":"Altersvorsorgedepot - Depot neu","zielgruppe":"beide","typ":"Aktuelles","kanalTypes":["insta","wa"],"kachel":"Kapitalmarkt.\nStaatlich gefoerdert.\n\n<Ab 2027 Realitaet.>","datum":"2026-09-16","zeit":"07:00","done":false,"caption":"Das neue Altersvorsorgedepot denkt private Vorsorge neu.\n\nFuer jeden eingezahlten Euro bis 1.200 EUR gibt es 30 Cent vom Staat.\n\nDazu: flexible Anlage in kapitalmarktorientierten Fonds.\n\nDas Depot ist ein Werkzeug. Ob es das richtige fuer dich ist, klaeren wir gemeinsam.\nLink in der Bio. 👇","hashtags":"#Altersvorsorgedepot #Altersvorsorge #Vermoegensaufbau #Rentenreform #Finanzcoach #coachthorben #Finanzathlet #Staatlichgefoerdert #Ruhestand #Vorsorge","canva":["Instagram-Vorlage oeffnen","Text anpassen","Letzten Satz in Blau #378ADD","Export Post13_Insta.png"],"taglineWA":"@coachthorben","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext","Graue Zeile: @coachthorben","Export Post13_WA.png"]},{"id":14,"title":"Altersvorsorgedepot - Firmenkunden","zielgruppe":"firma","typ":"Aktuelles","kanalTypes":["insta","wa"],"kachel":"Die Altersvorsorge-Reform.\n\n<Was Unternehmer jetzt wissen sollten.>","datum":"2026-09-23","zeit":"07:00","done":false,"caption":"Die Reform betrifft nicht nur Privatpersonen.\n\nAls Unternehmer traegst du Verantwortung - auch fuer deine Mitarbeiter.\n\nWas die Reform oeffnet:\n→ Neue Moeglichkeiten in der bAV\n→ Altersvorsorgedepot als Mitarbeiter-Benefit\n→ Fruehstart-Rente als Gesprachsthema mit jungen Mitarbeitern\n\nKurzes Gespraech? Link in der Bio. 👇","hashtags":"#Firmenkunden #Unternehmer #BetrieblicheAltersvorsorge #Altersvorsorgedepot #Rentenreform #Firmenkundenberater #coachthorben #Mittelstand #Mitarbeiterbenefit #Geschaeftsfuehrer","canva":["Instagram-Vorlage oeffnen","Text anpassen","Letzten Satz in Blau #378ADD","Export Post14_Insta.png"],"taglineWA":"Firmenkundenberater & Finanzcoach","canvaWA":["WA-Status Vorlage oeffnen (1080x1920px)","Gleicher Kacheltext","Graue Zeile: Firmenkundenberater & Finanzcoach","Export Post14_WA.png"]}];
+
 var rpPosts=[];
 
 function loadRP(){
@@ -877,102 +661,12 @@ function load(){
   }catch(e){}
   // Hardcoded backup data
   stati=[{"key": "neu", "label": "Neu", "color": "#378ADD"}, {"key": "analyse", "label": "Analyse", "color": "#EF9F27"}, {"key": "angebot", "label": "Angebot", "color": "#7F77DD"}, {"key": "aktiv", "label": "Aktiv", "color": "#639922"}, {"key": "pause", "label": "Pause", "color": "#888780"}];
-  kunden=[
-    {id:20,name:"Baldede, Dilara",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Baldede_Dilara?csf=1&web=1&e=P1MCar",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:21,name:"Bauknecht, Birgit",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bauknecht_Birgit?csf=1&web=1&e=9khw8i",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:22,name:"Becker, Jonas",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Becker_Olga?csf=1&web=1&e=Eu7tvo",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:23,name:"Becker, Tobias",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Becker_Olga?csf=1&web=1&e=Eu7tvo",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:24,name:"Beutel, Andrea",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:25,name:"Beutel, Hanna Sofie",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:26,name:"Beutel, Lena Pauline",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:27,name:"Beutel, Marcus",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:28,name:"Bez, Manuel",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Manuel?csf=1&web=1&e=omg5qp",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:29,name:"Bez, Anna-Mia",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:30,name:"Bez, Kerstin",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:31,name:"Bez, Marcus",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[{id:51,text:"Basis Rente Angebot rechnen und versenden",datum:"2026-03-30",done:false,prio:"1"}]},
-    {id:32,name:"Bez, Timo",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:33,name:"Brenner-Jirikowsky, Kerstin",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Brenner%20Jirikowsky_Uwe_Kerstin?csf=1&web=1&e=yotBj7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:34,name:"Jirikowsky, Uwe",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Brenner%20Jirikowsky_Uwe_Kerstin?csf=1&web=1&e=yotBj7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:35,name:"Brillisauer, Thomas",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Brillisauer_Thomas?csf=1&web=1&e=yHz5de",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:36,name:"Calarota, Lina",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Calarota_Marco_Lea?csf=1&web=1&e=v3kxu7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:37,name:"Calarota, Marco",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Calarota_Marco_Lea?csf=1&web=1&e=v3kxu7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:38,name:"Calarota, Mila",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Calarota_Marco_Lea?csf=1&web=1&e=v3kxu7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:39,name:"Davies, Steve",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Davies_Steve?csf=1&web=1&e=agET51",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:40,name:"Demercheva, Ksenia",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Demercheva_Ksenia?csf=1&web=1&e=fQbiP4",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end",notiz:"",todos:[]},
-    {id:41,name:"Fazeli, Mohammad Soleyman",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Fazeli_Mohammad%20Soleyman?csf=1&web=1&e=IISjj7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:42,name:"Fazeli, Zorah",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Fazeli_Mohammad%20Soleyman?csf=1&web=1&e=IISjj7",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:43,name:"Freund, Florentino",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Freund_Florentino?csf=1&web=1&e=sc9nn3",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:44,name:"Geissler, Björn",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Geissler_Bj%C3%B6rn?csf=1&web=1&e=xh1YyS",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:45,name:"Geißler, Pia",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Geissler_Pia?csf=1&web=1&e=1aee6U",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[{id:52,text:"To DO one Note",datum:"2026-05-07",done:false,prio:"1"}]},
-    {id:46,name:"Gonella, Samuele",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Gonella_Samuele?csf=1&web=1&e=MY1H8z",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:47,name:"Graeser, Robin",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Graeser_Robin?csf=1&web=1&e=4kz8Ce",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:48,name:"Graupner, Jan",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Graupner_Jan?csf=1&web=1&e=TguUvW",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:49,name:"Hinderer, Wolfgang",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Hinderer_Wolfgang_Angelika?csf=1&web=1&e=FFjAha",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:50,name:"Hinderer, Angelika",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Hinderer_Wolfgang_Angelika?csf=1&web=1&e=FFjAha",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:51,name:"Günther, Catarina",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/G%C3%BCnther_Catarina?csf=1&web=1&e=aPbpSx",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:52,name:"Hauser, Werner",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Hauser_Werner?csf=1&web=1&e=E8W4aX",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end",notiz:"",todos:[]},
-    {id:53,name:"Kächele, Achim",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_K_L_M_N_O/K%C3%A4chele_Achim?csf=1&web=1&e=1oTPsB",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={0B742DA1-C7AD-4342-8AF3-B0D7C15C1D73}&end=()&end",notiz:"",todos:[]},
-    {id:54,name:"Kovacs, Eszter",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_K_L_M_N_O/Kovacs_Eszter?csf=1&web=1&e=4ZpoTu",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={0B742DA1-C7AD-4342-8AF3-B0D7C15C1D73}&end=()&end",notiz:"",todos:[]},
-    {id:55,name:"Letic, Amela",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_K_L_M_N_O/Letic_Amela?csf=1&web=1&e=KrV85a",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={0B742DA1-C7AD-4342-8AF3-B0D7C15C1D73}&end=()&end",notiz:"",todos:[]},
-    {id:56,name:"Marcus Beutel, günStil Garten-u. Land-",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Gr%C3%BCnstil?csf=1&web=1&e=E8HaPT",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end",notiz:"",todos:[]},
-    {id:57,name:"Michael Fischinger & Nadja Palmer, FIKU Fischinger GmbH",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Fiku_MichaelFischinger?csf=1&web=1&e=Aj9Fcw",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end",notiz:"",todos:[]},
-    {id:58,name:"Palmer, Nadja",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Palmer_Nadja?csf=1&web=1&e=GXSYSe",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:59,name:"Palmer, Charlotte",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Palmer_Nadja?csf=1&web=1&e=GXSYSe",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:60,name:"Papadopoulos, Vasileios",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Papadopolus_Vasileios?csf=1&web=1&e=v8JsN0",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:61,name:"Peschke, Marcel",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Peschke_Marcel?csf=1&web=1&e=O5fvw8",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:62,name:"Reimer, Thorben",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Svenja_Thorben?csf=1&web=1&e=w4mSwU",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:63,name:"Reimer, Matti",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Matti?csf=1&web=1&e=Zh9udb",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:64,name:"Reimer, Svenja",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Svenja_Thorben?csf=1&web=1&e=w4mSwU",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:65,name:"Reimer, Horst",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Horst_Gudrun?csf=1&web=1&e=fFHkYl",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:66,name:"Reimer, Gudrun",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Horst_Gudrun?csf=1&web=1&e=fFHkYl",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:67,name:"Requardt, Thomas",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Requardt_Thomas?csf=1&web=1&e=f5A9WW",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:68,name:"Seidl, Timo",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Seidl_Timo?csf=1&web=1&e=pVcULf",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:69,name:"Schaich, Lukas",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schaich_Lukas?csf=1&web=1&e=BTg9Cl",on:"",notiz:"",todos:[]},
-    {id:70,name:"Schietinger, Ingo",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Ingo_Sabine?csf=1&web=1&e=g8O87C",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:71,name:"Schietinger, Roswitha",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Kurt_Roswitha?csf=1&web=1&e=hIkEAJ",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:72,name:"Schietinger, Kurt",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Kurt_Roswitha?csf=1&web=1&e=hIkEAJ",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:73,name:"Schietinger, Sabine",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Ingo_Sabine?csf=1&web=1&e=g8O87C",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:74,name:"Schietinger, Simon",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Simon?csf=1&web=1&e=MLwWey",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:75,name:"Schumann, Henriette",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Henriette?csf=1&web=1&e=R93EjV",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:76,name:"Schumann, Monika",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Tobias_Monika?csf=1&web=1&e=OxpDxP",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:77,name:"Schumann, Tobias",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Tobias_Monika?csf=1&web=1&e=OxpDxP",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:78,name:"Schumann, Leonhard",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Tobias_Monika?csf=1&web=1&e=OxpDxP",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:79,name:"Schwarz, Florian",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schwarz_Florian?csf=1&web=1&e=zobYPW",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:80,name:"Schweiß, Nadine",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schweiss_Nadine?csf=1&web=1&e=hTyoNv",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:81,name:"Seidl, Samantha",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Steidl_Samantha?csf=1&web=1&e=j7zRSz",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:82,name:"Sharleena Hauser, Hundezentrum Hauser",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Hauser_Sharleena?csf=1&web=1&e=QnW20Q",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end",notiz:"",todos:[]},
-    {id:83,name:"Siegler, Clemens",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Siegler_Clemens?csf=1&web=1&e=LRttTB",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:84,name:"Silberhorn, Benjamin",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:85,name:"Silberhorn, Leni",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:86,name:"Silberhorn, Luca",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:87,name:"Silberhorn, Tamara",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:88,name:"Smyczek, Piotr",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Smycek_Piotr?csf=1&web=1&e=ANhSvh",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:89,name:"Stoll-Dettmer, Janette",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Stoll-Dettmer_Janette?csf=1&web=1&e=eCm5Ul",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:90,name:"Stoll-Dettmer, Henri",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Stoll-Dettmer_Janette?csf=1&web=1&e=eCm5Ul",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:91,name:"Stoll-Dettmer, Karla",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Stoll-Dettmer_Janette?csf=1&web=1&e=eCm5Ul",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end",notiz:"",todos:[]},
-    {id:92,name:"Szvatek, Gabor",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Szvatek_Gabor_Edina_Emma?csf=1&web=1&e=jJAYkv",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:93,name:"Szvatek, Emma",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Szvatek_Gabor_Edina_Emma?csf=1&web=1&e=jJAYkv",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:94,name:"Szvatek-Kovacs, Edina",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Szvatek_Gabor_Edina_Emma?csf=1&web=1&e=jJAYkv",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:95,name:"Toader, Victor-Ioan",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Toader_Victor?csf=1&web=1&e=SJW7tn",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:96,name:"Tomic, Mirjana",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Tomic_Mirjana?csf=1&web=1&e=jfCG0m",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end",notiz:"",todos:[]},
-    {id:97,name:"Weiß, Carolin",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Wei%C3%9F_Carolin?csf=1&web=1&e=c5fjyR",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:98,name:"Weiß, Rolf",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Wei%C3%9F_Rolf?csf=1&web=1&e=oNx5Dw",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:99,name:"Weller, Jürgen Frederic",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Weller_J%C3%BCrgen_Stefanie_Selina?csf=1&web=1&e=g9UyWY",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[{id:50,text:"WoMo versichern",datum:"2026-03-31",done:false,prio:""}]},
-    {id:100,name:"Weller, Selina",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Weller_J%C3%BCrgen_Stefanie_Selina?csf=1&web=1&e=g9UyWY",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:101,name:"Weller, Stefanie",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Weller_J%C3%BCrgen_Stefanie_Selina?csf=1&web=1&e=g9UyWY",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:102,name:"Zimdars, Karen",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Karen?csf=1&web=1&e=bEIilL",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:103,name:"Zimdars, Mila",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Karen?csf=1&web=1&e=bEIilL",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:104,name:"Zimdars, Nele",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Karen?csf=1&web=1&e=bEIilL",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:105,name:"Zimdars, Hendrik",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Hendrik?csf=1&web=1&e=fp3Slc",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end",notiz:"",todos:[]},
-    {id:106,name:"Jürgen Weller, Malerbetrieb Jürden Weller",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Malerbetrieb_J%C3%BCrgenWeller?csf=1&web=1&e=wzHR5Y",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end",notiz:"",todos:[]},
-    {id:107,name:"Monika Schumann-Maiß, Pliensau Apotheke OHG",status:"aktiv",od:"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Pliensau_Apotheke?csf=1&web=1&e=fByCs6",on:"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end",notiz:"",todos:[]},
-    {id:108,name:"Büro",status:"neu",od:"",on:"",notiz:"",todos:[{id:53,text:"Fa. Acomax - bKV n. Jahresgespräch mit WuW und Punkt Liquidität, Performance Coaching",datum:"2026-04-10",done:false,prio:""},{id:54,text:"T. Hauser - Terminierung n. Versand Unterlagen an TR",datum:"2026-04-09",done:false,prio:"1"},{id:55,text:"dashboard > wdhl. funktion für Termine coden! Claude",datum:"2026-05-05",done:false,prio:""}]}
-  ];
-  nextKId=109;nextTId=56;
+  kunden=[{"id":20,"name":"Baldede, Dilara","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Baldede_Dilara?csf=1&web=1&e=P1MCar","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":21,"name":"Bauknecht, Birgit","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bauknecht_Birgit?csf=1&web=1&e=9khw8i","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":22,"name":"Becker, Jonas","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Becker_Olga?csf=1&web=1&e=Eu7tvo","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":23,"name":"Becker, Tobias","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Becker_Olga?csf=1&web=1&e=Eu7tvo","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":24,"name":"Beutel, Andrea","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":25,"name":"Beutel, Hanna Sofie","status":"angebot","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[{"id":52,"text":"Invest 20T EUR","datum":"2026-04-13","done":false,"prio":"2"}],"umsatzNotiz":"Invest, Gold, VEP","umsatzPot":20},{"id":26,"name":"Beutel, Lena Pauline","status":"angebot","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[{"id":53,"text":"Invest 20T EUR","datum":"2026-04-13","done":false,"prio":"2"}],"umsatzNotiz":"Invest, Gold, VEP","umsatzPot":20},{"id":27,"name":"Beutel, Marcus","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Beutel_Marcus_Andrea_Hanna_Lena?csf=1&web=1&e=cEQ6Ah","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":28,"name":"Bez, Manuel","status":"angebot","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Manuel?csf=1&web=1&e=omg5qp","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[],"umsatzPot":103.3,"umsatzNotiz":"BU"},{"id":29,"name":"Bez, Anna-Mia","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":30,"name":"Bez, Kerstin","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":31,"name":"Bez, Marcus","status":"angebot","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[],"umsatzNotiz":"Basis"},{"id":32,"name":"Bez, Timo","status":"angebot","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Bez_Marcus_Kerstin_Timo_Anna-Mia?csf=1&web=1&e=M5hVBM","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[],"umsatzPot":45,"umsatzNotiz":"BU"},{"id":33,"name":"Brenner-Jirikowsky, Kerstin","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Brenner%20Jirikowsky_Uwe_Kerstin?csf=1&web=1&e=yotBj7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":34,"name":"Jirikowsky, Uwe","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Brenner%20Jirikowsky_Uwe_Kerstin?csf=1&web=1&e=yotBj7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":35,"name":"Brillisauer, Thomas","status":"analyse","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Brillisauer_Thomas?csf=1&web=1&e=yHz5de","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[{"id":54,"text":"bAV, und Sach","datum":"","done":false,"prio":""}],"umsatzNotiz":"bAV, AV, Invest"},{"id":36,"name":"Calarota, Lina","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Calarota_Marco_Lea?csf=1&web=1&e=v3kxu7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":37,"name":"Calarota, Marco","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Calarota_Marco_Lea?csf=1&web=1&e=v3kxu7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":38,"name":"Calarota, Mila","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Calarota_Marco_Lea?csf=1&web=1&e=v3kxu7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":39,"name":"Davies, Steve","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Davies_Steve?csf=1&web=1&e=agET51","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":40,"name":"Demercheva, Ksenia","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_A_B_C_D_E/Demercheva_Ksenia?csf=1&web=1&e=fQbiP4","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={AC0695C9-FEF7-4510-8E05-C6D30FB4F38C}&end=()&end","notiz":"","todos":[]},{"id":41,"name":"Fazeli, Mohammad Soleyman","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Fazeli_Mohammad%20Soleyman?csf=1&web=1&e=IISjj7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":42,"name":"Fazeli, Zorah","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Fazeli_Mohammad%20Soleyman?csf=1&web=1&e=IISjj7","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":43,"name":"Freund, Florentino","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Freund_Florentino?csf=1&web=1&e=sc9nn3","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":44,"name":"Geissler, Björn","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Geissler_Bj%C3%B6rn?csf=1&web=1&e=xh1YyS","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":45,"name":"Geißler, Pia","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Geissler_Pia?csf=1&web=1&e=1aee6U","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":46,"name":"Gonella, Samuele","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Gonella_Samuele?csf=1&web=1&e=MY1H8z","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":47,"name":"Graeser, Robin","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Graeser_Robin?csf=1&web=1&e=4kz8Ce","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":48,"name":"Graupner, Jan","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Graupner_Jan?csf=1&web=1&e=TguUvW","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":49,"name":"Hinderer, Wolfgang","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Hinderer_Wolfgang_Angelika?csf=1&web=1&e=FFjAha","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":50,"name":"Hinderer, Angelika","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_F_G_H_I_J/Hinderer_Wolfgang_Angelika?csf=1&web=1&e=FFjAha","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":51,"name":"Günther, Catarina","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/G%C3%BCnther_Catarina?csf=1&web=1&e=aPbpSx","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":52,"name":"Hauser, Werner","status":"analyse","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Hauser_Werner?csf=1&web=1&e=E8W4aX","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={3DD6C7F7-022E-4FE2-8943-527A52CB2B2F}&end=()&end","notiz":"","todos":[]},{"id":53,"name":"Kächele, Achim","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_K_L_M_N_O/K%C3%A4chele_Achim?csf=1&web=1&e=1oTPsB","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={0B742DA1-C7AD-4342-8AF3-B0D7C15C1D73}&end=()&end","notiz":"","todos":[]},{"id":54,"name":"Kovacs, Eszter","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_K_L_M_N_O/Kovacs_Eszter?csf=1&web=1&e=4ZpoTu","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={0B742DA1-C7AD-4342-8AF3-B0D7C15C1D73}&end=()&end","notiz":"","todos":[]},{"id":55,"name":"Letic, Amela","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_K_L_M_N_O/Letic_Amela?csf=1&web=1&e=KrV85a","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={0B742DA1-C7AD-4342-8AF3-B0D7C15C1D73}&end=()&end","notiz":"","todos":[]},{"id":56,"name":"Marcus Beutel, günStil Garten-u. Land-","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Gr%C3%BCnstil?csf=1&web=1&e=E8HaPT","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end","notiz":"","todos":[]},{"id":57,"name":"Michael Fischinger & Nadja Palmer, FIKU Fischinger GmbH","status":"analyse","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Fiku_MichaelFischinger?csf=1&web=1&e=Aj9Fcw","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end","notiz":"","todos":[]},{"id":58,"name":"Palmer, Nadja","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Palmer_Nadja?csf=1&web=1&e=GXSYSe","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":59,"name":"Palmer, Charlotte","status":"analyse","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Palmer_Nadja?csf=1&web=1&e=GXSYSe","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":60,"name":"Papadopoulos, Vasileios","status":"angebot","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Papadopolus_Vasileios?csf=1&web=1&e=v8JsN0","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[],"umsatzPot":7.58,"umsatzNotiz":"ZKV"},{"id":61,"name":"Peschke, Marcel","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Peschke_Marcel?csf=1&web=1&e=O5fvw8","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":62,"name":"Reimer, Thorben","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Svenja_Thorben?csf=1&web=1&e=w4mSwU","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":63,"name":"Reimer, Matti","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Matti?csf=1&web=1&e=Zh9udb","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":64,"name":"Reimer, Svenja","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Svenja_Thorben?csf=1&web=1&e=w4mSwU","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":65,"name":"Reimer, Horst","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Horst_Gudrun?csf=1&web=1&e=fFHkYl","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":66,"name":"Reimer, Gudrun","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Reimer_Horst_Gudrun?csf=1&web=1&e=fFHkYl","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":67,"name":"Requardt, Thomas","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Requardt_Thomas?csf=1&web=1&e=f5A9WW","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":68,"name":"Seidl, Timo","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Seidl_Timo?csf=1&web=1&e=pVcULf","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":69,"name":"Schaich, Lukas","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schaich_Lukas?csf=1&web=1&e=BTg9Cl","on":"","notiz":"","todos":[]},{"id":70,"name":"Schietinger, Ingo","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Ingo_Sabine?csf=1&web=1&e=g8O87C","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":71,"name":"Schietinger, Roswitha","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Kurt_Roswitha?csf=1&web=1&e=hIkEAJ","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":72,"name":"Schietinger, Kurt","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Kurt_Roswitha?csf=1&web=1&e=hIkEAJ","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":73,"name":"Schietinger, Sabine","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Ingo_Sabine?csf=1&web=1&e=g8O87C","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":74,"name":"Schietinger, Simon","status":"analyse","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schietinger_Simon?csf=1&web=1&e=MLwWey","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[{"id":50,"text":"Freischaltung per Post versenden","datum":"2026-04-07","done":true,"prio":"1"},{"id":51,"text":"Investmentstrategie umsetzten und versenden, sobald Geld auf 05er ist","datum":"2026-04-09","done":false,"prio":"1"}],"umsatzNotiz":"Invest"},{"id":75,"name":"Schumann, Henriette","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Henriette?csf=1&web=1&e=R93EjV","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":76,"name":"Schumann, Monika","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Tobias_Monika?csf=1&web=1&e=OxpDxP","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":77,"name":"Schumann, Tobias","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Tobias_Monika?csf=1&web=1&e=OxpDxP","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":78,"name":"Schumann, Leonhard","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schumann_Tobias_Monika?csf=1&web=1&e=OxpDxP","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":79,"name":"Schwarz, Florian","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schwarz_Florian?csf=1&web=1&e=zobYPW","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":80,"name":"Schweiß, Nadine","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Schweiss_Nadine?csf=1&web=1&e=hTyoNv","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":81,"name":"Seidl, Samantha","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Steidl_Samantha?csf=1&web=1&e=j7zRSz","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":82,"name":"Sharleena Hauser, Hundezentrum Hauser","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Hauser_Sharleena?csf=1&web=1&e=QnW20Q","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end","notiz":"","todos":[]},{"id":83,"name":"Siegler, Clemens","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Siegler_Clemens?csf=1&web=1&e=LRttTB","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":84,"name":"Silberhorn, Benjamin","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":85,"name":"Silberhorn, Leni","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":86,"name":"Silberhorn, Luca","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":87,"name":"Silberhorn, Tamara","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Silberhorn_Benni_Tamara?csf=1&web=1&e=eadPdp","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":88,"name":"Smyczek, Piotr","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Smycek_Piotr?csf=1&web=1&e=ANhSvh","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":89,"name":"Stoll-Dettmer, Janette","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Stoll-Dettmer_Janette?csf=1&web=1&e=eCm5Ul","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":90,"name":"Stoll-Dettmer, Henri","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Stoll-Dettmer_Janette?csf=1&web=1&e=eCm5Ul","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":91,"name":"Stoll-Dettmer, Karla","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_ST_SCH/Stoll-Dettmer_Janette?csf=1&web=1&e=eCm5Ul","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EAD69896-1CA7-459B-91A7-6D353745F748}&end=()&end","notiz":"","todos":[]},{"id":92,"name":"Szvatek, Gabor","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Szvatek_Gabor_Edina_Emma?csf=1&web=1&e=jJAYkv","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":93,"name":"Szvatek, Emma","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Szvatek_Gabor_Edina_Emma?csf=1&web=1&e=jJAYkv","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":94,"name":"Szvatek-Kovacs, Edina","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Szvatek_Gabor_Edina_Emma?csf=1&web=1&e=jJAYkv","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":95,"name":"Toader, Victor-Ioan","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Toader_Victor?csf=1&web=1&e=SJW7tn","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":96,"name":"Tomic, Mirjana","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_P_Q_R_S_T/Tomic_Mirjana?csf=1&web=1&e=jfCG0m","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={EBAAA44C-193A-47C8-AF75-E51D590A902C}&end=()&end","notiz":"","todos":[]},{"id":97,"name":"Weiß, Carolin","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Wei%C3%9F_Carolin?csf=1&web=1&e=c5fjyR","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":98,"name":"Weiß, Rolf","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Wei%C3%9F_Rolf?csf=1&web=1&e=oNx5Dw","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":99,"name":"Weller, Jürgen Frederic","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Weller_J%C3%BCrgen_Stefanie_Selina?csf=1&web=1&e=g9UyWY","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":100,"name":"Weller, Selina","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Weller_J%C3%BCrgen_Stefanie_Selina?csf=1&web=1&e=g9UyWY","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":101,"name":"Weller, Stefanie","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Weller_J%C3%BCrgen_Stefanie_Selina?csf=1&web=1&e=g9UyWY","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":102,"name":"Zimdars, Karen","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Karen?csf=1&web=1&e=bEIilL","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":103,"name":"Zimdars, Mila","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Karen?csf=1&web=1&e=bEIilL","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":104,"name":"Zimdars, Nele","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Karen?csf=1&web=1&e=bEIilL","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":105,"name":"Zimdars, Hendrik","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Kunden/PK_U_V_W_X_Y_Z/Zimdars_Hendrik?csf=1&web=1&e=fp3Slc","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={02AB191C-07E6-47F3-8B20-334D7EA411E8}&end=()&end","notiz":"","todos":[]},{"id":106,"name":"Jürgen Weller, Malerbetrieb Jürden Weller","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Malerbetrieb_J%C3%BCrgenWeller?csf=1&web=1&e=wzHR5Y","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end","notiz":"","todos":[]},{"id":107,"name":"Monika Schumann-Maiß, Pliensau Apotheke OHG","status":"aktiv","od":"https://dvag02-my.sharepoint.com/:f:/r/personal/thorben_reimer_dvag_de/Documents/!Firmenkunden/Pliensau_Apotheke?csf=1&web=1&e=fByCs6","on":"https://dvag02-my.sharepoint.com/personal/thorben_reimer_dvag_de/_layouts/Doc.aspx?sourcedoc={D4C78B70-E7E0-4C1A-9E13-8FCF552AD031}&end=()&end","notiz":"","todos":[]},{"id":108,"name":"Kiedaisch","status":"analyse","od":"","on":"","notiz":"","todos":[],"umsatzNotiz":"AV Theresa"}];
+  nextKId=109;nextTId=55;109;nextTId=56;
   DEF_TAGS=["#admin", "#dvag", "#kunde", "#coaching"];
   try{save();}catch(e){}
 }
-function save(){try{localStorage.setItem(SK,JSON.stringify({stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS}));}catch(e){}try{if(typeof umsatzData!=='undefined')saveUmsatz();}catch(e){}}
+function save(){try{localStorage.setItem(SK,JSON.stringify({stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,umsatzData:umsatzData,potKunden:potKunden,nextPotId:nextPotId}));}catch(e){}}
 function getSt(key){for(var i=0;i<stati.length;i++){if(stati[i].key===key)return stati[i];}return{label:key,color:'#888780'};}
 function isOD(d){return d&&d<today;}
 function isTD(d){return d===today;}
@@ -997,6 +691,7 @@ function updateCounts(){
   document.getElementById('inp-status').innerHTML=sopts(stati[0]?stati[0].key:'');
   var offen=rpPosts.filter(function(p){return!p.done;}).length;
   var rpEl=document.getElementById('cnt-redaktion');if(rpEl)rpEl.textContent=offen||'-';
+  var uEl=document.getElementById('cnt-umsatz');if(uEl){var uc=kunden.filter(function(k){return k.status==='neu'||k.status==='analyse'||k.status==='angebot';}).length;uEl.textContent=uc||'-';}
   renderSB();
 }
 function goView(v){
@@ -1004,7 +699,7 @@ function goView(v){
   ['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n===v?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
   renderSB();
   if(v==='pipeline')renderPipeline();
-  else if(v==='umsatz'){renderUmsatz();}
+  else if(v==='umsatz')renderUmsatz();
   else if(v==='alle'){document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);}
   else if(v==='tags')renderTagView();
   else if(v==='redaktion')renderRP();
@@ -1050,83 +745,6 @@ function renderHeute(){
   document.getElementById('h-today').innerHTML=td.length?'<div class=today-sec><h3>Heute</h3>'+td.map(function(t){return mkI(t,'bar-td');}).join('')+'</div>':'';
   document.getElementById('h-upcoming').innerHTML=up.length?'<div class=today-sec><h3>Demnaechst</h3>'+up.map(function(t){return mkI(t,'');}).join('')+'</div>':'';
   document.getElementById('h-empty').style.display=(!od.length&&!td.length&&!up.length)?'':'none';
-  // ── Redaktionsplan Posts heute ──
-  var rpToday=rpPosts.filter(function(p){return p.datum===today&&!p.done;});
-  var rpEl=document.getElementById('h-redaktion');
-  if(rpEl){
-    if(rpToday.length){
-      var kanalCol={'insta':'#C13584','wa':'#128C7E','li':'#0A66C2','story':'#185FA5'};
-      var kanalLbl={'insta':'📸 Instagram','wa':'💬 WhatsApp','li':'💼 LinkedIn','story':'📖 Story'};
-      rpEl.innerHTML='<div class=today-sec style="margin-top:1.25rem">'
-        +'<h3 style="display:flex;align-items:center;gap:8px">📅 Social Media heute'
-        +'<span style="font-size:11px;font-weight:400;color:var(--muted);font-family:var(--mono)">'+rpToday.length+' Post'+(rpToday.length>1?'s':'')+'</span></h3>'
-        +rpToday.map(function(p){
-          var openKey='rp-heute-'+p.id;
-          var isOpen=!!openCards[openKey];
-          var badges=(p.kanalTypes||[]).map(function(k){
-            return'<span style="font-size:10px;padding:1px 8px;border-radius:20px;background:'+kanalCol[k]+'22;color:'+kanalCol[k]+';font-weight:500">'+(kanalLbl[k]||k)+'</span>';
-          }).join(' ');
-          var body='';
-          if(isOpen){
-            body='<div style="border-top:0.5px solid var(--border);padding:12px 14px;background:var(--surface2)">';
-            // Kachel
-            if(p.kachel){
-              var kachelHtml=p.kachel.replace(/</g,'').replace(/>/g,'').replace(/^<(.*)>$/m,'<span style="color:var(--c-link);font-weight:600">$1</span>');
-              body+='<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Kachel-Text</div>';
-              body+='<div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:13px;line-height:1.6;white-space:pre-wrap;margin-bottom:10px">'+p.kachel.replace(/<([^>]+)>/g,'<span style="color:var(--c-link);font-weight:600">$1</span>')+'</div>';
-            }
-            // Caption Instagram
-            if(p.caption){
-              body+='<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Caption Instagram</div>';
-              body+='<div id="rph-cap-'+p.id+'" style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;font-size:12px;line-height:1.7;white-space:pre-wrap;margin-bottom:4px">'+p.caption+'</div>';
-              body+='<button class="rp-copy-btn" style="margin-bottom:10px" onclick="navigator.clipboard.writeText(document.getElementById(\'rph-cap-'+p.id+'\').innerText).then(function(){var b=event.target;b.textContent=\'✓ Kopiert\';setTimeout(function(){b.textContent=\'Kopieren\'},2000)})">Kopieren</button>';
-            }
-            // Caption LinkedIn
-            if(p.captionLI){
-              body+='<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Caption LinkedIn</div>';
-              body+='<div style="background:#0A66C215;border:0.5px solid #0A66C240;border-radius:var(--radius);padding:10px 12px;margin-bottom:4px">';
-              body+='<div style="font-size:10px;color:#0A66C2;margin-bottom:4px;font-weight:500">Hook = erste Zeile. Frage oder Aussage.</div>';
-              body+='<div id="rph-li-'+p.id+'" style="font-size:12px;line-height:1.7;white-space:pre-wrap">'+p.captionLI+'</div></div>';
-              body+='<button class="rp-copy-btn" style="margin-bottom:10px" onclick="navigator.clipboard.writeText(document.getElementById(\'rph-li-'+p.id+'\').innerText).then(function(){var b=event.target;b.textContent=\'✓ Kopiert\';setTimeout(function(){b.textContent=\'Kopieren\'},2000)})">Kopieren</button>';
-            }
-            // Hashtags
-            if(p.hashtags){
-              body+='<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Hashtags</div>';
-              body+='<div id="rph-ht-'+p.id+'" style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius);padding:8px 12px;font-size:12px;color:var(--muted);margin-bottom:4px">'+p.hashtags+'</div>';
-              body+='<button class="rp-copy-btn" style="margin-bottom:10px" onclick="navigator.clipboard.writeText(document.getElementById(\'rph-ht-'+p.id+'\').innerText).then(function(){var b=event.target;b.textContent=\'✓ Kopiert\';setTimeout(function(){b.textContent=\'Kopieren\'},2000)})">Kopieren</button>';
-            }
-            // Kanal checkboxen
-            if(p.kanalTypes&&p.kanalTypes.length){
-              body+='<div style="background:var(--surface);border-radius:var(--radius);padding:8px 12px;display:flex;gap:14px;flex-wrap:wrap;align-items:center;margin-top:4px">';
-              body+='<span style="font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Erledigt:</span>';
-              body+=p.kanalTypes.map(function(k){
-                var chk=(p.done_channels&&p.done_channels[k])?' checked':'';
-                return'<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">'
-                  +'<input type="checkbox"'+chk+' onchange="toggleChannel('+p.id+',\''+k+'\',this)" onclick="event.stopPropagation()">'
-                  +'<span style="color:'+kanalCol[k]+';font-weight:500">'+(kanalLbl[k]||k)+'</span></label>';
-              }).join('');
-              body+='</div>';
-            }
-            body+='</div>';
-          }
-          return'<div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);margin-bottom:8px;overflow:hidden">'
-            +'<div style="display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer" onclick="openCards[\''+openKey+'\']=!openCards[\''+openKey+'\'];renderHeute()">'
-            +'<input type=checkbox'+(p.done?' checked':'')+' onclick="event.stopPropagation();toggleRP('+p.id+',this)" />'
-            +'<div style="flex:1;min-width:0">'
-            +'<div style="font-size:13px;font-weight:500">'+p.title+'</div>'
-            +'<div style="margin-top:3px;display:flex;gap:4px;flex-wrap:wrap">'+badges+'</div>'
-            +'</div>'
-            +'<span style="font-size:11px;color:var(--muted);font-family:var(--mono)">'+p.zeit+' Uhr</span>'
-            +'<span style="font-size:11px;color:var(--hint);transform:'+(isOpen?'rotate(90deg)':'none')+';display:inline-block;transition:transform .15s">&#9658;</span>'
-            +'</div>'
-            +body
-            +'</div>';
-        }).join('')
-        +'</div>';
-    } else {
-      rpEl.innerHTML='';
-    }
-  }
   renderHTagBtns();
 }
 function renderTagView(){
@@ -1265,6 +883,9 @@ function importData(input){
       stati=data.stati||DEF_STATI;kunden=data.kunden||[];nextKId=data.nextKId||100;nextTId=data.nextTId||1000;
       if(data.defTags)DEF_TAGS=data.defTags;
       if(data.rpPosts)rpPosts=data.rpPosts;
+      if(data.umsatzData)umsatzData=data.umsatzData;
+      if(data.potKunden)potKunden=data.potKunden;
+      if(data.nextPotId)nextPotId=data.nextPotId;
       save();saveRP();updateCounts();renderHeute();
       alert('Import erfolgreich. '+kunden.length+' Kunden geladen.');
     }catch(err){alert('Fehler beim Import: '+err.message);}
@@ -1364,121 +985,41 @@ doBackupReminder();
 window.addEventListener('beforeunload',function(){
   try{var data={stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,rpPosts:rpPosts,umsatzData:umsatzData,potKunden:potKunden,nextPotId:nextPotId,exportedAt:new Date().toISOString()};localStorage.setItem('autoBackup',JSON.stringify(data));localStorage.setItem('autoBackupDate',today);}catch(e){}
 });
-// ── UMSATZ MODULE ──────────────────────────────────────────────────
-var UMSATZ_KEY = 'umsatz_v1';
-var POTKUNDEN_KEY = 'potkunden_v1';
-var umsatzData = [];   // [{monat:'2026-01', einheiten:45.5}, ...]
-var potKunden = [];    // [{id,name,zeitraum,einheiten,notiz}, ...]
-var nextPotId = 1;
-var umsatzChartInst = null;
 
-function loadUmsatz(){
-  try{
-    var u=JSON.parse(localStorage.getItem(UMSATZ_KEY));
-    if(u&&u.data)umsatzData=u.data;
-    if(u&&u.potKunden)potKunden=u.potKunden;
-    if(u&&u.nextPotId)nextPotId=u.nextPotId;
-  }catch(e){}
-  // Also check main SK for umsatz data (from import)
-  try{
-    var p=JSON.parse(localStorage.getItem(SK));
-    if(p&&p.umsatzData&&umsatzData.length===0)umsatzData=p.umsatzData;
-    if(p&&p.potKunden&&potKunden.length===0)potKunden=p.potKunden;
-    if(p&&p.nextPotId&&nextPotId===1)nextPotId=p.nextPotId;
-  }catch(e){}
-}
-
-function saveUmsatz(){
-  try{
-    localStorage.setItem(UMSATZ_KEY,JSON.stringify({
-      data:umsatzData,potKunden:potKunden,nextPotId:nextPotId
-    }));
-  }catch(e){}
-}
+var umsatzData=[{"monat":"2025-05","einheiten":9661.29},{"monat":"2025-06","einheiten":5891.09},{"monat":"2025-07","einheiten":1683.39},{"monat":"2025-08","einheiten":14627.66},{"monat":"2025-09","einheiten":4739.68},{"monat":"2025-10","einheiten":7949.05},{"monat":"2025-11","einheiten":9843.76},{"monat":"2025-12","einheiten":7546.36},{"monat":"2026-01","einheiten":3920.1},{"monat":"2026-02","einheiten":1864.96},{"monat":"2026-03","einheiten":912.98}],potKunden=[],nextPotId=1,umsatzChartInst=null;
 
 function renderUmsatz(){
-  // Date label
-  var dl=document.getElementById('dl-umsatz');
-  if(dl)dl.textContent=todayFmt;
-
-  renderUmsatzChart();
-  renderPipelineTable();
-  renderPotKunden();
-
-  // Count offene pipeline
-  var pipeCount=kunden.filter(function(k){
-    return k.status==='neu'||k.status==='analyse'||k.status==='angebot';
-  }).length;
-  var el=document.getElementById('cnt-umsatz');
-  if(el)el.textContent=pipeCount||'-';
+  var dl=document.getElementById('dl-umsatz');if(dl)dl.textContent=todayFmt;
+  renderUmsatzChart();renderPipelineTable();renderPotKunden();
 }
-
 function renderUmsatzChart(){
-  var ctx=document.getElementById('umsatzChart');
-  if(!ctx)return;
-
-  // Build last 12 months
-  var months=[];
-  var d=new Date();
+  var ctx=document.getElementById('umsatzChart');if(!ctx)return;
+  var months=[],d=new Date();
   for(var i=11;i>=0;i--){
     var dd=new Date(d.getFullYear(),d.getMonth()-i,1);
     var key=dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0');
-    var lbl=['Jan','Feb','Mär','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][dd.getMonth()]+' '+String(dd.getFullYear()).slice(2);
+    var lbl=['Jan','Feb','Mrz','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][dd.getMonth()]+' '+String(dd.getFullYear()).slice(2);
     var found=umsatzData.filter(function(u){return u.monat===key;})[0];
     months.push({key:key,lbl:lbl,val:found?found.einheiten:0});
   }
-
-  var curKey=today.slice(0,7);
-  var colors=months.map(function(m){
-    return m.key===curKey?'#378ADD':'rgba(55,138,221,0.4)';
-  });
-
-  // Jahressumme = nur aktuelles Kalenderjahr
   var curYear=today.slice(0,4);
-  var jahresSum=months.filter(function(m){return m.key.slice(0,4)===curYear;})
-    .reduce(function(s,m){return s+m.val;},0);
-  // Durchschnitt = letzte 12 Monate (nur Monate mit Einträgen)
-  var avgVal=months.filter(function(m){return m.val>0;});
-  var avg=avgVal.length>0?(months.reduce(function(s,m){return s+m.val;},0)/avgVal.length):0;
+  var jSum=months.filter(function(m){return m.key.slice(0,4)===curYear;}).reduce(function(s,m){return s+m.val;},0);
+  var av=months.filter(function(m){return m.val>0;});
+  var avg=av.length>0?(months.reduce(function(s,m){return s+m.val;},0)/av.length):0;
   var sumEl=document.getElementById('umsatz-jahres-sum');
-  if(sumEl)sumEl.innerHTML='<span style="margin-right:24px">'+curYear+'-Summe: <strong>'+jahresSum.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</strong> €</span>'+'<span>Ø Monatsdurchschnitt (12 M.): <strong style="color:var(--c-link)">'+avg.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</strong> €</span>';
-
+  if(sumEl)sumEl.innerHTML='<span style="margin-right:24px">'+curYear+'-Summe: <strong>'+jSum.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</strong> \u20ac</span><span>\u00d8 Monatsdurchschnitt: <strong style="color:var(--c-link)">'+avg.toLocaleString('de-DE',{minimumFractionDigits:2,maximumFractionDigits:2})+'</strong> \u20ac</span>';
   if(umsatzChartInst)umsatzChartInst.destroy();
   var muted=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
-  umsatzChartInst=new Chart(ctx,{
-    type:'bar',
-    data:{
-      labels:months.map(function(m){return m.lbl;}),
-      datasets:[{
-        data:months.map(function(m){return m.val;}),
-        backgroundColor:colors,
-        borderRadius:4,
-        borderSkipped:false
-      }]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(2)+' €';}}}},
-      scales:{
-        y:{beginAtZero:true,ticks:{color:muted,font:{size:11},callback:function(v){return v+' €';}},grid:{color:'rgba(136,135,128,0.1)'}},
-        x:{ticks:{color:muted,font:{size:11}},grid:{display:false}}
-      }
-    }
-  });
+  umsatzChartInst=new Chart(ctx,{type:'bar',data:{labels:months.map(function(m){return m.lbl;}),datasets:[{data:months.map(function(m){return m.val;}),backgroundColor:months.map(function(m){return m.key===today.slice(0,7)?'#378ADD':'rgba(55,138,221,0.4)';}),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(2)+' \u20ac';}}}},scales:{y:{beginAtZero:true,ticks:{color:muted,font:{size:11},callback:function(v){return v+' \u20ac';}},grid:{color:'rgba(136,135,128,0.1)'}},x:{ticks:{color:muted,font:{size:11}},grid:{display:false}}}}});
 }
-
-function addMonatUmsatz(){
-  var container=document.getElementById('umsatz-monat-editor');
-  if(!container)return;
-  container.style.display=container.style.display==='none'?'block':'none';
-  if(container.style.display==='block')renderMonatEditor();
+function toggleMonatEditor(){
+  var c=document.getElementById('umsatz-monat-editor');if(!c)return;
+  c.style.display=c.style.display==='none'?'block':'none';
+  if(c.style.display==='block')renderMonatEditor();
 }
 function renderMonatEditor(){
-  var container=document.getElementById('umsatz-monat-editor');
-  if(!container)return;
-  var months=[];
-  var d=new Date();
+  var c=document.getElementById('umsatz-monat-editor');if(!c)return;
+  var months=[],d=new Date();
   for(var i=11;i>=0;i--){
     var dd=new Date(d.getFullYear(),d.getMonth()-i,1);
     var key=dd.getFullYear()+'-'+String(dd.getMonth()+1).padStart(2,'0');
@@ -1486,184 +1027,55 @@ function renderMonatEditor(){
     var found=umsatzData.filter(function(u){return u.monat===key;})[0];
     months.push({key:key,lbl:lbl,val:found?found.einheiten:0});
   }
-  container.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:12px">'
-    +months.map(function(m){
-      var isCur=m.key===today.slice(0,7);
-      return '<div style="background:var(--surface2);border-radius:var(--radius);padding:8px 10px;border:0.5px solid '+(isCur?'#378ADD':'var(--border)')+'">'
-        +'<div style="font-size:11px;color:'+(isCur?'#378ADD':'var(--muted)')+';margin-bottom:4px;font-weight:'+(isCur?'600':'400')+'">'+(isCur?'▶ ':'')+m.lbl+'</div>'
-        +'<div style="display:flex;align-items:center;gap:4px">'
-        +'<input type="number" step="0.1" min="0" value="'+m.val+'" data-monat="'+m.key+'" '
-        +'onchange="saveMonatVal(this)" '
-        +'style="width:72px;font-family:var(--mono);font-size:14px;font-weight:600;padding:4px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none">'
-        +'<span style="font-size:11px;color:var(--muted)">€</span>'
-        +'</div>'
-        +'</div>';
-    }).join('')
-    +'</div>';
+  var rows=months.map(function(m){
+    var isCur=m.key===today.slice(0,7);
+    return '<div style="background:var(--surface2);border-radius:var(--radius);padding:8px 10px;border:0.5px solid '+(isCur?'#378ADD':'var(--border)')+'"><div style="font-size:11px;color:'+(isCur?'#378ADD':'var(--muted)')+';margin-bottom:4px;font-weight:'+(isCur?600:400)+'">'+m.lbl+'</div><div style="display:flex;align-items:center;gap:4px"><input type="number" step="0.01" min="0" value="'+m.val+'" data-monat="'+m.key+'" onchange="saveMonatVal(this)" style="width:72px;font-family:var(--mono);font-size:14px;font-weight:600;padding:4px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"><span style="font-size:11px;color:var(--muted)">\u20ac</span></div></div>';
+  });
+  c.innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;padding:12px">'+rows.join('')+'</div>';
 }
 function saveMonatVal(inp){
   var monat=inp.getAttribute('data-monat');
   var num=parseFloat(inp.value)||0;
   var found=umsatzData.filter(function(u){return u.monat===monat;})[0];
-  if(found){
-    umsatzData=umsatzData.map(function(u){return u.monat===monat?{monat:monat,einheiten:num}:u;});
-  }else{
-    umsatzData.push({monat:monat,einheiten:num});
-  }
-  saveUmsatz();
-  renderUmsatzChart();
+  if(found){umsatzData=umsatzData.map(function(u){return u.monat===monat?{monat:monat,einheiten:num}:u;});}
+  else{umsatzData.push({monat:monat,einheiten:num});}
+  save();renderUmsatzChart();
 }
-
 function renderPipelineTable(){
   var tbody=document.getElementById('pipeline-tbody');
   var tfoot=document.getElementById('pipeline-tfoot');
   if(!tbody)return;
-
-  var pipeKunden=kunden.filter(function(k){
-    return k.status==='neu'||k.status==='analyse'||k.status==='angebot';
-  }).sort(function(a,b){return a.name.localeCompare(b.name);});
-
-  var totalPot=0;
-  tbody.innerHTML=pipeKunden.map(function(k){
+  var pipe=kunden.filter(function(k){return k.status==='neu'||k.status==='analyse'||k.status==='angebot';}).sort(function(a,b){return a.name.localeCompare(b.name);});
+  var totalS=0,totalM=0;
+  var rows=pipe.map(function(k){
     var s=getSt(k.status);
     var pot=k.umsatzPot||0;
-    totalPot+=pot;
     var isSicher=k.status==='angebot';
-    var isMoeglich=k.status==='neu'||k.status==='analyse';
-    return '<tr style="background:'+(isSicher?'rgba(55,138,221,0.04)':isMoeglich?'rgba(99,153,34,0.04)':'')+'">'  
-      +'<td style="padding:8px 12px;font-weight:500">'+k.name+'</td>'
-      +'<td style="padding:8px 12px">'
-      +'<select onchange="updPipelineStatus('+k.id+',this.value)" '
-      +'style="font-family:var(--font);font-size:12px;padding:4px 8px;border:0.5px solid '+s.color+';border-radius:20px;background:'+s.color+'22;color:'+s.color+';outline:none;cursor:pointer">'
-      +stati.filter(function(st){return st.key!=='aktiv'&&st.key!=='pause';}).map(function(st){
-        return '<option value="'+st.key+'"'+(k.status===st.key?' selected':'')+'>'+st.label+'</option>';
-      }).join('')
-      +'<option value="aktiv"'+(k.status==='aktiv'?' selected':'')+'>Aktiv ✓</option>'
-      +'</select>'
-      +'</td>'
-      +(isSicher
-        ? '<td style="padding:8px 12px;text-align:right">'
-          +'<input type="number" step="0.1" min="0" value="'+pot+'" '
-          +'onchange="updPipelinePot('+k.id+',this.value)" '
-          +'style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid #378ADD55;border-radius:var(--radius);background:var(--bg);color:#378ADD;font-weight:600;outline:none">'
-          +'</td><td style="padding:8px 12px">-</td>'
-        : '<td style="padding:8px 12px;text-align:right">-</td>'
-          +'<td style="padding:8px 12px;text-align:right">'
-          +'<input type="number" step="0.1" min="0" value="'+pot+'" '
-          +'onchange="updPipelinePot('+k.id+',this.value)" '
-          +'style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid #63992255;border-radius:var(--radius);background:var(--bg);color:#639922;font-weight:600;outline:none">'
-          +'</td>'
-      )
-      +'<td style="padding:8px 12px;color:var(--muted);font-size:12px">'
-      +'<input class="pot-inp" style="width:100%;max-width:200px;font-size:12px;padding:3px 8px" '
-      +'value="'+(k.umsatzNotiz||'')+'" placeholder="Notiz..." '
-      +'onchange="updPipelineNotiz('+k.id+',this.value)">'
-      +'</td>'
-      +'</tr>';
-  }).join('');
-
-  if(pipeKunden.length===0){
-    tbody.innerHTML='<tr><td colspan="4" style="padding:16px;text-align:center;color:var(--muted)">Keine Kunden in Pipeline.</td></tr>';
-  }
-
-  var totalSicher=pipeKunden.filter(function(k){return k.status==='angebot';}).reduce(function(s,k){return s+(k.umsatzPot||0);},0);
-  var totalMoeglich=pipeKunden.filter(function(k){return k.status==='neu'||k.status==='analyse';}).reduce(function(s,k){return s+(k.umsatzPot||0);},0);
-  tfoot.innerHTML='<tr style="background:var(--surface2);font-weight:600">'
-    +'<td colspan="2" style="padding:8px 12px;font-size:13px">Gesamt Potenzial</td>'
-    +'<td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#378ADD">'+totalSicher.toFixed(1)+' EH</td>'
-    +'<td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#639922">'+totalMoeglich.toFixed(1)+' EH</td>'
-    +'<td></td></tr>';
+    if(isSicher)totalS+=pot;else totalM+=pot;
+    var monatVal=k.umsatzMonat||today.slice(0,7);
+    var potInp='<input type="number" step="0.1" min="0" value="'+pot+'" onchange="updPipelinePot('+k.id+',this.value)" style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid '+(isSicher?'#378ADD55':'#63992255')+';border-radius:var(--radius);background:var(--bg);color:'+(isSicher?'#378ADD':'#639922')+';font-weight:600;outline:none">';
+    var sicherCell=isSicher?'<td style="padding:8px 12px;text-align:right">'+potInp+'</td><td style="padding:8px 12px;text-align:right;color:var(--muted)">-</td>':'<td style="padding:8px 12px;text-align:right;color:var(--muted)">-</td><td style="padding:8px 12px;text-align:right">'+potInp+'</td>';
+    return '<tr style="background:'+(isSicher?'rgba(55,138,221,0.04)':'rgba(99,153,34,0.04)')+';border-top:0.5px solid var(--border)"><td style="padding:8px 12px;font-weight:500">'+k.name+'</td><td style="padding:8px 12px"><span style="font-size:11px;padding:2px 8px;border-radius:20px;background:'+s.color+'22;color:'+s.color+'">'+s.label+'</span></td>'+sicherCell+'<td style="padding:8px 12px"><input type="month" value="'+monatVal+'" onchange="updPipelineMonat('+k.id+',this.value)" style="font-family:var(--font);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"></td><td style="padding:8px 12px"><input class="pot-inp" style="width:100%;max-width:180px;font-size:12px;padding:3px 8px" value="'+(k.umsatzNotiz||'')+'" placeholder="Notiz..." onchange="updPipelineNotiz('+k.id+',this.value)"></td></tr>';
+  });
+  tbody.innerHTML=rows.join('')||'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--muted)">Keine Kunden in Pipeline.</td></tr>';
+  tfoot.innerHTML='<tr style="background:var(--surface2);font-weight:600"><td colspan="2" style="padding:8px 12px">Gesamt Potenzial</td><td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#378ADD">'+totalS.toFixed(1)+' EH</td><td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#639922">'+totalM.toFixed(1)+' EH</td><td colspan="2"></td></tr>';
 }
-
-function updPipelinePot(kid,val){
-  var num=parseFloat(val)||0;
-  kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzPot:num}):k;});
-  save();
-  var tfoot2=document.getElementById('pipeline-tfoot');
-  if(tfoot2){
-    var total2=kunden.filter(function(k){return k.status==='neu'||k.status==='analyse'||k.status==='angebot';})
-      .reduce(function(s,k){return s+(k.umsatzPot||0);},0);
-    var ts=kunden.filter(function(k){return k.status==='angebot';}).reduce(function(s,k){return s+(k.umsatzPot||0);},0);
-    var tm=kunden.filter(function(k){return k.status==='neu'||k.status==='analyse';}).reduce(function(s,k){return s+(k.umsatzPot||0);},0);
-    tfoot2.innerHTML='<tr style="background:var(--surface2);font-weight:600">'
-      +'<td colspan="2" style="padding:8px 12px;font-size:13px">Gesamt Potenzial</td>'
-      +'<td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#378ADD">'+ts.toFixed(1)+' EH</td>'
-      +'<td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#639922">'+tm.toFixed(1)+' EH</td>'
-      +'<td></td></tr>';
-  }
-}
-
-function updPipelineNotiz(kid,val){
-  kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzNotiz:val}):k;});
-  save();
-}
-
+function updPipelinePot(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzPot:parseFloat(val)||0}):k;});save();renderPipelineTable();}
+function updPipelineMonat(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzMonat:val}):k;});save();}
+function updPipelineNotiz(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzNotiz:val}):k;});save();}
 function renderPotKunden(){
   var tbody=document.getElementById('potkunden-tbody');
   var empty=document.getElementById('potkunden-empty');
   if(!tbody)return;
-
-  if(potKunden.length===0){
-    tbody.innerHTML='';
-    if(empty)empty.style.display='block';
-    return;
-  }
+  if(potKunden.length===0){tbody.innerHTML='';if(empty)empty.style.display='block';return;}
   if(empty)empty.style.display='none';
-
   tbody.innerHTML=potKunden.map(function(p){
-    return '<tr>'
-      +'<td style="padding:8px 12px;font-weight:500">'
-      +'<input class="pot-inp" value="'+p.name+'" onchange="updPotKunde('+p.id+',\'name\',this.value)" style="width:140px">'
-      +'</td>'
-      +'<td style="padding:8px 12px">'
-      +'<input class="pot-inp" value="'+(p.zeitraum||'')+'" placeholder="z.B. Q3 2026" onchange="updPotKunde('+p.id+',\'zeitraum\',this.value)" style="width:100px">'
-      +'</td>'
-      +'<td style="padding:8px 12px;text-align:right">'
-      +'<input type="number" step="0.1" min="0" value="'+(p.einheiten||0)+'" onchange="updPotKunde('+p.id+',\'einheiten\',parseFloat(this.value)||0)" style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none">'
-      +'</td>'
-      +'<td style="padding:8px 12px">'
-      +'<input class="pot-inp" value="'+(p.notiz||'')+'" placeholder="Notiz..." onchange="updPotKunde('+p.id+',\'notiz\',this.value)" style="width:100%;max-width:200px;font-size:12px">'
-      +'</td>'
-      +'<td style="padding:8px 12px;text-align:center">'
-      +'<button onclick="delPotKunde('+p.id+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px" title="Löschen">×</button>'
-      +'</td>'
-      +'</tr>';
+    return '<tr style="border-top:0.5px solid var(--border)"><td style="padding:8px 12px"><input class="pot-inp" value="'+p.name+'" onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('name')+String.fromCharCode(44)+'this.value)" style="width:140px"></td><td style="padding:8px 12px"><input class="pot-inp" value="'+(p.zeitraum||'')+'" placeholder="Q3 2026" onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('zeitraum')+String.fromCharCode(44)+'this.value)" style="width:100px"></td><td style="padding:8px 12px;text-align:right"><input type="number" step="0.1" min="0" value="'+(p.einheiten||0)+'" onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('einheiten')+String.fromCharCode(44)+'parseFloat(this.value)||0)" style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"></td><td style="padding:8px 12px"><input class="pot-inp" value="'+(p.notiz||'')+'" placeholder="Notiz..." onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('notiz')+String.fromCharCode(44)+'this.value)" style="width:100%;max-width:200px;font-size:12px"></td><td style="padding:8px 12px;text-align:center"><button onclick="delPotKunde('+p.id+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">\xd7</button></td></tr>';
   }).join('');
 }
-
-function addPotKunde(){
-  var name=prompt('Name des Potentialkunden:');
-  if(!name||!name.trim())return;
-  potKunden.push({id:nextPotId++,name:name.trim(),zeitraum:'',einheiten:0,notiz:''});
-  saveUmsatz();
-  renderPotKunden();
-}
-
-function updPotKunde(id,field,val){
-  potKunden=potKunden.map(function(p){
-    if(p.id!==id)return p;
-    var upd={};upd[field]=val;
-    return Object.assign({},p,upd);
-  });
-  saveUmsatz();
-}
-
-function delPotKunde(id){
-  if(!confirm('Eintrag löschen?'))return;
-  potKunden=potKunden.filter(function(p){return p.id!==id;});
-  saveUmsatz();
-  renderPotKunden();
-}
-// ── END UMSATZ MODULE ──────────────────────────────────────────────
-function updPipelineStatus(kid,newStatus){
-  kunden=kunden.map(function(k){
-    return k.id===kid?Object.assign({},k,{status:newStatus}):k;
-  });
-  save();
-  updateCounts();
-  renderPipelineTable();
-  renderSB();
-}
+function addPotKunde(){var name=prompt('Name:');if(!name||!name.trim())return;potKunden.push({id:nextPotId++,name:name.trim(),zeitraum:'',einheiten:0,notiz:''});save();renderPotKunden();}
+function updPotKunde(id,field,val){potKunden=potKunden.map(function(p){if(p.id!==id)return p;var u={};u[field]=val;return Object.assign({},p,u);});save();}
+function delPotKunde(id){if(!confirm('L\xf6schen?'))return;potKunden=potKunden.filter(function(p){return p.id!==id;});save();renderPotKunden();}
 </script>
 </body>
 </html>
