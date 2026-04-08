@@ -470,6 +470,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 
 
+
 var today=new Date().toISOString().split('T')[0];
 var todayFmt=new Date().toLocaleDateString('de-DE',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
 ['dl1','dl2','dl3','dl-rp'].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent=todayFmt;});
@@ -1155,12 +1156,19 @@ function renderPipelineTable(){
     var monatVal=k.umsatzMonat||today.slice(0,7);
     var potInp='<input type="number" step="0.1" min="0" value="'+pot+'" onchange="updPipelinePot('+k.id+',this.value)" style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid '+(isSicher?'#378ADD55':'#63992255')+';border-radius:var(--radius);background:var(--bg);color:'+(isSicher?'#378ADD':'#639922')+';font-weight:600;outline:none">';
     var sicherCell=isSicher?'<td style="padding:8px 12px;text-align:right">'+potInp+'</td><td style="padding:8px 12px;text-align:right;color:var(--muted)">-</td>':'<td style="padding:8px 12px;text-align:right;color:var(--muted)">-</td><td style="padding:8px 12px;text-align:right">'+potInp+'</td>';
-    return '<tr style="background:'+(isSicher?'rgba(55,138,221,0.04)':'rgba(99,153,34,0.04)')+';border-top:0.5px solid var(--border)"><td style="padding:8px 12px;font-weight:500">'+k.name+'</td><td style="padding:8px 12px"><span style="font-size:11px;padding:2px 8px;border-radius:20px;background:'+s.color+'22;color:'+s.color+'">'+s.label+'</span></td>'+sicherCell+'<td style="padding:8px 12px"><input type="month" value="'+monatVal+'" onchange="updPipelineMonat('+k.id+',this.value)" style="font-family:var(--font);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"></td><td style="padding:8px 12px"><input class="pot-inp" style="width:100%;max-width:180px;font-size:12px;padding:3px 8px" value="'+(k.umsatzNotiz||'')+'" placeholder="Notiz..." onchange="updPipelineNotiz('+k.id+',this.value)"></td></tr>';
+    return '<tr style="background:'+(isSicher?'rgba(55,138,221,0.04)':'rgba(99,153,34,0.04)')+';border-top:0.5px solid var(--border)"><td style="padding:8px 12px;font-weight:500">'+k.name+'</td><td style="padding:8px 12px"><select onchange="updPipelineStatus('+k.id+',this.value)" style="font-family:var(--font);font-size:12px;padding:3px 8px;border:0.5px solid '+s.color+';border-radius:20px;background:'+s.color+'22;color:'+s.color+';outline:none;cursor:pointer">'+stati.map(function(st){return'<option value="'+st.key+'"'+(st.key===k.status?' selected':'')+'>'+st.label+'</option>';}).join('')+'</select></td>'+sicherCell+'<td style="padding:8px 12px"><input type="month" value="'+monatVal+'" onchange="updPipelineMonat('+k.id+',this.value)" style="font-family:var(--font);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"></td><td style="padding:8px 12px"><input class="pot-inp" style="width:100%;max-width:180px;font-size:12px;padding:3px 8px" value="'+(k.umsatzNotiz||'')+'" placeholder="Notiz..." onchange="updPipelineNotiz('+k.id+',this.value)"></td></tr>';
   });
   tbody.innerHTML=rows.join('')||'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--muted)">Keine Kunden in Pipeline.</td></tr>';
   tfoot.innerHTML='<tr style="background:var(--surface2);font-weight:600"><td colspan="2" style="padding:8px 12px">Gesamt Potenzial</td><td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#378ADD">'+totalS.toFixed(1)+' EH</td><td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#639922">'+totalM.toFixed(1)+' EH</td><td colspan="2"></td></tr>';
 }
 function updPipelinePot(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzPot:parseFloat(val)||0}):k;});save();renderPipelineTable();renderForecastChart();}
+function updPipelineStatus(kid,val){
+  kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{status:val}):k;});
+  save();
+  renderPipelineTable();
+  if(typeof renderForecastChart==="function")renderForecastChart();
+  updateCounts();
+}
 function updPipelineMonat(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzMonat:val}):k;});save();renderForecastChart();}
 function updPipelineNotiz(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzNotiz:val}):k;});save();}
 function renderPotKunden(){
