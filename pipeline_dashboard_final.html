@@ -338,6 +338,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <div id="umsatz-monat-editor" style="display:none;background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);margin-top:8px"></div>
       <div id="umsatz-jahres-sum" style="margin-top:.5rem;font-size:13px;color:var(--muted);text-align:right"></div>
     </div>
+    <!-- Vorausschau -->
+    <div style="margin-bottom:1.5rem">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <h3 style="font-size:14px;font-weight:600">Umsatzvorausschau <span style="font-weight:400;font-size:12px;color:var(--muted)">(Sicher + Moeglich)</span></h3>
+      </div>
+      <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem">
+        <canvas id="forecastChart" height="120"></canvas>
+      </div>
+      <div id="forecast-sum" style="margin-top:.5rem;font-size:13px;color:var(--muted);text-align:right"></div>
+    </div>
     <div style="margin-bottom:1.5rem">
       <h3 style="font-size:14px;font-weight:600;margin-bottom:.75rem">Aktive Pipeline</h3>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
@@ -456,6 +466,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <script>
+
 
 
 
@@ -990,7 +1001,7 @@ var umsatzData=[{"monat":"2025-05","einheiten":9661.29},{"monat":"2025-06","einh
 
 function renderUmsatz(){
   var dl=document.getElementById('dl-umsatz');if(dl)dl.textContent=todayFmt;
-  renderUmsatzChart();renderPipelineTable();renderPotKunden();
+  renderUmsatzChart();renderPipelineTable();renderPotKunden();renderForecastChart();
 }
 function renderUmsatzChart(){
   var ctx=document.getElementById('umsatzChart');if(!ctx)return;
@@ -1012,6 +1023,95 @@ function renderUmsatzChart(){
   var muted=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
   umsatzChartInst=new Chart(ctx,{type:'bar',data:{labels:months.map(function(m){return m.lbl;}),datasets:[{data:months.map(function(m){return m.val;}),backgroundColor:months.map(function(m){return m.key===today.slice(0,7)?'#378ADD':'rgba(55,138,221,0.4)';}),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(2)+' \u20ac';}}}},scales:{y:{beginAtZero:true,ticks:{color:muted,font:{size:11},callback:function(v){return v+' \u20ac';}},grid:{color:'rgba(136,135,128,0.1)'}},x:{ticks:{color:muted,font:{size:11}},grid:{display:false}}}}});
 }
+
+var forecastChartInst = null;
+
+function renderForecastChart(){
+  var ctx=document.getElementById('forecastChart');
+  if(!ctx)return;
+
+  // Collect months from pipeline (kunden with umsatzMonat set)
+  var forecastMap={};
+  kunden.forEach(function(k){
+    if(k.status!=='neu'&&k.status!=='analyse'&&k.status!=='angebot')return;
+    if(!(k.umsatzPot>0))return;
+    var monat=k.umsatzMonat||today.slice(0,7);
+    if(!forecastMap[monat])forecastMap[monat]={sicher:0,moeglich:0};
+    if(k.status==='angebot')forecastMap[monat].sicher+=k.umsatzPot;
+    else forecastMap[monat].moeglich+=k.umsatzPot;
+  });
+  // Also add potKunden
+  potKunden.forEach(function(p){
+    if(!(p.einheiten>0)||!p.zeitraum)return;
+    // Try to parse zeitraum as YYYY-MM or Q format
+    var monat=null;
+    var qm=p.zeitraum.match(/Q([1-4])\s*(\d{2,4})/i);
+    if(qm){
+      var q=parseInt(qm[1]);
+      var yr=qm[2].length===2?'20'+qm[2]:qm[2];
+      var startM=[1,4,7,10][q-1];
+      monat=yr+'-'+String(startM).padStart(2,'0');
+    } else {
+      var dm=p.zeitraum.match(/(\d{4})-(\d{2})/);
+      if(dm)monat=dm[0];
+    }
+    if(monat){
+      if(!forecastMap[monat])forecastMap[monat]={sicher:0,moeglich:0};
+      forecastMap[monat].moeglich+=p.einheiten;
+    }
+  });
+
+  if(Object.keys(forecastMap).length===0){
+    if(forecastChartInst)forecastChartInst.destroy();
+    var sumEl=document.getElementById('forecast-sum');
+    if(sumEl)sumEl.textContent='Noch keine Pipeline-Eintraege mit Monatszuweisung.';
+    return;
+  }
+
+  // Build sorted month list from today onwards
+  var months=Object.keys(forecastMap).sort();
+  // Ensure we show current month even if empty
+  if(months.indexOf(today.slice(0,7))<0){months.unshift(today.slice(0,7));months.sort();}
+
+  var lbls=months.map(function(m){
+    var d=new Date(m+'-01');
+    return ['Jan','Feb','Mrz','Apr','Mai','Jun','Jul','Aug','Sep','Okt','Nov','Dez'][d.getMonth()]+' '+String(d.getFullYear()).slice(2);
+  });
+  var sicherVals=months.map(function(m){return forecastMap[m]?forecastMap[m].sicher:0;});
+  var moeglichVals=months.map(function(m){return forecastMap[m]?forecastMap[m].moeglich:0;});
+
+  var totalSicher=sicherVals.reduce(function(s,v){return s+v;},0);
+  var totalMoeglich=moeglichVals.reduce(function(s,v){return s+v;},0);
+  var sumEl=document.getElementById('forecast-sum');
+  if(sumEl)sumEl.innerHTML='Sicher: <strong style="color:#378ADD">'+totalSicher.toFixed(1)+' EH</strong>'
+    +'&nbsp;&nbsp;|&nbsp;&nbsp;Moeglich: <strong style="color:#639922">'+totalMoeglich.toFixed(1)+' EH</strong>'
+    +'&nbsp;&nbsp;|&nbsp;&nbsp;Gesamt: <strong>'+( totalSicher+totalMoeglich).toFixed(1)+' EH</strong>';
+
+  if(forecastChartInst)forecastChartInst.destroy();
+  var muted=getComputedStyle(document.documentElement).getPropertyValue('--muted').trim()||'#888';
+  forecastChartInst=new Chart(ctx,{
+    type:'bar',
+    data:{
+      labels:lbls,
+      datasets:[
+        {label:'Sicher (Angebot)',data:sicherVals,backgroundColor:'rgba(55,138,221,0.7)',borderRadius:4,borderSkipped:false,stack:'a'},
+        {label:'Moeglich (Neu/Analyse)',data:moeglichVals,backgroundColor:'rgba(99,153,34,0.5)',borderRadius:4,borderSkipped:false,stack:'a'}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{
+        legend:{display:true,position:'top',labels:{font:{size:11},color:muted,boxWidth:10,padding:10}},
+        tooltip:{callbacks:{label:function(c){return c.dataset.label+': '+c.parsed.y.toFixed(1)+' EH';}}}
+      },
+      scales:{
+        y:{beginAtZero:true,stacked:true,ticks:{color:muted,font:{size:11}},grid:{color:'rgba(136,135,128,0.1)'}},
+        x:{stacked:true,ticks:{color:muted,font:{size:11}},grid:{display:false}}
+      }
+    }
+  });
+}
+
 function toggleMonatEditor(){
   var c=document.getElementById('umsatz-monat-editor');if(!c)return;
   c.style.display=c.style.display==='none'?'block':'none';
@@ -1060,8 +1160,8 @@ function renderPipelineTable(){
   tbody.innerHTML=rows.join('')||'<tr><td colspan="6" style="padding:16px;text-align:center;color:var(--muted)">Keine Kunden in Pipeline.</td></tr>';
   tfoot.innerHTML='<tr style="background:var(--surface2);font-weight:600"><td colspan="2" style="padding:8px 12px">Gesamt Potenzial</td><td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#378ADD">'+totalS.toFixed(1)+' EH</td><td style="padding:8px 12px;text-align:right;font-family:var(--mono);color:#639922">'+totalM.toFixed(1)+' EH</td><td colspan="2"></td></tr>';
 }
-function updPipelinePot(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzPot:parseFloat(val)||0}):k;});save();renderPipelineTable();}
-function updPipelineMonat(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzMonat:val}):k;});save();}
+function updPipelinePot(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzPot:parseFloat(val)||0}):k;});save();renderPipelineTable();renderForecastChart();}
+function updPipelineMonat(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzMonat:val}):k;});save();renderForecastChart();}
 function updPipelineNotiz(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzNotiz:val}):k;});save();}
 function renderPotKunden(){
   var tbody=document.getElementById('potkunden-tbody');
