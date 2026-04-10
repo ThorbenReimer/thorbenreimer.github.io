@@ -602,7 +602,29 @@ function renderRP(){
     if(rpActiveKanal!=='alle'){var kt=p.kanalTypes||['insta','wa'];if(kt.indexOf(rpActiveKanal)<0)return false;}
     return true;
   });
-  el.innerHTML=filtered.map(function(p){
+  el.innerHTML=filtered.filter(function(p){return!p.done;}).map(function(p){
+    return rpCard(p);
+  }).join('');
+  // Archiv
+  var done=filtered.filter(function(p){return p.done;}).sort(function(a,b){return b.datum.localeCompare(a.datum);});
+  if(done.length){
+    var archOpen=!!window.rpArchivOpen;
+    var archHtml='<div style="margin-top:1.5rem">'
+      +'<button onclick="window.rpArchivOpen=!window.rpArchivOpen;renderRP()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 0;width:100%">'
+      +'<span style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)">Archiv · '+done.length+' veröffentlicht</span>'
+      +'<span style="font-size:11px;color:var(--hint);transform:'+(archOpen?'rotate(90deg)':'none')+';display:inline-block;transition:transform .15s">&#9658;</span>'
+      +'</button>'
+      +(archOpen
+        ?'<div style="border-top:0.5px solid var(--border);padding-top:1rem;opacity:.75">'+done.map(function(p){return rpCard(p);}).join('')+'</div>'
+        :'')
+      +'</div>';
+    el.innerHTML+=archHtml;
+  }
+  var offen=rpPosts.filter(function(p){return!p.done;}).length;
+  var el2=document.getElementById('cnt-redaktion');
+  if(el2)el2.textContent=offen||'-';
+}
+function rpCard(p){
     var isOpen=!!rpOpenCards[p.id];
     var lines=p.kachel.split('\n');
     var kHtml=lines.map(function(l){var m=l.match(/^<(.+)>$/);return m?'<span style="color:#378ADD">'+m[1]+'</span>':l;}).join('<br>');
@@ -625,35 +647,13 @@ function renderRP(){
         +'<span style="font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.05em">Thorben Reimer</span>'
         +'<span style="color:#378ADD;font-size:11px;font-weight:700">TR</span>'
         +'</div></div>'
-        +(p.caption
-          ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Caption Instagram</div>'
-           +'<div id="cap-'+p.id+'" style="background:var(--surface2);border-radius:var(--radius);padding:10px 12px;font-size:12px;line-height:1.7;white-space:pre-wrap;margin-bottom:4px">'+p.caption+'</div>'
-           +'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>'
-          :'')
-        +(p.hashtags
-          ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Hashtags</div>'
-           +'<div id="ht-'+p.id+'" style="background:var(--surface2);border-radius:var(--radius);padding:10px 12px;font-size:12px;line-height:1.7;margin-bottom:4px">'+p.hashtags+'</div>'
-           +'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>'
-          :'')
-        +(canvaHtml
-          ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Canva-Anleitung · Instagram</div>'+canvaHtml
-          :'')
-        +(p.canvaWA
-          ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Canva-Anleitung · WhatsApp Status (1080×1920px)</div>'
-           +'<div style="background:#25D36615;border:0.5px solid #25D36640;border-radius:var(--radius);padding:8px 12px;margin-bottom:6px">'
-           +'<div style="font-size:11px;color:#128C7E;margin-bottom:6px;font-weight:500">Graue Tagline unten: '+( p.taglineWA||'@coachthorben')+'</div>'
-           +'<div class="rp-canva-steps">'+p.canvaWA.map(function(s,i){return'<div class="rp-canva-step"><span class="rp-step-n">'+(i+1)+'</span>'+s+'</div>';}).join('')+'</div></div>'
-          :'')
-        +(p.captionLI
-          ?('<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Caption LinkedIn</div>'
-           +'<div style="background:#0A66C215;border:0.5px solid #0A66C240;border-radius:var(--radius);padding:8px 12px;margin-bottom:4px">'
-           +'<div style="font-size:10px;color:#0A66C2;margin-bottom:6px;font-weight:500">Hook = erste Zeile. Frage oder Aussage.</div>'
-           +'<div id="li-'+p.id+'" style="font-size:12px;line-height:1.7;white-space:pre-wrap">'+p.captionLI+'</div>'
-           +'</div>'
-           +'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.lastChild.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>')
-          :'')
-        +(p.kanalTypes&&p.kanalTypes.length
-          ?'<div style="margin-top:10px;background:var(--surface2);border-radius:var(--radius);padding:8px 12px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">'           +'<span style="font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Erledigt:</span>'           +(p.kanalTypes.map(function(k){              var chk=(p.done_channels&&p.done_channels[k])?' checked':'';              var lbl=k==='insta'?'Instagram':k==='wa'?'WhatsApp':k==='story'?'Story':'LinkedIn';              var col=k==='insta'?'#C13584':k==='wa'?'#128C7E':k==='story'?'#185FA5':'#0A66C2';              return'<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">'                +'<input type="checkbox"'+chk+' onchange="toggleChannel('+p.id+',\''+k+'\',this)" onclick="event.stopPropagation()">'                +'<span style="color:'+col+';font-weight:500">'+lbl+'</span></label>';            }).join(''))           +'</div>'          :'')        +'<div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
+        +(p.caption?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Caption Instagram</div>'+'<div id="cap-'+p.id+'" style="background:var(--surface2);border-radius:var(--radius);padding:10px 12px;font-size:12px;line-height:1.7;white-space:pre-wrap;margin-bottom:4px">'+p.caption+'</div>'+'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>':'')
+        +(p.hashtags?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Hashtags</div>'+'<div id="ht-'+p.id+'" style="background:var(--surface2);border-radius:var(--radius);padding:10px 12px;font-size:12px;line-height:1.7;margin-bottom:4px">'+p.hashtags+'</div>'+'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>':'')
+        +(canvaHtml?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Canva-Anleitung · Instagram</div>'+canvaHtml:'')
+        +(p.canvaWA?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Canva-Anleitung · WhatsApp Status (1080×1920px)</div>'+'<div style="background:#25D36615;border:0.5px solid #25D36640;border-radius:var(--radius);padding:8px 12px;margin-bottom:6px">'+'<div style="font-size:11px;color:#128C7E;margin-bottom:6px;font-weight:500">Graue Tagline unten: '+(p.taglineWA||'@coachthorben')+'</div>'+'<div class="rp-canva-steps">'+p.canvaWA.map(function(s,i){return'<div class="rp-canva-step"><span class="rp-step-n">'+(i+1)+'</span>'+s+'</div>';}).join('')+'</div></div>':'')
+        +(p.captionLI?('<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Caption LinkedIn</div>'+'<div style="background:#0A66C215;border:0.5px solid #0A66C240;border-radius:var(--radius);padding:8px 12px;margin-bottom:4px">'+'<div style="font-size:10px;color:#0A66C2;margin-bottom:6px;font-weight:500">Hook = erste Zeile. Frage oder Aussage.</div>'+'<div id="li-'+p.id+'" style="font-size:12px;line-height:1.7;white-space:pre-wrap">'+p.captionLI+'</div>'+'</div>'+'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.lastChild.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>'):'')
+        +(p.kanalTypes&&p.kanalTypes.length?'<div style="margin-top:10px;background:var(--surface2);border-radius:var(--radius);padding:8px 12px;display:flex;gap:14px;flex-wrap:wrap;align-items:center">'+'<span style="font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.05em">Erledigt:</span>'+(p.kanalTypes.map(function(k){var chk=(p.done_channels&&p.done_channels[k])?' checked':'';var lbl=k==='insta'?'Instagram':k==='wa'?'WhatsApp':k==='story'?'Story':'LinkedIn';var col=k==='insta'?'#C13584':k==='wa'?'#128C7E':k==='story'?'#185FA5':'#0A66C2';return'<label style="display:flex;align-items:center;gap:4px;font-size:12px;cursor:pointer">'+'<input type="checkbox"'+chk+' onchange="toggleChannel('+p.id+',\''+k+'\',this)" onclick="event.stopPropagation()">'+'<span style="color:'+col+';font-weight:500">'+lbl+'</span></label>';}).join(''))+'</div>':'')
+        +'<div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">'
         +'<label style="font-size:11px;color:var(--muted)">Datum:</label>'
         +'<input type="date" class="rp-date-inp" value="'+p.datum+'" onchange="updRPDatum('+p.id+',this.value)">'
         +'<label style="font-size:11px;color:var(--muted)">Zeit:</label>'
@@ -674,10 +674,6 @@ function renderRP(){
       +'</div>'
       +body
       +'</div>';
-  }).join('');
-  var offen=rpPosts.filter(function(p){return!p.done;}).length;
-  var el2=document.getElementById('cnt-redaktion');
-  if(el2)el2.textContent=offen||'-';
 }
 // Event delegation for copy buttons
 document.addEventListener('click', function(e){
@@ -691,7 +687,6 @@ document.addEventListener('click', function(e){
     btn.textContent = '✓ Kopiert';
     setTimeout(function(){ btn.textContent = orig; }, 2000);
   }).catch(function(){
-    // fallback
     var ta = document.createElement('textarea');
     ta.value = el.textContent;
     document.body.appendChild(ta);
