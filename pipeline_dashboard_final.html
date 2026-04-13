@@ -282,17 +282,18 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <span id="h-tag-btns" style="display:contents"></span>
     </div>
     <!-- Quick-Add Aufgabe -->
-    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:1rem;position:relative" id="h-quick-box">
+    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:1rem" id="h-quick-box">
       <div style="font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Schnell-Aufgabe</div>
       <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-        <div style="position:relative;flex:1;min-width:140px">
+        <div style="position:relative;flex:1;min-width:160px">
           <input id="h-q-ksearch" type="text" placeholder="Kunde suchen..." autocomplete="off"
-            oninput="renderQKDropdown()"
-            onfocus="renderQKDropdown()"
-            onblur="setTimeout(function(){closeQKDropdown()},180)"
-            style="width:100%;font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"
+            oninput="filterQKSelect()"
+            style="width:100%;font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius) var(--radius) 0 0;background:var(--bg);color:var(--text);outline:none;box-sizing:border-box"
           />
-          <div id="h-q-kdrop" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--radius);z-index:50;max-height:180px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.12)"></div>
+          <select id="h-q-ksel" size="5"
+            onchange="selectQKunde()"
+            style="display:none;width:100%;font-family:var(--font);font-size:13px;border:0.5px solid var(--c-link);border-top:none;border-radius:0 0 var(--radius) var(--radius);background:var(--surface);color:var(--text);outline:none;max-height:150px;position:absolute;top:100%;left:0;right:0;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.15)">
+          </select>
         </div>
         <input id="h-q-txt" type="text" placeholder="Aufgabe..."
           onkeydown="if(event.key==='Enter')addQuickTask()"
@@ -311,8 +312,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <button onclick="addQuickTask()" style="font-family:var(--font);font-size:13px;font-weight:500;padding:6px 14px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--text);color:var(--bg);cursor:pointer;white-space:nowrap">+ Aufgabe</button>
       </div>
       <div id="h-q-sel" style="margin-top:6px;font-size:12px;color:var(--muted);display:none">
-        <span id="h-q-sel-name" style="font-weight:500;color:var(--c-today)"></span>
-        <button onclick="clearQKSel()" style="margin-left:6px;font-size:11px;background:none;border:none;cursor:pointer;color:var(--hint)">&#10005;</button>
+        Kunde: <span id="h-q-sel-name" style="font-weight:500;color:var(--c-today)"></span>
+        <button onclick="clearQKSel()" style="margin-left:6px;font-size:11px;background:none;border:none;cursor:pointer;color:var(--hint)">&#10005; ändern</button>
       </div>
     </div>
 
@@ -1209,51 +1210,46 @@ function updPipelineNotiz(kid,val){kunden=kunden.map(function(k){return k.id===k
 
 // ── Quick-Add Aufgabe im Heute-Tab ──
 var qKselId=null;
-function renderQKDropdown(){
+function filterQKSelect(){
   var inp=document.getElementById('h-q-ksearch');
-  var drop=document.getElementById('h-q-kdrop');
-  if(!inp||!drop)return;
+  var sel=document.getElementById('h-q-ksel');
+  if(!inp||!sel)return;
   var q=inp.value.trim().toLowerCase();
-  var matches=q?kunden.filter(function(k){return k.name.toLowerCase().indexOf(q)>=0;}):kunden.slice(0,8);
-  matches=matches.slice(0,8);
-  if(!matches.length){drop.style.display='none';return;}
-  drop.innerHTML=matches.map(function(k){
+  var matches=kunden.slice().sort(function(a,b){return a.name.localeCompare(b.name,'de');});
+  if(q)matches=matches.filter(function(k){return k.name.toLowerCase().indexOf(q)>=0;});
+  matches=matches.slice(0,10);
+  if(!matches.length){sel.style.display='none';return;}
+  sel.innerHTML=matches.map(function(k){
     var s=getSt(k.status);
-    return'<div style="padding:7px 12px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;border-bottom:0.5px solid var(--border)"'
-      +' onmousedown="selectQKunde('+k.id+','+JSON.stringify(k.name)+')"'
-      +' onmouseover="this.style.background=\'var(--surface2)\'"'
-      +' onmouseout="this.style.background=\'\'">'
-      +'<span style="flex:1">'+k.name+'</span>'
-      +'<span style="font-size:11px;padding:1px 7px;border-radius:20px;background:'+s.color+'22;color:'+s.color+'">'+s.label+'</span>'
-      +'</div>';
+    return'<option value="'+k.id+'" data-name="'+k.name.replace(/"/g,'&quot;')+'">'+k.name+' · '+s.label+'</option>';
   }).join('');
-  drop.style.display='block';
+  sel.style.display='block';
+  sel.size=Math.min(matches.length,5);
 }
-function selectQKunde(id,name){
-  qKselId=id;
+function selectQKunde(){
+  var sel=document.getElementById('h-q-ksel');
+  if(!sel||!sel.value)return;
+  qKselId=parseInt(sel.value);
+  var opt=sel.options[sel.selectedIndex];
+  var name=opt?opt.text.split(' · ')[0]:'';
+  sel.style.display='none';
   var inp=document.getElementById('h-q-ksearch');
-  var drop=document.getElementById('h-q-kdrop');
+  if(inp)inp.value='';
   var selRow=document.getElementById('h-q-sel');
   var selName=document.getElementById('h-q-sel-name');
-  if(inp)inp.value='';
-  if(drop)drop.style.display='none';
   if(selRow)selRow.style.display='block';
   if(selName)selName.textContent=name;
   var txtInp=document.getElementById('h-q-txt');
-  if(txtInp)txtInp.focus();
+  if(txtInp)setTimeout(function(){txtInp.focus();},50);
 }
 function clearQKSel(){
   qKselId=null;
   var selRow=document.getElementById('h-q-sel');
-  var selName=document.getElementById('h-q-sel-name');
   if(selRow)selRow.style.display='none';
-  if(selName)selName.textContent='';
   var inp=document.getElementById('h-q-ksearch');
   if(inp){inp.value='';inp.focus();}
-}
-function closeQKDropdown(){
-  var drop=document.getElementById('h-q-kdrop');
-  if(drop)drop.style.display='none';
+  var sel=document.getElementById('h-q-ksel');
+  if(sel)sel.style.display='none';
 }
 function downloadSelf(){
   var html=document.documentElement.outerHTML;
@@ -1264,18 +1260,17 @@ function downloadSelf(){
   a.click();
   URL.revokeObjectURL(a.href);
 }
-function addQuickTask(){  if(!qKselId){
+function addQuickTask(){
+  if(!qKselId){
     var inp=document.getElementById('h-q-ksearch');
-    if(inp)inp.focus();
-    inp.style.borderColor='var(--c-danger)';
-    setTimeout(function(){inp.style.borderColor='';},1200);
+    if(inp){inp.focus();inp.style.borderColor='var(--c-danger)';setTimeout(function(){inp.style.borderColor='';},1200);}
     return;
   }
   var txtInp=document.getElementById('h-q-txt');
   var datInp=document.getElementById('h-q-date');
   var prioInp=document.getElementById('h-q-prio');
   var txt=txtInp?txtInp.value.trim():'';
-  if(!txt){if(txtInp)txtInp.focus();return;}
+  if(!txt){if(txtInp){txtInp.focus();txtInp.style.borderColor='var(--c-danger)';setTimeout(function(){txtInp.style.borderColor='';},1200);}return;}
   var dat=datInp?datInp.value:'';
   var prio=prioInp?prioInp.value:'';
   kunden=kunden.map(function(k){
