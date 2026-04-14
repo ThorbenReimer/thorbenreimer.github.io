@@ -1063,6 +1063,13 @@ document.addEventListener('click',function(e){
     setTimeout(function(){btn.textContent=o;},2000);
   });
 });
+var akquiseProjekte=[
+  {id:1,name:'Expertenrunde',kategorie:'beide',status:'idee',potenzialEH:0,notiz:'Firmenkunden: Themenabende mit DVAG-Aufhaenger'},
+  {id:2,name:'in Bewegung \u2013 Workshops',kategorie:'coaching',status:'idee',potenzialEH:0,notiz:'Einzelne Workshop-Formate zu Bewegung / Performance'},
+  {id:3,name:'90-Min-Workshop Firmenkunden',kategorie:'dvag',status:'planung',potenzialEH:0,notiz:'Einstiegsformat fuer Mittelstand'}
+],nextAPId=4,apActiveFilter='alle';
+var AP_KATEGORIEN={dvag:{label:'DVAG',color:'#378ADD',bg:'#E6F1FB',text:'#0C447C'},coaching:{label:'Coaching',color:'#7F77DD',bg:'#EEEDFE',text:'#3C3489'},beide:{label:'Beide',color:'#EF9F27',bg:'#FAEEDA',text:'#633806'}};
+var AP_STATI={idee:{label:'Idee',bg:'#F1EFE8',color:'#5F5E5A'},planung:{label:'In Planung',bg:'#FAEEDA',color:'#633806'},aktiv:{label:'Aktiv',bg:'#EAF3DE',color:'#27500A'},pause:{label:'Pausiert',bg:'#F1EFE8',color:'#888780'},abgesagt:{label:'Abgesagt',bg:'#FCEBEB',color:'#A32D2D'}};
 load();loadRP();updateCounts();renderHTagBtns();renderHeute();
 
 function doBackupReminder(){
@@ -1095,11 +1102,6 @@ window.addEventListener('beforeunload',function(){
 });
 
 var umsatzData=[{"monat":"2025-05","einheiten":9661.29},{"monat":"2025-06","einheiten":5891.09},{"monat":"2025-07","einheiten":1683.39},{"monat":"2025-08","einheiten":14627.66},{"monat":"2025-09","einheiten":4739.68},{"monat":"2025-10","einheiten":7949.05},{"monat":"2025-11","einheiten":9843.76},{"monat":"2025-12","einheiten":7546.36},{"monat":"2026-01","einheiten":3920.1},{"monat":"2026-02","einheiten":1864.96},{"monat":"2026-03","einheiten":912.98}],potKunden=[],nextPotId=1,umsatzChartInst=null;
-var akquiseProjekte=[
-  {id:1,name:'Expertenrunde',kategorie:'beide',status:'idee',potenzialEH:0,notiz:'Firmenkunden: Themenabende mit DVAG-Aufhaenger'},
-  {id:2,name:'in Bewegung – Workshops',kategorie:'coaching',status:'idee',potenzialEH:0,notiz:'Einzelne Workshop-Formate zu Bewegung / Performance'},
-  {id:3,name:'90-Min-Workshop Firmenkunden',kategorie:'dvag',status:'planung',potenzialEH:0,notiz:'Einstiegsformat fuer Mittelstand'}
-],nextAPId=4,apActiveFilter='alle';
 
 function renderUmsatz(){
   var dl=document.getElementById('dl-umsatz');if(dl)dl.textContent=todayFmt;
@@ -1292,8 +1294,6 @@ function saveAPForm(){var name=(document.getElementById('ap-inp-name').value||''
 function updAP(id,field,val){akquiseProjekte=akquiseProjekte.map(function(a){if(a.id!==id)return a;var u={};u[field]=val;return Object.assign({},a,u);});save();}
 function addAkquiseProjekt(){toggleAPForm();}
 // ── AKQUISE-PROJEKTE ──
-var AP_KATEGORIEN={dvag:{label:'DVAG',color:'#378ADD',bg:'#E6F1FB',text:'#0C447C'},coaching:{label:'Coaching',color:'#7F77DD',bg:'#EEEDFE',text:'#3C3489'},beide:{label:'Beide',color:'#EF9F27',bg:'#FAEEDA',text:'#633806'}};
-var AP_STATI={idee:{label:'Idee',bg:'#F1EFE8',color:'#5F5E5A'},planung:{label:'In Planung',bg:'#FAEEDA',color:'#633806'},aktiv:{label:'Aktiv',bg:'#EAF3DE',color:'#27500A'},pause:{label:'Pausiert',bg:'#F1EFE8',color:'#888780'},abgesagt:{label:'Abgesagt',bg:'#FCEBEB',color:'#A32D2D'}};
 
 function setAPFilter(f){
   apActiveFilter=f;
