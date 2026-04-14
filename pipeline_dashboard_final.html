@@ -386,7 +386,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         <h3 style="font-size:14px;font-weight:600">Potentialkunden</h3>
         <button onclick="togglePotForm()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufuegen</button>
       </div>
-      <div id="pot-add-form" style="display:none;background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:.75rem;display:none">
+      <div id="pot-add-form" style="display:none;background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:.75rem">
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
           <input id="pot-inp-name" class="pot-inp" placeholder="Name..." style="flex:2;min-width:120px" onkeydown="if(event.key==='Enter')savePotForm()" />
           <input id="pot-inp-zeitraum" class="pot-inp" placeholder="Q3 2026" style="width:90px" onkeydown="if(event.key==='Enter')savePotForm()" />
@@ -1289,6 +1289,7 @@ function updPotKunde(id,field,val){potKunden=potKunden.map(function(p){if(p.id!=
 function delPotKunde(id){if(!confirm('L\xf6schen?'))return;potKunden=potKunden.filter(function(p){return p.id!==id;});save();renderPotKunden();}
 function toggleAPForm(){var f=document.getElementById('ap-add-form');if(!f)return;f.style.display=f.style.display==='none'?'flex':'none';if(f.style.display==='flex')setTimeout(function(){document.getElementById('ap-inp-name').focus();},50);}
 function saveAPForm(){var name=(document.getElementById('ap-inp-name').value||'').trim();if(!name)return;var kat=document.getElementById('ap-inp-kat').value||'beide';akquiseProjekte.push({id:nextAPId++,name:name,kategorie:kat,status:'idee',potenzialEH:0,notiz:''});save();document.getElementById('ap-inp-name').value='';document.getElementById('ap-add-form').style.display='none';renderAPList();updateCounts();}
+function updAP(id,field,val){akquiseProjekte=akquiseProjekte.map(function(a){if(a.id!==id)return a;var u={};u[field]=val;return Object.assign({},a,u);});save();}
 function addAkquiseProjekt(){toggleAPForm();}
 // ── AKQUISE-PROJEKTE ──
 var AP_KATEGORIEN={dvag:{label:'DVAG',color:'#378ADD',bg:'#E6F1FB',text:'#0C447C'},coaching:{label:'Coaching',color:'#7F77DD',bg:'#EEEDFE',text:'#3C3489'},beide:{label:'Beide',color:'#EF9F27',bg:'#FAEEDA',text:'#633806'}};
