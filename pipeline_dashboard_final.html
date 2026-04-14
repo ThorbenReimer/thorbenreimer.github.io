@@ -656,22 +656,18 @@ function renderRP(){
       +'</div>';
   }
 
-  // Split: offen oben, archiv (alle Kanaele done) unten
-  var offen=filtered.filter(function(p){
+  // Split: offen oben, archiv (done oder alle Kanaele abgehakt) unten
+  function isDone(p){
     var kt=p.kanalTypes||['insta','wa'];
     var dc=p.done_channels||{};
-    return !kt.every(function(k){return dc[k];});
-  }).sort(function(a,b){
-    // Ueberfaellige zuerst, dann nach Datum
+    return p.done===true || kt.every(function(k){return dc[k];});
+  }
+  var offen=filtered.filter(function(p){return !isDone(p);}).sort(function(a,b){
     var aOD=a.datum<today?0:1, bOD=b.datum<today?0:1;
     if(aOD!==bOD)return aOD-bOD;
     return a.datum.localeCompare(b.datum);
   });
-  var archiv=filtered.filter(function(p){
-    var kt=p.kanalTypes||['insta','wa'];
-    var dc=p.done_channels||{};
-    return kt.every(function(k){return dc[k];});
-  }).sort(function(a,b){return b.datum.localeCompare(a.datum);});
+  var archiv=filtered.filter(function(p){return isDone(p);}).sort(function(a,b){return b.datum.localeCompare(a.datum);});
 
   var offenHtml=offen.length
     ? offen.map(buildCard).join('')
@@ -690,7 +686,7 @@ function renderRP(){
   }
 
   el.innerHTML=offenHtml+archivHtml;
-  var offenCnt=rpPosts.filter(function(p){var kt=p.kanalTypes||['insta','wa'];var dc=p.done_channels||{};return !kt.every(function(k){return dc[k];});}).length;
+  var offenCnt=rpPosts.filter(function(p){return !isDone(p);}).length;
   var el2=document.getElementById('cnt-redaktion');
   if(el2)el2.textContent=offenCnt||'-';
 }
