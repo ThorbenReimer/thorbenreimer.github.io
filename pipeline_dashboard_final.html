@@ -384,7 +384,16 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
     <div style="margin-bottom:1.75rem">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h3 style="font-size:14px;font-weight:600">Potentialkunden</h3>
-        <button onclick="addPotKunde()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufuegen</button>
+        <button onclick="togglePotForm()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufuegen</button>
+      </div>
+      <div id="pot-add-form" style="display:none;background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:.75rem;display:none">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input id="pot-inp-name" class="pot-inp" placeholder="Name..." style="flex:2;min-width:120px" onkeydown="if(event.key==='Enter')savePotForm()" />
+          <input id="pot-inp-zeitraum" class="pot-inp" placeholder="Q3 2026" style="width:90px" onkeydown="if(event.key==='Enter')savePotForm()" />
+          <input id="pot-inp-eh" type="number" step="0.1" min="0" placeholder="EH" class="pot-inp" style="width:70px" onkeydown="if(event.key==='Enter')savePotForm()" />
+          <button onclick="savePotForm()" class="btn-dark" style="font-size:12px;padding:5px 12px">Speichern</button>
+          <button onclick="togglePotForm()" class="btn-light" style="font-size:12px;padding:5px 10px">Abbrechen</button>
+        </div>
       </div>
       <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);overflow:hidden">
         <table style="width:100%;border-collapse:collapse;font-size:13px">
@@ -410,7 +419,19 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <h3 style="font-size:14px;font-weight:600">Akquise-Projekte</h3>
           <p style="font-size:12px;color:var(--muted);margin-top:2px">Ideen &amp; Projekte, die kuenftig Umsatz bringen koennen</p>
         </div>
-        <button onclick="addAkquiseProjekt()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Projekt</button>
+        <button onclick="toggleAPForm()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Projekt</button>
+      </div>
+      <div id="ap-add-form" style="display:none;background:var(--surface);border:0.5px solid var(--border-md);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:.75rem">
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+          <input id="ap-inp-name" class="pot-inp" placeholder="Projektname..." style="flex:2;min-width:140px" onkeydown="if(event.key==='Enter')saveAPForm()" />
+          <select id="ap-inp-kat" class="pot-inp" style="width:110px">
+            <option value="beide">Beide</option>
+            <option value="dvag">DVAG</option>
+            <option value="coaching">Coaching</option>
+          </select>
+          <button onclick="saveAPForm()" class="btn-dark" style="font-size:12px;padding:5px 12px">Speichern</button>
+          <button onclick="toggleAPForm()" class="btn-light" style="font-size:12px;padding:5px 10px">Abbrechen</button>
+        </div>
       </div>
       <!-- Filter by Kategorie -->
       <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem" id="ap-filter-bar">
@@ -1261,10 +1282,14 @@ function renderPotKunden(){
     return '<tr style="border-top:0.5px solid var(--border)"><td style="padding:8px 12px"><input class="pot-inp" value="'+p.name+'" onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('name')+String.fromCharCode(44)+'this.value)" style="width:140px"></td><td style="padding:8px 12px"><input class="pot-inp" value="'+(p.zeitraum||'')+'" placeholder="Q3 2026" onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('zeitraum')+String.fromCharCode(44)+'this.value)" style="width:100px"></td><td style="padding:8px 12px;text-align:right"><input type="number" step="0.1" min="0" value="'+(p.einheiten||0)+'" onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('einheiten')+String.fromCharCode(44)+'parseFloat(this.value)||0)" style="width:70px;text-align:right;font-family:var(--mono);font-size:12px;padding:3px 6px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"></td><td style="padding:8px 12px"><input class="pot-inp" value="'+(p.notiz||'')+'" placeholder="Notiz..." onchange="updPotKunde('+p.id+String.fromCharCode(44)+JSON.stringify('notiz')+String.fromCharCode(44)+'this.value)" style="width:100%;max-width:200px;font-size:12px"></td><td style="padding:8px 12px;text-align:center"><button onclick="delPotKunde('+p.id+')" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:16px">\xd7</button></td></tr>';
   }).join('');
 }
-function addPotKunde(){var name=prompt('Name:');if(!name||!name.trim())return;potKunden.push({id:nextPotId++,name:name.trim(),zeitraum:'',einheiten:0,notiz:''});save();renderPotKunden();}
+function togglePotForm(){var f=document.getElementById('pot-add-form');if(!f)return;f.style.display=f.style.display==='none'?'flex':'none';if(f.style.display==='flex')setTimeout(function(){document.getElementById('pot-inp-name').focus();},50);}
+function savePotForm(){var name=(document.getElementById('pot-inp-name').value||'').trim();if(!name)return;var zeitraum=document.getElementById('pot-inp-zeitraum').value||'';var eh=parseFloat(document.getElementById('pot-inp-eh').value)||0;potKunden.push({id:nextPotId++,name:name,zeitraum:zeitraum,einheiten:eh,notiz:''});save();document.getElementById('pot-inp-name').value='';document.getElementById('pot-inp-zeitraum').value='';document.getElementById('pot-inp-eh').value='';document.getElementById('pot-add-form').style.display='none';renderPotKunden();updateCounts();}
+function addPotKunde(){togglePotForm();}
 function updPotKunde(id,field,val){potKunden=potKunden.map(function(p){if(p.id!==id)return p;var u={};u[field]=val;return Object.assign({},p,u);});save();}
 function delPotKunde(id){if(!confirm('L\xf6schen?'))return;potKunden=potKunden.filter(function(p){return p.id!==id;});save();renderPotKunden();}
-
+function toggleAPForm(){var f=document.getElementById('ap-add-form');if(!f)return;f.style.display=f.style.display==='none'?'flex':'none';if(f.style.display==='flex')setTimeout(function(){document.getElementById('ap-inp-name').focus();},50);}
+function saveAPForm(){var name=(document.getElementById('ap-inp-name').value||'').trim();if(!name)return;var kat=document.getElementById('ap-inp-kat').value||'beide';akquiseProjekte.push({id:nextAPId++,name:name,kategorie:kat,status:'idee',potenzialEH:0,notiz:''});save();document.getElementById('ap-inp-name').value='';document.getElementById('ap-add-form').style.display='none';renderAPList();updateCounts();}
+function addAkquiseProjekt(){toggleAPForm();}
 // ── AKQUISE-PROJEKTE ──
 var AP_KATEGORIEN={dvag:{label:'DVAG',color:'#378ADD',bg:'#E6F1FB',text:'#0C447C'},coaching:{label:'Coaching',color:'#7F77DD',bg:'#EEEDFE',text:'#3C3489'},beide:{label:'Beide',color:'#EF9F27',bg:'#FAEEDA',text:'#633806'}};
 var AP_STATI={idee:{label:'Idee',bg:'#F1EFE8',color:'#5F5E5A'},planung:{label:'In Planung',bg:'#FAEEDA',color:'#633806'},aktiv:{label:'Aktiv',bg:'#EAF3DE',color:'#27500A'},pause:{label:'Pausiert',bg:'#F1EFE8',color:'#888780'},abgesagt:{label:'Abgesagt',bg:'#FCEBEB',color:'#A32D2D'}};
@@ -1305,18 +1330,7 @@ function renderAPList(){
       +'</div>';
   }).join('');
 }
-function addAkquiseProjekt(){
-  var name=prompt('Projektname:');
-  if(!name||!name.trim())return;
-  akquiseProjekte.push({id:nextAPId++,name:name.trim(),kategorie:'beide',status:'idee',potenzialEH:0,notiz:''});
-  save();renderAPList();updateCounts();
-}
-function updAP(id,field,val){
-  akquiseProjekte=akquiseProjekte.map(function(a){if(a.id!==id)return a;var u={};u[field]=val;return Object.assign({},a,u);});
-  save();
-}
 function delAP(id){
-  if(!confirm('Projekt l\xf6schen?'))return;
   akquiseProjekte=akquiseProjekte.filter(function(a){return a.id!==id;});
   save();renderAPList();updateCounts();
 }
