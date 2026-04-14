@@ -579,10 +579,10 @@ function renderRP(){
     if(rpActiveMonth==='april'&&!(p.datum>='2026-04-01'&&p.datum<='2026-04-30'))return false;
     if(rpActiveMonth==='mai'&&!(p.datum>='2026-05-01'&&p.datum<='2026-05-31'))return false;
     if(rpActiveKanal!=='alle'){var kt=p.kanalTypes||['insta','wa'];if(kt.indexOf(rpActiveKanal)<0)return false;}
-    if(rpActiveKanal!=='alle'){var kt=p.kanalTypes||['insta','wa'];if(kt.indexOf(rpActiveKanal)<0)return false;}
     return true;
   });
-  el.innerHTML=filtered.map(function(p){
+
+  function buildCard(p){
     var isOpen=!!rpOpenCards[p.id];
     var lines=p.kachel.split('\n');
     var kHtml=lines.map(function(l){var m=l.match(/^<(.+)>$/);return m?'<span style="color:#378ADD">'+m[1]+'</span>':l;}).join('<br>');
@@ -654,10 +654,45 @@ function renderRP(){
       +'</div>'
       +body
       +'</div>';
-  }).join('');
-  var offen=rpPosts.filter(function(p){return!p.done;}).length;
+  }
+
+  // Split: offen oben, archiv (alle Kanaele done) unten
+  var offen=filtered.filter(function(p){
+    var kt=p.kanalTypes||['insta','wa'];
+    var dc=p.done_channels||{};
+    return !kt.every(function(k){return dc[k];});
+  }).sort(function(a,b){
+    // Ueberfaellige zuerst, dann nach Datum
+    var aOD=a.datum<today?0:1, bOD=b.datum<today?0:1;
+    if(aOD!==bOD)return aOD-bOD;
+    return a.datum.localeCompare(b.datum);
+  });
+  var archiv=filtered.filter(function(p){
+    var kt=p.kanalTypes||['insta','wa'];
+    var dc=p.done_channels||{};
+    return kt.every(function(k){return dc[k];});
+  }).sort(function(a,b){return b.datum.localeCompare(a.datum);});
+
+  var offenHtml=offen.length
+    ? offen.map(buildCard).join('')
+    : '<div style="padding:20px;text-align:center;color:var(--muted);font-size:13px">Alle Posts erledigt &#10003;</div>';
+
+  var archivHtml='';
+  if(archiv.length){
+    var archivOpen=!!window.rpArchivOpen;
+    archivHtml='<div style="margin-top:1.5rem">'
+      +'<button onclick="window.rpArchivOpen=!window.rpArchivOpen;renderRP()" style="display:flex;align-items:center;gap:8px;background:none;border:none;cursor:pointer;padding:6px 0;width:100%">'
+      +'<span style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted)">Archiv ('+archiv.length+' veroeffentlicht)</span>'
+      +'<span style="font-size:11px;color:var(--hint);transform:'+(archivOpen?'rotate(90deg)':'none')+';display:inline-block;margin-left:4px">&#9658;</span>'
+      +'</button>'
+      +(archivOpen?'<div style="opacity:.65">'+archiv.map(buildCard).join('')+'</div>':'')
+      +'</div>';
+  }
+
+  el.innerHTML=offenHtml+archivHtml;
+  var offenCnt=rpPosts.filter(function(p){var kt=p.kanalTypes||['insta','wa'];var dc=p.done_channels||{};return !kt.every(function(k){return dc[k];});}).length;
   var el2=document.getElementById('cnt-redaktion');
-  if(el2)el2.textContent=offen||'-';
+  if(el2)el2.textContent=offenCnt||'-';
 }
 // Event delegation for copy buttons
 document.addEventListener('click', function(e){
