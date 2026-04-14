@@ -237,7 +237,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
 <div class="app">
 <aside class="sidebar">
-  <div class="sidebar-brand"><h1>Thorben Reimer</h1><p>DVAG · Pipeline</p><div style="display:flex;gap:6px;margin-top:10px"><button class="btn-export" onclick="exportData()">&#8681; Export</button><button class="btn-export" onclick="document.getElementById('import-data-file').click()">&#8679; Import</button><input type="file" id="import-data-file" accept=".json" style="display:none" onchange="importData(this)" /></div><div style="margin-top:6px"><button class="btn-export" style="width:100%;background:var(--c-today);color:#fff;border-color:var(--c-today);font-weight:500" onclick="downloadSelf()">&#8681; Dashboard speichern</button></div></div>
+  <div class="sidebar-brand"><h1>Thorben Reimer</h1><p>DVAG · Pipeline</p><div style="display:flex;gap:6px;margin-top:10px"><button class="btn-export" onclick="exportData()">&#8681; Export</button><button class="btn-export" onclick="document.getElementById('import-data-file').click()">&#8679; Import</button><input type="file" id="import-data-file" accept=".json" style="display:none" onchange="importData(this)" /></div></div>
   <div class="sb-section">Ansicht</div>
   <button class="nav-item active" id="nav-heute" onclick="goView('heute')">
     <span class="nav-left"><span style="font-size:14px">&#128203;</span> Heute</span>
@@ -254,6 +254,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
   <button class="nav-item" id="nav-umsatz" onclick="goView('umsatz')">
     <span class="nav-left"><span style="font-size:14px">💰</span> Umsatz</span>
     <span class="nav-count" id="cnt-umsatz">-</span>
+  </button>
+  <button class="nav-item" id="nav-potenzial" onclick="goView('potenzial')">
+    <span class="nav-left"><span style="font-size:14px">🚀</span> Potenzial</span>
+    <span class="nav-count" id="cnt-potenzial">-</span>
   </button>
   <button class="nav-item" id="nav-pipeline" onclick="goView('pipeline')">
     <span class="nav-left"><span style="font-size:14px">&#128202;</span> Pipeline</span>
@@ -281,42 +285,6 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
       <button class="filter-chip active" id="ft-all" onclick="setHFilter('tag','all')">Alle</button>
       <span id="h-tag-btns" style="display:contents"></span>
     </div>
-    <!-- Quick-Add Aufgabe -->
-    <div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:.75rem 1rem;margin-bottom:1rem" id="h-quick-box">
-      <div style="font-size:10px;font-weight:500;color:var(--muted);text-transform:uppercase;letter-spacing:.07em;margin-bottom:.5rem">Schnell-Aufgabe</div>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
-        <div style="position:relative;flex:1;min-width:160px">
-          <input id="h-q-ksearch" type="text" placeholder="Kunde suchen..." autocomplete="off"
-            oninput="filterQKSelect()"
-            style="width:100%;font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius) var(--radius) 0 0;background:var(--bg);color:var(--text);outline:none;box-sizing:border-box"
-          />
-          <select id="h-q-ksel" size="5"
-            onchange="selectQKunde()"
-            style="display:none;width:100%;font-family:var(--font);font-size:13px;border:0.5px solid var(--c-link);border-top:none;border-radius:0 0 var(--radius) var(--radius);background:var(--surface);color:var(--text);outline:none;max-height:150px;position:absolute;top:100%;left:0;right:0;z-index:50;box-shadow:0 4px 12px rgba(0,0,0,.15)">
-          </select>
-        </div>
-        <input id="h-q-txt" type="text" placeholder="Aufgabe..."
-          onkeydown="if(event.key==='Enter')addQuickTask()"
-          style="flex:2;min-width:140px;font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"
-        />
-        <input id="h-q-date" type="date"
-          style="font-family:var(--font);font-size:13px;padding:6px 8px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none"
-        />
-        <select id="h-q-prio" style="font-family:var(--font);font-size:12px;padding:6px 8px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none">
-          <option value="">Prio</option>
-          <option value="1">Sofort</option>
-          <option value="2">Planen</option>
-          <option value="3">Delegieren</option>
-          <option value="4">Eliminieren</option>
-        </select>
-        <button onclick="addQuickTask()" style="font-family:var(--font);font-size:13px;font-weight:500;padding:6px 14px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--text);color:var(--bg);cursor:pointer;white-space:nowrap">+ Aufgabe</button>
-      </div>
-      <div id="h-q-sel" style="margin-top:6px;font-size:12px;color:var(--muted);display:none">
-        Kunde: <span id="h-q-sel-name" style="font-weight:500;color:var(--c-today)"></span>
-        <button onclick="clearQKSel()" style="margin-left:6px;font-size:11px;background:none;border:none;cursor:pointer;color:var(--hint)">&#10005; ändern</button>
-      </div>
-    </div>
-
     <div id="h-overdue"></div><div id="h-today"></div><div id="h-upcoming"></div>
     <p id="h-empty" style="color:var(--muted);font-size:14px;display:none">Keine Aufgaben fuer diesen Filter.</p>
   </div>
@@ -403,7 +371,17 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
         </table>
       </div>
     </div>
-    <div>
+    <div style="margin-top:1rem;padding:10px 14px;background:#EAF3DE;border-left:3px solid #639922;border-radius:0 var(--radius) var(--radius) 0;font-size:13px;color:#27500A">
+      Potentialkunden &amp; Akquise-Projekte findest du im Reiter <strong>&#128640; Potenzial</strong>.
+    </div>
+  </div>
+
+  <!-- ── POTENZIAL VIEW ── -->
+  <div id="view-potenzial" style="display:none">
+    <div class="page-header"><h2>Potenzial</h2><span class="page-date" id="dl-potenzial"></span></div>
+
+    <!-- Potentialkunden -->
+    <div style="margin-bottom:1.75rem">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
         <h3 style="font-size:14px;font-weight:600">Potentialkunden</h3>
         <button onclick="addPotKunde()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Hinzufuegen</button>
@@ -422,6 +400,28 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
           <tbody id="potkunden-tbody"></tbody>
         </table>
         <div id="potkunden-empty" style="padding:16px;text-align:center;color:var(--muted);font-size:13px;display:none">Noch keine Potentialkunden.</div>
+      </div>
+    </div>
+
+    <!-- Akquise-Projekte -->
+    <div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem">
+        <div>
+          <h3 style="font-size:14px;font-weight:600">Akquise-Projekte</h3>
+          <p style="font-size:12px;color:var(--muted);margin-top:2px">Ideen &amp; Projekte, die kuenftig Umsatz bringen koennen</p>
+        </div>
+        <button onclick="addAkquiseProjekt()" class="btn-dark" style="font-size:12px;padding:5px 12px">+ Projekt</button>
+      </div>
+      <!-- Filter by Kategorie -->
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:.75rem" id="ap-filter-bar">
+        <button class="rp-mtab active" id="apf-alle" onclick="setAPFilter('alle')">Alle</button>
+        <button class="rp-mtab" id="apf-dvag" onclick="setAPFilter('dvag')" style="color:#0C447C;border-color:#378ADD44">DVAG</button>
+        <button class="rp-mtab" id="apf-coaching" onclick="setAPFilter('coaching')" style="color:#3C3489;border-color:#7F77DD44">Coaching</button>
+        <button class="rp-mtab" id="apf-beide" onclick="setAPFilter('beide')" style="color:#633806;border-color:#EF9F2744">Beide</button>
+      </div>
+      <div id="ap-list"></div>
+      <div id="ap-empty" style="padding:24px;text-align:center;color:var(--muted);font-size:13px;display:none">
+        Noch keine Akquise-Projekte. Trage z.B. "Expertenrunde", "in Bewegung Workshops" oder andere Ideen ein.
       </div>
     </div>
   </div>
@@ -704,7 +704,13 @@ function load(){
   try{
     var p=JSON.parse(localStorage.getItem(SK));
     if(p&&p.kunden&&p.kunden.length>0){
-      stati=p.stati||DEF_STATI;kunden=p.kunden;nextKId=p.nextKId||109;nextTId=p.nextTId||56;DEF_TAGS=p.defTags||DEF_TAGS;return;
+      stati=p.stati||DEF_STATI;kunden=p.kunden;nextKId=p.nextKId||109;nextTId=p.nextTId||56;DEF_TAGS=p.defTags||DEF_TAGS;
+      if(p.umsatzData)umsatzData=p.umsatzData;
+      if(p.potKunden)potKunden=p.potKunden;
+      if(p.nextPotId)nextPotId=p.nextPotId;
+      if(p.akquiseProjekte)akquiseProjekte=p.akquiseProjekte;
+      if(p.nextAPId)nextAPId=p.nextAPId;
+      return;
     }
   }catch(e){}
   // Hardcoded backup data
@@ -714,7 +720,7 @@ function load(){
   DEF_TAGS=["#admin", "#dvag", "#kunde", "#coaching"];
   try{save();}catch(e){}
 }
-function save(){try{localStorage.setItem(SK,JSON.stringify({stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,umsatzData:umsatzData,potKunden:potKunden,nextPotId:nextPotId}));}catch(e){}}
+function save(){try{localStorage.setItem(SK,JSON.stringify({stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,umsatzData:umsatzData,potKunden:potKunden,nextPotId:nextPotId,akquiseProjekte:akquiseProjekte,nextAPId:nextAPId}));}catch(e){}}
 function getSt(key){for(var i=0;i<stati.length;i++){if(stati[i].key===key)return stati[i];}return{label:key,color:'#888780'};}
 function isOD(d){return d&&d<today;}
 function isTD(d){return d===today;}
@@ -740,22 +746,24 @@ function updateCounts(){
   var offen=rpPosts.filter(function(p){return!p.done;}).length;
   var rpEl=document.getElementById('cnt-redaktion');if(rpEl)rpEl.textContent=offen||'-';
   var uEl=document.getElementById('cnt-umsatz');if(uEl){var uc=kunden.filter(function(k){return k.status==='neu'||k.status==='analyse'||k.status==='angebot';}).length;uEl.textContent=uc||'-';}
+  var pEl=document.getElementById('cnt-potenzial');if(pEl){var pc=potKunden.length+akquiseProjekte.filter(function(a){return a.status!=='abgesagt';}).length;pEl.textContent=pc||'-';}
   renderSB();
 }
 function goView(v){
   sf=null;curView=v;
-  ['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n===v?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
+  ['heute','redaktion','tags','pipeline','umsatz','potenzial','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n===v?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n===v);});
   renderSB();
   if(v==='pipeline')renderPipeline();
   else if(v==='umsatz')renderUmsatz();
+  else if(v==='potenzial')renderPotenzial();
   else if(v==='alle'){document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);}
   else if(v==='tags')renderTagView();
   else if(v==='redaktion')renderRP();
   else renderHeute();
   updateCounts();
 }
-function goFilter(s){sf=s;curView='alle';['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.remove('active');});renderSB();document.getElementById('alle-title').textContent=getSt(s).label;renderKunden(s);}
-function goKunde(kid){sf=null;curView='alle';['heute','redaktion','tags','pipeline','umsatz','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n==='alle');});renderSB();document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);setTimeout(function(){var e=document.getElementById('kunde-'+kid);if(e){e.scrollIntoView({behavior:'smooth',block:'center'});openCards[kid]=true;renderKunden(null);}},100);}
+function goFilter(s){sf=s;curView='alle';['heute','redaktion','tags','pipeline','umsatz','potenzial','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.remove('active');});renderSB();document.getElementById('alle-title').textContent=getSt(s).label;renderKunden(s);}
+function goKunde(kid){sf=null;curView='alle';['heute','redaktion','tags','pipeline','umsatz','potenzial','alle'].forEach(function(n){document.getElementById('view-'+n).style.display=n==='alle'?'':'none';var el=document.getElementById('nav-'+n);if(el)el.classList.toggle('active',n==='alle');});renderSB();document.getElementById('alle-title').textContent='Alle Kunden';renderKunden(null);setTimeout(function(){var e=document.getElementById('kunde-'+kid);if(e){e.scrollIntoView({behavior:'smooth',block:'center'});openCards[kid]=true;renderKunden(null);}},100);}
 function setHFilter(type,val){
   if(type==='prio'){hPrioF=val;['all','1','2','3','4'].forEach(function(v){var el=document.getElementById('fp-'+v);if(el)el.classList.toggle('active',v===val);});}
   else{hTagF=val;var ab=document.getElementById('ft-all');if(ab)ab.classList.toggle('active',val==='all');var bs=document.querySelectorAll('.htagbtn');for(var i=0;i<bs.length;i++)bs[i].classList.toggle('active',bs[i].getAttribute('data-t')===val);}
@@ -1031,14 +1039,19 @@ doBackupReminder();
 })();
 
 window.addEventListener('beforeunload',function(){
-  try{var data={stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,rpPosts:rpPosts,umsatzData:umsatzData,potKunden:potKunden,nextPotId:nextPotId,exportedAt:new Date().toISOString()};localStorage.setItem('autoBackup',JSON.stringify(data));localStorage.setItem('autoBackupDate',today);}catch(e){}
+  try{var data={stati:stati,kunden:kunden,nextKId:nextKId,nextTId:nextTId,defTags:DEF_TAGS,rpPosts:rpPosts,umsatzData:umsatzData,potKunden:potKunden,nextPotId:nextPotId,akquiseProjekte:akquiseProjekte,nextAPId:nextAPId,exportedAt:new Date().toISOString()};localStorage.setItem('autoBackup',JSON.stringify(data));localStorage.setItem('autoBackupDate',today);}catch(e){}
 });
 
 var umsatzData=[{"monat":"2025-05","einheiten":9661.29},{"monat":"2025-06","einheiten":5891.09},{"monat":"2025-07","einheiten":1683.39},{"monat":"2025-08","einheiten":14627.66},{"monat":"2025-09","einheiten":4739.68},{"monat":"2025-10","einheiten":7949.05},{"monat":"2025-11","einheiten":9843.76},{"monat":"2025-12","einheiten":7546.36},{"monat":"2026-01","einheiten":3920.1},{"monat":"2026-02","einheiten":1864.96},{"monat":"2026-03","einheiten":912.98}],potKunden=[],nextPotId=1,umsatzChartInst=null;
+var akquiseProjekte=[
+  {id:1,name:'Expertenrunde',kategorie:'beide',status:'idee',potenzialEH:0,notiz:'Firmenkunden: Themenabende mit DVAG-Aufhaenger'},
+  {id:2,name:'in Bewegung – Workshops',kategorie:'coaching',status:'idee',potenzialEH:0,notiz:'Einzelne Workshop-Formate zu Bewegung / Performance'},
+  {id:3,name:'90-Min-Workshop Firmenkunden',kategorie:'dvag',status:'planung',potenzialEH:0,notiz:'Einstiegsformat fuer Mittelstand'}
+],nextAPId=4,apActiveFilter='alle';
 
 function renderUmsatz(){
   var dl=document.getElementById('dl-umsatz');if(dl)dl.textContent=todayFmt;
-  renderUmsatzChart();renderPipelineTable();renderPotKunden();renderForecastChart();
+  renderUmsatzChart();renderPipelineTable();renderForecastChart();
 }
 function renderUmsatzChart(){
   var ctx=document.getElementById('umsatzChart');if(!ctx)return;
@@ -1207,81 +1220,6 @@ function updPipelineStatus(kid,val){
 }
 function updPipelineMonat(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzMonat:val}):k;});save();renderForecastChart();}
 function updPipelineNotiz(kid,val){kunden=kunden.map(function(k){return k.id===kid?Object.assign({},k,{umsatzNotiz:val}):k;});save();}
-
-// ── Quick-Add Aufgabe im Heute-Tab ──
-var qKselId=null;
-function filterQKSelect(){
-  var inp=document.getElementById('h-q-ksearch');
-  var sel=document.getElementById('h-q-ksel');
-  if(!inp||!sel)return;
-  var q=inp.value.trim().toLowerCase();
-  var matches=kunden.slice().sort(function(a,b){return a.name.localeCompare(b.name,'de');});
-  if(q)matches=matches.filter(function(k){return k.name.toLowerCase().indexOf(q)>=0;});
-  matches=matches.slice(0,10);
-  if(!matches.length){sel.style.display='none';return;}
-  sel.innerHTML=matches.map(function(k){
-    var s=getSt(k.status);
-    return'<option value="'+k.id+'" data-name="'+k.name.replace(/"/g,'&quot;')+'">'+k.name+' · '+s.label+'</option>';
-  }).join('');
-  sel.style.display='block';
-  sel.size=Math.min(matches.length,5);
-}
-function selectQKunde(){
-  var sel=document.getElementById('h-q-ksel');
-  if(!sel||!sel.value)return;
-  qKselId=parseInt(sel.value);
-  var opt=sel.options[sel.selectedIndex];
-  var name=opt?opt.text.split(' · ')[0]:'';
-  sel.style.display='none';
-  var inp=document.getElementById('h-q-ksearch');
-  if(inp)inp.value='';
-  var selRow=document.getElementById('h-q-sel');
-  var selName=document.getElementById('h-q-sel-name');
-  if(selRow)selRow.style.display='block';
-  if(selName)selName.textContent=name;
-  var txtInp=document.getElementById('h-q-txt');
-  if(txtInp)setTimeout(function(){txtInp.focus();},50);
-}
-function clearQKSel(){
-  qKselId=null;
-  var selRow=document.getElementById('h-q-sel');
-  if(selRow)selRow.style.display='none';
-  var inp=document.getElementById('h-q-ksearch');
-  if(inp){inp.value='';inp.focus();}
-  var sel=document.getElementById('h-q-ksel');
-  if(sel)sel.style.display='none';
-}
-function downloadSelf(){
-  var html=document.documentElement.outerHTML;
-  var blob=new Blob([html],{type:'text/html'});
-  var a=document.createElement('a');
-  a.href=URL.createObjectURL(blob);
-  a.download='pipeline_dashboard.html';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-function addQuickTask(){
-  if(!qKselId){
-    var inp=document.getElementById('h-q-ksearch');
-    if(inp){inp.focus();inp.style.borderColor='var(--c-danger)';setTimeout(function(){inp.style.borderColor='';},1200);}
-    return;
-  }
-  var txtInp=document.getElementById('h-q-txt');
-  var datInp=document.getElementById('h-q-date');
-  var prioInp=document.getElementById('h-q-prio');
-  var txt=txtInp?txtInp.value.trim():'';
-  if(!txt){if(txtInp){txtInp.focus();txtInp.style.borderColor='var(--c-danger)';setTimeout(function(){txtInp.style.borderColor='';},1200);}return;}
-  var dat=datInp?datInp.value:'';
-  var prio=prioInp?prioInp.value:'';
-  kunden=kunden.map(function(k){
-    if(k.id!==qKselId)return k;
-    return Object.assign({},k,{todos:k.todos.concat([{id:nextTId++,text:txt,datum:dat,done:false,prio:prio}])});
-  });
-  if(txtInp)txtInp.value='';
-  if(datInp)datInp.value='';
-  if(prioInp)prioInp.value='';
-  save();updateCounts();renderHeute();renderKunden(sf);
-}
 function renderPotKunden(){
   var tbody=document.getElementById('potkunden-tbody');
   var empty=document.getElementById('potkunden-empty');
@@ -1295,6 +1233,62 @@ function renderPotKunden(){
 function addPotKunde(){var name=prompt('Name:');if(!name||!name.trim())return;potKunden.push({id:nextPotId++,name:name.trim(),zeitraum:'',einheiten:0,notiz:''});save();renderPotKunden();}
 function updPotKunde(id,field,val){potKunden=potKunden.map(function(p){if(p.id!==id)return p;var u={};u[field]=val;return Object.assign({},p,u);});save();}
 function delPotKunde(id){if(!confirm('L\xf6schen?'))return;potKunden=potKunden.filter(function(p){return p.id!==id;});save();renderPotKunden();}
+
+// ── AKQUISE-PROJEKTE ──
+var AP_KATEGORIEN={dvag:{label:'DVAG',color:'#378ADD',bg:'#E6F1FB',text:'#0C447C'},coaching:{label:'Coaching',color:'#7F77DD',bg:'#EEEDFE',text:'#3C3489'},beide:{label:'Beide',color:'#EF9F27',bg:'#FAEEDA',text:'#633806'}};
+var AP_STATI={idee:{label:'Idee',bg:'#F1EFE8',color:'#5F5E5A'},planung:{label:'In Planung',bg:'#FAEEDA',color:'#633806'},aktiv:{label:'Aktiv',bg:'#EAF3DE',color:'#27500A'},pause:{label:'Pausiert',bg:'#F1EFE8',color:'#888780'},abgesagt:{label:'Abgesagt',bg:'#FCEBEB',color:'#A32D2D'}};
+
+function setAPFilter(f){
+  apActiveFilter=f;
+  ['alle','dvag','coaching','beide'].forEach(function(x){var el=document.getElementById('apf-'+x);if(el)el.classList.toggle('active',x===f);});
+  renderAPList();
+}
+function renderPotenzial(){
+  var dl=document.getElementById('dl-potenzial');if(dl)dl.textContent=todayFmt;
+  renderPotKunden();
+  renderAPList();
+}
+function renderAPList(){
+  var list=akquiseProjekte.filter(function(a){return apActiveFilter==='alle'||a.kategorie===apActiveFilter;});
+  var el=document.getElementById('ap-list');
+  var emEl=document.getElementById('ap-empty');
+  if(!el)return;
+  if(list.length===0){el.innerHTML='';if(emEl)emEl.style.display='block';return;}
+  if(emEl)emEl.style.display='none';
+  el.innerHTML=list.map(function(a){
+    var kat=AP_KATEGORIEN[a.kategorie]||AP_KATEGORIEN.beide;
+    var st=AP_STATI[a.status]||AP_STATI.idee;
+    var katOpts=Object.keys(AP_KATEGORIEN).map(function(k){return'<option value="'+k+'"'+(k===a.kategorie?' selected':'')+'>'+AP_KATEGORIEN[k].label+'</option>';}).join('');
+    var stOpts=Object.keys(AP_STATI).map(function(k){return'<option value="'+k+'"'+(k===a.status?' selected':'')+'>'+AP_STATI[k].label+'</option>';}).join('');
+    return '<div style="background:var(--surface);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:1rem 1.1rem;margin-bottom:.75rem">'
+      +'<div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">'
+      +'<div style="flex:1;min-width:160px">'
+      +'<input class="pot-inp" value="'+a.name+'" placeholder="Projektname..." onchange="updAP('+a.id+',\'name\',this.value)" style="font-size:14px;font-weight:500;width:100%;margin-bottom:6px">'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">'
+      +'<select onchange="updAP('+a.id+',\'kategorie\',this.value)" style="font-family:var(--font);font-size:11px;padding:2px 6px;border:0.5px solid '+kat.color+';border-radius:20px;background:'+kat.bg+';color:'+kat.text+';outline:none;cursor:pointer">'+katOpts+'</select>'
+      +'<select onchange="updAP('+a.id+',\'status\',this.value);renderAPList()" style="font-family:var(--font);font-size:11px;padding:2px 6px;border:0.5px solid var(--border-md);border-radius:20px;background:'+st.bg+';color:'+st.color+';outline:none;cursor:pointer">'+stOpts+'</select>'
+      +'</div></div>'
+      +'<button onclick="delAP('+a.id+')" style="background:none;border:none;color:var(--hint);cursor:pointer;font-size:18px;padding:0 4px;line-height:1;align-self:flex-start">\xd7</button>'
+      +'</div>'
+      +'<textarea class="notiz-inp" rows="2" placeholder="Beschreibung, Ideen, naechster Schritt..." onchange="updAP('+a.id+',\'notiz\',this.value)" style="width:100%;margin-top:8px;font-size:12px">'+( a.notiz||'')+'</textarea>'
+      +'</div>';
+  }).join('');
+}
+function addAkquiseProjekt(){
+  var name=prompt('Projektname:');
+  if(!name||!name.trim())return;
+  akquiseProjekte.push({id:nextAPId++,name:name.trim(),kategorie:'beide',status:'idee',potenzialEH:0,notiz:''});
+  save();renderAPList();updateCounts();
+}
+function updAP(id,field,val){
+  akquiseProjekte=akquiseProjekte.map(function(a){if(a.id!==id)return a;var u={};u[field]=val;return Object.assign({},a,u);});
+  save();
+}
+function delAP(id){
+  if(!confirm('Projekt l\xf6schen?'))return;
+  akquiseProjekte=akquiseProjekte.filter(function(a){return a.id!==id;});
+  save();renderAPList();updateCounts();
+}
 </script>
 </body>
 </html>
