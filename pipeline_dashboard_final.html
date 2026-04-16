@@ -169,8 +169,8 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .rp-body{flex:1}
 .rp-title{font-size:14px;font-weight:500;margin-bottom:3px}
 .rp-meta{font-size:12px;color:var(--muted);font-family:var(--mono);margin-bottom:6px}
-.rp-kachel{background:#161e2e;border-radius:6px;padding:10px 12px;font-size:13px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:6px}
-.rp-kachel span{color:#378ADD}
+.rp-kachel{background:#0d1a2e;border-radius:6px;padding:10px 12px;font-size:13px;font-weight:600;color:#fff;line-height:1.4;margin-bottom:6px}
+.rp-kachel span{color:#2085c5}
 .rp-tags{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
 .rp-tag{font-size:11px;font-family:var(--mono);padding:2px 8px;border-radius:20px;font-weight:500}
 .rp-tag-beide{background:#FAEEDA;color:#633806}
@@ -196,7 +196,7 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .rp-rhythm-row{display:flex;gap:10px;margin-bottom:8px;align-items:center}
 .rp-rhythm-week{min-width:60px;font-size:11px;color:var(--muted);font-family:var(--mono)}
 .rp-rhythm-txt{font-size:13px;color:var(--text)}
-.rp-reminder{background:#E6F1FB;border-left:3px solid #378ADD;border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:13px;color:#0C447C;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
+.rp-reminder{background:#E6F1FB;border-left:3px solid #2085c5;border-radius:0 var(--radius) var(--radius) 0;padding:10px 14px;font-size:13px;color:#0C447C;margin-bottom:1.25rem;display:flex;align-items:center;gap:10px}
 
 .pot-inp{font-family:var(--font);font-size:13px;padding:6px 10px;border:0.5px solid var(--border-md);border-radius:var(--radius);background:var(--bg);color:var(--text);outline:none}
 @media(max-width:700px){.app{grid-template-columns:1fr}.sidebar{display:none}.metrics{grid-template-columns:repeat(3,minmax(0,1fr))}.two-col{grid-template-columns:1fr}}
@@ -209,10 +209,10 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 .rp-post-head:hover{background:var(--surface2)}
 .rp-post-body{border-top:0.5px solid var(--border);padding:1rem 1.1rem;display:none}
 .rp-post-body.open{display:block}
-.rp-kachel-preview{background:#161e2e;border-radius:8px;padding:16px 18px;margin-bottom:1rem}
-.rp-kachel-preview .kp-line{width:28px;height:3px;background:#378ADD;border-radius:2px;margin-bottom:12px}
+.rp-kachel-preview{background:#0d1a2e;border-radius:8px;padding:16px 18px;margin-bottom:1rem}
+.rp-kachel-preview .kp-line{width:28px;height:3px;background:#2085c5;border-radius:2px;margin-bottom:12px}
 .rp-kachel-preview .kp-text{font-family:Georgia,serif;font-size:15px;font-weight:700;color:#fff;line-height:1.4}
-.rp-kachel-preview .kp-text span{color:#378ADD}
+.rp-kachel-preview .kp-text span{color:#2085c5}
 .rp-kachel-preview .kp-footer{display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:10px;margin-top:12px}
 .rp-kachel-preview .kp-name{font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.05em}
 .rp-section-lbl{font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px;margin-top:14px}
@@ -580,6 +580,9 @@ function loadRP(){
   } catch(e){rpPosts=JSON.parse(JSON.stringify(DEF_POSTS));}
 }
 function saveRP(){try{localStorage.setItem('rp_v1',JSON.stringify(rpPosts));}catch(e){}}
+function updRPStil(id,v){rpPosts=rpPosts.map(function(p){return p.id===id?Object.assign({},p,{stil:v}):p;});saveRP();renderRP();}
+function updRPTyp(id,v){rpPosts=rpPosts.map(function(p){return p.id===id?Object.assign({},p,{postTyp:v,karSlides:v==='karussell'?(p.karSlides||2):1}):p;});saveRP();renderRP();}
+function updKarSlides(id,v){rpPosts=rpPosts.map(function(p){return p.id===id?Object.assign({},p,{karSlides:Math.max(2,parseInt(v)||2)}):p;});saveRP();}
 
 function rpKanalBadges(kt){
   if(!kt||!kt.length)return'';
@@ -630,7 +633,7 @@ function renderRP(){
   function buildCard(p){
     var isOpen=!!rpOpenCards[p.id];
     var lines=p.kachel.split('\n');
-    var kHtml=lines.map(function(l){var m=l.match(/^<(.+)>$/);return m?'<span style="color:#378ADD">'+m[1]+'</span>':l;}).join('<br>');
+    var kHtml=lines.map(function(l){var m=l.match(/^<(.+)>$/);return m?'<span style="color:#2085c5">'+m[1]+'</span>':l;}).join('<br>');
     var dc=p.done_channels||{};
     var kt=p.kanalTypes||['insta','wa'];
     var doneCnt=kt.filter(function(k){return dc[k];}).length;
@@ -643,13 +646,21 @@ function renderRP(){
       if(p.canva){canvaHtml='<div class="rp-canva-steps">'+p.canva.map(function(s,i){return'<div class="rp-canva-step"><span class="rp-step-n">'+(i+1)+'</span>'+s+'</div>';}).join('')+'</div>';}
       body='<div class="rp-post-body open">'
         +'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Kachel-Vorschau</div>'
-        +'<div style="background:#161e2e;border-radius:8px;padding:14px 16px;margin-bottom:12px">'
-        +'<div style="width:28px;height:3px;background:#378ADD;border-radius:2px;margin-bottom:10px"></div>'
-        +'<div style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:#fff;line-height:1.5">'+kHtml+'</div>'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:10px">'
-        +'<span style="font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.05em">Thorben Reimer</span>'
-        +'<span style="color:#378ADD;font-size:11px;font-weight:700">TR</span>'
+        +'<div style="background:'+((p.stil||'dunkel')==='hell'?'#ffffff':'#0d1a2e')+';border-radius:8px;padding:14px 16px 12px;margin-bottom:8px">'
+        +'<div style="width:28px;height:3px;background:#2085c5;border-radius:2px;margin-bottom:10px"></div>'
+        +'<div style="font-size:14px;font-weight:800;color:'+((p.stil||'dunkel')==='hell'?'#0d1a2e':'#ffffff')+';line-height:1.45;font-family:-apple-system,BlinkMacSystemFont,sans-serif">'+kHtml+'</div>'
+        +'<div style="display:flex;justify-content:flex-end;margin-top:12px">'
+        +'<span style="font-size:9px;font-weight:700;color:'+((p.stil||'dunkel')==='hell'?'rgba(13,26,46,0.3)':'rgba(255,255,255,0.3)')+';letter-spacing:.5px">↗TR</span>'
         +'</div></div>'
+        +'<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-bottom:12px">'
+        +'<span style="font-size:9px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em">Stil:</span>'
+        +'<button onclick="event.stopPropagation();updRPStil('+p.id+',\'dunkel\')" style="font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1.5px solid '+((p.stil||'dunkel')==='dunkel'?'#2085c5':'var(--border-md)')+';background:'+((p.stil||'dunkel')==='dunkel'?'#0d1a2e':'transparent')+';color:'+((p.stil||'dunkel')==='dunkel'?'#fff':'var(--muted)')+'">Dunkel</button>'
+        +'<button onclick="event.stopPropagation();updRPStil('+p.id+',\'hell\')" style="font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1.5px solid '+((p.stil||'dunkel')==='hell'?'#2085c5':'var(--border-md)')+';background:'+((p.stil||'dunkel')==='hell'?'#e8e8e8':'transparent')+';color:'+((p.stil||'dunkel')==='hell'?'#0d1a2e':'var(--muted)')+'">Hell</button>'
+        +'<span style="font-size:9px;color:var(--muted);font-weight:500;text-transform:uppercase;letter-spacing:.05em;margin-left:8px">Typ:</span>'
+        +'<button onclick="event.stopPropagation();updRPTyp('+p.id+',\'einzel\')" style="font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1.5px solid '+((!p.postTyp||p.postTyp==='einzel')?'#2085c5':'var(--border-md)')+';background:'+((!p.postTyp||p.postTyp==='einzel')?'#2085c522':'transparent')+';color:'+((!p.postTyp||p.postTyp==='einzel')?'#2085c5':'var(--muted)')+'">Einzel</button>'
+        +'<button onclick="event.stopPropagation();updRPTyp('+p.id+',\'karussell\')" style="font-size:11px;padding:3px 10px;border-radius:4px;cursor:pointer;border:1.5px solid '+(p.postTyp==='karussell'?'#2085c5':'var(--border-md)')+';background:'+(p.postTyp==='karussell'?'#2085c522':'transparent')+';color:'+(p.postTyp==='karussell'?'#2085c5':'var(--muted)')+'">Karussell</button>'
+        +(p.postTyp==='karussell'?'<input type="number" min="2" max="10" value="'+(p.karSlides||2)+'" onclick="event.stopPropagation()" onchange="updKarSlides('+p.id+',this.value)" style="width:46px;font-size:11px;padding:2px 5px;border:0.5px solid var(--border-md);border-radius:4px;background:var(--bg);color:var(--text)"><span style="font-size:11px;color:var(--muted)">Folien</span>':'')\
+        +'</div>'
         +(p.caption
           ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:6px">Caption Instagram</div>'
            +'<div id="cap-'+p.id+'" style="background:var(--surface2);border-radius:var(--radius);padding:10px 12px;font-size:12px;line-height:1.7;white-space:pre-wrap;margin-bottom:4px">'+p.caption+'</div>'
@@ -661,7 +672,7 @@ function renderRP(){
            +'<button class="rp-copy-btn" onclick="var t=this.previousElementSibling;navigator.clipboard.writeText(t.innerText).then(function(){var s=document.activeElement;s.textContent=String.fromCharCode(10003,32,75,111,112,105,101,114,116);setTimeout(function(){s.textContent=String.fromCharCode(75,111,112,105,101,114,110)},2000)})">Kopieren</button>'
           :'')
         +(canvaHtml
-          ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Canva-Anleitung · Instagram</div>'+canvaHtml
+          ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Post Generator · Instagram</div>'+canvaHtml
           :'')
         +(p.canvaWA
           ?'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:10px 0 6px">Canva-Anleitung · WhatsApp Status (1080×1920px)</div>'
@@ -691,7 +702,7 @@ function renderRP(){
       +'<div class="rp-num" style="background:'+rpColor(p.zielgruppe)+'">'+p.id+'</div>'
       +'<div style="flex:1;min-width:0">'
       +'<div style="font-size:14px;font-weight:500">'+p.title+'</div>'
-      +'<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap">'+rpKanalBadges(p.kanalTypes||['insta','wa'])+'</div>'
+      +'<div style="margin-top:4px;display:flex;gap:4px;flex-wrap:wrap;align-items:center">'+rpKanalBadges(p.kanalTypes||['insta','wa'])+'<span style="font-size:9px;padding:1px 6px;border-radius:3px;font-weight:700;'+((p.stil||'dunkel')==='dunkel'?'background:#0d1a2e;color:#fff':'background:#e8e8e8;color:#0d1a2e')+'">'+((p.stil||'dunkel')==='dunkel'?'D':'H')+'</span>'+(p.postTyp==='karussell'?'<span style="font-size:9px;padding:1px 6px;border-radius:3px;background:#2085c522;color:#2085c5;font-weight:700">&#8596;'+(p.karSlides||2)+'</span>':'')+'</div>'
       +'<div style="font-size:11px;color:var(--muted);font-family:var(--mono);margin-top:2px">'+fmtDatum(p.datum)+' · '+p.zeit+' Uhr</div>'
       +'</div>'
       +'<span class="rp-status-badge '+statusCls+'">'+statusTxt+'</span>'
