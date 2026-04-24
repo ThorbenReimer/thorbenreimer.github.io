@@ -1460,6 +1460,7 @@ function renderUmsatzChart(){
   umsatzChartInst=new Chart(ctx,{type:'bar',data:{labels:months.map(function(m){return m.lbl;}),datasets:[{data:months.map(function(m){return m.val;}),backgroundColor:months.map(function(m){return m.key===today.slice(0,7)?'#378ADD':'rgba(55,138,221,0.4)';}),borderRadius:4,borderSkipped:false}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.parsed.y.toFixed(2)+' \u20ac';}}}},scales:{y:{beginAtZero:true,ticks:{color:muted,font:{size:11},callback:function(v){return v+' \u20ac';}},grid:{color:'rgba(136,135,128,0.1)'}},x:{ticks:{color:muted,font:{size:11}},grid:{display:false}}}}});
 }
 
+var umsatzChartInst = null;
 var forecastChartInst = null;
 
 function renderForecastChart(){
