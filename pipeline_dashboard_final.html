@@ -1665,8 +1665,8 @@ function renderAPList(){
         +'<option value="4"'+(t.prio==="4"?" selected":"")+'>Eliminieren</option>';
       var dc=t.datum&&t.datum<today&&!t.done?'var(--c-danger)':t.datum===today&&!t.done?'var(--c-today)':'var(--muted)';
       var aid=a.id,tid=t.id;
-      var chgDatum='updAPTodo('+aid+','+tid+',"datum",this.value)';
-      var chgPrio='updAPTodo('+aid+','+tid+',"prio",this.value)';
+      var chgDatum='updAPTodo('+aid+','+tid+",\\'datum\\',this.value)";
+      var chgPrio='updAPTodo('+aid+','+tid+",\\'prio\\',this.value)";
       var delBtn='delAPTodo('+aid+','+tid+')';
       var chkFn='chkAPTodo('+aid+','+tid+',this)';
       var subs=t.subtasks||[];
@@ -1820,7 +1820,7 @@ function updAPTodo(apId,tid,field,val){
     if(a.id!==apId)return a;
     return Object.assign({},a,{todos:(a.todos||[]).map(function(t){if(t.id!==tid)return t;var u={};u[field]=val;return Object.assign({},t,u);})});
   });
-  save();renderHeute();
+  save();renderHeute();renderAPList();
 }
 function delAPTodo(apId,tid){
   akquiseProjekte=akquiseProjekte.map(function(a){
