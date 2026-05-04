@@ -151,23 +151,78 @@ function calcPushupReps(maxPU,type){
   return null;
 }
 
+function getPullupMode(maxKZ){
+  if(!maxKZ||maxKZ<1)return null;
+  if(maxKZ<=3)return "beginner";  // GtG + Negativs
+  if(maxKZ<=7)return "cluster";    // Klassisches Cluster
+  return "advanced";                // Größere Cluster
+}
+
 function calcPullupReps(maxKZ,type){
-  if(!maxKZ||maxKZ<2)return null;
-  if(type==="cluster"){
-    const baseRep=Math.max(2,Math.round(maxKZ*0.6));
-    const lastRep=Math.max(1,baseRep-1);
-    return{type:"cluster",sets:[baseRep,baseRep,baseRep,lastRep],rir:[maxKZ-baseRep,maxKZ-baseRep,maxKZ-baseRep,maxKZ-lastRep],total:baseRep*3+lastRep,
-      label:"Cluster · 4 Mini-Sätze",
-      desc:`30 s Pause zwischen Sätzen. FROM (Dead Hang Start, Brust zur Stange). RIR ${maxKZ-baseRep}.`};
+  if(!maxKZ||maxKZ<1)return null;
+  const mode=getPullupMode(maxKZ);
+  
+  // ==== BEGINNER MODE: Max 1-3 sauber ====
+  if(mode==="beginner"){
+    if(type==="cluster"){
+      // Greasing the Groove: 4-5 Mini-Sätze á 1 Rep (oder Max-1)
+      const repsPerSet=Math.max(1,maxKZ-1);
+      return{type:"gtg",sets:[repsPerSet,repsPerSet,repsPerSet,repsPerSet,repsPerSet],rir:[1,1,1,1,1],total:repsPerSet*5,
+        label:"Greasing the Groove · 5 × "+repsPerSet+" Rep",
+        desc:`5 Mini-Sätze á ${repsPerSet} sauberer FROM-Pull-up. 60-90 s Pause zwischen Sätzen. NIE bis Versagen.`,
+        mode:"beginner"};
+    }
+    if(type==="myorep"){
+      // Negativ-Reps am Samstag
+      return{type:"negativ",sets:[4,4,4],rir:[null,null,null],total:12,
+        label:"Negativ-Reps · 3 × 4 exzentrisch",
+        desc:"Hochspringen → kontrolliert in 5 Sek absenken. 3 Sätze á 4 Negativs. 90 s Pause. Danach 1 Test-Rep wenn Lust.",
+        mode:"beginner"};
+    }
   }
-  if(type==="myorep"){
-    const act=Math.max(2,maxKZ-1);
-    const m1=Math.max(1,Math.round(maxKZ*0.4));
-    const m2=Math.max(1,Math.round(maxKZ*0.35));
-    const m3=Math.max(1,Math.round(maxKZ*0.3));
-    return{type:"myorep",sets:[act,m1,m2,m3],rir:[1,1,1,0],total:act+m1+m2+m3,
-      label:"Myo-Rep · Spitzenreiz",
-      desc:"Aktivierung 1 vor Versagen, dann 3× Mini mit 15 s Pause."};
+  
+  // ==== CLUSTER MODE: Max 4-7 ====
+  if(mode==="cluster"){
+    if(type==="cluster"){
+      const baseRep=Math.max(2,Math.round(maxKZ*0.6));
+      const lastRep=Math.max(1,baseRep-1);
+      return{type:"cluster",sets:[baseRep,baseRep,baseRep,lastRep],rir:[maxKZ-baseRep,maxKZ-baseRep,maxKZ-baseRep,maxKZ-lastRep],total:baseRep*3+lastRep,
+        label:"Cluster · 4 Mini-Sätze",
+        desc:`30 s Pause zwischen Sätzen. FROM (Dead Hang Start, Brust zur Stange). RIR ${maxKZ-baseRep}.`,
+        mode:"cluster"};
+    }
+    if(type==="myorep"){
+      const act=Math.max(2,maxKZ-1);
+      const m1=Math.max(1,Math.round(maxKZ*0.4));
+      const m2=Math.max(1,Math.round(maxKZ*0.35));
+      const m3=Math.max(1,Math.round(maxKZ*0.3));
+      return{type:"myorep",sets:[act,m1,m2,m3],rir:[1,1,1,0],total:act+m1+m2+m3,
+        label:"Myo-Rep · Spitzenreiz",
+        desc:"Aktivierung 1 vor Versagen, dann 3× Mini mit 15 s Pause.",
+        mode:"cluster"};
+    }
+  }
+  
+  // ==== ADVANCED MODE: Max 8+ ====
+  if(mode==="advanced"){
+    if(type==="cluster"){
+      const baseRep=Math.max(5,Math.round(maxKZ*0.6));
+      const lastRep=Math.max(4,baseRep-1);
+      return{type:"cluster",sets:[baseRep,baseRep,baseRep,lastRep],rir:[maxKZ-baseRep,maxKZ-baseRep,maxKZ-baseRep,maxKZ-lastRep],total:baseRep*3+lastRep,
+        label:"Cluster Advanced · 4 Mini-Sätze",
+        desc:`30 s Pause zwischen Sätzen. FROM. RIR ${maxKZ-baseRep}. Bei Stagnation: Tempo verlangsamen oder Gewicht hinzu.`,
+        mode:"advanced"};
+    }
+    if(type==="myorep"){
+      const act=Math.max(6,maxKZ-1);
+      const m1=Math.max(3,Math.round(maxKZ*0.4));
+      const m2=Math.max(3,Math.round(maxKZ*0.35));
+      const m3=Math.max(2,Math.round(maxKZ*0.3));
+      return{type:"myorep",sets:[act,m1,m2,m3],rir:[1,1,1,0],total:act+m1+m2+m3,
+        label:"Myo-Rep Advanced",
+        desc:"Aktivierung 1 vor Versagen, dann 3× Mini mit 15 s Pause. Bei Plateau: Gewicht hinzu.",
+        mode:"advanced"};
+    }
   }
   return null;
 }
@@ -293,9 +348,11 @@ function renderDaily(){
       </div>
     </div>`;
   }else if(plan.kz==="myorep"){
-    kzCard=renderExerciseCard("kz",kzData,"Pull-ups Myo-Rep",CI.orange,"card-myo",max.kz,"Pull-ups (FROM)");
+    const titleMyo=kzData?.mode==="beginner"?"Pull-ups · Negativ-Reps (Sa)":"Pull-ups · Myo-Rep";
+    kzCard=renderExerciseCard("kz",kzData,titleMyo,CI.orange,"card-myo",max.kz,"Pull-ups (FROM)");
   }else{
-    kzCard=renderExerciseCard("kz",kzData,"Pull-ups Cluster",CI.green,"card-kz",max.kz,"Pull-ups (FROM)");
+    const titleStd=kzData?.mode==="beginner"?"Pull-ups · GtG-Methode":"Pull-ups · Cluster";
+    kzCard=renderExerciseCard("kz",kzData,titleStd,CI.green,"card-kz",max.kz,"Pull-ups (FROM)");
   }
 
   // Header Stats
@@ -340,7 +397,9 @@ function renderExerciseCard(type,data,title,color,cardClass,maxVal,nameUnit){
     const labelMap={
       "pyramid":["Stopp 1","Stopp 2","Stopp 3"],
       "cluster":["Set 1","Set 2","Set 3","Set 4"],
-      "myorep":type==="pu"?["Aktiv.","Mini 1","Mini 2","Mini 3","Mini 4"]:["Aktiv.","Mini 1","Mini 2","Mini 3"]
+      "myorep":type==="pu"?["Aktiv.","Mini 1","Mini 2","Mini 3","Mini 4"]:["Aktiv.","Mini 1","Mini 2","Mini 3"],
+      "gtg":["Set 1","Set 2","Set 3","Set 4","Set 5"],
+      "negativ":["Neg 1","Neg 2","Neg 3"]
     };
     const lbl=(labelMap[data.type]||[])[i]||`Set ${i+1}`;
     return`<div class="set-col">
@@ -362,8 +421,8 @@ function renderExerciseCard(type,data,title,color,cardClass,maxVal,nameUnit){
         <div style="color:#7A9CC0;font-size:11px;margin-top:2px">Max: ${maxVal} ${nameUnit} · Ziel: ${data.total} Wdh</div>
       </div>
       <div style="text-align:right">
-        <div style="color:${color};font-weight:800;font-size:18px">${total||"—"}</div>
-        ${total>0?`<div style="color:${pct>=90?CI.green:pct>=70?CI.orange:CI.muted};font-size:10px">${pct}%</div>`:""}
+        <div id="total_${type}" style="color:${color};font-weight:800;font-size:18px">${total||"—"}</div>
+        <div id="pct_${type}" style="color:${pct>=90?CI.green:pct>=70?CI.orange:CI.muted};font-size:10px;display:${total>0?'block':'none'}">${total>0?pct+"%":""}</div>
       </div>
     </div>
     <div class="target-box"><b>${data.label}</b> · ${data.desc}</div>
@@ -374,6 +433,15 @@ function renderExerciseCard(type,data,title,color,cardClass,maxVal,nameUnit){
 
 function renderSetup(){
   const max=S.max;
+  const currentMaxKZ=parseInt(S.maxKZInput)||max.kz||0;
+  const currentMode=getPullupMode(currentMaxKZ);
+  const modeInfo={
+    "beginner":{name:"Beginner-Modus",color:CI.purple,desc:"GtG (5×1 Rep) + Negativs am Samstag · für Max 1-3"},
+    "cluster":{name:"Cluster-Modus",color:CI.green,desc:"Klassisches Cluster (4 Sätze) + Myo-Rep · für Max 4-7"},
+    "advanced":{name:"Advanced-Modus",color:CI.accent,desc:"Größere Cluster · für Max 8+"}
+  };
+  const modeDisplay=currentMode?modeInfo[currentMode]:null;
+  
   return`<div class="hdr"><button class="back-btn" onclick="set({showSetup:false})">←</button>
     <div style="text-align:center;flex:1"><div class="hdr-title">MAXWERTE</div><div class="hdr-sub">Pre-Test oder Re-Test</div></div>
     <div style="width:30px"></div>
@@ -388,13 +456,16 @@ function renderSetup(){
     </div>
     <div class="card card-pu">
       <label class="lbl">Push-up Max (saubere Wdh)</label>
-      <input class="inp" type="number" inputmode="numeric" placeholder="z.B. 25" value="${S.maxPUInput||max.pu||''}" oninput="S.maxPUInput=this.value">
+      <input class="inp" type="number" inputmode="numeric" placeholder="z.B. 25" value="${S.maxPUInput||max.pu||''}" oninput="updMaxInput('pu',this.value)">
       ${max.pu?`<div style="color:#7A9CC0;font-size:11px;margin-top:6px">Aktuell: ${max.pu}</div>`:""}
     </div>
     <div class="card card-kz">
       <label class="lbl">Pull-up Max (FROM, sauber)</label>
-      <input class="inp" type="number" inputmode="numeric" placeholder="z.B. 4" value="${S.maxKZInput||max.kz||''}" oninput="S.maxKZInput=this.value">
+      <input class="inp" type="number" inputmode="numeric" placeholder="z.B. 4" value="${S.maxKZInput||max.kz||''}" oninput="updMaxInput('kz',this.value)">
       ${max.kz?`<div style="color:#7A9CC0;font-size:11px;margin-top:6px">Aktuell: ${max.kz}</div>`:""}
+      <div id="mode_display" style="border:1px solid;border-radius:8px;padding:10px;margin-top:10px;display:${modeDisplay?'block':'none'};background:${modeDisplay?modeDisplay.color+'18':'transparent'};border-color:${modeDisplay?modeDisplay.color+'40':'transparent'}">
+        ${modeDisplay?`<div style="color:${modeDisplay.color};font-size:11px;font-weight:700;margin-bottom:4px">→ ${modeDisplay.name}</div><div style="color:#D0DCE8;font-size:11px;line-height:1.5">${modeDisplay.desc}</div>`:""}
+      </div>
       <div class="target-box" style="margin-top:8px"><b>Wichtig:</b> Nur Wiederholungen aus vollem Hang mit voller Range zählen. Im Zweifel weniger eintragen.</div>
     </div>
     <button class="btn" style="background:${CI.accent}" onclick="saveMaxes()">Speichern ✓</button>
@@ -532,7 +603,7 @@ function renderExerciseEditor(ex,e,woColor){
     return`<div class="set-col">
       <div class="set-lbl">S${i+1}</div>
       <div style="color:${woColor};font-size:9px;font-weight:700;margin-bottom:3px">Ziel: ${target}</div>
-      <input class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${target}" value="${v}" oninput="upWoSet('${ex.id}',${i},this.value)">
+      <input id="wo_${ex.id}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${target}" value="${v}" oninput="upWoSet('${ex.id}',${i},this.value)">
     </div>`;
   }).join('')}</div>`;
 
@@ -542,7 +613,7 @@ function renderExerciseEditor(ex,e,woColor){
         <div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:3px">${ex.name}</div>
         <span class="method-badge" style="background:${woColor}22;color:${woColor}">${methodBadge}</span>
       </div>
-      ${total?`<div style="color:${woColor};font-weight:800;font-size:16px">${total}/${targetTotal}</div>`:""}
+      <div id="wototal_${ex.id}" style="color:${woColor};font-weight:800;font-size:16px;display:${total?'block':'none'}">${total?total+"/"+targetTotal:""}</div>
     </div>
     <div class="target-box">${ex.tip}</div>
     ${wf}
@@ -707,13 +778,77 @@ function loadTodayFormIfSaved(){
 // ============ EVENT HANDLERS ============
 window.set=set;
 
+window.updMaxInput=(type,val)=>{
+  if(type==="pu")S.maxPUInput=val;
+  else S.maxKZInput=val;
+  // Direktes Update der Mode-Anzeige (nur bei KZ relevant)
+  if(type==="kz")refreshModeDisplay();
+};
+
+function refreshModeDisplay(){
+  const currentMaxKZ=parseInt(S.maxKZInput)||S.max.kz||0;
+  const currentMode=getPullupMode(currentMaxKZ);
+  const modeInfo={
+    "beginner":{name:"Beginner-Modus",color:CI.purple,desc:"GtG (5×1 Rep) + Negativs am Samstag · für Max 1-3"},
+    "cluster":{name:"Cluster-Modus",color:CI.green,desc:"Klassisches Cluster (4 Sätze) + Myo-Rep · für Max 4-7"},
+    "advanced":{name:"Advanced-Modus",color:CI.accent,desc:"Größere Cluster · für Max 8+"}
+  };
+  const el=document.getElementById("mode_display");
+  if(!el)return;
+  if(!currentMode){el.style.display="none";return;}
+  const m=modeInfo[currentMode];
+  el.style.display="block";
+  el.style.background=m.color+"18";
+  el.style.borderColor=m.color+"40";
+  el.innerHTML=`<div style="color:${m.color};font-size:11px;font-weight:700;margin-bottom:4px">→ ${m.name}</div><div style="color:#D0DCE8;font-size:11px;line-height:1.5">${m.desc}</div>`;
+}
+
 window.upDailySet=(type,i,val)=>{
   const arr=type==="pu"?[...S.dailyPU]:[...S.dailyKZ];
   arr[i]=val;
   if(type==="pu")S.dailyPU=arr;else S.dailyKZ=arr;
-  // Lokales Update der Total-Anzeige ohne komplettes Re-Render
-  render();
+  // Direktes DOM-Update ohne render() - Input behält Fokus
+  refreshDailyCard(type);
 };
+
+function refreshDailyCard(type){
+  const dow=todayDayOfWeek();
+  const plan=DAY_PLAN[dow];
+  const max=S.max;
+  const formArr=type==="pu"?S.dailyPU:S.dailyKZ;
+  const planType=type==="pu"?plan.pu:plan.kz;
+  const data=type==="pu"?calcPushupReps(max.pu,planType):calcPullupReps(max.kz,planType);
+  if(!data)return;
+  
+  // Border-Farben pro Input updaten
+  const targets=data.sets;
+  formArr.forEach((v,i)=>{
+    const inp=document.getElementById(type+"_"+i);
+    if(!inp)return;
+    const n=Number(v);
+    const target=targets[i];
+    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
+    inp.style.borderColor=bc;
+  });
+  
+  // Total + Prozent updaten
+  const ra=formArr.map(Number).filter(n=>n>0);
+  const total=ra.reduce((a,b)=>a+b,0);
+  const targetTotal=data.total;
+  const pct=Math.round(total/targetTotal*100)||0;
+  const totalEl=document.getElementById("total_"+type);
+  const pctEl=document.getElementById("pct_"+type);
+  if(totalEl)totalEl.textContent=total||"—";
+  if(pctEl){
+    if(total>0){
+      pctEl.style.display="block";
+      pctEl.textContent=pct+"%";
+      pctEl.style.color=pct>=90?CI.green:pct>=70?CI.orange:CI.muted;
+    }else{
+      pctEl.style.display="none";
+    }
+  }
+}
 
 window.saveDailyEntry=()=>{
   const today=todayKey();
@@ -772,8 +907,46 @@ window.upWoSet=(id,i,val)=>{
   const sets=[...e.sets];
   sets[i]=val;
   S.activeWoForm[id]={...e,sets};
-  render();
+  // Direktes DOM-Update ohne render()
+  refreshWoCard(id);
 };
+
+function refreshWoCard(id){
+  if(!S.activeWorkout)return;
+  const wo=WORKOUTS[S.activeWorkout];
+  const ex=wo.exercises.find(e=>e.id===id);
+  if(!ex)return;
+  const e=S.activeWoForm[id];
+  
+  let targetSets=[];
+  if(ex.method==="cluster")targetSets=ex.clusterReps;
+  else if(ex.method==="mcgill")targetSets=ex.pyramid;
+  else if(ex.method==="standard")targetSets=Array(ex.sets).fill(ex.targetReps);
+  
+  // Border-Farben pro Input
+  e.sets.forEach((v,i)=>{
+    const inp=document.getElementById("wo_"+id+"_"+i);
+    if(!inp)return;
+    const n=Number(v);
+    const target=targetSets[i];
+    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
+    inp.style.borderColor=bc;
+  });
+  
+  // Total updaten
+  const ra=e.sets.map(Number).filter(n=>n>0);
+  const total=ra.reduce((a,b)=>a+b,0);
+  const targetTotal=targetSets.reduce((a,b)=>a+b,0);
+  const totalEl=document.getElementById("wototal_"+id);
+  if(totalEl){
+    if(total>0){
+      totalEl.style.display="block";
+      totalEl.textContent=total+"/"+targetTotal;
+    }else{
+      totalEl.style.display="none";
+    }
+  }
+}
 
 window.saveWorkoutSession=()=>{
   const entry={date:todayKey(),type:S.activeWorkout,exercises:S.activeWoForm};
