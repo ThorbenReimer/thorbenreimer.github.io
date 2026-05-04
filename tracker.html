@@ -257,11 +257,13 @@ let S={
   daily:loadDaily(),
   max:loadMax(),
   // Daily form
-  dailyPU:[],dailyKZ:[],dailyNote:"",dailyRPE:null,
+  dailyPU:[],dailyKZ:[],dailyNote:"",dailyRPE:"",
   // Workout form
   activeWorkout:null,activeWoForm:{},woSaved:false,
   // Detail views
   progressEx:null,
+  // Edit history
+  editingDate:null,
   // Setup
   showSetup:false,maxPUInput:"",maxKZInput:""
 };
@@ -380,7 +382,21 @@ function renderDaily(){
     </div>
     ${puCard}
     ${kzCard}
-    ${(plan.pu||plan.kz!=="rest")?`<button class="btn" style="background:${CI.accent}" onclick="saveDailyEntry()">Heute speichern ✓</button>`:""}
+    ${(plan.pu||plan.kz!=="rest")?`
+    <div class="card" style="border-left:3px solid ${CI.muted}">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        <div style="flex:1">
+          <label class="lbl">RPE (1–10)</label>
+          <input id="rpe_input" class="inp" type="number" inputmode="numeric" placeholder="z.B. 6" value="${S.dailyRPE||""}" oninput="updRPE(this.value)" min="1" max="10">
+        </div>
+        <div style="flex:0;color:${CI.muted};font-size:9px;line-height:1.3;text-align:left;width:90px">
+          1-3 locker<br>4-6 mittel<br>7-8 hart<br>9-10 max
+        </div>
+      </div>
+      <label class="lbl">Notiz (optional)</label>
+      <input id="note_input" class="inp" type="text" placeholder="z.B. Bank statt Boden, müde Schultern..." value="${S.dailyNote||""}" oninput="updNote(this.value)" style="text-align:left">
+    </div>
+    <button class="btn" style="background:${CI.accent}" onclick="saveDailyEntry()">${todayEntry?"Aktualisieren ✓":"Heute speichern ✓"}</button>`:""}
     ${todayEntry?`<div style="text-align:center;color:${CI.muted};font-size:11px;margin-top:8px">Letzte Speicherung: ${new Date(todayEntry.savedAt||Date.now()).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</div>`:""}
   </div>${navHtml()}`;
 }
@@ -627,6 +643,9 @@ function renderVerlauf(){
   if(S.progressEx){
     return renderExDetail();
   }
+  if(S.editingDate){
+    return renderEditDay();
+  }
 
   // Daily Stats
   const max=S.max;
@@ -690,15 +709,24 @@ function renderVerlauf(){
       <div class="divider"></div>
       <div class="stat"><div class="stat-n" style="color:${CI.orange}">${S.daily.length}</div><div class="stat-l">Tage aktiv</div></div>
     </div>
-    ${lastDays.length?`<span class="lbl" style="margin-top:14px;display:block">Letzte Tage</span>
-    ${[...lastDays].reverse().slice(0,7).map(d=>`<div class="history-mini">
-      <span style="color:#7A9CC0">${fmt(d.date)}</span>
+    ${lastDays.length?`<span class="lbl" style="margin-top:14px;display:block">Letzte 30 Tage · zum Bearbeiten antippen</span>
+    ${[...lastDays].reverse().map(d=>{
+      const dow=new Date(d.date).getDay();
+      const dayLbl=["So","Mo","Di","Mi","Do","Fr","Sa"][dow];
+      return`<div class="history-mini" style="cursor:pointer" onclick="openEditDay('${d.date}')">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="color:#7A9CC0;font-size:10px;font-weight:700;width:20px">${dayLbl}</span>
+        <span style="color:#7A9CC0">${fmt(d.date)}</span>
+      </div>
       <div style="display:flex;gap:6px;align-items:center">
         ${d.puTotal?tag(d.puTotal+" PU",CI.accent):""}
         ${d.kzTotal?tag(d.kzTotal+" KZ",CI.green):""}
+        ${d.rpe?tag("RPE "+d.rpe,CI.muted):""}
+        ${d.note?'<span style="color:#7A9CC0">📝</span>':""}
         ${d.isMyo?tag("🔥",CI.orange):""}
+        <span style="color:#7A9CC0;font-size:14px">›</span>
       </div>
-    </div>`).join("")}`:""}
+    </div>`}).join("")}`:""}
     ${woProgressCards||(S.workouts.length?"":'<div style="text-align:center;padding:30px 20px;color:#7A9CC0;font-size:12px">Workout-Verlauf erscheint nach erster Einheit</div>')}
   </div>${navHtml()}`;
 }
@@ -709,6 +737,110 @@ function buildWoData(exId){
     const r=(e.sets||[]).map(Number).filter(n=>!isNaN(n)&&n>0);
     return{date:s.date,label:fmt(s.date),avg:avg(r),weight:parseFloat(e.weight)||0};
   }).sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+function renderEditDay(){
+  const date=S.editingDate;
+  const entry=S.daily.find(d=>d.date===date);
+  if(!entry){
+    return`<div class="hdr"><button class="back-btn" onclick="set({editingDate:null})">←</button>
+      <div style="text-align:center;flex:1"><div class="hdr-title">EINTRAG NICHT GEFUNDEN</div></div>
+      <div style="width:30px"></div>
+    </div><div class="body"><div style="color:#7A9CC0;text-align:center;padding:30px">Eintrag wurde nicht gefunden.</div></div>${navHtml()}`;
+  }
+  
+  const dow=new Date(date).getDay();
+  const plan=DAY_PLAN[dow];
+  const dayLabel=plan.label;
+  const max=S.max;
+  
+  // Berechne Soll-Werte basierend auf damaligem oder aktuellem Max
+  const puData=calcPushupReps(max.pu,plan.pu);
+  const kzData=plan.kz==="rest"?null:calcPullupReps(max.kz,plan.kz);
+  
+  // Push-up Karte (mit aktuellen Werten aus entry)
+  const puSets=entry.pu||[];
+  const puCard=puData?renderEditCard("epu",puData,plan.pu==="myorep"?"Push-ups Myo-Rep":"Push-ups Lauf-Pyramide",plan.pu==="myorep"?CI.orange:CI.accent,plan.pu==="myorep"?"card-myo":"card-pu",max.pu,"Push-ups",puSets):"";
+  
+  // Pull-up Karte
+  let kzCard="";
+  if(plan.kz==="rest"){
+    kzCard=`<div class="card card-rest">
+      <div style="display:flex;align-items:center;gap:10px">
+        <div style="font-size:24px">🛌</div>
+        <div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">Pull-ups · Pause-Tag</div></div>
+      </div>
+    </div>`;
+  }else if(kzData){
+    const kzSets=entry.kz||[];
+    const titleKZ=plan.kz==="myorep"?(kzData.mode==="beginner"?"Pull-ups · Negativ-Reps":"Pull-ups · Myo-Rep"):(kzData.mode==="beginner"?"Pull-ups · GtG-Methode":"Pull-ups · Cluster");
+    kzCard=renderEditCard("ekz",kzData,titleKZ,plan.kz==="myorep"?CI.orange:CI.green,plan.kz==="myorep"?"card-myo":"card-kz",max.kz,"Pull-ups (FROM)",kzSets);
+  }
+  
+  return`<div class="hdr"><button class="back-btn" onclick="set({editingDate:null})">←</button>
+    <div style="text-align:center;flex:1"><div class="hdr-title">${dayLabel} · ${fmt(date)}</div><div class="hdr-sub">Eintrag bearbeiten</div></div>
+    <div style="width:30px"></div>
+  </div>
+  <div class="body">
+    <div class="banner banner-info">
+      <div style="color:${CI.light};font-size:11px;line-height:1.5">Du bearbeitest einen vergangenen Eintrag. Änderungen werden direkt gespeichert.</div>
+    </div>
+    ${puCard}
+    ${kzCard}
+    <div class="card" style="border-left:3px solid ${CI.muted}">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
+        <div style="flex:1">
+          <label class="lbl">RPE (1–10)</label>
+          <input id="erpe_input" class="inp" type="number" inputmode="numeric" placeholder="z.B. 6" value="${entry.rpe||""}" oninput="updEditRPE(this.value)" min="1" max="10">
+        </div>
+        <div style="flex:0;color:${CI.muted};font-size:9px;line-height:1.3;text-align:left;width:90px">
+          1-3 locker<br>4-6 mittel<br>7-8 hart<br>9-10 max
+        </div>
+      </div>
+      <label class="lbl">Notiz</label>
+      <input id="enote_input" class="inp" type="text" placeholder="z.B. Bank statt Boden..." value="${entry.note||""}" oninput="updEditNote(this.value)" style="text-align:left">
+    </div>
+    <button class="btn" style="background:${CI.accent}" onclick="saveEditedEntry()">Änderungen speichern ✓</button>
+    <button class="btn" style="background:transparent;border:1px solid ${CI.red};color:${CI.red}" onclick="deleteEntry()">🗑 Eintrag löschen</button>
+    <button class="btn btn-outline" onclick="set({editingDate:null})">Abbrechen</button>
+  </div>${navHtml()}`;
+}
+
+function renderEditCard(type,data,title,color,cardClass,maxVal,nameUnit,currentSets){
+  // Wie renderExerciseCard, aber mit "edit"-Type-Präfix für IDs
+  const setsHtml=data.sets.map((target,i)=>{
+    const val=currentSets[i]||"";
+    const n=Number(val);
+    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
+    const labelMap={
+      "pyramid":["Stopp 1","Stopp 2","Stopp 3"],
+      "cluster":["Set 1","Set 2","Set 3","Set 4"],
+      "myorep":type==="epu"?["Aktiv.","Mini 1","Mini 2","Mini 3","Mini 4"]:["Aktiv.","Mini 1","Mini 2","Mini 3"],
+      "gtg":["Set 1","Set 2","Set 3","Set 4","Set 5"],
+      "negativ":["Neg 1","Neg 2","Neg 3"]
+    };
+    const lbl=(labelMap[data.type]||[])[i]||`Set ${i+1}`;
+    return`<div class="set-col">
+      <div class="set-lbl">${lbl}</div>
+      <div style="color:${color};font-size:9px;font-weight:700;margin-bottom:3px">Ziel: ${target}</div>
+      <input id="${type}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${target}" value="${val}" oninput="upEditSet('${type}',${i},this.value)">
+    </div>`;
+  }).join("");
+  
+  const ra=currentSets.map(Number).filter(n=>n>0);
+  const total=ra.reduce((a,b)=>a+b,0);
+  
+  return`<div class="card ${cardClass}">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+      <div>
+        <div style="color:#fff;font-weight:700;font-size:14px">${title}</div>
+        <div style="color:#7A9CC0;font-size:11px;margin-top:2px">Max ${maxVal} ${nameUnit} · Soll: ${data.total} Wdh</div>
+      </div>
+      <div id="total_${type}" style="color:${color};font-weight:800;font-size:18px">${total||"—"}</div>
+    </div>
+    <label class="lbl">Ist-Wiederholungen</label>
+    <div class="sets-row">${setsHtml}</div>
+  </div>`;
 }
 
 function renderExDetail(){
@@ -771,6 +903,8 @@ function loadTodayFormIfSaved(){
   if(todayEntry&&!S._loaded){
     S.dailyPU=todayEntry.pu||[];
     S.dailyKZ=todayEntry.kz||[];
+    S.dailyNote=todayEntry.note||"";
+    S.dailyRPE=todayEntry.rpe||"";
     S._loaded=true;
   }
 }
@@ -862,12 +996,119 @@ window.saveDailyEntry=()=>{
     kz:[...S.dailyKZ],
     puTotal,
     kzTotal,
+    note:S.dailyNote||"",
+    rpe:S.dailyRPE||"",
     isMyo:plan.pu==="myorep",
     savedAt:Date.now()
   };
   S.daily=[...S.daily.filter(d=>d.date!==today),entry];
   saveDaily(S.daily);
   render();
+};
+
+window.updRPE=v=>{S.dailyRPE=v;};
+window.updNote=v=>{S.dailyNote=v;};
+
+// Edit-Mode Handler
+window.openEditDay=date=>{
+  // Reset Edit-Buffer und in den Bearbeitungsmodus
+  S._editBuffer=null;
+  set({editingDate:date,tab:"verlauf"});
+};
+
+function getEditBuffer(){
+  if(!S._editBuffer){
+    const entry=S.daily.find(d=>d.date===S.editingDate);
+    S._editBuffer={
+      pu:[...(entry?.pu||[])],
+      kz:[...(entry?.kz||[])],
+      rpe:entry?.rpe||"",
+      note:entry?.note||""
+    };
+  }
+  return S._editBuffer;
+}
+
+window.upEditSet=(type,i,val)=>{
+  const buf=getEditBuffer();
+  const arr=type==="epu"?[...buf.pu]:[...buf.kz];
+  arr[i]=val;
+  if(type==="epu")buf.pu=arr;else buf.kz=arr;
+  // Direktes DOM-Update ohne render()
+  refreshEditCard(type);
+};
+
+function refreshEditCard(type){
+  const date=S.editingDate;
+  const dow=new Date(date).getDay();
+  const plan=DAY_PLAN[dow];
+  const max=S.max;
+  const buf=getEditBuffer();
+  const formArr=type==="epu"?buf.pu:buf.kz;
+  const planType=type==="epu"?plan.pu:plan.kz;
+  const data=type==="epu"?calcPushupReps(max.pu,planType):calcPullupReps(max.kz,planType);
+  if(!data)return;
+  
+  const targets=data.sets;
+  formArr.forEach((v,i)=>{
+    const inp=document.getElementById(type+"_"+i);
+    if(!inp)return;
+    const n=Number(v);
+    const target=targets[i];
+    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
+    inp.style.borderColor=bc;
+  });
+  
+  const ra=formArr.map(Number).filter(n=>n>0);
+  const total=ra.reduce((a,b)=>a+b,0);
+  const totalEl=document.getElementById("total_"+type);
+  if(totalEl)totalEl.textContent=total||"—";
+}
+
+window.updEditRPE=v=>{
+  const buf=getEditBuffer();
+  buf.rpe=v;
+};
+
+window.updEditNote=v=>{
+  const buf=getEditBuffer();
+  buf.note=v;
+};
+
+window.saveEditedEntry=()=>{
+  if(!S.editingDate)return;
+  const buf=getEditBuffer();
+  const date=S.editingDate;
+  const dow=new Date(date).getDay();
+  const plan=DAY_PLAN[dow];
+  const puTotal=buf.pu.map(Number).filter(n=>n>0).reduce((a,b)=>a+b,0);
+  const kzTotal=buf.kz.map(Number).filter(n=>n>0).reduce((a,b)=>a+b,0);
+  const oldEntry=S.daily.find(d=>d.date===date);
+  const entry={
+    date,
+    pu:[...buf.pu],
+    kz:[...buf.kz],
+    puTotal,
+    kzTotal,
+    note:buf.note,
+    rpe:buf.rpe,
+    isMyo:plan.pu==="myorep",
+    savedAt:oldEntry?.savedAt||Date.now(),
+    editedAt:Date.now()
+  };
+  S.daily=[...S.daily.filter(d=>d.date!==date),entry];
+  saveDaily(S.daily);
+  S._editBuffer=null;
+  set({editingDate:null});
+};
+
+window.deleteEntry=()=>{
+  if(!S.editingDate)return;
+  if(!confirm("Eintrag wirklich löschen? Dies kann nicht rückgängig gemacht werden."))return;
+  S.daily=S.daily.filter(d=>d.date!==S.editingDate);
+  saveDaily(S.daily);
+  S._editBuffer=null;
+  set({editingDate:null});
 };
 
 window.saveMaxes=()=>{
@@ -957,6 +1198,7 @@ window.saveWorkoutSession=()=>{
 
 // ============ INIT ============
 S._loaded=false;
+S._editBuffer=null;
 render();
 </script>
 </body>
