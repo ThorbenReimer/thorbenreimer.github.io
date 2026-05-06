@@ -643,11 +643,11 @@ function renderRP(){
       if(p.canva){canvaHtml='<div class="rp-canva-steps">'+p.canva.map(function(s,i){return'<div class="rp-canva-step"><span class="rp-step-n">'+(i+1)+'</span>'+s+'</div>';}).join('')+'</div>';}
       body='<div class="rp-post-body open">'
         +'<div style="font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin-bottom:8px">Kachel-Vorschau</div>'
-        +'<div style="background:#161e2e;border-radius:8px;padding:14px 16px;margin-bottom:12px">'
+        +'<div style="background:'+(p.stil==='hell'?'#ffffff':'#161e2e')+';border-radius:8px;padding:14px 16px;margin-bottom:12px">'
         +'<div style="width:28px;height:3px;background:#378ADD;border-radius:2px;margin-bottom:10px"></div>'
-        +'<div style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:#fff;line-height:1.5">'+kHtml+'</div>'
-        +'<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid rgba(255,255,255,0.1);padding-top:8px;margin-top:10px">'
-        +'<span style="font-size:9px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:.05em">Thorben Reimer</span>'
+        +'<div style="font-family:Georgia,serif;font-size:14px;font-weight:700;color:'+(p.stil==='hell'?'#1a1a18':'#fff')+';line-height:1.5">'+kHtml+'</div>'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;border-top:1px solid '+(p.stil==='hell'?'rgba(0,0,0,0.15)':'rgba(255,255,255,0.1)')+';padding-top:8px;margin-top:10px">'
+        +'<span style="font-size:9px;color:'+(p.stil==='hell'?'rgba(0,0,0,0.5)':'rgba(255,255,255,0.4)')+';text-transform:uppercase;letter-spacing:.05em">Thorben Reimer</span>'
         +'<span style="color:#378ADD;font-size:11px;font-weight:700">TR</span>'
         +'</div></div>'
         +(p.caption
