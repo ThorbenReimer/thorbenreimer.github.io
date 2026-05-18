@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Performance">
+<title>Performance Tracker · Thorben Reimer</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+body{background:#161E2E;font-family:-apple-system,'Helvetica Neue',sans-serif;color:#D0DCE8;max-width:430px;margin:0 auto;min-height:100vh}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=number]{-moz-appearance:textfield}
+.hdr{background:#1E2D45;border-bottom:1px solid #2A3A55;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
+.hdr-logo{height:32px;width:auto}
+.hdr-center{text-align:center;flex:1;padding:0 10px}
+.hdr-title{color:#fff;font-size:15px;font-weight:800;letter-spacing:.3px}
+.hdr-sub{color:#7A9CC0;font-size:10px;margin-top:1px}
+.body{padding:14px 18px 90px}
+.card{background:#1E2D45;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #2A3A55}
+.lbl{color:#7A9CC0;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;display:block}
+.inp{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:11px;font-size:16px;color:#fff;width:100%;outline:none}
+.inp-sm{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:10px 4px;font-size:16px;color:#fff;width:100%;outline:none;text-align:center}
+.btn{border:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-bottom:10px;color:#fff}
+.btn-sm{border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid}
+.btn-outline{background:transparent;border:1px solid #2A3A55;color:#7A9CC0}
+.nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#1E2D45;border-top:1px solid #2A3A55;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
+.nav-btn{flex:1;padding:14px 0;background:none;border:none;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
+.tag{border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;display:inline-block}
+.row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #2A3A55}
+.stat{flex:1;text-align:center}
+.stat-n{font-size:22px;font-weight:800}
+.stat-l{color:#7A9CC0;font-size:10px;text-transform:uppercase;letter-spacing:.8px}
+.check{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #2A3A55}
+.divider{width:1px;background:#2A3A55}
+.back-btn{background:none;border:none;color:#7A9CC0;font-size:22px;cursor:pointer;padding:0;line-height:1}
+.sets-row{display:flex;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.set-col{flex:1;min-width:50px;text-align:center;position:relative}
+.set-lbl{color:#7A9CC0;font-size:10px;margin-bottom:4px}
+.set-rm{position:absolute;top:0;right:2px;background:#2A3A55;color:#7A9CC0;border:none;border-radius:50%;width:16px;height:16px;font-size:10px;cursor:pointer;line-height:1;padding:0}
+.tags-row{display:flex;gap:5px;justify-content:flex-end;align-items:center;flex-wrap:wrap;margin-bottom:4px;min-height:22px}
+.add-set-btn{background:#378ADD20;border:1px dashed #378ADD60;color:#7AB8F5;border-radius:8px;padding:8px 10px;font-size:11px;font-weight:700;cursor:pointer;margin-bottom:6px}
+.stage-tag{background:#A78BFA20;color:#A78BFA;border:1px solid #A78BFA40;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;display:inline-block}
+.prog-box{border-radius:8px;padding:8px 12px;margin-top:8px;font-size:12px;font-weight:600}
+svg.chart{width:100%;overflow:visible}
+.slot-card{background:#1E2D45;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #2A3A55;cursor:pointer;transition:all .2s}
+.slot-card:hover{border-color:#378ADD60}
+.slot-icon{font-size:24px;margin-right:10px}
+.heatmap-cell{width:14px;height:14px;border-radius:3px}
+.streak-num{color:#378ADD;font-weight:800;font-size:20px}
+.note-area{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:10px;font-size:13px;color:#fff;width:100%;outline:none;resize:none;font-family:inherit;min-height:60px}
+.info-banner{background:linear-gradient(135deg,#378ADD15,#4CAF8215);border:1px solid #378ADD30;border-radius:10px;padding:10px 12px;margin-bottom:12px;font-size:11px;color:#7AB8F5}
+.coach-tip{background:#A78BFA12;border-left:3px solid #A78BFA;border-radius:6px;padding:8px 12px;margin:8px 0;font-size:11px;color:#D0DCE8;font-style:italic}
+.footer{background:#1E2D45;border-top:1px solid #2A3A55;padding:12px 18px;text-align:center;margin-top:20px;margin-bottom:60px}
+.footer-text{color:#7A9CC0;font-size:10px;line-height:1.6}
+.footer-name{color:#7AB8F5;font-weight:700}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const CI={bg:"#161E2E",navy:"#1E2D45",sep:"#2A3A55",accent:"#378ADD",light:"#7AB8F5",white:"#FFFFFF",body:"#D0DCE8",muted:"#7A9CC0",green:"#4CAF82",orange:"#F59E0B",red:"#EF4444",purple:"#A78BFA",pink:"#EC4899"};
+const LOGO="https://thorbenreimer.de/TR_logo_transparent.png";
+
+const SLOTS={
+  morningRun:{
+    id:"morningRun",label:"Lauf-Routine",sub:"Pre + Post Run",icon:"🏃",color:CI.accent,
+    defaultSets:1,weeklyGoal:5,unit:"Sätze",
+    exercises:[
+      {id:"glute_bridge",name:"Glute Bridge",target:12,unit:"Wdh",stages:["BW 12×, 2 Sek halten","Single-Leg BW 10×","BW + Band über Knie 12×","+ Pause 3-5 Sek oben"]},
+      {id:"bird_dog",name:"Bird Dog (pro Seite)",target:10,unit:"Wdh",stages:["BW 10×","BW langsam (3 Sek halten)","+ Band","+ KH 4kg"]},
+      {id:"plank",name:"Plank",target:30,unit:"Sek",stages:["30 Sek","45 Sek","60 Sek","+ Beinheben","RKC Plank"]},
+      {id:"bw_squat",name:"BW Squats (Warm-up)",target:10,unit:"Wdh",stages:["BW 10×","BW 15×","Goblet 10×","Goblet 15×"]},
+      {id:"bulgarian",name:"Bulgarian Split Squat (pro Seite)",target:10,unit:"Wdh",stages:["BW 8×","BW 10×","Suitcase KB 8kg","Suitcase KB 16kg","Goblet 16kg","Tempo 3-1-1"]},
+      {id:"sl_rdl",name:"Single-Leg RDL (pro Seite)",target:8,unit:"Wdh",stages:["BW 8×","BW 10×","+ KH 8kg gegenüberliegend","+ KH 16kg","+ KH 16kg gleichseitig"]},
+      {id:"side_plank",name:"Side Plank (pro Seite)",target:30,unit:"Sek",stages:["Knie 30 Sek","Voll 30 Sek","Voll 45 Sek","Voll 60 Sek","+ Hip Dip 12×","+ Beinheben 8×"]},
+    ]
+  },
+  pushups:{
+    id:"pushups",label:"Push-ups Daily",sub:"Sub-max · 1-3× täglich",icon:"🤸",color:CI.light,
+    defaultSets:1,weeklyGoal:14,unit:"Blocks",trackBlocks:true,
+    exercises:[
+      {id:"pushup_daily",name:"Push-up (sub-max, sauber)",target:12,unit:"Wdh",stages:[
+        "Knie 10× (Einstieg)",
+        "Standard 10×",
+        "Standard 12-15×",
+        "Standard 15-18×",
+        "Standard 18-22×",
+        "Tempo 3-1-1, 12×",
+        "Enge Hände 10×",
+        "Enge Hände 12-15×",
+        "Archer Push-up 6× pro Seite",
+        "Einarm-Negative 3×",
+        "Einarm Push-up 1×"
+      ]},
+    ]
+  },
+  officeKB:{
+    id:"officeKB",label:"Office KB",sub:"Büro · 16kg Kettlebell",icon:"💼",color:CI.green,
+    defaultSets:2,weeklyGoal:10,unit:"Blocks",trackBlocks:true,
+    exercises:[
+      {id:"goblet_squat",name:"KB Goblet Squat",target:10,unit:"Wdh",stages:["10× sauber","12×","15×","Tempo 3-1-1, 10×","Pause-Reps 10×","24kg nötig"]},
+      {id:"kb_sl_rdl",name:"KB Single-Leg RDL (pro Seite)",target:10,unit:"Wdh",stages:["10× 16kg gegenüberliegend","12× 16kg","10× gleichseitig","12× gleichseitig","Tempo 3-1-1"]},
+      {id:"kb_bulgarian",name:"KB Suitcase Bulgarian (pro Seite)",target:10,unit:"Wdh",stages:["10× 16kg","12× 16kg","15× 16kg","Tempo 3-1-1","Pause 2 Sek unten"]},
+      {id:"kb_swing",name:"KB Swing (russisch)",target:15,unit:"Wdh",stages:["15× 16kg","20× 16kg","25× 16kg","30× 16kg","24kg nötig"]},
+      {id:"kb_carry",name:"KB Suitcase Carry (pro Seite)",target:60,unit:"Sek",stages:["60 Sek","90 Sek","2 Min","2 Min beidseitig wechseln"]},
+    ]
+  },
+  tennisPrep:{
+    id:"tennisPrep",label:"Tennis-Prep",sub:"Nur Bänder, vor Tennis",icon:"🎾",color:CI.orange,
+    defaultSets:1,weeklyGoal:2,unit:"Sätze",
+    exercises:[
+      {id:"clamshell",name:"Clamshell (pro Seite, Band)",target:12,unit:"Wdh",stages:["Band leicht 12×","Band mittel 12×","Band stark 12×","+ Manschette am Knöchel"]},
+      {id:"banded_bridge",name:"Banded Glute Bridge",target:12,unit:"Wdh",stages:["Band leicht 12×","Band mittel 12×","Band stark 12×","Single-Leg + Band"]},
+      {id:"std_hip_abd",name:"Standing Hip Abduction (pro Seite)",target:10,unit:"Wdh",stages:["Band leicht 10×","Band mittel 10×","Band stark 10×","+ ROM erhöhen"]},
+      {id:"pallof_tennis",name:"Pallof Press (pro Seite, Band)",target:10,unit:"Wdh",stages:["Band leicht 10×","Band mittel 10×","Band stark 10×","+ Einbeinstand"]},
+      {id:"side_plank_tennis",name:"Side Plank (pro Seite)",target:30,unit:"Sek",stages:["Knie 30 Sek","Voll 30 Sek","Voll 45 Sek","Voll 60 Sek","+ Hip Dip"]},
+    ]
+  },
+  sofa5:{
+    id:"sofa5",label:"Sofa-5",sub:"Abends · BW + Band",icon:"🛋️",color:CI.purple,
+    defaultSets:1,weeklyGoal:3,unit:"Sätze",
+    exercises:[
+      {id:"sofa_bridge",name:"Glute Bridge",target:15,unit:"Wdh",stages:["BW 15×","BW 20×","Single-Leg 10×","+ Band über Knie 15×","+ Pause 3 Sek oben"]},
+      {id:"sofa_sp",name:"Side Plank (pro Seite)",target:30,unit:"Sek",stages:["Knie 30 Sek","Voll 30 Sek","Voll 45 Sek","Voll 60 Sek","+ Hip Dip"]},
+      {id:"dead_bug",name:"Dead Bug (pro Seite)",target:10,unit:"Wdh",stages:["BW 8×","BW 10×","BW langsam 5 Sek","+ Band an Armen","+ KH 4kg"]},
+      {id:"sofa_pallof",name:"Pallof Press (pro Seite, Band)",target:10,unit:"Wdh",stages:["Band leicht 10×","Band mittel 10×","Band stark 10×","+ Einbeinstand"]},
+    ]
+  },
+  pullups:{
+    id:"pullups",label:"Pull-ups",sub:"Keller · 4 Sätze",icon:"💪",color:CI.pink,
+    defaultSets:4,weeklyGoal:2,unit:"Einheiten",fixedSets:true,
+    exercises:[
+      {id:"pullup",name:"Pull-up (sauber)",target:1,unit:"Wdh",stages:[
+        "1× sauber",
+        "2× sauber",
+        "3× sauber",
+        "4× sauber",
+        "5× sauber",
+        "6× sauber",
+        "8× sauber",
+        "+ KH zwischen Knien 2kg",
+        "+ KH 4kg",
+        "+ KH 6kg"
+      ]},
+      {id:"neg_pullup",name:"Negative Pull-up",target:1,unit:"Wdh",stages:[
+        "1× 5 Sek",
+        "1× 8 Sek",
+        "1× 10 Sek",
+        "2× 5 Sek",
+        "2× 8 Sek"
+      ]},
+    ]
+  },
+};
+
+const todayKey=()=>new Date().toISOString().split("T")[0];
+const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:0;
+const max=a=>a.length?Math.max(...a):0;
+const fmt=d=>d.slice(5);
+const tag=(t,c)=>`<span class="tag" style="background:${c}22;color:${c}">${t}</span>`;
+
+const persist=d=>{try{localStorage.setItem("perf_v1",JSON.stringify(d))}catch{}};
+const loadAll=()=>{try{const r=localStorage.getItem("perf_v1");return r?JSON.parse(r):{entries:[]}}catch{return{entries:[]}}};
+
+let DATA=loadAll();
+let S={
+  view:"home",activeSlot:null,
+  form:{},stageOverride:{},
+  blocks:1,note:"",saved:false,
+  detailEx:null
+};
+const set=p=>{Object.assign(S,p);render()};
+const save=()=>persist(DATA);
+
+// Get current stage for an exercise (auto or override)
+function getStage(slotId,exId){
+  if(S.stageOverride[exId])return S.stageOverride[exId];
+  // Find last entry for this exercise
+  const last=[...DATA.entries].reverse().find(e=>e.slot===slotId&&e.exercises&&e.exercises[exId]);
+  return last?.exercises[exId]?.stage||1;
+}
+
+// Check if exercise meets progression threshold (>=110% of target)
+function checkProgression(ex,sets){
+  const reps=sets.map(Number).filter(n=>n>0);
+  if(!reps.length)return null;
+  const allOver=reps.every(r=>r>=ex.target*1.10);
+  const avgOver=avg(reps)>=ex.target*1.05;
+  if(allOver)return{level:"increase",msg:"🚀 Nächste Stufe versuchen"};
+  if(avgOver)return{level:"possible",msg:"📈 Steigerung möglich"};
+  return null;
+}
+
+// Build chart data for one exercise across all entries
+function buildChartData(slotId,exId){
+  return DATA.entries
+    .filter(e=>e.slot===slotId&&e.exercises&&e.exercises[exId])
+    .map(e=>{
+      const ex=e.exercises[exId];
+      const reps=(ex.sets||[]).map(Number).filter(n=>n>0);
+      return{date:e.date,label:fmt(e.date),avg:avg(reps),max:max(reps),stage:ex.stage||1};
+    })
+    .sort((a,b)=>a.date.localeCompare(b.date));
+}
+
+function svgLine(data,key,color){
+  const vals=data.map(d=>d[key]).filter(v=>v!=null&&v>0);
+  if(vals.length<2)return'<div style="color:#7A9CC0;font-size:11px;padding:10px 0">Mindestens 2 Einträge nötig.</div>';
+  const mn=Math.min(...vals),mx=Math.max(...vals),rng=mx-mn||1,W=300,H=80;
+  const pts=data.filter(d=>d[key]>0).map((d,i,a)=>({x:i/(a.length-1||1)*W,y:H-(d[key]-mn)/rng*(H-10)-5,v:d[key],l:d.label,s:d.stage}));
+  const path=pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ");
+  const dots=pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="4" fill="${color}"><title>${p.l}: ${p.v} (Stufe ${p.s})</title></circle>`).join("");
+  const lbs=pts.filter((_,i)=>i===0||i===pts.length-1||pts.length<=5).map(p=>`<text x="${p.x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${p.l}</text>`).join("");
+  return`<svg class="chart" viewBox="0 0 ${W} ${H+18}" height="${H+18}"><path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round"/>${dots}${lbs}</svg>`;
+}
+
+function navHtml(active){
+  return`<nav class="nav">
+    <button class="nav-btn" style="color:${active==='home'?CI.accent:CI.muted}" onclick="goTo('home')">⊕ Heute</button>
+    <button class="nav-btn" style="color:${active==='week'?CI.accent:CI.muted}" onclick="goTo('week')">📅 Woche</button>
+    <button class="nav-btn" style="color:${active==='progress'?CI.accent:CI.muted}" onclick="goTo('progress')">↗ Verlauf</button>
+  </nav>`;
+}
+
+function footer(){
+  return`<div class="footer"><div class="footer-text">
+    <span class="footer-name">Thorben Reimer</span> · Performance Coach<br>
+    0151 56 165 578 · <a href="mailto:Thorben.Reimer@dvag.de" style="color:#378ADD;text-decoration:none">Thorben.Reimer@dvag.de</a>
+  </div></div>`;
+}
+
+// ── HOME / TODAY ──
+function renderHome(){
+  const today=todayKey();
+  const todayEntries=DATA.entries.filter(e=>e.date===today);
+  const doneSlots=new Set(todayEntries.map(e=>e.slot));
+  
+  // Weekly stats
+  const weekAgo=new Date();weekAgo.setDate(weekAgo.getDate()-6);
+  const weekKey=weekAgo.toISOString().split("T")[0];
+  const weekEntries=DATA.entries.filter(e=>e.date>=weekKey);
+
+  const slotCards=Object.values(SLOTS).map(slot=>{
+    const doneToday=doneSlots.has(slot.id);
+    const weekCount=weekEntries.filter(e=>e.slot===slot.id).length;
+    const weekBlocks=weekEntries.filter(e=>e.slot===slot.id).reduce((s,e)=>s+(e.blocks||1),0);
+    const displayCount=slot.trackBlocks?weekBlocks:weekCount;
+    const goalPct=Math.min(displayCount/slot.weeklyGoal*100,100);
+    const goalColor=goalPct>=100?CI.green:goalPct>=50?CI.orange:CI.muted;
+    
+    return`<div class="slot-card" onclick="startSlot('${slot.id}')" style="border-left:3px solid ${slot.color}">
+      <div style="display:flex;align-items:center;gap:10px">
+        <span class="slot-icon">${slot.icon}</span>
+        <div style="flex:1">
+          <div style="color:#fff;font-weight:800;font-size:14px">${slot.label}${doneToday?" <span style='color:"+CI.green+";font-size:11px'>✓ heute</span>":""}</div>
+          <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${slot.sub}</div>
+          <div style="display:flex;align-items:center;gap:6px;margin-top:6px">
+            <div style="flex:1;height:4px;background:#2A3A55;border-radius:2px;overflow:hidden">
+              <div style="width:${goalPct}%;height:100%;background:${goalColor};transition:width .3s"></div>
+            </div>
+            <span style="color:${goalColor};font-size:10px;font-weight:700">${displayCount}/${slot.weeklyGoal}</span>
+          </div>
+        </div>
+        <span style="color:#7A9CC0;font-size:18px">›</span>
+      </div>
+    </div>`;
+  }).join('');
+  
+  const totalToday=todayEntries.length;
+  const totalWeek=weekEntries.length;
+  
+  return`${hdr("PERFORMANCE","Routinen · "+today)}
+  <div class="body">
+    <div class="card" style="display:flex;margin-bottom:14px">
+      <div class="stat"><div class="stat-n" style="color:${CI.accent}">${totalToday}</div><div class="stat-l">Heute</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="stat-n" style="color:${CI.green}">${totalWeek}</div><div class="stat-l">7 Tage</div></div>
+      <div class="divider"></div>
+      <div class="stat"><div class="stat-n" style="color:${CI.light}">${DATA.entries.length}</div><div class="stat-l">Gesamt</div></div>
+    </div>
+    <div class="info-banner">💡 Tap auf einen Slot zum Tracken. Fortschrittsbalken zeigt Wochen-Ziel.</div>
+    <span class="lbl">Routinen</span>
+    ${slotCards}
+  </div>
+  ${footer()}
+  ${navHtml('home')}`;
+}
+
+function hdr(title,sub,back){
+  return`<div class="hdr">
+    ${back?`<button class="back-btn" onclick="${back}">←</button>`:`<img src="${LOGO}" class="hdr-logo" onerror="this.style.display='none'">`}
+    <div class="hdr-center"><div class="hdr-title">${title}</div>${sub?`<div class="hdr-sub">${sub}</div>`:""}</div>
+    <div style="width:${back?30:40}px"></div>
+  </div>`;
+}
+
+// ── SLOT DETAIL / INPUT ──
+function renderSlot(){
+  const slot=SLOTS[S.activeSlot];
+  
+  if(S.saved){
+    return`${hdr(slot.label+" · Gespeichert",slot.sub,"goTo('home')")}
+    <div class="body">
+      <div style="text-align:center;padding:30px 0">
+        <div style="font-size:50px;margin-bottom:12px">${slot.icon}</div>
+        <div style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px">Stark, Thorben!</div>
+        <div style="color:#7A9CC0;font-size:13px">${slot.label} gespeichert</div>
+      </div>
+      <button class="btn" style="background:${slot.color}" onclick="goTo('home')">Zurück zur Übersicht</button>
+    </div>${navHtml('')}`;
+  }
+  
+  // Studio entfernt - keine Freitext-Slots mehr
+  
+  const blocksControl=slot.trackBlocks?`<div class="card">
+    <label class="lbl">Wie viele Blocks heute?</label>
+    <div style="display:flex;gap:8px;justify-content:space-between">
+      ${[1,2,3].map(n=>`<button class="btn-sm" style="flex:1;background:${S.blocks===n?slot.color:'#161E2E'};color:${S.blocks===n?'#fff':CI.muted};border-color:${S.blocks===n?slot.color:CI.sep}" onclick="set({blocks:${n}})">${n}×</button>`).join('')}
+    </div>
+    <div style="color:#7A9CC0;font-size:11px;text-align:center;margin-top:6px">Du dokumentierst einen Block — Anzahl × dieser Block wird gespeichert</div>
+  </div>`:'';
+  
+  const exCards=slot.exercises.map(ex=>{
+    const e=S.form[ex.id]||{sets:Array(slot.defaultSets).fill("")};
+    const stage=getStage(slot.id,ex.id);
+    const stageName=ex.stages[stage-1]||ex.stages[0];
+    const reps=e.sets.map(Number).filter(n=>n>0);
+    const prog=reps.length===e.sets.length?checkProgression(ex,e.sets):null;
+    
+    const si=`<div class="sets-row">${e.sets.map((v,i)=>{
+      const n=Number(v);
+      const bc=n>0?(n>=ex.target?CI.green:n>=ex.target*.8?CI.orange:CI.muted):CI.sep;
+      const isRemovable=!slot.fixedSets&&e.sets.length>1;
+      return`<div class="set-col">
+        ${isRemovable?`<button class="set-rm" onclick="rmSet('${ex.id}',${i})">×</button>`:''}
+        <div class="set-lbl">S${i+1}</div>
+        <input class="inp-sm" id="set_${ex.id}_${i}" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.target}" value="${v}" oninput="upS('${ex.id}',${i},this.value)">
+      </div>`;
+    }).join('')}</div>`;
+    
+    const addBtn=slot.fixedSets?'':`<button class="add-set-btn" onclick="addSet('${ex.id}')">+ Satz</button>`;
+    
+    const progBox=prog?`<div class="prog-box" style="background:${prog.level==='increase'?CI.green:CI.orange}18;color:${prog.level==='increase'?CI.green:CI.orange};border:1px solid ${prog.level==='increase'?CI.green:CI.orange}40">${prog.msg}</div>`:'';
+    
+    return`<div class="card" style="border-left:3px solid ${slot.color}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:8px">
+        <div style="flex:1;min-width:0">
+          <div style="color:#fff;font-weight:700;font-size:14px">${ex.name}</div>
+          <div style="color:#7A9CC0;font-size:11px;margin-top:2px">Ziel: ${ex.target} ${ex.unit} · Stufe ${stage}/${ex.stages.length}</div>
+        </div>
+        <div onclick="cycleStage('${ex.id}',${ex.stages.length})" style="cursor:pointer"><span class="stage-tag">St. ${stage}</span></div>
+      </div>
+      <div style="background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:8px 10px;color:#A78BFA;font-size:11px;margin-bottom:10px">${stageName}</div>
+      <label class="lbl">Wdh pro Satz</label>
+      ${si}
+      ${addBtn}
+      ${progBox}
+    </div>`;
+  }).join('');
+  
+  return`${hdr(slot.label,slot.sub,"goTo('home')")}
+  <div class="body">
+    ${blocksControl}
+    ${exCards}
+    <div class="card">
+      <label class="lbl">Notiz (optional)</label>
+      <textarea class="note-area" placeholder="z.B. Knie etwas empfindlich, Energie 8/10..." oninput="S.note=this.value">${S.note}</textarea>
+    </div>
+    <button class="btn" style="background:${slot.color}" onclick="saveSlot()">Einheit speichern ✓</button>
+  </div>${navHtml('')}`;
+}
+
+// ── WEEK VIEW ──
+function renderWeek(){
+  const days=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date();d.setDate(d.getDate()-i);
+    days.push(d.toISOString().split("T")[0]);
+  }
+  const dayNames=["So","Mo","Di","Mi","Do","Fr","Sa"];
+  
+  const slotRows=Object.values(SLOTS).map(slot=>{
+    const weekEntries=DATA.entries.filter(e=>e.slot===slot.id&&days.includes(e.date));
+    const count=slot.trackBlocks?weekEntries.reduce((s,e)=>s+(e.blocks||1),0):weekEntries.length;
+    const pct=Math.min(count/slot.weeklyGoal*100,100);
+    const color=pct>=100?CI.green:pct>=50?CI.orange:CI.muted;
+    
+    const dayCells=days.map(d=>{
+      const dayEntries=weekEntries.filter(e=>e.date===d);
+      const hasEntry=dayEntries.length>0;
+      const blocks=slot.trackBlocks?dayEntries.reduce((s,e)=>s+(e.blocks||1),0):dayEntries.length;
+      const bg=hasEntry?slot.color:CI.sep;
+      const opacity=hasEntry?(blocks>=2?1:0.6):0.3;
+      return`<div class="heatmap-cell" style="background:${bg};opacity:${opacity}" title="${d}${hasEntry?' · '+blocks+'×':''}"></div>`;
+    }).join('');
+    
+    return`<div class="card" style="border-left:3px solid ${slot.color};padding:12px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <span style="font-size:18px">${slot.icon}</span>
+        <div style="flex:1">
+          <div style="color:#fff;font-size:13px;font-weight:700">${slot.label}</div>
+          <div style="color:#7A9CC0;font-size:10px">${count}/${slot.weeklyGoal} ${slot.unit}</div>
+        </div>
+        <span style="color:${color};font-weight:800;font-size:14px">${Math.round(pct)}%</span>
+      </div>
+      <div style="display:flex;gap:4px;justify-content:space-between">${dayCells}</div>
+    </div>`;
+  }).join('');
+  
+  const dayLabels=`<div style="display:flex;gap:4px;justify-content:space-between;margin:0 14px 8px;padding-left:34px">
+    ${days.map(d=>{const dt=new Date(d);return`<div style="width:14px;text-align:center;color:#7A9CC0;font-size:9px">${dayNames[dt.getDay()]}</div>`}).join('')}
+  </div>`;
+  
+  return`${hdr("WOCHEN-ÜBERSICHT","Letzte 7 Tage")}
+  <div class="body">
+    <div class="info-banner">📊 Heatmap: dunkler = mehr Blocks/Einheiten. Ziel = Wochen-Goal pro Slot.</div>
+    ${dayLabels}
+    ${slotRows}
+  </div>${navHtml('week')}`;
+}
+
+// ── PROGRESS / CHARTS ──
+function renderProgress(){
+  if(S.detailEx){
+    const{slotId,exId}=S.detailEx;
+    const slot=SLOTS[slotId];
+    const ex=slot.exercises.find(e=>e.id===exId);
+    const data=buildChartData(slotId,exId);
+    const latest=data[data.length-1];
+    
+    const rows=[...data].reverse().slice(0,15).map(d=>{
+      return`<div class="row">
+        <span style="color:#7A9CC0;font-size:12px">${d.date}</span>
+        <span style="color:#D0DCE8;font-size:12px">⌀${d.avg} · max ${d.max}</span>
+        <span class="stage-tag">St. ${d.stage}</span>
+      </div>`;
+    }).join('');
+    
+    return`${hdr(ex.name,slot.label,"set({detailEx:null})")}
+    <div class="body">
+      ${data.length<2?'<div style="text-align:center;padding:40px;color:#7A9CC0">Mindestens 2 Einträge nötig.</div>':`
+      <div class="card" style="border-left:3px solid ${slot.color}">
+        <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:8px">Durchschnittliche Wdh</div>
+        ${svgLine(data,'avg',slot.color)}
+      </div>
+      <div class="card" style="border-left:3px solid ${slot.color}">
+        <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:8px">Best-Satz</div>
+        ${svgLine(data,'max',CI.green)}
+      </div>
+      <div class="card" style="border-left:3px solid ${slot.color}">
+        <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:8px">Aktuelle Stufe: ${latest?.stage}/${ex.stages.length}</div>
+        <div style="color:#A78BFA;font-size:12px">${ex.stages[(latest?.stage||1)-1]}</div>
+      </div>
+      <span class="lbl" style="margin-top:6px;display:block">Letzte Einträge</span>
+      ${rows}`}
+    </div>${navHtml('progress')}`;
+  }
+  
+  const slotSections=Object.values(SLOTS).filter(s=>s.exercises.length).map(slot=>{
+    const exList=slot.exercises.map(ex=>{
+      const data=buildChartData(slot.id,ex.id);
+      if(!data.length)return'';
+      const latest=data[data.length-1];
+      const first=data[0];
+      const diff=data.length>1?Math.round((latest.avg-first.avg)*10)/10:null;
+      return`<div class="card" style="border-left:3px solid ${slot.color};cursor:pointer" onclick="set({detailEx:{slotId:'${slot.id}',exId:'${ex.id}'}})">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="flex:1;min-width:0">
+            <div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div>
+            <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${data.length} Einträge · ⌀ aktuell: <span style="color:${slot.color}">${latest.avg}</span> · Stufe ${latest.stage}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px">
+            ${diff!==null?tag((diff>0?'+':'')+diff+'⌀',diff>0?CI.green:diff<0?CI.orange:CI.muted):''}
+            <span style="color:#7A9CC0;font-size:16px">›</span>
+          </div>
+        </div>
+      </div>`;
+    }).filter(Boolean).join('');
+    if(!exList)return'';
+    return`<div style="margin-top:12px">
+      <span class="lbl" style="color:${slot.color}">${slot.icon} ${slot.label}</span>
+      ${exList}
+    </div>`;
+  }).filter(Boolean).join('');
+  
+  return`${hdr("VERLAUF","Klick auf Übung für Details")}
+  <div class="body">
+    ${!DATA.entries.length?'<div style="text-align:center;padding:60px 20px"><div style="font-size:40px;margin-bottom:12px">📊</div><div style="color:#7A9CC0;font-size:14px">Nach den ersten Einheiten erscheinen hier deine Grafiken.</div></div>':slotSections||'<div style="color:#7A9CC0;padding:20px;text-align:center">Noch keine getrackten Übungen.</div>'}
+  </div>${navHtml('progress')}`;
+}
+
+// ── RENDER ──
+function render(){
+  const app=document.getElementById('app');
+  if(S.view==='home')app.innerHTML=renderHome();
+  else if(S.view==='slot')app.innerHTML=renderSlot();
+  else if(S.view==='week')app.innerHTML=renderWeek();
+  else if(S.view==='progress')app.innerHTML=renderProgress();
+  window.scrollTo(0,0);
+}
+
+// ── HANDLERS ──
+window.goTo=v=>set({view:v,activeSlot:null,detailEx:null,saved:false,note:"",form:{},stageOverride:{},blocks:1});
+
+window.startSlot=id=>{
+  const slot=SLOTS[id];
+  const init={};
+  slot.exercises.forEach(ex=>{
+    init[ex.id]={sets:Array(slot.defaultSets).fill("")};
+  });
+  set({activeSlot:id,form:init,view:'slot',saved:false,note:"",blocks:1,stageOverride:{}});
+};
+
+window.upS=(id,i,val)=>{
+  const s=[...S.form[id].sets];
+  s[i]=val;
+  S.form[id]={...S.form[id],sets:s};
+  // Update only colors & tags without full re-render
+  const slot=SLOTS[S.activeSlot];
+  const ex=slot.exercises.find(e=>e.id===id);
+  s.forEach((v,j)=>{
+    const inp=document.getElementById('set_'+id+'_'+j);
+    if(!inp)return;
+    const n=Number(v);
+    inp.style.borderColor=n>0?(n>=ex.target?CI.green:n>=ex.target*.8?CI.orange:CI.muted):CI.sep;
+  });
+};
+
+window.addSet=id=>{
+  S.form[id].sets=[...S.form[id].sets,""];
+  render();
+};
+
+window.rmSet=(id,i)=>{
+  const sets=[...S.form[id].sets];
+  sets.splice(i,1);
+  S.form[id].sets=sets;
+  render();
+};
+
+window.cycleStage=(exId,maxStage)=>{
+  const cur=S.stageOverride[exId]||getStage(S.activeSlot,exId);
+  const next=cur>=maxStage?1:cur+1;
+  S.stageOverride={...S.stageOverride,[exId]:next};
+  render();
+};
+
+window.saveSlot=()=>{
+  const slot=SLOTS[S.activeSlot];
+  const entry={
+    date:todayKey(),
+    slot:S.activeSlot,
+    blocks:slot.trackBlocks?S.blocks:1,
+    note:S.note||"",
+    exercises:{}
+  };
+  if(slot.exercises.length){
+    slot.exercises.forEach(ex=>{
+      const e=S.form[ex.id];
+      const stage=S.stageOverride[ex.id]||getStage(S.activeSlot,ex.id);
+      entry.exercises[ex.id]={
+        sets:e.sets.filter(v=>v!==""),
+        stage:stage
+      };
+    });
+  }
+  DATA.entries.push(entry);
+  save();
+  set({saved:true});
+};
+
+render();
+</script>
+</body>
+</html>
