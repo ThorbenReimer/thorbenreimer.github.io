@@ -312,7 +312,7 @@ html { scroll-behavior: smooth; }
 /* Expandable Steckbrief Kacheln */
 .expandable-card{cursor:pointer;flex-direction:column;position:relative;transition:all .3s}
 .expandable-card:hover{background:rgba(55,138,221,0.1);border-color:rgba(55,138,221,0.4)}
-.expand-arrow{font-size:1.2rem;color:var(--blue);transition:transform .3s;align-self:flex-end;margin-top:.25rem;line-height:1}
+.expand-arrow{font-size:1.2rem;color:var(--blue);transition:transform .3s;align-self:center;margin-top:.25rem;line-height:1}
 .expandable-card.open .expand-arrow{transform:rotate(90deg)}
 .steck-detail{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s;opacity:0;font-size:.85rem;color:rgba(255,255,255,0.6);line-height:1.6;width:100%}
 .expandable-card.open .steck-detail{max-height:100px;opacity:1;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,0.08)}
@@ -711,7 +711,7 @@ html { scroll-behavior: smooth; }
   if (!el) return;
   const text = 'Finanzathleten.';
   let i = 0;
-  const speed = 80;
+  const speed = 20;
   
   function type() {
     if (i < text.length) {
