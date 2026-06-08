@@ -5,276 +5,105 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Performance">
-<title>Performance Tracker · Thorben Reimer</title>
+<meta name="apple-mobile-web-app-title" content="Training">
+<title>Performance Tracker</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 body{background:#161E2E;font-family:-apple-system,'Helvetica Neue',sans-serif;color:#D0DCE8;max-width:430px;margin:0 auto;min-height:100vh}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=number]{-moz-appearance:textfield}
 .hdr{background:#1E2D45;border-bottom:1px solid #2A3A55;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50}
-.hdr-title{color:#fff;font-size:15px;font-weight:800;letter-spacing:.3px}
+.hdr-title{color:#fff;font-size:16px;font-weight:800;letter-spacing:.3px}
 .hdr-sub{color:#7A9CC0;font-size:11px;margin-top:2px}
 .body{padding:14px 18px 90px}
 .card{background:#1E2D45;border-radius:14px;padding:14px;margin-bottom:10px;border:1px solid #2A3A55}
-.card-pu{border-left:3px solid #378ADD}
-.card-kz{border-left:3px solid #4CAF82}
-.card-myo{border-left:3px solid #F59E0B}
-.card-test{border-left:3px solid #A78BFA}
-.card-rest{border-left:3px solid #7A9CC0}
 .lbl{color:#7A9CC0;font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px;display:block}
 .inp{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:11px;font-size:16px;color:#fff;width:100%;outline:none;text-align:center}
 .inp-sm{background:#161E2E;border:1px solid #2A3A55;border-radius:8px;padding:11px 4px;font-size:16px;color:#fff;width:100%;outline:none;text-align:center}
 .btn{border:none;border-radius:10px;padding:14px 20px;font-size:15px;font-weight:700;cursor:pointer;width:100%;margin-bottom:10px;color:#fff}
 .btn-sm{border-radius:8px;padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;border:1px solid}
-.btn-outline{background:transparent;border:1px solid #2A3A55;color:#7A9CC0}
 .nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;background:#1E2D45;border-top:1px solid #2A3A55;display:flex;z-index:100;padding-bottom:env(safe-area-inset-bottom)}
 .nav-btn{flex:1;padding:14px 0;background:none;border:none;font-size:11px;font-weight:700;cursor:pointer;letter-spacing:.5px;text-transform:uppercase}
 .tag{border-radius:6px;padding:3px 8px;font-size:10px;font-weight:700;display:inline-block}
 .row{display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid #2A3A55}
-.row:last-child{border-bottom:none}
 .stat{flex:1;text-align:center}
 .stat-n{font-size:22px;font-weight:800}
 .stat-l{color:#7A9CC0;font-size:10px;text-transform:uppercase;letter-spacing:.8px}
 .check{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid #2A3A55}
+.prog-box{border-radius:8px;padding:8px 12px;margin-top:8px;font-size:12px;font-weight:600}
 .sets-row{display:flex;gap:8px;margin-bottom:6px}
 .set-col{flex:1;text-align:center}
 .set-lbl{color:#7A9CC0;font-size:10px;margin-bottom:4px}
-.tags-row{display:flex;gap:5px;justify-content:flex-end;align-items:center;flex-wrap:wrap;min-height:22px}
-.back-btn{background:none;border:none;color:#7A9CC0;font-size:22px;cursor:pointer;padding:0;line-height:1}
+.tags-row{display:flex;gap:5px;justify-content:flex-end;align-items:center;flex-wrap:wrap;margin-bottom:4px}
+.prog-steps{background:rgba(42,58,85,.4);border-radius:8px;padding:8px 10px;margin-bottom:10px}
+.prog-step{color:#7A9CC0;font-size:11px;margin-bottom:3px}
 svg.chart{width:100%;overflow:visible}
-.banner{border-radius:12px;padding:12px 14px;margin-bottom:14px}
-.banner-test{background:linear-gradient(135deg,#A78BFA22,#378ADD22);border:1px solid #A78BFA40}
-.banner-myo{background:linear-gradient(135deg,#F59E0B22,#EF444422);border:1px solid #F59E0B40}
-.banner-rest{background:#7A9CC012;border:1px solid #7A9CC030}
-.banner-info{background:#378ADD12;border:1px solid #378ADD30}
-.target-box{background:#161E2E;border-radius:8px;padding:10px 12px;margin:8px 0;font-size:12px;color:#D0DCE8;line-height:1.6}
-.target-box b{color:#7AB8F5}
-.history-mini{background:#161E2E;border-radius:8px;padding:8px 10px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
-.divider{width:1px;background:#2A3A55}
-.method-badge{background:#378ADD22;color:#7AB8F5;border-radius:4px;padding:2px 6px;font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <script>
-const CI={bg:"#161E2E",navy:"#1E2D45",sep:"#2A3A55",accent:"#378ADD",light:"#7AB8F5",white:"#FFFFFF",body:"#D0DCE8",muted:"#7A9CC0",green:"#4CAF82",orange:"#F59E0B",red:"#EF4444",purple:"#A78BFA"};
-
-// ============ DAILY CONFIG ============
-const START_DATE="2026-05-03"; // Sonntag
-const RETEST_INTERVAL=14; // Tage
-
-// Wochenplan: Mo-So
-const DAY_PLAN={
-  0:{label:"Sonntag",pu:"pyramid",kz:"rest",note:"Pause-Tag · keine Pull-ups · lockerer Lauf möglich"},
-  1:{label:"Montag",pu:"pyramid",kz:"cluster",note:"Lauf + Push-ups · Pull-ups abends"},
-  2:{label:"Dienstag",pu:"pyramid",kz:"rest",note:"KB-Training abends · keine Pull-ups (Übertraining)"},
-  3:{label:"Mittwoch",pu:"pyramid",kz:"rest",note:"Tennis-Coaching abends · keine Pull-ups"},
-  4:{label:"Donnerstag",pu:"pyramid",kz:"cluster",note:"Lauf + Push-ups · Pull-ups abends"},
-  5:{label:"Freitag",pu:"pyramid",kz:"cluster",note:"Lauf + Push-ups · Pull-ups abends"},
-  6:{label:"Samstag",pu:"myorep",kz:"myorep",note:"MYO-REP-TAG · einmal/Woche näher ans Limit"},
-};
-
-// ============ WORKOUT CONFIG ============
+const CI={bg:"#161E2E",navy:"#1E2D45",sep:"#2A3A55",accent:"#378ADD",light:"#7AB8F5",white:"#FFFFFF",body:"#D0DCE8",muted:"#7A9CC0",green:"#4CAF82",orange:"#F59E0B",purple:"#A78BFA"};
+const PROG={INCREASE:1.10,POSSIBLE:1.05,KG_STEP:2};
 const WORKOUTS={
-  A:{label:"Workout A",subtitle:"Glutes & Posterior Chain",color:CI.accent,day:"Mo & Fr",exercises:[
-    {id:"bulgarian_split",name:"Bulgarian Split Squat (KH)",method:"cluster",clusterReps:[6,6,6],pause:30,unit:"kg",
-      tip:"3 Cluster-Sätze á 6 Wdh, 30 s Pause dazwischen. RIR 2-3 (du könntest noch 2-3 mehr).",
-      progressions:["Wenn 4 Wochen RIR 3 mit gleichem Gewicht → +2kg","ODER: Cluster-Reps von 6 auf 7 erhöhen"]},
-    {id:"clamshell",name:"Clamshell (Band)",method:"standard",sets:2,targetReps:14,unit:"Band",
-      tip:"2 Sätze á 12-15 Wdh. RIR 5+ (nur Aktivierung Glutes Medius, kein Versagen).",
-      progressions:["Aktivierungs-Übung: kein klassisches Upgrade","Bei 2×15 sauber → mittleres Band"]},
-    {id:"hip_thrust",name:"Hip Thrust (KH)",method:"cluster",clusterReps:[6,6,6],pause:30,unit:"kg",
-      tip:"3 Cluster-Sätze á 6 Wdh, 30 s Pause. RIR 2-3.",
-      progressions:["Wenn 4 Wochen RIR 3 → +2kg","ODER Cluster-Reps auf 7 erhöhen"]},
-    {id:"rdl",name:"Romanian Deadlift",method:"cluster",clusterReps:[6,6,6],pause:30,unit:"kg",
-      tip:"3 Cluster-Sätze á 6 Wdh, 30 s Pause. RIR 2-3. Bewegung kontrolliert, Hüfte schiebt nach hinten.",
-      progressions:["Wenn 4 Wochen RIR 3 → +2kg","→ Single-Leg RDL als Variation"]},
+  A:{label:"Rumpf A",subtitle:"Anti-Lateralflexion + Gesäß",color:CI.accent,day:"Mo",exercises:[
+    {id:"suitcase_carry",name:"Suitcase Carry (1-arm)",sets:3,targetReps:25,top:30,range:"3× 25–30 m",unit:"m",perSide:true,load:"kg",
+      ladder:[{l:"24 kg · 25 m",d:"Basis"},{l:"24 kg · 30 m",d:"Distanz"},{l:"+ Weste · 25 m",d:"Last"},{l:"Overhead Carry",d:"Hebel"},{l:"Bottoms-up KB",d:"Winkel"}]},
+    {id:"bstance_hipthrust",name:"B-Stance Hip Thrust (KH)",sets:3,targetReps:8,top:10,range:"3× 8",unit:"Wdh",perSide:true,load:"kg",
+      ladder:[{l:"KH auf Hüfte · 8 Wdh",d:"Basis"},{l:"KH schwerer",d:"Last"},{l:"3 s oben halten",d:"Tempo"},{l:"Single-Leg",d:"Hebel"}]},
+    {id:"hk_pallof",name:"Half-kneeling Pallof (2 s halten)",sets:3,targetReps:8,top:10,range:"3× 8 (2 s)",unit:"Wdh",perSide:true,load:"band",
+      ladder:[{l:"Band leicht · 8×2 s",d:"Basis"},{l:"Band mittel",d:"Last"},{l:"Tall-kneeling",d:"Winkel"},{l:"Landmine Press",d:"Last+Hebel"}]},
+    {id:"deadbug_kb",name:"Dead Bug · KB überkopf",sets:3,targetReps:6,top:8,range:"3× 6–8",unit:"Wdh",perSide:true,load:"kg",
+      ladder:[{l:"KB 8 kg · LWS flach",d:"Basis"},{l:"KB schwerer",d:"Last"},{l:"Bein tiefer/gestreckt",d:"Hebel"}]},
   ]},
-  B:{label:"Workout B",subtitle:"Core nach McGill (Big Three)",color:CI.green,day:"Mi",exercises:[
-    {id:"dead_bug",name:"Dead Bug ① (McGill-Pyramide)",method:"mcgill",pyramid:[5,4,3],pause:10,unit:"BW",
-      tip:"Pro Seite: 5 → 10s Pause → 4 → 10s → 3. NIEMALS Versagen, Wirbelsäule bleibt flach.",
-      progressions:["Wenn Pyramide 5-4-3 sauber → 6-5-4","→ mit Band an Armen","→ mit KH in Händen"]},
-    {id:"side_plank",name:"Side Plank ② (McGill-Pyramide)",method:"mcgill",pyramid:[30,20,10],pause:10,unit:"Sek",
-      tip:"30s → 10s Pause → 20s → 10s → 10s pro Seite. Nicht zittern, kein Zusammenbrechen.",
-      progressions:["Wenn 30-20-10 sauber → 40-30-20","→ +Hip Dip","→ Side Plank Row"]},
-    {id:"pallof",name:"Pallof Press ③",method:"standard",sets:2,targetReps:9,unit:"Band",
-      tip:"2 Sätze á 8-10 Wdh pro Seite. RIR 3-4. Anti-Rotation = volle Kontrolle wichtiger als Reps.",
-      progressions:["Bei 2×10 sauber → mittleres Band","→ Abstand zum Anker vergrößern","→ im Einbeinstand"]},
-    {id:"atw",name:"Around the World",method:"standard",sets:2,targetReps:9,unit:"Band",
-      tip:"2 Sätze á 8-10 Wdh pro Seite. RIR 3-4. Großer Kreis, Rumpf stabil.",
-      progressions:["Bei 2×10 sauber → mittleres Band","→ Tempo verlangsamen (3 s pro Kreis)"]},
+  B:{label:"Rumpf B",subtitle:"Anti-Rotation + Stabilität (submax.)",color:CI.green,day:"Do",exercises:[
+    {id:"hk_ohpress",name:"Half-kneeling 1-arm OH Press",sets:3,targetReps:6,top:8,range:"3× 6–8",unit:"Wdh",perSide:true,load:"kg",
+      ladder:[{l:"KH/KB · 6 Wdh",d:"Basis"},{l:"schwerer",d:"Last"},{l:"5 s Hold oben",d:"Zeit"},{l:"Half-Kneeling",d:"Basis"},{l:"Half-Kneeling RFE",d:"Hebel"}]},
+    {id:"db_rdl_core",name:"Romanian Deadlift (3 s exz.)",sets:3,targetReps:8,top:10,range:"3× 8",unit:"Wdh",perSide:false,load:"kg",
+      ladder:[{l:"KH · 3 s runter",d:"Basis"},{l:"KH schwerer",d:"Last"},{l:"LH 20 kg",d:"Last"},{l:"Single-Leg RDL",d:"Hebel"}]},
+    {id:"side_plank_hard",name:"Side Plank · kurz & hart",sets:3,targetReps:15,top:25,range:"3× 15–25 s",unit:"Sek",perSide:true,load:"none",
+      ladder:[{l:"Knie ab · 15–25 s",d:"leicht"},{l:"Füße gestreckt",d:"Hebel"},{l:"Oberes Bein heben",d:"Hebel"},{l:"Gewicht auf Hüfte",d:"Last"}]},
+    {id:"kb_frontrack_carry",name:"KB Front-Rack Carry (1-arm)",sets:3,targetReps:25,top:30,range:"3× 25–30 m",unit:"m",perSide:true,load:"kg",
+      ladder:[{l:"8–16 kg · 25 m",d:"Basis"},{l:"schwerer · 30 m",d:"Last"},{l:"Overhead Carry",d:"Hebel"},{l:"Bottoms-up",d:"Winkel"}]},
   ]},
 };
 
-// ============ HELPERS ============
 const todayKey=()=>new Date().toISOString().split("T")[0];
 const avg=a=>a.length?Math.round(a.reduce((x,y)=>x+y,0)/a.length*10)/10:0;
-const fmt=d=>d.slice(5);
+const persist=d=>{try{localStorage.setItem("tr_v2",JSON.stringify(d))}catch{}};
+const loadSessions=()=>{try{const r=localStorage.getItem("tr_v2");return r?JSON.parse(r):[]}catch{return[]}};
 
-// LocalStorage Keys
-const LS_WO="pt_workouts_v3";
-const LS_DAILY="pt_daily_v3";
-const LS_MAX="pt_max_v3";
-const LS_TAB="pt_tab_v3";
+let S={view:"home",activeType:null,sessions:loadSessions(),form:{},saved:false,progResults:{},showProg:{},progressEx:null};
+const set=p=>{Object.assign(S,p);render()};
 
-const loadWO=()=>{try{return JSON.parse(localStorage.getItem(LS_WO))||[]}catch{return[]}};
-const saveWO=d=>{try{localStorage.setItem(LS_WO,JSON.stringify(d))}catch{}};
-const loadDaily=()=>{try{return JSON.parse(localStorage.getItem(LS_DAILY))||[]}catch{return[]}};
-const saveDaily=d=>{try{localStorage.setItem(LS_DAILY,JSON.stringify(d))}catch{}};
-const loadMax=()=>{try{return JSON.parse(localStorage.getItem(LS_MAX))||{pu:null,kz:null,puHistory:[],kzHistory:[]}}catch{return{pu:null,kz:null,puHistory:[],kzHistory:[]}}};
-const saveMax=d=>{try{localStorage.setItem(LS_MAX,JSON.stringify(d))}catch{}};
-const loadTab=()=>{try{return localStorage.getItem(LS_TAB)||"daily"}catch{return"daily"}};
-const saveTab=t=>{try{localStorage.setItem(LS_TAB,t)}catch{}};
-
-// ============ DAILY CALCULATIONS ============
-function calcPushupReps(maxPU,type){
-  if(!maxPU||maxPU<5)return null;
-  if(type==="pyramid"){
-    const s1=Math.round(maxPU*0.6);
-    const s2=Math.round(maxPU*0.72);
-    const s3=Math.round(maxPU*0.66);
-    return{type:"pyramid",sets:[s1,s2,s3],rir:[maxPU-s1,maxPU-s2,maxPU-s3],total:s1+s2+s3,
-      label:"Lauf-Pyramide · 3 Stopps",
-      desc:`Stopp 1 (Anfang Lauf), Stopp 2 (Mitte), Stopp 3 (vor Ende). RIR ${maxPU-s2}-${maxPU-s1}.`};
+const calcProg=(ex,arr,w,rung)=>{
+  const r=arr.map(Number).filter(n=>n>0);
+  if(r.length<ex.sets)return null;
+  if(ex.ladder){
+    const idx=rung||0;const top=ex.top||(ex.targetReps+2);
+    if(r.every(x=>x>=top)){
+      if(idx<ex.ladder.length-1){const nx=ex.ladder[idx+1];return{level:"increase",msg:"🚀 Bereit für Stufe "+(idx+2)+": "+nx.l+(nx.d?" ("+nx.d+")":""),nextRung:idx+1}}
+      return{level:"increase",msg:"🚀 Top-Stufe – Last fein erhöhen",nextRung:idx};
+    }
+    if(r.every(x=>x>=ex.targetReps))return{level:"possible",msg:"📈 Stufe sitzt – oberes Range-Ende anpeilen, dann hoch",nextRung:idx};
+    return{level:"ok",msg:"✓ Stufe halten – kurz & hart, saubere Technik",nextRung:idx};
   }
-  if(type==="myorep"){
-    const act=Math.round(maxPU*0.88);
-    const m1=Math.max(3,Math.round(maxPU*0.22));
-    const m2=Math.max(3,Math.round(maxPU*0.18));
-    const m3=Math.max(2,Math.round(maxPU*0.15));
-    const m4=Math.max(2,Math.round(maxPU*0.12));
-    return{type:"myorep",sets:[act,m1,m2,m3,m4],rir:[3,1,1,1,0],total:act+m1+m2+m3+m4,
-      label:"Myo-Rep · Spitzenreiz",
-      desc:"Aktivierung (RIR 3) → 4× Mini-Sätze mit 15 s Pause."};
+  if(r.every(x=>x>=ex.targetReps*PROG.INCREASE)){
+    if(ex.progType==="kg"){const n=(parseFloat(w)||0)+PROG.KG_STEP;return{level:"increase",msg:"🚀 Steigern → "+n+" kg",nextWeight:String(n)}}
+    if(ex.progType==="band"){const b=["leicht","mittel","stark"];const i=b.findIndex(x=>(w||"").toLowerCase().includes(x));const n=i>=0&&i<2?b[i+1]:null;return{level:"increase",msg:n?"🚀 Band → "+n:"🚀 Abstand vergrößern",nextWeight:n||w}}
+    return{level:"increase",msg:"🚀 Wdh-Ziel auf "+(ex.targetReps+2)+" erhöhen",nextWeight:w}
   }
-  return null;
-}
-
-function getPullupMode(maxKZ){
-  if(!maxKZ||maxKZ<1)return null;
-  if(maxKZ<=3)return "beginner";  // GtG + Negativs
-  if(maxKZ<=7)return "cluster";    // Klassisches Cluster
-  return "advanced";                // Größere Cluster
-}
-
-function calcPullupReps(maxKZ,type){
-  if(!maxKZ||maxKZ<1)return null;
-  const mode=getPullupMode(maxKZ);
-  
-  // ==== BEGINNER MODE: Max 1-3 sauber ====
-  if(mode==="beginner"){
-    if(type==="cluster"){
-      // Greasing the Groove: 4-5 Mini-Sätze á 1 Rep (oder Max-1)
-      const repsPerSet=Math.max(1,maxKZ-1);
-      return{type:"gtg",sets:[repsPerSet,repsPerSet,repsPerSet,repsPerSet,repsPerSet],rir:[1,1,1,1,1],total:repsPerSet*5,
-        label:"Greasing the Groove · 5 × "+repsPerSet+" Rep",
-        desc:`5 Mini-Sätze á ${repsPerSet} sauberer FROM-Pull-up. 60-90 s Pause zwischen Sätzen. NIE bis Versagen.`,
-        mode:"beginner"};
-    }
-    if(type==="myorep"){
-      // Negativ-Reps am Samstag
-      return{type:"negativ",sets:[4,4,4],rir:[null,null,null],total:12,
-        label:"Negativ-Reps · 3 × 4 exzentrisch",
-        desc:"Hochspringen → kontrolliert in 5 Sek absenken. 3 Sätze á 4 Negativs. 90 s Pause. Danach 1 Test-Rep wenn Lust.",
-        mode:"beginner"};
-    }
-  }
-  
-  // ==== CLUSTER MODE: Max 4-7 ====
-  if(mode==="cluster"){
-    if(type==="cluster"){
-      const baseRep=Math.max(2,Math.round(maxKZ*0.6));
-      const lastRep=Math.max(1,baseRep-1);
-      return{type:"cluster",sets:[baseRep,baseRep,baseRep,lastRep],rir:[maxKZ-baseRep,maxKZ-baseRep,maxKZ-baseRep,maxKZ-lastRep],total:baseRep*3+lastRep,
-        label:"Cluster · 4 Mini-Sätze",
-        desc:`30 s Pause zwischen Sätzen. FROM (Dead Hang Start, Brust zur Stange). RIR ${maxKZ-baseRep}.`,
-        mode:"cluster"};
-    }
-    if(type==="myorep"){
-      const act=Math.max(2,maxKZ-1);
-      const m1=Math.max(1,Math.round(maxKZ*0.4));
-      const m2=Math.max(1,Math.round(maxKZ*0.35));
-      const m3=Math.max(1,Math.round(maxKZ*0.3));
-      return{type:"myorep",sets:[act,m1,m2,m3],rir:[1,1,1,0],total:act+m1+m2+m3,
-        label:"Myo-Rep · Spitzenreiz",
-        desc:"Aktivierung 1 vor Versagen, dann 3× Mini mit 15 s Pause.",
-        mode:"cluster"};
-    }
-  }
-  
-  // ==== ADVANCED MODE: Max 8+ ====
-  if(mode==="advanced"){
-    if(type==="cluster"){
-      const baseRep=Math.max(5,Math.round(maxKZ*0.6));
-      const lastRep=Math.max(4,baseRep-1);
-      return{type:"cluster",sets:[baseRep,baseRep,baseRep,lastRep],rir:[maxKZ-baseRep,maxKZ-baseRep,maxKZ-baseRep,maxKZ-lastRep],total:baseRep*3+lastRep,
-        label:"Cluster Advanced · 4 Mini-Sätze",
-        desc:`30 s Pause zwischen Sätzen. FROM. RIR ${maxKZ-baseRep}. Bei Stagnation: Tempo verlangsamen oder Gewicht hinzu.`,
-        mode:"advanced"};
-    }
-    if(type==="myorep"){
-      const act=Math.max(6,maxKZ-1);
-      const m1=Math.max(3,Math.round(maxKZ*0.4));
-      const m2=Math.max(3,Math.round(maxKZ*0.35));
-      const m3=Math.max(2,Math.round(maxKZ*0.3));
-      return{type:"myorep",sets:[act,m1,m2,m3],rir:[1,1,1,0],total:act+m1+m2+m3,
-        label:"Myo-Rep Advanced",
-        desc:"Aktivierung 1 vor Versagen, dann 3× Mini mit 15 s Pause. Bei Plateau: Gewicht hinzu.",
-        mode:"advanced"};
-    }
-  }
-  return null;
-}
-
-// ============ DATE / RETEST LOGIC ============
-function daysSinceStart(){
-  const start=new Date(START_DATE);
-  const today=new Date(todayKey());
-  return Math.floor((today-start)/(86400000));
-}
-
-function nextRetestInDays(){
-  const d=daysSinceStart();
-  if(d<0)return -d;
-  const cycle=d%RETEST_INTERVAL;
-  return RETEST_INTERVAL-cycle;
-}
-
-function isRetestDay(){
-  const d=daysSinceStart();
-  return d>0&&d%RETEST_INTERVAL===0;
-}
-
-function todayDayOfWeek(){
-  return new Date(todayKey()).getDay();
-}
-
-// ============ STATE ============
-let S={
-  tab:loadTab(),
-  workouts:loadWO(),
-  daily:loadDaily(),
-  max:loadMax(),
-  // Daily form
-  dailyPU:[],dailyKZ:[],dailyNote:"",dailyRPE:"",
-  // Workout form
-  activeWorkout:null,activeWoForm:{},woSaved:false,
-  // Detail views
-  progressEx:null,
-  // Edit history
-  editingDate:null,
-  // Setup
-  showSetup:false,maxPUInput:"",maxKZInput:""
+  if(avg(r)>=ex.targetReps*PROG.POSSIBLE)return{level:"possible",msg:"📈 Steigerung möglich – nächste Woche"};
+  return{level:"ok",msg:"✓ Gewicht/Niveau halten"};
 };
 
-const set=p=>{Object.assign(S,p);if(p.tab)saveTab(p.tab);render()};
-
-// ============ TAGS / CHARTS ============
 const tag=(t,c)=>`<span class="tag" style="background:${c}22;color:${c}">${t}</span>`;
+const pbox=p=>{const bg=p.level==="increase"?CI.green+"18":p.level==="possible"?CI.orange+"18":CI.sep+"40";const c=p.level==="increase"?CI.green:p.level==="possible"?CI.orange:CI.muted;return`<div class="prog-box" style="background:${bg};color:${c};border:1px solid ${c}50">${p.msg}</div>`};
+
+const buildData=id=>S.sessions.filter(s=>s.exercises?.[id]).map(s=>{const e=s.exercises[id];const r=(e.sets||[]).map(Number).filter(n=>!isNaN(n)&&n>0);return{date:s.date,label:s.date.slice(5),avg:avg(r),s1:r[0]??null,s2:r[1]??null,s3:r[2]??null,weight:parseFloat(e.weight)||0}}).sort((a,b)=>a.date.localeCompare(b.date));
 
 function svgLine(data,key,color,h){
-  h=h||80;const vals=data.map(d=>d[key]).filter(v=>v!=null&&v>0);if(vals.length<2)return"";
+  h=h||80;const vals=data.map(d=>d[key]).filter(v=>v!=null&&v>0);if(vals.length<2)return'';
   const mn=Math.min(...vals),mx=Math.max(...vals),rng=mx-mn||1,W=300,H=h;
   const pts=data.filter(d=>d[key]>0).map((d,i,a)=>({x:i/(a.length-1||1)*W,y:H-(d[key]-mn)/rng*(H-10)-5,v:d[key],l:d.label}));
   const path=pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ");
@@ -283,922 +112,146 @@ function svgLine(data,key,color,h){
   return`<svg class="chart" viewBox="0 0 ${W} ${H+18}" height="${H+18}"><path d="${path}" fill="none" stroke="${color}" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>${dots}${lbs}</svg>`;
 }
 
-// ============ NAV ============
-function navHtml(){
-  return`<nav class="nav">
-    <button class="nav-btn" style="color:${S.tab==='daily'?CI.accent:CI.muted}" onclick="set({tab:'daily'})">⊕ Daily</button>
-    <button class="nav-btn" style="color:${S.tab==='workout'?CI.accent:CI.muted}" onclick="set({tab:'workout'})">⊞ Workout</button>
-    <button class="nav-btn" style="color:${S.tab==='verlauf'?CI.accent:CI.muted}" onclick="set({tab:'verlauf'})">↗ Verlauf</button>
-  </nav>`;
-}
-
-// ============ DAILY VIEW ============
-function renderDaily(){
-  const today=todayKey();
-  const dow=todayDayOfWeek();
-  const plan=DAY_PLAN[dow];
-  const max=S.max;
-
-  // Setup wenn keine Maxwerte da
-  if(!max.pu||!max.kz||S.showSetup){
-    return renderSetup();
-  }
-
-  // Re-Test Banner
-  const isRetest=isRetestDay();
-  const daysToRetest=nextRetestInDays();
-  const daysSince=daysSinceStart();
-
-  let banner="";
-  if(isRetest){
-    banner=`<div class="banner banner-test">
-      <div style="color:${CI.purple};font-weight:800;font-size:14px;margin-bottom:4px">🎯 Re-Test heute!</div>
-      <div style="color:#D0DCE8;font-size:12px;margin-bottom:8px">Tag ${daysSince} · alle 14 Tage Maxwert prüfen</div>
-      <button class="btn-sm" style="background:${CI.purple};color:#fff;border-color:${CI.purple}" onclick="set({showSetup:true})">Maxwerte aktualisieren →</button>
-    </div>`;
-  }else if(daysToRetest<=2){
-    banner=`<div class="banner banner-info">
-      <div style="color:${CI.light};font-weight:700;font-size:12px">📅 Re-Test in ${daysToRetest} Tag(en)</div>
-    </div>`;
-  }
-
-  // Heute schon eingetragen?
-  const todayEntry=S.daily.find(d=>d.date===today);
-
-  // Push-up Daten
-  const puData=calcPushupReps(max.pu,plan.pu);
-  const kzData=plan.kz==="rest"?null:calcPullupReps(max.kz,plan.kz);
-
-  // PU Card
-  let puCard="";
-  if(plan.pu==="myorep"){
-    puCard=renderExerciseCard("pu",puData,"Push-ups Myo-Rep",CI.orange,"card-myo",max.pu,"Push-ups");
-  }else{
-    puCard=renderExerciseCard("pu",puData,"Push-ups Lauf-Pyramide",CI.accent,"card-pu",max.pu,"Push-ups");
-  }
-
-  // KZ Card
-  let kzCard="";
-  if(plan.kz==="rest"){
-    kzCard=`<div class="card card-rest">
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px">
-        <div style="font-size:24px">🛌</div>
-        <div style="flex:1">
-          <div style="color:#fff;font-weight:700;font-size:14px">Pull-ups · Pause</div>
-          <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${plan.note}</div>
-        </div>
-      </div>
-    </div>`;
-  }else if(plan.kz==="myorep"){
-    const titleMyo=kzData?.mode==="beginner"?"Pull-ups · Negativ-Reps (Sa)":"Pull-ups · Myo-Rep";
-    kzCard=renderExerciseCard("kz",kzData,titleMyo,CI.orange,"card-myo",max.kz,"Pull-ups (FROM)");
-  }else{
-    const titleStd=kzData?.mode==="beginner"?"Pull-ups · GtG-Methode":"Pull-ups · Cluster";
-    kzCard=renderExerciseCard("kz",kzData,titleStd,CI.green,"card-kz",max.kz,"Pull-ups (FROM)");
-  }
-
-  // Header Stats
-  const weekStart=new Date(today);weekStart.setDate(weekStart.getDate()-6);
-  const weekStartStr=weekStart.toISOString().split("T")[0];
-  const thisWeek=S.daily.filter(d=>d.date>=weekStartStr);
-  const weekPU=thisWeek.reduce((s,d)=>s+(d.puTotal||0),0);
-  const weekKZ=thisWeek.reduce((s,d)=>s+(d.kzTotal||0),0);
-  const streak=calculateStreak();
-
-  return`<div class="hdr">
-    <div><div class="hdr-title">DAILY · ${plan.label}</div><div class="hdr-sub">${today} · Tag ${daysSince+1} · ${todayEntry?'<span style="color:'+CI.green+'">eingetragen</span>':'noch offen'}</div></div>
-    <button class="btn-sm" style="background:#2A3A55;color:#7A9CC0;border-color:#2A3A55;font-size:10px" onclick="set({showSetup:true})">⚙</button>
-  </div>
-  <div class="body">
-    ${banner}
-    <div class="card" style="display:flex;margin-bottom:14px">
-      <div class="stat"><div class="stat-n" style="color:${CI.accent}">${max.pu||"—"}</div><div class="stat-l">Max PU</div></div>
-      <div class="divider"></div>
-      <div class="stat"><div class="stat-n" style="color:${CI.green}">${max.kz||"—"}</div><div class="stat-l">Max KZ</div></div>
-      <div class="divider"></div>
-      <div class="stat"><div class="stat-n" style="color:${CI.light}">${weekPU}</div><div class="stat-l">PU Woche</div></div>
-      <div class="divider"></div>
-      <div class="stat"><div class="stat-n" style="color:${CI.orange}">${streak}</div><div class="stat-l">Streak</div></div>
-    </div>
-    ${puCard}
-    ${kzCard}
-    ${(plan.pu||plan.kz!=="rest")?`
-    <div class="card" style="border-left:3px solid ${CI.muted}">
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-        <div style="flex:1">
-          <label class="lbl">RPE (1–10)</label>
-          <input id="rpe_input" class="inp" type="number" inputmode="numeric" placeholder="z.B. 6" value="${S.dailyRPE||""}" oninput="updRPE(this.value)" min="1" max="10">
-        </div>
-        <div style="flex:0;color:${CI.muted};font-size:9px;line-height:1.3;text-align:left;width:90px">
-          1-3 locker<br>4-6 mittel<br>7-8 hart<br>9-10 max
-        </div>
-      </div>
-      <label class="lbl">Notiz (optional)</label>
-      <input id="note_input" class="inp" type="text" placeholder="z.B. Bank statt Boden, müde Schultern..." value="${S.dailyNote||""}" oninput="updNote(this.value)" style="text-align:left">
-    </div>
-    <button class="btn" style="background:${CI.accent}" onclick="saveDailyEntry()">${todayEntry?"Aktualisieren ✓":"Heute speichern ✓"}</button>`:""}
-    ${todayEntry?`<div style="text-align:center;color:${CI.muted};font-size:11px;margin-top:8px">Letzte Speicherung: ${new Date(todayEntry.savedAt||Date.now()).toLocaleTimeString('de-DE',{hour:'2-digit',minute:'2-digit'})}</div>`:""}
-  </div>${navHtml()}`;
-}
-
-function renderExerciseCard(type,data,title,color,cardClass,maxVal,nameUnit){
-  if(!data)return"";
-  const formArr=type==="pu"?S.dailyPU:S.dailyKZ;
-  const isPyramidLike=data.type==="pyramid"||data.type==="cluster"||data.type==="myorep";
-  
-  const setsHtml=data.sets.map((target,i)=>{
-    const val=formArr[i]||"";
-    const n=Number(val);
-    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
-    const labelMap={
-      "pyramid":["Stopp 1","Stopp 2","Stopp 3"],
-      "cluster":["Set 1","Set 2","Set 3","Set 4"],
-      "myorep":type==="pu"?["Aktiv.","Mini 1","Mini 2","Mini 3","Mini 4"]:["Aktiv.","Mini 1","Mini 2","Mini 3"],
-      "gtg":["Set 1","Set 2","Set 3","Set 4","Set 5"],
-      "negativ":["Neg 1","Neg 2","Neg 3"]
-    };
-    const lbl=(labelMap[data.type]||[])[i]||`Set ${i+1}`;
-    return`<div class="set-col">
-      <div class="set-lbl">${lbl}</div>
-      <div style="color:${color};font-size:9px;font-weight:700;margin-bottom:3px">Ziel: ${target}</div>
-      <input id="${type}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${target}" value="${val}" oninput="upDailySet('${type}',${i},this.value)">
-    </div>`;
-  }).join("");
-
-  const ra=formArr.map(Number).filter(n=>n>0);
-  const total=ra.reduce((a,b)=>a+b,0);
-  const targetTotal=data.total;
-  const pct=Math.round(total/targetTotal*100)||0;
-
-  return`<div class="card ${cardClass}">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-      <div>
-        <div style="color:#fff;font-weight:700;font-size:14px">${title}</div>
-        <div style="color:#7A9CC0;font-size:11px;margin-top:2px">Max: ${maxVal} ${nameUnit} · Ziel: ${data.total} Wdh</div>
-      </div>
-      <div style="text-align:right">
-        <div id="total_${type}" style="color:${color};font-weight:800;font-size:18px">${total||"—"}</div>
-        <div id="pct_${type}" style="color:${pct>=90?CI.green:pct>=70?CI.orange:CI.muted};font-size:10px;display:${total>0?'block':'none'}">${total>0?pct+"%":""}</div>
-      </div>
-    </div>
-    <div class="target-box"><b>${data.label}</b> · ${data.desc}</div>
-    <label class="lbl">Ist-Wiederholungen</label>
-    <div class="sets-row">${setsHtml}</div>
-  </div>`;
-}
-
-function renderSetup(){
-  const max=S.max;
-  const currentMaxKZ=parseInt(S.maxKZInput)||max.kz||0;
-  const currentMode=getPullupMode(currentMaxKZ);
-  const modeInfo={
-    "beginner":{name:"Beginner-Modus",color:CI.purple,desc:"GtG (5×1 Rep) + Negativs am Samstag · für Max 1-3"},
-    "cluster":{name:"Cluster-Modus",color:CI.green,desc:"Klassisches Cluster (4 Sätze) + Myo-Rep · für Max 4-7"},
-    "advanced":{name:"Advanced-Modus",color:CI.accent,desc:"Größere Cluster · für Max 8+"}
+function svgMulti(data,h){
+  h=h||110;const all=[...data.flatMap(d=>[d.s1,d.s2,d.s3,d.avg])].filter(v=>v!=null&&v>0);if(!all.length||data.length<2)return'<div style="color:#7A9CC0;font-size:12px">Mindestens 2 Einheiten nötig.</div>';
+  const mn=Math.min(...all),mx=Math.max(...all),rng=mx-mn||1,W=300,H=h;
+  const mkLine=(key,col,dash)=>{
+    const pts=data.map((d,i)=>({x:i/(data.length-1)*W,y:H-(((d[key]||0)-mn)/rng)*(H-10)-5,v:d[key]})).filter(p=>p.v>0);
+    if(pts.length<2)return'';
+    return`<path d="${pts.map((p,i)=>(i?"L":"M")+p.x+","+p.y).join(" ")}" fill="none" stroke="${col}" stroke-width="${key==='avg'?2.5:1.5}" stroke-dasharray="${dash||''}" stroke-linecap="round"/>${pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3" fill="${col}"/>`).join('')}`;
   };
-  const modeDisplay=currentMode?modeInfo[currentMode]:null;
-  
-  return`<div class="hdr"><button class="back-btn" onclick="set({showSetup:false})">←</button>
-    <div style="text-align:center;flex:1"><div class="hdr-title">MAXWERTE</div><div class="hdr-sub">Pre-Test oder Re-Test</div></div>
-    <div style="width:30px"></div>
-  </div>
-  <div class="body">
-    <div class="banner banner-info">
-      <div style="color:${CI.light};font-weight:700;font-size:13px;margin-bottom:6px">Pre-Test Anleitung</div>
-      <div style="color:#D0DCE8;font-size:11px;line-height:1.6">
-        <b>Push-ups:</b> 1 Satz max. saubere Wdh. Brust nahe Boden, voller Arm-Streckung oben. Sobald Bewegung bricht → STOPP.<br>
-        <b>Pull-ups:</b> Aus vollem Hang (Dead Hang Start). Brust zur Stange. Sauber gerechnet (kein Schwung).
-      </div>
-    </div>
-    <div class="card card-pu">
-      <label class="lbl">Push-up Max (saubere Wdh)</label>
-      <input class="inp" type="number" inputmode="numeric" placeholder="z.B. 25" value="${S.maxPUInput||max.pu||''}" oninput="updMaxInput('pu',this.value)">
-      ${max.pu?`<div style="color:#7A9CC0;font-size:11px;margin-top:6px">Aktuell: ${max.pu}</div>`:""}
-    </div>
-    <div class="card card-kz">
-      <label class="lbl">Pull-up Max (FROM, sauber)</label>
-      <input class="inp" type="number" inputmode="numeric" placeholder="z.B. 4" value="${S.maxKZInput||max.kz||''}" oninput="updMaxInput('kz',this.value)">
-      ${max.kz?`<div style="color:#7A9CC0;font-size:11px;margin-top:6px">Aktuell: ${max.kz}</div>`:""}
-      <div id="mode_display" style="border:1px solid;border-radius:8px;padding:10px;margin-top:10px;display:${modeDisplay?'block':'none'};background:${modeDisplay?modeDisplay.color+'18':'transparent'};border-color:${modeDisplay?modeDisplay.color+'40':'transparent'}">
-        ${modeDisplay?`<div style="color:${modeDisplay.color};font-size:11px;font-weight:700;margin-bottom:4px">→ ${modeDisplay.name}</div><div style="color:#D0DCE8;font-size:11px;line-height:1.5">${modeDisplay.desc}</div>`:""}
-      </div>
-      <div class="target-box" style="margin-top:8px"><b>Wichtig:</b> Nur Wiederholungen aus vollem Hang mit voller Range zählen. Im Zweifel weniger eintragen.</div>
-    </div>
-    <button class="btn" style="background:${CI.accent}" onclick="saveMaxes()">Speichern ✓</button>
-    ${max.pu?`<button class="btn btn-outline" onclick="set({showSetup:false})">Abbrechen</button>`:""}
-  </div>${navHtml()}`;
+  const lbs=data.filter((_,i)=>i===0||i===data.length-1||data.length<=5).map((d,_,__)=>{const x=(data.indexOf(d)/(data.length-1||1))*W;return`<text x="${x}" y="${H+14}" text-anchor="middle" fill="#7A9CC0" font-size="9">${d.label}</text>`}).join('');
+  return`<svg class="chart" viewBox="0 0 ${W} ${H+32}" height="${H+32}">${mkLine('s1',CI.light)}${mkLine('s2',CI.accent)}${mkLine('s3',CI.muted)}${mkLine('avg',CI.green,'5,3')}${lbs}<text x="0" y="${H+28}" fill="${CI.light}" font-size="9">S1</text><text x="18" y="${H+28}" fill="${CI.accent}" font-size="9">S2</text><text x="36" y="${H+28}" fill="${CI.muted}" font-size="9">S3</text><text x="54" y="${H+28}" fill="${CI.green}" font-size="9">⌀</text></svg>`;
 }
 
-// ============ WORKOUT VIEW ============
-function renderWorkout(){
+function navHtml(active){
+  return`<nav class="nav"><button class="nav-btn" style="color:${active==='home'?CI.accent:CI.muted}" onclick="goTo('home')">⊕ Home</button><button class="nav-btn" style="color:${active==='progress'?CI.accent:CI.muted}" onclick="goTo('progress')">↗ Verlauf</button></nav>`;
+}
+
+function renderHome(){
   const today=todayKey();
-  const lastOf=t=>[...S.workouts].reverse().find(s=>s.type===t);
-  const doneToday=t=>S.workouts.some(s=>s.date===today&&s.type===t);
-
-  if(S.activeWorkout)return renderWorkoutSession();
-
+  const lastOf=t=>[...S.sessions].reverse().find(s=>s.type===t);
+  const doneToday=t=>S.sessions.some(s=>s.date===today&&s.type===t);
   const stats=`<div class="card" style="display:flex;margin-bottom:14px">
-    ${['A','B'].map(t=>{const n=S.workouts.filter(s=>s.type===t).length;const c=t==='A'?CI.accent:CI.green;return`<div class="stat"><div class="stat-n" style="color:${c}">${n}</div><div class="stat-l">W-${t}</div></div>`}).join('<div class="divider"></div>')}
-    <div class="divider"></div>
-    <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.workouts.length}</div><div class="stat-l">Gesamt</div></div>
+    ${['A','B'].map(t=>{const n=S.sessions.filter(s=>s.type===t).length;const c=t==='A'?CI.accent:CI.green;return`<div class="stat"><div class="stat-n" style="color:${c}">${n}</div><div class="stat-l">Rumpf ${t}</div></div>`}).join('<div style="width:1px;background:#2A3A55"></div>')}
+    <div style="width:1px;background:#2A3A55"></div>
+    <div class="stat"><div class="stat-n" style="color:${CI.accent}">${S.sessions.length}</div><div class="stat-l">Gesamt</div></div>
   </div>`;
-
   const cards=['A','B'].map(t=>{
     const wo=WORKOUTS[t];const done=doneToday(t);const last=lastOf(t);
     const cs=done?`background:${CI.green};border-color:${CI.green}`:'border-color:#2A3A55';
-    return`<div class="card" style="border-left:3px solid ${wo.color};margin-bottom:10px">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div class="check" style="${cs}">${done?'<span style="color:#fff;font-size:13px">✓</span>':''}</div>
-        <div style="flex:1">
-          <div style="color:#fff;font-weight:800;font-size:15px">${wo.label}</div>
-          <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${wo.subtitle} · <span style="color:${wo.color}bb">${wo.day}</span>${last?' · zuletzt '+fmt(last.date):''}</div>
-        </div>
-        <button class="btn-sm" style="background:${wo.color}20;color:${wo.color};border-color:${wo.color}40" onclick="startWorkout('${t}')">${done?'Nochmal':'START →'}</button>
-      </div>
-    </div>`;
+    return`<div class="card" style="border-left:3px solid ${wo.color};margin-bottom:10px"><div style="display:flex;align-items:center;gap:10px">
+      <div class="check" style="${cs}">${done?'<span style="color:#fff;font-size:13px">✓</span>':''}</div>
+      <div style="flex:1"><div style="color:#fff;font-weight:800;font-size:15px">${wo.label}</div>
+      <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${wo.subtitle} · <span style="color:${wo.color}bb">${wo.day}</span>${last?' · <span style="color:#2A3A55">zuletzt '+last.date.slice(5)+'</span>':''}</div></div>
+      <button class="btn-sm" style="background:${wo.color}20;color:${wo.color};border-color:${wo.color}40" onclick="startWorkout('${t}')">${done?'Nochmal':'START →'}</button>
+    </div></div>`;
   }).join('');
-
-  const recent=S.workouts.length?`<span class="lbl" style="margin-top:16px;display:block">Letzte Einheiten</span>${[...S.workouts].reverse().slice(0,5).map(s=>`<div class="row"><span style="color:#7A9CC0;font-size:12px">${s.date}</span>${tag('Workout '+s.type,WORKOUTS[s.type].color)}</div>`).join('')}`:"";
-
-  return`<div class="hdr">
-    <div><div class="hdr-title">WORKOUT</div><div class="hdr-sub">Glutes & Core · Cluster + McGill</div></div>
-    ${tag(S.workouts.length+' Einh.',CI.accent)}
-  </div>
-  <div class="body">
-    ${stats}
-    <span class="lbl">Training starten</span>
-    ${cards}
-    <div style="background:${CI.purple}12;border:1px solid ${CI.purple}30;border-radius:12px;padding:10px 14px;margin-top:8px;margin-bottom:12px">
-      <div style="color:${CI.purple};font-size:11px;font-weight:700">🌙 Bird Dog (Optional)</div>
-      <div style="color:#7A9CC0;font-size:11px;margin-top:3px">Abends vor dem Fernseher · 3×8/Seite · langsam & kontrolliert</div>
-    </div>
-    ${recent}
-  </div>${navHtml()}`;
+  const recent=S.sessions.length?`<span class="lbl" style="margin-top:16px;display:block">`+'Letzte Einheiten</span>'+[...S.sessions].reverse().slice(0,5).map(s=>`<div class="row"><span style="color:#7A9CC0;font-size:12px">${s.date}</span>${tag('Rumpf '+s.type,WORKOUTS[s.type].color)}</div>`).join(''):'';
+  return`<div class="hdr"><div><div class="hdr-title">PERFORMANCE PLAN</div><div class="hdr-sub">Thorben Reimer · ${today}</div></div>${tag(S.sessions.length+' Einh.',CI.accent)}</div>
+  <div class="body">${stats}<span class="lbl">Training starten</span>${cards}
+  <div style="background:${CI.purple}12;border:1px solid ${CI.purple}30;border-radius:12px;padding:12px 14px;margin-top:4px;margin-bottom:12px">
+    <div style="color:${CI.purple};font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:8px">Drumherum · kein extra Tag</div>
+    <div style="display:flex;gap:8px;margin-bottom:8px"><div style="font-size:15px">💪</div><div><div style="color:${CI.light};font-size:12px;font-weight:700">Push-ups · nach Rumpf A + B (Mo/Do)</div><div style="color:#7A9CC0;font-size:11px;margin-top:1px">3 Sätze submaximal (2–3 Wdh vor Versagen stoppen) · nicht mehr täglich</div></div></div>
+    <div style="display:flex;gap:8px;margin-bottom:8px"><div style="font-size:15px">🆙</div><div><div style="color:${CI.light};font-size:12px;font-weight:700">Pull-ups · über die Woche verteilt</div><div style="color:#7A9CC0;font-size:11px;margin-top:1px">Greasing the Groove: oft 1 sauber + 1 Negative (3–5 s) · nie bis Erschöpfung · nicht tracken</div></div></div>
+    <div style="display:flex;gap:8px"><div style="font-size:15px">🌙</div><div><div style="color:${CI.light};font-size:12px;font-weight:700">Bird Dog · abends</div><div style="color:#7A9CC0;font-size:11px;margin-top:1px">3×8/Seite · langsam &amp; kontrolliert</div></div></div>
+  </div>${recent}</div>${navHtml('home')}`;
 }
 
-function renderWorkoutSession(){
-  const wo=WORKOUTS[S.activeWorkout];
-  if(S.woSaved){
-    return`<div class="hdr"><button class="back-btn" onclick="set({activeWorkout:null,woSaved:false})">←</button>
-      <div style="text-align:center;flex:1"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div>
-      <div style="width:30px"></div>
-    </div>
-    <div class="body">
-      <div style="text-align:center;padding:30px 0">
-        <div style="font-size:50px;margin-bottom:12px">💪</div>
-        <div style="color:#fff;font-size:20px;font-weight:800;margin-bottom:6px">Einheit gespeichert!</div>
-        <div style="color:#7A9CC0;font-size:13px">Saubere Bewegung statt Versagen → DOMS bleibt niedrig</div>
-      </div>
-      <button class="btn" style="background:${wo.color}" onclick="set({activeWorkout:null,woSaved:false,activeWoForm:{}})">Zurück zur Übersicht</button>
-    </div>${navHtml()}`;
+function renderWorkout(){
+  const wo=WORKOUTS[S.activeType];
+  if(S.saved){
+    const cards=wo.exercises.map(ex=>{const p=S.progResults[ex.id];if(!p)return'';const bc=p.level==="increase"?CI.green:p.level==="possible"?CI.orange:CI.sep;return`<div class="card" style="border-left:3px solid ${bc}"><div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div>${pbox(p)}</div>`}).join('');
+    return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div>
+    <div class="body"><div style="text-align:center;padding:20px 0 16px"><div style="font-size:46px;margin-bottom:8px">💪</div><div style="color:#fff;font-size:18px;font-weight:800;margin-bottom:4px">Einheit gespeichert!</div><div style="color:#7A9CC0;font-size:12px;margin-bottom:16px">Empfehlungen für nächste Einheit:</div></div>${cards}<button class="btn" style="background:${wo.color};margin-top:16px" onclick="goTo('home')">Zurück zur Übersicht</button></div>${navHtml('')}`;
   }
-
   const exCards=wo.exercises.map(ex=>{
-    const e=S.activeWoForm[ex.id]||initExForm(ex);
-    return renderExerciseEditor(ex,e,wo.color);
+    const e=S.form[ex.id]||{weight:'',sets:Array(ex.sets).fill(''),rung:0};
+    const ra=e.sets.map(Number).filter(n=>n>0);const ar=ra.length?avg(ra):null;
+    const lh=ra.length===ex.sets?calcProg(ex,e.sets,e.weight,e.rung):null;
+    const load=ex.load||(ex.unit==='kg'?'kg':ex.unit==='Band'?'band':'none');
+    const sp=S.showProg[ex.id];
+    const unitWord=ex.unit==='Sek'?'Sek':ex.unit==='m'?'m':'Wdh';
+    const metricLabel=ex.unit==='Sek'?'Sekunden pro Satz':ex.unit==='m'?'Meter pro Satz':'Wdh pro Satz';
+    const targetTxt=(ex.range?ex.range:ex.sets+'×'+ex.targetReps+' '+unitWord)+(ex.perSide?' /Seite':'');
+    let ps='';
+    if(sp){
+      if(ex.ladder)ps=`<div class="prog-steps">${ex.ladder.map((rg,i)=>{const cur=i===(e.rung||0);return`<div class="prog-step" style="cursor:pointer;display:flex;justify-content:space-between;align-items:center;padding:4px 6px;border-radius:6px;${cur?'background:'+wo.color+'22;color:#fff':''}" onclick="setRung('${ex.id}',${i})"><span><span style="color:${wo.color}">${cur?'●':'○'}</span> ${rg.l}</span>${rg.d?`<span style="color:#7A9CC0;font-size:10px">${rg.d}</span>`:''}</div>`}).join('')}</div>`;
+      else if(ex.progressions)ps=`<div class="prog-steps">${ex.progressions.map(p=>`<div class="prog-step"><span style="color:${wo.color}">→</span> ${p}</div>`).join('')}</div>`;
+    }
+    const rungChip=ex.ladder?`<div style="color:${wo.color};font-size:11px;font-weight:700;margin-top:3px">⬢ Stufe ${(e.rung||0)+1}/${ex.ladder.length}: ${ex.ladder[e.rung||0].l}</div>`:'';
+    const wf=load==='kg'?`<div style="margin-bottom:12px"><label class="lbl">Last (kg)</label><input class="inp" type="number" inputmode="numeric" placeholder="${e.weight?'Vorschlag: '+e.weight+'kg':'z.B. 24'}" value="${e.weight}" oninput="upW('${ex.id}',this.value)">${e.weight?`<div style="color:#7A9CC0;font-size:11px;text-align:center;margin-top:3px">Vorschlag: <span style="color:${CI.accent}">${e.weight} kg</span></div>`:''}</div>`
+      :load==='band'?`<div style="margin-bottom:12px"><label class="lbl">Band-Stärke</label><input class="inp" type="text" placeholder="leicht / mittel / stark" value="${e.weight}" oninput="upW('${ex.id}',this.value)"></div>`:'';
+    const si=`<div class="sets-row">${e.sets.map((v,i)=>{const n=Number(v);const bc=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;return`<div class="set-col"><div class="set-lbl">S${i+1}</div><input id="set_${ex.id}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${ex.targetReps}" value="${v}" oninput="upS('${ex.id}',${i},this.value)"></div>`}).join('')}</div>`;
+    const tr=ra.length?`<div id="tags_${ex.id}" class="tags-row">${e.sets.map((v,i)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')}${ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''}</div>`:`<div id="tags_${ex.id}" class="tags-row"></div>`;
+    return`<div class="card" style="border-left:3px solid ${wo.color}"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">Ziel: ${targetTxt}</div>${rungChip}</div><div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">${ar!==null?`<div style="color:${wo.color};font-weight:800;font-size:18px">⌀${ar}</div>`:''}<button class="btn-sm" style="background:#7A9CC020;color:#7A9CC0;border-color:#2A3A55;font-size:10px;padding:3px 8px" onclick="togP('${ex.id}')">${sp?'▲':'▼ Stufen'}</button></div></div>${ps}${wf}<label class="lbl">${metricLabel}</label>${si}${tr}${lh?pbox(lh):''}</div>`;
   }).join('');
-
-  return`<div class="hdr"><button class="back-btn" onclick="set({activeWorkout:null})">←</button>
-    <div style="text-align:center;flex:1"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div>
-    <div style="width:30px"></div>
-  </div>
-  <div class="body">
-    ${exCards}
-    <button class="btn" style="background:${wo.color}" onclick="saveWorkoutSession()">Einheit speichern ✓</button>
-  </div>${navHtml()}`;
+  return`<div class="hdr"><button class="back-btn" onclick="goTo('home')">←</button><div style="text-align:center"><div class="hdr-title">${wo.label}</div><div class="hdr-sub">${wo.subtitle}</div></div><div style="width:30px"></div></div>
+  <div class="body">${exCards}<button class="btn" style="background:${wo.color}" onclick="saveWo()">Einheit speichern ✓</button></div>${navHtml('')}`;
 }
 
-function initExForm(ex){
-  if(ex.method==="cluster"){
-    return{weight:"",sets:Array(ex.clusterReps.length).fill("")};
-  }
-  if(ex.method==="mcgill"){
-    return{weight:"",sets:Array(ex.pyramid.length).fill("")};
-  }
-  if(ex.method==="standard"){
-    return{weight:"",sets:Array(ex.sets).fill("")};
-  }
-  return{weight:"",sets:[""]};
-}
-
-function renderExerciseEditor(ex,e,woColor){
-  let methodInfo="";
-  let targetSets=[];
-  let methodBadge="";
-  if(ex.method==="cluster"){
-    targetSets=ex.clusterReps;
-    methodBadge="Cluster";
-    methodInfo=`${ex.clusterReps.length} Sätze á ${ex.clusterReps[0]} Wdh · ${ex.pause} s Pause · RIR 2-3`;
-  }else if(ex.method==="mcgill"){
-    targetSets=ex.pyramid;
-    methodBadge="McGill";
-    methodInfo=`Absteigend ${ex.pyramid.join("→")} ${ex.unit==="Sek"?"s":"Wdh"} · ${ex.pause} s Pause · NICHT bis Versagen`;
-  }else if(ex.method==="standard"){
-    targetSets=Array(ex.sets).fill(ex.targetReps);
-    methodBadge="Standard";
-    methodInfo=`${ex.sets} Sätze á ${ex.targetReps} ${ex.unit==="Sek"?"s":"Wdh"} · RIR 3-5`;
-  }
-
-  const ra=e.sets.map(Number).filter(n=>n>0);
-  const total=ra.reduce((a,b)=>a+b,0);
-  const targetTotal=targetSets.reduce((a,b)=>a+b,0);
-
-  const isBW=ex.unit==="BW"||ex.unit==="Sek";
-  const isKg=ex.unit==="kg";
-  const isBand=ex.unit==="Band";
-
-  const wf=!isBW?`<div style="margin-bottom:10px">
-    <label class="lbl">${isKg?'Gewicht (kg)':'Band-Stärke'}</label>
-    <input class="inp" type="${isKg?'number':'text'}" inputmode="${isKg?'numeric':'text'}" placeholder="${isKg?(e.weight?'Letzte: '+e.weight:'z.B. 16'):'leicht / mittel / stark'}" value="${e.weight}" oninput="upWoWeight('${ex.id}',this.value)">
-  </div>`:'';
-
-  const sets=`<div class="sets-row">${e.sets.map((v,i)=>{
-    const target=targetSets[i];
-    const n=Number(v);
-    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
-    return`<div class="set-col">
-      <div class="set-lbl">S${i+1}</div>
-      <div style="color:${woColor};font-size:9px;font-weight:700;margin-bottom:3px">Ziel: ${target}</div>
-      <input id="wo_${ex.id}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${target}" value="${v}" oninput="upWoSet('${ex.id}',${i},this.value)">
-    </div>`;
-  }).join('')}</div>`;
-
-  return`<div class="card" style="border-left:3px solid ${woColor}">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-      <div style="flex:1">
-        <div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:3px">${ex.name}</div>
-        <span class="method-badge" style="background:${woColor}22;color:${woColor}">${methodBadge}</span>
-      </div>
-      <div id="wototal_${ex.id}" style="color:${woColor};font-weight:800;font-size:16px;display:${total?'block':'none'}">${total?total+"/"+targetTotal:""}</div>
-    </div>
-    <div class="target-box">${ex.tip}</div>
-    ${wf}
-    <label class="lbl">${ex.unit==="Sek"?"Sekunden pro Satz":"Wdh pro Satz"}</label>
-    ${sets}
-  </div>`;
-}
-
-// ============ VERLAUF VIEW ============
-function renderVerlauf(){
+function renderProgress(){
   if(S.progressEx){
-    return renderExDetail();
+    const allEx=[...WORKOUTS.A.exercises,...WORKOUTS.B.exercises];
+    const ex=allEx.find(e=>e.id===S.progressEx);
+    const wt=Object.keys(WORKOUTS).find(k=>WORKOUTS[k].exercises.find(e=>e.id===S.progressEx));
+    const wo=WORKOUTS[wt];const data=buildData(S.progressEx);
+    const wc=data.some(d=>d.weight>0)?`<div class="card" style="border-left:3px solid ${wo.color}"><div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Gewicht (kg)</div>${svgLine(data,'weight',wo.color)}</div>`:'';
+    const rc=`<div class="card" style="border-left:3px solid ${wo.color}"><div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Wdh pro Satz + Durchschnitt</div>${svgMulti(data)}</div>`;
+    const rows=[...data].reverse().map(d=>`<div class="row"><span style="color:#7A9CC0;font-size:12px">${d.date}</span><div style="display:flex;gap:5px">${[d.s1,d.s2,d.s3].filter(v=>v!==null).map((v,j)=>tag(v,[CI.light,CI.accent,CI.muted][j])).join('')}${tag('⌀'+d.avg,wo.color)}</div>${d.weight>0?`<span style="color:#7A9CC0;font-size:12px">${d.weight}kg</span>`:''}</div>`).join('');
+    return`<div class="hdr"><button class="back-btn" onclick="set({progressEx:null})">←</button><div style="text-align:center"><div class="hdr-title">${ex?.name||''}</div><div class="hdr-sub">${data.length} Einheiten</div></div><div style="width:30px"></div></div>
+    <div class="body">${data.length<1?'<div style="text-align:center;padding:40px;color:#7A9CC0">Noch keine Daten.</div>':wc+rc+'<span class="lbl" style="margin-top:6px;display:block">Alle Einträge</span>'+rows}</div>${navHtml('progress')}`;
   }
-  if(S.editingDate){
-    return renderEditDay();
-  }
-
-  // Daily Stats
-  const max=S.max;
-  const lastDays=S.daily.slice(-30);
-  const totalPU=S.daily.reduce((s,d)=>s+(d.puTotal||0),0);
-  const totalKZ=S.daily.reduce((s,d)=>s+(d.kzTotal||0),0);
-
-  // Max Verlauf
-  const puHistData=(max.puHistory||[]).map((h,i,a)=>({label:fmt(h.date),avg:h.value,date:h.date}));
-  const kzHistData=(max.kzHistory||[]).map((h,i,a)=>({label:fmt(h.date),avg:h.value,date:h.date}));
-
-  // Workout Übungen
-  const allEx=[...WORKOUTS.A.exercises,...WORKOUTS.B.exercises];
-  const woProgressCards=['A','B'].map(t=>{
-    const wo=WORKOUTS[t];
-    const has=wo.exercises.some(ex=>buildWoData(ex.id).length>0);
-    if(!has)return"";
-    return`<div style="margin-top:12px">
-      <span class="lbl" style="color:${wo.color}">${wo.label} · ${wo.subtitle}</span>
-      ${wo.exercises.map(ex=>{
-        const data=buildWoData(ex.id);if(!data.length)return"";
-        const last=data[data.length-1];
-        return`<div class="card" style="border-left:3px solid ${wo.color};cursor:pointer" onclick="set({progressEx:'${ex.id}'})">
-          <div style="display:flex;justify-content:space-between;align-items:center">
-            <div>
-              <div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div>
-              <div style="color:#7A9CC0;font-size:11px;margin-top:2px">${data.length} Einh. · ⌀ zuletzt: <span style="color:${wo.color}">${last.avg}</span>${last.weight>0?` · ${last.weight}${ex.unit}`:""}</div>
-            </div>
-            <span style="color:#7A9CC0;font-size:16px">›</span>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>`;
+  const cards=['A','B'].map(t=>{
+    const wo=WORKOUTS[t];const has=wo.exercises.some(ex=>buildData(ex.id).length>0);if(!has)return'';
+    return`<div style="margin-top:12px"><span class="lbl" style="color:${wo.color}">${wo.label} · ${wo.subtitle}</span>${wo.exercises.map(ex=>{const data=buildData(ex.id);if(!data.length)return'';const lat=data[data.length-1];const diff=data.length>1?Math.round((lat.avg-data[0].avg)*10)/10:null;return`<div class="card" style="border-left:3px solid ${wo.color};cursor:pointer" onclick="set({progressEx:'${ex.id}'})"><div style="display:flex;justify-content:space-between;align-items:center"><div><div style="color:#fff;font-weight:700;font-size:13px">${ex.name}</div><div style="color:#7A9CC0;font-size:11px;margin-top:2px">${data.length} Einh. · ⌀ zuletzt: <span style="color:${wo.color}">${lat.avg}</span>${lat.weight>0?' · <span style="color:#2A3A55">'+lat.weight+'kg</span>':''}</div></div><div style="display:flex;align-items:center;gap:8px">${diff!==null?tag((diff>0?'+':'')+diff+'⌀',diff>0?CI.green:diff<0?CI.orange:CI.muted):''}<span style="color:#7A9CC0;font-size:16px">›</span></div></div></div>`}).join('')}</div>`;
   }).join('');
-
-  return`<div class="hdr">
-    <div><div class="hdr-title">VERLAUF</div><div class="hdr-sub">Daily + Workout · alle Daten</div></div>
-    <div style="width:30px"></div>
-  </div>
-  <div class="body">
-    <span class="lbl">Maxwert-Verlauf</span>
-    <div class="card card-pu">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="color:#fff;font-weight:700;font-size:13px">Push-ups Max</div>
-        <div style="color:${CI.accent};font-weight:800;font-size:18px">${max.pu||"—"}</div>
-      </div>
-      ${puHistData.length>=2?svgLine(puHistData,"avg",CI.accent,60):'<div style="color:#7A9CC0;font-size:11px">Noch nicht genug Re-Tests</div>'}
-    </div>
-    <div class="card card-kz">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
-        <div style="color:#fff;font-weight:700;font-size:13px">Pull-ups Max (FROM)</div>
-        <div style="color:${CI.green};font-weight:800;font-size:18px">${max.kz||"—"}</div>
-      </div>
-      ${kzHistData.length>=2?svgLine(kzHistData,"avg",CI.green,60):'<div style="color:#7A9CC0;font-size:11px">Noch nicht genug Re-Tests</div>'}
-    </div>
-    <span class="lbl" style="margin-top:14px;display:block">Daily Stats</span>
-    <div class="card" style="display:flex">
-      <div class="stat"><div class="stat-n" style="color:${CI.accent}">${totalPU}</div><div class="stat-l">PU gesamt</div></div>
-      <div class="divider"></div>
-      <div class="stat"><div class="stat-n" style="color:${CI.green}">${totalKZ}</div><div class="stat-l">KZ gesamt</div></div>
-      <div class="divider"></div>
-      <div class="stat"><div class="stat-n" style="color:${CI.orange}">${S.daily.length}</div><div class="stat-l">Tage aktiv</div></div>
-    </div>
-    ${lastDays.length?`<span class="lbl" style="margin-top:14px;display:block">Letzte 30 Tage · zum Bearbeiten antippen</span>
-    ${[...lastDays].reverse().map(d=>{
-      const dow=new Date(d.date).getDay();
-      const dayLbl=["So","Mo","Di","Mi","Do","Fr","Sa"][dow];
-      return`<div class="history-mini" style="cursor:pointer" onclick="openEditDay('${d.date}')">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="color:#7A9CC0;font-size:10px;font-weight:700;width:20px">${dayLbl}</span>
-        <span style="color:#7A9CC0">${fmt(d.date)}</span>
-      </div>
-      <div style="display:flex;gap:6px;align-items:center">
-        ${d.puTotal?tag(d.puTotal+" PU",CI.accent):""}
-        ${d.kzTotal?tag(d.kzTotal+" KZ",CI.green):""}
-        ${d.rpe?tag("RPE "+d.rpe,CI.muted):""}
-        ${d.note?'<span style="color:#7A9CC0">📝</span>':""}
-        ${d.isMyo?tag("🔥",CI.orange):""}
-        <span style="color:#7A9CC0;font-size:14px">›</span>
-      </div>
-    </div>`}).join("")}`:""}
-    ${woProgressCards||(S.workouts.length?"":'<div style="text-align:center;padding:30px 20px;color:#7A9CC0;font-size:12px">Workout-Verlauf erscheint nach erster Einheit</div>')}
-  </div>${navHtml()}`;
+  return`<div class="hdr"><div style="width:30px"></div><div style="text-align:center"><div class="hdr-title">FORTSCHRITT</div><div class="hdr-sub">${S.sessions.length} Einheiten gesamt</div></div><div style="width:30px"></div></div>
+  <div class="body">${!S.sessions.length?'<div style="text-align:center;padding:60px 20px"><div style="font-size:40px;margin-bottom:12px">📊</div><div style="color:#7A9CC0;font-size:14px">Nach der ersten Einheit erscheinen hier deine Grafiken.</div></div>':cards}</div>${navHtml('progress')}`;
 }
 
-function buildWoData(exId){
-  return S.workouts.filter(s=>s.exercises&&s.exercises[exId]).map(s=>{
-    const e=s.exercises[exId];
-    const r=(e.sets||[]).map(Number).filter(n=>!isNaN(n)&&n>0);
-    return{date:s.date,label:fmt(s.date),avg:avg(r),weight:parseFloat(e.weight)||0};
-  }).sort((a,b)=>a.date.localeCompare(b.date));
-}
-
-function renderEditDay(){
-  const date=S.editingDate;
-  const entry=S.daily.find(d=>d.date===date);
-  if(!entry){
-    return`<div class="hdr"><button class="back-btn" onclick="set({editingDate:null})">←</button>
-      <div style="text-align:center;flex:1"><div class="hdr-title">EINTRAG NICHT GEFUNDEN</div></div>
-      <div style="width:30px"></div>
-    </div><div class="body"><div style="color:#7A9CC0;text-align:center;padding:30px">Eintrag wurde nicht gefunden.</div></div>${navHtml()}`;
-  }
-  
-  const dow=new Date(date).getDay();
-  const plan=DAY_PLAN[dow];
-  const dayLabel=plan.label;
-  const max=S.max;
-  
-  // Berechne Soll-Werte basierend auf damaligem oder aktuellem Max
-  const puData=calcPushupReps(max.pu,plan.pu);
-  const kzData=plan.kz==="rest"?null:calcPullupReps(max.kz,plan.kz);
-  
-  // Push-up Karte (mit aktuellen Werten aus entry)
-  const puSets=entry.pu||[];
-  const puCard=puData?renderEditCard("epu",puData,plan.pu==="myorep"?"Push-ups Myo-Rep":"Push-ups Lauf-Pyramide",plan.pu==="myorep"?CI.orange:CI.accent,plan.pu==="myorep"?"card-myo":"card-pu",max.pu,"Push-ups",puSets):"";
-  
-  // Pull-up Karte
-  let kzCard="";
-  if(plan.kz==="rest"){
-    kzCard=`<div class="card card-rest">
-      <div style="display:flex;align-items:center;gap:10px">
-        <div style="font-size:24px">🛌</div>
-        <div style="flex:1"><div style="color:#fff;font-weight:700;font-size:14px">Pull-ups · Pause-Tag</div></div>
-      </div>
-    </div>`;
-  }else if(kzData){
-    const kzSets=entry.kz||[];
-    const titleKZ=plan.kz==="myorep"?(kzData.mode==="beginner"?"Pull-ups · Negativ-Reps":"Pull-ups · Myo-Rep"):(kzData.mode==="beginner"?"Pull-ups · GtG-Methode":"Pull-ups · Cluster");
-    kzCard=renderEditCard("ekz",kzData,titleKZ,plan.kz==="myorep"?CI.orange:CI.green,plan.kz==="myorep"?"card-myo":"card-kz",max.kz,"Pull-ups (FROM)",kzSets);
-  }
-  
-  return`<div class="hdr"><button class="back-btn" onclick="set({editingDate:null})">←</button>
-    <div style="text-align:center;flex:1"><div class="hdr-title">${dayLabel} · ${fmt(date)}</div><div class="hdr-sub">Eintrag bearbeiten</div></div>
-    <div style="width:30px"></div>
-  </div>
-  <div class="body">
-    <div class="banner banner-info">
-      <div style="color:${CI.light};font-size:11px;line-height:1.5">Du bearbeitest einen vergangenen Eintrag. Änderungen werden direkt gespeichert.</div>
-    </div>
-    ${puCard}
-    ${kzCard}
-    <div class="card" style="border-left:3px solid ${CI.muted}">
-      <div style="display:flex;gap:10px;align-items:center;margin-bottom:8px">
-        <div style="flex:1">
-          <label class="lbl">RPE (1–10)</label>
-          <input id="erpe_input" class="inp" type="number" inputmode="numeric" placeholder="z.B. 6" value="${entry.rpe||""}" oninput="updEditRPE(this.value)" min="1" max="10">
-        </div>
-        <div style="flex:0;color:${CI.muted};font-size:9px;line-height:1.3;text-align:left;width:90px">
-          1-3 locker<br>4-6 mittel<br>7-8 hart<br>9-10 max
-        </div>
-      </div>
-      <label class="lbl">Notiz</label>
-      <input id="enote_input" class="inp" type="text" placeholder="z.B. Bank statt Boden..." value="${entry.note||""}" oninput="updEditNote(this.value)" style="text-align:left">
-    </div>
-    <button class="btn" style="background:${CI.accent}" onclick="saveEditedEntry()">Änderungen speichern ✓</button>
-    <button class="btn" style="background:transparent;border:1px solid ${CI.red};color:${CI.red}" onclick="deleteEntry()">🗑 Eintrag löschen</button>
-    <button class="btn btn-outline" onclick="set({editingDate:null})">Abbrechen</button>
-  </div>${navHtml()}`;
-}
-
-function renderEditCard(type,data,title,color,cardClass,maxVal,nameUnit,currentSets){
-  // Wie renderExerciseCard, aber mit "edit"-Type-Präfix für IDs
-  const setsHtml=data.sets.map((target,i)=>{
-    const val=currentSets[i]||"";
-    const n=Number(val);
-    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
-    const labelMap={
-      "pyramid":["Stopp 1","Stopp 2","Stopp 3"],
-      "cluster":["Set 1","Set 2","Set 3","Set 4"],
-      "myorep":type==="epu"?["Aktiv.","Mini 1","Mini 2","Mini 3","Mini 4"]:["Aktiv.","Mini 1","Mini 2","Mini 3"],
-      "gtg":["Set 1","Set 2","Set 3","Set 4","Set 5"],
-      "negativ":["Neg 1","Neg 2","Neg 3"]
-    };
-    const lbl=(labelMap[data.type]||[])[i]||`Set ${i+1}`;
-    return`<div class="set-col">
-      <div class="set-lbl">${lbl}</div>
-      <div style="color:${color};font-size:9px;font-weight:700;margin-bottom:3px">Ziel: ${target}</div>
-      <input id="${type}_${i}" class="inp-sm" type="number" inputmode="numeric" style="border-color:${bc}" placeholder="${target}" value="${val}" oninput="upEditSet('${type}',${i},this.value)">
-    </div>`;
-  }).join("");
-  
-  const ra=currentSets.map(Number).filter(n=>n>0);
-  const total=ra.reduce((a,b)=>a+b,0);
-  
-  return`<div class="card ${cardClass}">
-    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
-      <div>
-        <div style="color:#fff;font-weight:700;font-size:14px">${title}</div>
-        <div style="color:#7A9CC0;font-size:11px;margin-top:2px">Max ${maxVal} ${nameUnit} · Soll: ${data.total} Wdh</div>
-      </div>
-      <div id="total_${type}" style="color:${color};font-weight:800;font-size:18px">${total||"—"}</div>
-    </div>
-    <label class="lbl">Ist-Wiederholungen</label>
-    <div class="sets-row">${setsHtml}</div>
-  </div>`;
-}
-
-function renderExDetail(){
-  const allEx=[...WORKOUTS.A.exercises,...WORKOUTS.B.exercises];
-  const ex=allEx.find(e=>e.id===S.progressEx);
-  const wt=Object.keys(WORKOUTS).find(k=>WORKOUTS[k].exercises.find(e=>e.id===S.progressEx));
-  const wo=WORKOUTS[wt];
-  const data=buildWoData(S.progressEx);
-  const rows=[...data].reverse().map(d=>`<div class="row">
-    <span style="color:#7A9CC0;font-size:12px">${d.date}</span>
-    <div style="display:flex;gap:8px;align-items:center">
-      ${tag("⌀"+d.avg,wo.color)}
-      ${d.weight>0?`<span style="color:#7A9CC0;font-size:12px">${d.weight}${ex.unit}</span>`:""}
-    </div>
-  </div>`).join('');
-
-  return`<div class="hdr"><button class="back-btn" onclick="set({progressEx:null})">←</button>
-    <div style="text-align:center;flex:1"><div class="hdr-title">${ex?.name||""}</div><div class="hdr-sub">${data.length} Einheiten</div></div>
-    <div style="width:30px"></div>
-  </div>
-  <div class="body">
-    ${data.length>=2?`<div class="card" style="border-left:3px solid ${wo.color}">
-      <div style="color:#fff;font-weight:700;font-size:13px;margin-bottom:10px">Durchschnitt pro Einheit</div>
-      ${svgLine(data,"avg",wo.color,80)}
-    </div>`:'<div style="color:#7A9CC0;text-align:center;padding:20px">Mehr Einheiten nötig für Grafik</div>'}
-    ${rows?`<span class="lbl" style="margin-top:6px;display:block">Alle Einträge</span>${rows}`:""}
-  </div>${navHtml()}`;
-}
-
-// ============ HELPER FUNCTIONS ============
-function calculateStreak(){
-  if(!S.daily.length)return 0;
-  let s=0;
-  const today=new Date(todayKey());
-  for(let i=0;i<60;i++){
-    const d=new Date(today);d.setDate(d.getDate()-i);
-    const dStr=d.toISOString().split("T")[0];
-    const entry=S.daily.find(e=>e.date===dStr);
-    if(entry&&((entry.puTotal||0)>0||(entry.kzTotal||0)>0))s++;
-    else if(i>0)break;
-  }
-  return s;
-}
-
-// ============ MAIN RENDER ============
 function render(){
-  const app=document.getElementById("app");
-  if(S.tab==="daily")app.innerHTML=renderDaily();
-  else if(S.tab==="workout")app.innerHTML=renderWorkout();
-  else if(S.tab==="verlauf")app.innerHTML=renderVerlauf();
-  // Re-load form values from saved daily entry if exists
-  loadTodayFormIfSaved();
+  const app=document.getElementById('app');
+  if(S.view==='home')app.innerHTML=renderHome();
+  else if(S.view==='workout')app.innerHTML=renderWorkout();
+  else if(S.view==='progress')app.innerHTML=renderProgress();
 }
 
-function loadTodayFormIfSaved(){
-  // Wenn schon heute eingetragen → in Form laden (aber nur einmal pro Render-Zyklus)
-  if(S.tab!=="daily")return;
-  const today=todayKey();
-  const todayEntry=S.daily.find(d=>d.date===today);
-  if(todayEntry&&!S._loaded){
-    S.dailyPU=todayEntry.pu||[];
-    S.dailyKZ=todayEntry.kz||[];
-    S.dailyNote=todayEntry.note||"";
-    S.dailyRPE=todayEntry.rpe||"";
-    S._loaded=true;
-  }
-}
-
-// ============ EVENT HANDLERS ============
-window.set=set;
-
-window.updMaxInput=(type,val)=>{
-  if(type==="pu")S.maxPUInput=val;
-  else S.maxKZInput=val;
-  // Direktes Update der Mode-Anzeige (nur bei KZ relevant)
-  if(type==="kz")refreshModeDisplay();
-};
-
-function refreshModeDisplay(){
-  const currentMaxKZ=parseInt(S.maxKZInput)||S.max.kz||0;
-  const currentMode=getPullupMode(currentMaxKZ);
-  const modeInfo={
-    "beginner":{name:"Beginner-Modus",color:CI.purple,desc:"GtG (5×1 Rep) + Negativs am Samstag · für Max 1-3"},
-    "cluster":{name:"Cluster-Modus",color:CI.green,desc:"Klassisches Cluster (4 Sätze) + Myo-Rep · für Max 4-7"},
-    "advanced":{name:"Advanced-Modus",color:CI.accent,desc:"Größere Cluster · für Max 8+"}
-  };
-  const el=document.getElementById("mode_display");
-  if(!el)return;
-  if(!currentMode){el.style.display="none";return;}
-  const m=modeInfo[currentMode];
-  el.style.display="block";
-  el.style.background=m.color+"18";
-  el.style.borderColor=m.color+"40";
-  el.innerHTML=`<div style="color:${m.color};font-size:11px;font-weight:700;margin-bottom:4px">→ ${m.name}</div><div style="color:#D0DCE8;font-size:11px;line-height:1.5">${m.desc}</div>`;
-}
-
-window.upDailySet=(type,i,val)=>{
-  const arr=type==="pu"?[...S.dailyPU]:[...S.dailyKZ];
-  arr[i]=val;
-  if(type==="pu")S.dailyPU=arr;else S.dailyKZ=arr;
-  // Direktes DOM-Update ohne render() - Input behält Fokus
-  refreshDailyCard(type);
-};
-
-function refreshDailyCard(type){
-  const dow=todayDayOfWeek();
-  const plan=DAY_PLAN[dow];
-  const max=S.max;
-  const formArr=type==="pu"?S.dailyPU:S.dailyKZ;
-  const planType=type==="pu"?plan.pu:plan.kz;
-  const data=type==="pu"?calcPushupReps(max.pu,planType):calcPullupReps(max.kz,planType);
-  if(!data)return;
-  
-  // Border-Farben pro Input updaten
-  const targets=data.sets;
-  formArr.forEach((v,i)=>{
-    const inp=document.getElementById(type+"_"+i);
-    if(!inp)return;
-    const n=Number(v);
-    const target=targets[i];
-    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
-    inp.style.borderColor=bc;
-  });
-  
-  // Total + Prozent updaten
-  const ra=formArr.map(Number).filter(n=>n>0);
-  const total=ra.reduce((a,b)=>a+b,0);
-  const targetTotal=data.total;
-  const pct=Math.round(total/targetTotal*100)||0;
-  const totalEl=document.getElementById("total_"+type);
-  const pctEl=document.getElementById("pct_"+type);
-  if(totalEl)totalEl.textContent=total||"—";
-  if(pctEl){
-    if(total>0){
-      pctEl.style.display="block";
-      pctEl.textContent=pct+"%";
-      pctEl.style.color=pct>=90?CI.green:pct>=70?CI.orange:CI.muted;
-    }else{
-      pctEl.style.display="none";
-    }
-  }
-}
-
-window.saveDailyEntry=()=>{
-  const today=todayKey();
-  const dow=todayDayOfWeek();
-  const plan=DAY_PLAN[dow];
-  const puTotal=S.dailyPU.map(Number).filter(n=>n>0).reduce((a,b)=>a+b,0);
-  const kzTotal=S.dailyKZ.map(Number).filter(n=>n>0).reduce((a,b)=>a+b,0);
-  const entry={
-    date:today,
-    pu:[...S.dailyPU],
-    kz:[...S.dailyKZ],
-    puTotal,
-    kzTotal,
-    note:S.dailyNote||"",
-    rpe:S.dailyRPE||"",
-    isMyo:plan.pu==="myorep",
-    savedAt:Date.now()
-  };
-  S.daily=[...S.daily.filter(d=>d.date!==today),entry];
-  saveDaily(S.daily);
-  render();
-};
-
-window.updRPE=v=>{S.dailyRPE=v;};
-window.updNote=v=>{S.dailyNote=v;};
-
-// Edit-Mode Handler
-window.openEditDay=date=>{
-  // Reset Edit-Buffer und in den Bearbeitungsmodus
-  S._editBuffer=null;
-  set({editingDate:date,tab:"verlauf"});
-};
-
-function getEditBuffer(){
-  if(!S._editBuffer){
-    const entry=S.daily.find(d=>d.date===S.editingDate);
-    S._editBuffer={
-      pu:[...(entry?.pu||[])],
-      kz:[...(entry?.kz||[])],
-      rpe:entry?.rpe||"",
-      note:entry?.note||""
-    };
-  }
-  return S._editBuffer;
-}
-
-window.upEditSet=(type,i,val)=>{
-  const buf=getEditBuffer();
-  const arr=type==="epu"?[...buf.pu]:[...buf.kz];
-  arr[i]=val;
-  if(type==="epu")buf.pu=arr;else buf.kz=arr;
-  // Direktes DOM-Update ohne render()
-  refreshEditCard(type);
-};
-
-function refreshEditCard(type){
-  const date=S.editingDate;
-  const dow=new Date(date).getDay();
-  const plan=DAY_PLAN[dow];
-  const max=S.max;
-  const buf=getEditBuffer();
-  const formArr=type==="epu"?buf.pu:buf.kz;
-  const planType=type==="epu"?plan.pu:plan.kz;
-  const data=type==="epu"?calcPushupReps(max.pu,planType):calcPullupReps(max.kz,planType);
-  if(!data)return;
-  
-  const targets=data.sets;
-  formArr.forEach((v,i)=>{
-    const inp=document.getElementById(type+"_"+i);
-    if(!inp)return;
-    const n=Number(v);
-    const target=targets[i];
-    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
-    inp.style.borderColor=bc;
-  });
-  
-  const ra=formArr.map(Number).filter(n=>n>0);
-  const total=ra.reduce((a,b)=>a+b,0);
-  const totalEl=document.getElementById("total_"+type);
-  if(totalEl)totalEl.textContent=total||"—";
-}
-
-window.updEditRPE=v=>{
-  const buf=getEditBuffer();
-  buf.rpe=v;
-};
-
-window.updEditNote=v=>{
-  const buf=getEditBuffer();
-  buf.note=v;
-};
-
-window.saveEditedEntry=()=>{
-  if(!S.editingDate)return;
-  const buf=getEditBuffer();
-  const date=S.editingDate;
-  const dow=new Date(date).getDay();
-  const plan=DAY_PLAN[dow];
-  const puTotal=buf.pu.map(Number).filter(n=>n>0).reduce((a,b)=>a+b,0);
-  const kzTotal=buf.kz.map(Number).filter(n=>n>0).reduce((a,b)=>a+b,0);
-  const oldEntry=S.daily.find(d=>d.date===date);
-  const entry={
-    date,
-    pu:[...buf.pu],
-    kz:[...buf.kz],
-    puTotal,
-    kzTotal,
-    note:buf.note,
-    rpe:buf.rpe,
-    isMyo:plan.pu==="myorep",
-    savedAt:oldEntry?.savedAt||Date.now(),
-    editedAt:Date.now()
-  };
-  S.daily=[...S.daily.filter(d=>d.date!==date),entry];
-  saveDaily(S.daily);
-  S._editBuffer=null;
-  set({editingDate:null});
-};
-
-window.deleteEntry=()=>{
-  if(!S.editingDate)return;
-  if(!confirm("Eintrag wirklich löschen? Dies kann nicht rückgängig gemacht werden."))return;
-  S.daily=S.daily.filter(d=>d.date!==S.editingDate);
-  saveDaily(S.daily);
-  S._editBuffer=null;
-  set({editingDate:null});
-};
-
-window.saveMaxes=()=>{
-  const newPU=parseInt(S.maxPUInput)||S.max.pu;
-  const newKZ=parseInt(S.maxKZInput)||S.max.kz;
-  if(!newPU||!newKZ){alert("Bitte beide Werte eingeben.");return;}
-  const today=todayKey();
-  const newMax={
-    pu:newPU,
-    kz:newKZ,
-    puHistory:[...(S.max.puHistory||[]).filter(h=>h.date!==today),{date:today,value:newPU}],
-    kzHistory:[...(S.max.kzHistory||[]).filter(h=>h.date!==today),{date:today,value:newKZ}],
-  };
-  S.max=newMax;
-  saveMax(newMax);
-  set({showSetup:false,maxPUInput:"",maxKZInput:""});
-};
-
+window.goTo=v=>set({view:v,progressEx:null});
 window.startWorkout=t=>{
-  const last=[...S.workouts].reverse().find(s=>s.type===t);
+  const last=[...S.sessions].reverse().find(s=>s.type===t);
   const init={};
-  WORKOUTS[t].exercises.forEach(ex=>{
-    const lastEx=last?.exercises?.[ex.id];
-    const ef=initExForm(ex);
-    if(lastEx?.weight)ef.weight=lastEx.weight;
-    init[ex.id]=ef;
-  });
-  set({activeWorkout:t,activeWoForm:init,woSaved:false});
+  WORKOUTS[t].exercises.forEach(ex=>{const le=last?.exercises?.[ex.id];init[ex.id]={weight:le?.suggestedNextWeight??le?.weight??'',sets:Array(ex.sets).fill(''),rung:le?.suggestedNextRung??le?.rung??0}});
+  set({form:init,activeType:t,saved:false,progResults:{},showProg:{},view:'workout'});
 };
-
-window.upWoWeight=(id,val)=>{
-  S.activeWoForm[id]={...S.activeWoForm[id],weight:val};
-};
-
-window.upWoSet=(id,i,val)=>{
-  const e=S.activeWoForm[id];
-  const sets=[...e.sets];
-  sets[i]=val;
-  S.activeWoForm[id]={...e,sets};
-  // Direktes DOM-Update ohne render()
-  refreshWoCard(id);
-};
-
-function refreshWoCard(id){
-  if(!S.activeWorkout)return;
-  const wo=WORKOUTS[S.activeWorkout];
-  const ex=wo.exercises.find(e=>e.id===id);
-  if(!ex)return;
-  const e=S.activeWoForm[id];
-  
-  let targetSets=[];
-  if(ex.method==="cluster")targetSets=ex.clusterReps;
-  else if(ex.method==="mcgill")targetSets=ex.pyramid;
-  else if(ex.method==="standard")targetSets=Array(ex.sets).fill(ex.targetReps);
-  
-  // Border-Farben pro Input
-  e.sets.forEach((v,i)=>{
-    const inp=document.getElementById("wo_"+id+"_"+i);
-    if(!inp)return;
-    const n=Number(v);
-    const target=targetSets[i];
-    const bc=n>0?(n>=target?CI.green:n>=target*.7?CI.orange:CI.muted):CI.sep;
-    inp.style.borderColor=bc;
-  });
-  
-  // Total updaten
+window.upW=(id,val)=>{S.form[id]={...S.form[id],weight:val}};
+window.upS=(id,i,val)=>{
+  const s=[...S.form[id].sets];s[i]=val;S.form[id]={...S.form[id],sets:s};
+  // Update only colors and tags without full re-render
+  const wo=WORKOUTS[S.activeType];if(!wo)return;
+  const ex=wo.exercises.find(e=>e.id===id);if(!ex)return;
+  const e=S.form[id];
   const ra=e.sets.map(Number).filter(n=>n>0);
-  const total=ra.reduce((a,b)=>a+b,0);
-  const targetTotal=targetSets.reduce((a,b)=>a+b,0);
-  const totalEl=document.getElementById("wototal_"+id);
-  if(totalEl){
-    if(total>0){
-      totalEl.style.display="block";
-      totalEl.textContent=total+"/"+targetTotal;
-    }else{
-      totalEl.style.display="none";
-    }
-  }
-}
-
-window.saveWorkoutSession=()=>{
-  const entry={date:todayKey(),type:S.activeWorkout,exercises:S.activeWoForm};
-  S.workouts=[...S.workouts.filter(s=>!(s.date===entry.date&&s.type===entry.type)),entry];
-  saveWO(S.workouts);
-  set({woSaved:true});
+  const ar=ra.length?avg(ra):null;
+  e.sets.forEach((v,j)=>{
+    const inp=document.getElementById('set_'+id+'_'+j);if(!inp)return;
+    const n=Number(v);
+    inp.style.borderColor=n>0?(n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted):CI.sep;
+  });
+  const tr=document.getElementById('tags_'+id);
+  if(tr)tr.innerHTML=ra.length?e.sets.map((v,j)=>{const n=Number(v);if(!n)return'';const c=n>=ex.targetReps?CI.green:n>=ex.targetReps*.8?CI.orange:CI.muted;return tag(v,c)}).join('')+(ar?'<span style="color:#7A9CC0;font-size:12px">→</span>'+tag('⌀'+ar,wo.color):''):'';
+  const avgEl=document.getElementById('avg_'+id);if(avgEl)avgEl.textContent=ar!==null?'⌀'+ar:'';
+};
+window.togP=id=>{S.showProg={...S.showProg,[id]:!S.showProg[id]};render()};
+window.setRung=(id,i)=>{S.form[id]={...S.form[id],rung:i};render()};
+window.saveWo=()=>{
+  const wo=WORKOUTS[S.activeType];const results={};const enriched={...S.form};
+  wo.exercises.forEach(ex=>{const e=S.form[ex.id];const p=calcProg(ex,e.sets,e.weight,e.rung);results[ex.id]=p;enriched[ex.id]={...e,rung:e.rung||0};if(p?.nextWeight)enriched[ex.id].suggestedNextWeight=p.nextWeight;if(p&&p.nextRung!=null)enriched[ex.id].suggestedNextRung=p.nextRung});
+  const entry={date:todayKey(),type:S.activeType,exercises:enriched};
+  const updated=[...S.sessions.filter(s=>!(s.date===entry.date&&s.type===entry.type)),entry];
+  S.sessions=updated;persist(updated);set({progResults:results,saved:true});
 };
 
-// ============ INIT ============
-S._loaded=false;
-S._editBuffer=null;
 render();
 </script>
 </body>
