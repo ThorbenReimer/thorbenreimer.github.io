@@ -317,6 +317,89 @@ html { scroll-behavior: smooth; }
 .steck-detail{max-height:0;overflow:hidden;transition:max-height .4s cubic-bezier(.16,1,.3,1), opacity .3s;opacity:0;font-size:.85rem;color:rgba(255,255,255,0.6);line-height:1.6;width:100%}
 .expandable-card.open .steck-detail{max-height:100px;opacity:1;margin-top:.5rem;padding-top:.5rem;border-top:1px solid rgba(255,255,255,0.08)}
 
+
+/* ═══ RESPONSIVE MOBILE ═══ */
+@media (max-width: 768px) {
+  html { font-size: 14px; }
+  
+  /* Hero */
+  .hero h1 { font-size: 2.5rem; margin: 1rem 0; }
+  .hero p { font-size: 0.95rem; line-height: 1.6; }
+  
+  /* Parallelen Grid */
+  .par-grid { grid-template-columns: 1fr; gap: 1rem; }
+  
+  /* Leistungs-Karten */
+  .cards { grid-template-columns: 1fr; gap: 1.5rem; padding: 0 1rem; }
+  .card { padding: 1.5rem; }
+  .card h3 { font-size: 1.3rem; margin-bottom: 0.75rem; }
+  .card p { font-size: 0.9rem; }
+  .tag-list { gap: 0.5rem; }
+  .tag-pill { font-size: 0.85rem; padding: 0.5rem 1rem; }
+  .tag-hint { font-size: 0.75rem; margin-bottom: 0.5rem; }
+  .tag-detail { font-size: 0.9rem; line-height: 1.6; }
+  
+  /* Performance Steckbrief */
+  .perf-steck-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .perf-steck-item { padding: 1rem; }
+  .perf-steck-icon { font-size: 2rem; }
+  .perf-steck-item strong { font-size: 1rem; }
+  .perf-steck-item span { font-size: 0.8rem; }
+  .steck-detail { font-size: 0.8rem; }
+  
+  /* News Grid */
+  .news-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+  .news-karte { padding: 1.2rem; }
+  
+  /* CTA Section */
+  .cta-section h2 { font-size: 1.8rem; }
+  .cta-section p { font-size: 0.95rem; }
+  
+  /* Kontakt */
+  .kontakt-grid { grid-template-columns: 1fr; gap: 1rem; }
+  .kontakt-item { padding: 1.2rem; }
+  
+  /* Nav */
+  .nav { padding: 0.75rem 1rem; }
+  .nav-logo { height: 40px; }
+  .booking-btn { padding: 0.6rem 1.2rem; font-size: 0.9rem; }
+}
+
+@media (max-width: 480px) {
+  html { font-size: 13px; }
+  
+  body { padding: 0; margin: 0; }
+  
+  /* Hero */
+  .hero { padding: 2rem 1rem; }
+  .hero h1 { font-size: 2rem; line-height: 1.2; margin: 0.5rem 0; }
+  .hero p { font-size: 0.9rem; }
+  
+  /* Sections */
+  section { padding: 2rem 1rem !important; }
+  
+  /* Cards */
+  .cards { gap: 1rem; padding: 0; }
+  .card { padding: 1.2rem; }
+  .card h3 { font-size: 1.1rem; }
+  .card p { font-size: 0.85rem; }
+  
+  /* Tags */
+  .tag-pill { font-size: 0.8rem; padding: 0.4rem 0.8rem; }
+  .tag-detail { font-size: 0.85rem; }
+  
+  /* Steckbrief */
+  .perf-steck-item { padding: 0.8rem; }
+  .perf-steck-icon { font-size: 1.8rem; }
+  
+  /* CTA */
+  .cta-section h2 { font-size: 1.5rem; }
+  .cta-section p { font-size: 0.9rem; }
+  
+  /* Buttons */
+  .booking-btn { padding: 0.5rem 1rem; font-size: 0.85rem; width: 100%; max-width: 100%; }
+}
+
 </style>
 </head>
 <body>
