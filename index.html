@@ -400,6 +400,48 @@ html { scroll-behavior: smooth; }
   .booking-btn { padding: 0.5rem 1rem; font-size: 0.85rem; width: 100%; max-width: 100%; }
 }
 
+/* === Dein Weg === */
+.dein-weg{padding:6rem 5rem;background:var(--bg);border-top:1px solid var(--border)}
+.weg-steps{max-width:780px;margin:0 auto}
+.weg-step{display:flex;gap:1.5rem;align-items:flex-start;margin-bottom:1rem}
+.weg-num{flex:0 0 auto;width:52px;height:52px;border-radius:50%;background:var(--surface);border:2px solid var(--blue);color:var(--blue);font-family:var(--serif);font-weight:700;font-size:1.25rem;display:flex;align-items:center;justify-content:center}
+.weg-icon{flex:0 0 auto;width:46px;height:46px;border-radius:12px;background:rgba(55,138,221,0.1);display:flex;align-items:center;justify-content:center;font-size:22px}
+.weg-card-head{display:flex;align-items:center;gap:.85rem;margin-bottom:.5rem}
+.weg-card-head h3{margin-bottom:0}
+.weg-card{flex:1;background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:1.5rem 1.75rem;transition:all .3s;position:relative;overflow:hidden}
+.weg-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px;background:var(--blue);transform:scaleY(0);transition:transform .3s;transform-origin:top}
+.weg-card:hover{transform:translateX(6px);box-shadow:0 16px 36px rgba(0,0,0,.07)}
+.weg-card:hover::before{transform:scaleY(1)}
+.weg-card h3{font-family:var(--serif);font-size:1.3rem;font-weight:700;margin-bottom:.4rem}
+.weg-card p{color:var(--muted);font-size:1rem;line-height:1.65}
+.weg-tag{display:inline-block;margin-top:.9rem;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--blue);background:rgba(55,138,221,0.1);padding:5px 12px;border-radius:40px}
+.weg-divider{display:flex;align-items:center;gap:1rem;max-width:780px;margin:.5rem auto 1.5rem;color:var(--muted);font-size:11px;letter-spacing:.12em;text-transform:uppercase}
+.weg-divider::before,.weg-divider::after{content:'';flex:1;height:1px;background:var(--border)}
+@media(max-width:768px){.dein-weg{padding:4rem 1.5rem}.weg-num{width:44px;height:44px;font-size:1.1rem}.weg-step{gap:1rem}.weg-card{padding:1.2rem 1.3rem}.weg-card h3{font-size:1.15rem}}
+/* Dein Weg – Einstiege */
+.weg-entry-label{text-align:center;font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--text);margin:0 auto 1.5rem}
+.weg-entries{max-width:840px;margin:0 auto 2.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.weg-entry{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.25rem;text-align:center;transition:all .3s}
+.weg-entry:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,0.07)}
+.weg-entry .ico{width:44px;height:44px;margin:0 auto .8rem;background:rgba(55,138,221,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.weg-entry h4{font-family:var(--serif);font-size:1.08rem;font-weight:700;margin-bottom:.35rem}
+.weg-entry p{color:var(--muted);font-size:.85rem;line-height:1.5}
+.weg-connector{display:flex;align-items:center;gap:1rem;max-width:780px;margin:0 auto 2rem;color:var(--blue);font-weight:500;font-size:.95rem;text-align:center}
+.weg-connector::before,.weg-connector::after{content:'';flex:1;height:1px;background:var(--border)}
+@media(max-width:768px){.weg-entries{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:480px){.weg-entries{grid-template-columns:1fr}}
+/* Sport-Treppe (dunkle Sektion) */
+.sport-steps-label{font-family:var(--serif);font-size:1.3rem;font-weight:700;color:#fff;margin-bottom:1.25rem}
+.sport-steps{display:flex;flex-direction:column;gap:1rem}
+.sport-step{display:flex;gap:1rem;align-items:flex-start}
+.sport-num{flex:0 0 auto;width:42px;height:42px;border-radius:50%;border:2px solid var(--blue);color:var(--blue-light);font-family:var(--serif);font-weight:700;font-size:1.05rem;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,0.02)}
+.sport-card{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:14px;padding:1.1rem 1.25rem;transition:all .3s}
+.sport-card:hover{background:rgba(55,138,221,0.08);border-color:rgba(55,138,221,0.3);transform:translateX(4px)}
+.sport-card-head{display:flex;align-items:center;gap:.6rem;margin-bottom:.35rem}
+.sport-card-head .ico{font-size:1.3rem}
+.sport-card h4{font-size:1.1rem;font-weight:600;color:#fff;margin:0}
+.sport-card p{font-size:.98rem;color:rgba(255,255,255,0.45);line-height:1.6}
+.sport-tag{display:inline-block;margin-top:.7rem;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-light);background:rgba(55,138,221,0.12);padding:4px 11px;border-radius:40px}
 </style>
 </head>
 <body>
@@ -602,6 +644,83 @@ html { scroll-behavior: smooth; }
   </div>
 </section>
 
+<section class="dein-weg" id="dein-weg">
+  <div class="section-header fade-up">
+    <span class="section-tag">Dein Weg</span>
+    <h2>So werden wir gemeinsam stärker</h2>
+    <p>Es gibt viele Wege, wie wir zusammenkommen – und einen klaren Weg, den wir dann gemeinsam gehen.</p>
+  </div>
+  <div class="weg-entry-label fade-up">Welche Wege führen zu mir</div>
+  <div class="weg-entries fade-up">
+    <div class="weg-entry">
+      <div class="ico">🎤</div>
+      <h4>Expertenrunde</h4>
+      <p>Kostenlose Impulsrunde, online oder vor Ort.</p>
+    </div>
+    <div class="weg-entry">
+      <div class="ico">🤝</div>
+      <h4>Empfehlung</h4>
+      <p>Jemand, dem ich geholfen habe, bringt uns zusammen.</p>
+    </div>
+    <div class="weg-entry">
+      <div class="ico">📱</div>
+      <h4>Social Media</h4>
+      <p>Du folgst meinen Impulsen und meldest dich.</p>
+    </div>
+    <div class="weg-entry">
+      <div class="ico">📅</div>
+      <h4>Direkte Anfrage</h4>
+      <p>Du buchst direkt ein kostenloses Erstgespräch.</p>
+    </div>
+    <div class="weg-entry">
+      <div class="ico">🏟️</div>
+      <h4>Netzwerk &amp; Sport</h4>
+      <p>Wir kennen uns aus Netzwerk oder Sport-Kontakten.</p>
+    </div>
+    <div class="weg-entry">
+      <div class="ico">🏃</div>
+      <h4>In Bewegung</h4>
+      <p>Wir lernen uns beim gemeinsamen Sport kennen.</p>
+    </div>
+  </div>
+  <div class="weg-connector fade-up">… und dann gehen wir gemeinsam diesen Weg</div>
+  <div class="weg-steps">
+    <div class="weg-step fade-up">
+      <div class="weg-num">1</div>
+      <div class="weg-card">
+        <div class="weg-card-head"><span class="weg-icon">🔍</span><h3>Analyse</h3></div>
+        <p>Wir schauen persönlich auf deinen Ist-Stand und deine Ziele. Du bekommst deine Übersicht auf einer Seite – zum Behalten und Zeigen.</p>
+        <span class="weg-tag">kostenfrei · dein OnePager</span>
+      </div>
+    </div>
+    <div class="weg-divider fade-up">ab hier dein persönlicher Weg</div>
+    <div class="weg-step fade-up">
+      <div class="weg-num">2</div>
+      <div class="weg-card">
+        <div class="weg-card-head"><span class="weg-icon">⚙️</span><h3>Auswertung</h3></div>
+        <p>Jetzt arbeite ich für dich: individuell, nach deinen Bedürfnissen, baue ich aus deinen Zahlen und Zielen die passende Strategie.</p>
+        <span class="weg-tag">deine Strategie entsteht</span>
+      </div>
+    </div>
+    <div class="weg-step fade-up">
+      <div class="weg-num">3</div>
+      <div class="weg-card">
+        <div class="weg-card-head"><span class="weg-icon">🧭</span><h3>Beratung</h3></div>
+        <p>Du bekommst meinen Strategievorschlag: dein konkreter Weg, die Wirkung in Euro über die Jahre, deine Vermögens-Strategie – und das passende Angebot. Du entscheidest die Richtung.</p>
+        <span class="weg-tag">dein Strategievorschlag</span>
+      </div>
+    </div>
+    <div class="weg-step fade-up">
+      <div class="weg-num">4</div>
+      <div class="weg-card">
+        <div class="weg-card-head"><span class="weg-icon">🤝</span><h3>Zusammenarbeit</h3></div>
+        <p>Wir bleiben langfristig dran: feste Gespräche – mindestens einmal im Jahr. Weil sich dein Leben ändert, bleibt deine Strategie immer auf dem aktuellen Stand.</p>
+        <span class="weg-tag">langfristig · jährlicher Check-in</span>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="performance" id="performance">
   <div class="performance-header fade-up">
     <span class="section-tag">Performance Coaching</span>
@@ -614,14 +733,13 @@ html { scroll-behavior: smooth; }
       <span class="perf-steck-icon">🎾</span>
       <div><strong>Performance Coach</strong><span>4winners – Leiter Fitness & Athletik</span></div>
     </div>
-    <div class="perf-steck-item expandable-card" data-detail="Individuell programmiertes Athletiktraining — angepasst an deine Ziele, deine Belastbarkeit und deinen Alltag. Kein Einheitsprogramm, sondern ein System das zu dir passt.">
+    <div class="perf-steck-item">
       <span class="perf-steck-icon">🏋️</span>
       <div><strong>Athletiktraining</strong><span>Kraft · Schnelligkeit · Ausdauer · Beweglichkeit · Gesundheit</span></div>
-      <span class="expand-arrow">›</span>
     </div>
     <div class="perf-steck-item">
       <span class="perf-steck-icon">🎓</span>
-      <div><strong>Ausbilder & Dozent</strong><span>B.Sc. Prävention, Therapie & Reha · staatl. gepr. Sport- & Gymnastiklehrer</span></div>
+      <div><strong>Ausbilder & Dozent</strong><span>Ausbilder für staatl. gepr. Sport- & Gymnastiklehrer an der Kiedaisch-Schule · B.Sc. Prävention, Therapie & Reha</span></div>
     </div>
     <div class="perf-steck-item">
       <span class="perf-steck-icon">🏅</span>
@@ -630,6 +748,10 @@ html { scroll-behavior: smooth; }
     <div class="perf-steck-item">
       <span class="perf-steck-icon">🎯</span>
       <div><strong>Fokus</strong><span>Verletzungsprävention · individuelle Leistungssteigerung · 1:1 & Gruppe</span></div>
+    </div>
+    <div class="perf-steck-item">
+      <span class="perf-steck-icon">🎽</span>
+      <div><strong>Athleten-Workshops</strong><span>Organisiert und leitet Workshops für Athleten</span></div>
     </div>
   </div>
 
@@ -648,26 +770,38 @@ html { scroll-behavior: smooth; }
       </div>
     </div>
     <div class="performance-content fade-up">
-      <div class="perf-cards">
-        <div class="perf-card">
-          <div class="perf-card-icon">🎯</div>
-          <div>
-            <h4>Quick-Check</h4>
-            <p>60 Minuten — wir analysieren deinen Status quo: Bewegung, Energie, Belastbarkeit. Du bekommst einen klaren Fahrplan.</p>
+      <div class="sport-steps-label">So trainieren wir zusammen</div>
+      <div class="sport-steps">
+        <div class="sport-step">
+          <div class="sport-num">1</div>
+          <div class="sport-card">
+            <div class="sport-card-head"><span class="ico">🔍</span><h4>Check</h4></div>
+            <p>Standortbestimmung: Bewegung, Belastbarkeit und Ziele. Wir sehen genau, wo du stehst.</p>
+            <span class="sport-tag">kostenfrei · dein Status</span>
           </div>
         </div>
-        <div class="perf-card">
-          <div class="perf-card-icon">⚡</div>
-          <div>
-            <h4>90-Min-Workshop</h4>
-            <p>Kompakter Impuls für Einzelpersonen oder Teams. Von Theorie direkt in die Praxis — mit einem Handlungsschritt, den du sofort umsetzt.</p>
+        <div class="sport-step">
+          <div class="sport-num">2</div>
+          <div class="sport-card">
+            <div class="sport-card-head"><span class="ico">📋</span><h4>Plan</h4></div>
+            <p>Dein individueller Trainingsplan — abgestimmt auf Ziel, Belastbarkeit und Alltag. Kein Einheitsprogramm.</p>
+            <span class="sport-tag">dein Fahrplan</span>
           </div>
         </div>
-        <div class="perf-card">
-          <div class="perf-card-icon">🔥</div>
-          <div>
-            <h4>6-Wochen-Sprint</h4>
-            <p>Intensiver Begleitprozess für nachhaltige Veränderung. Bewegung, Regeneration und mentale Stärke — strukturiert und messbar.</p>
+        <div class="sport-step">
+          <div class="sport-num">3</div>
+          <div class="sport-card">
+            <div class="sport-card-head"><span class="ico">🏋️</span><h4>Training</h4></div>
+            <p>Wir arbeiten gemeinsam: strukturiert, sicher und mit echtem Fortschritt — 1:1 oder in der Gruppe.</p>
+            <span class="sport-tag">gemeinsam stark</span>
+          </div>
+        </div>
+        <div class="sport-step">
+          <div class="sport-num">4</div>
+          <div class="sport-card">
+            <div class="sport-card-head"><span class="ico">🔄</span><h4>Dranbleiben</h4></div>
+            <p>Langfristige Begleitung: nachjustieren, dranbleiben, nachhaltig verändern — bis es sitzt.</p>
+            <span class="sport-tag">langfristig</span>
           </div>
         </div>
       </div>
@@ -738,6 +872,15 @@ html { scroll-behavior: smooth; }
         <a href="https://outlook.office.com/book/ThorbenReimer1@thorbenreimer.de/" target="_blank" class="news-link">Termin anfragen →</a>
       </div>
     </div>
+    <div class="news-card fade-up">
+      <div class="news-body">
+        <span class="news-cat">Sport-Event</span>
+        <div class="news-date">Oktober 2026</div>
+        <div class="news-title">Tennis-Performance-Workshop</div>
+        <div class="news-text">Ein intensives Wochenende für Tennis-Athleten und ihre Eltern: Technik, Athletik und mentale Stärke vereint — mit erfahrenem A-Trainer und Ernährungsexpertise. Plätze begrenzt.</div>
+        <a href="mailto:kontakt@thorbenreimer.de?subject=Tennis-Performance-Workshop Okt 2026" class="news-link">Platz sichern →</a>
+      </div>
+    </div>
     <div class="news-placeholder fade-up">
       <div style="font-size:2rem;margin-bottom:.5rem">✏️</div>
       <p>Hier erscheinen bald neue Termine &amp; Impulse.</p>
@@ -763,7 +906,7 @@ html { scroll-behavior: smooth; }
       <div class="kontakt-item"><div class="k-icon">📱</div><a href="tel:+4915156165578">0151 56 165 578</a></div>
       <div class="kontakt-item"><div class="k-icon">✉️</div><a href="mailto:kontakt@thorbenreimer.de">kontakt@thorbenreimer.de</a></div>
       <div class="kontakt-item"><div class="k-icon">📍</div><span>Aichtal, Baden-Württemberg</span></div>
-      <div class="kontakt-item"><div class="k-icon" style="background:transparent;padding:0"><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'><path fill='#0A66C2' d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg></div><a href="https://www.linkedin.com/in/thorben-reimer" target="_blank">Thorben Reimer</a></div>
+      <div class="kontakt-item"><div class="k-icon" style="background:transparent;padding:0"><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'><path fill='#0A66C2' d='M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z'/></svg></div><a href="https://www.linkedin.com/in/thorben-reimer-07979a1a8/" target="_blank">Thorben Reimer</a></div>
       <div class="kontakt-item"><div class="k-icon" style="background:transparent;padding:0"><svg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24'><defs><radialGradient id='ig1' cx='30%' cy='107%' r='150%'><stop offset='0%' stop-color='#fdf497'/><stop offset='45%' stop-color='#fd5949'/><stop offset='60%' stop-color='#d6249f'/><stop offset='90%' stop-color='#285AEB'/></radialGradient></defs><path fill='url(#ig1)' d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z'/></svg></div><a href="https://www.instagram.com/coachthorben" target="_blank">@coachthorben</a></div>
     </div>
   </div>
