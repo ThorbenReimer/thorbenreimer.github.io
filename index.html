@@ -170,11 +170,11 @@ footer a:hover{color:rgba(255,255,255,0.6)}
 
 
 .perf-steckbrief{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:.75rem;margin-bottom:3rem}
-.perf-steck-item{display:flex;align-items:flex-start;gap:.75rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1rem;transition:background .3s}
+.perf-steck-item{display:flex;align-items:flex-start;gap:.9rem;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:1.2rem;transition:background .3s}
 .perf-steck-item:hover{background:rgba(55,138,221,0.08)}
-.perf-steck-icon{font-size:1.3rem;flex-shrink:0;margin-top:1px}
-.perf-steck-item strong{display:block;font-size:1.05rem;font-weight:600;color:#fff;margin-bottom:2px}
-.perf-steck-item span{font-size:.95rem;color:rgba(255,255,255,0.4);line-height:1.5}
+.perf-steck-icon{font-size:2.4rem;line-height:1;flex-shrink:0;width:50px;height:50px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:12px;position:relative;z-index:2;opacity:1}
+.perf-steck-item strong{display:block;font-size:1.2rem;font-weight:600;color:#fff;margin-bottom:3px}
+.perf-steck-item span{font-size:1.05rem;color:rgba(255,255,255,0.5);line-height:1.55}
 
 
 .ueber{padding:6rem 5rem;background:var(--dark)}
@@ -422,7 +422,7 @@ html { scroll-behavior: smooth; }
 .weg-entry-label{text-align:center;font-family:var(--serif);font-size:1.4rem;font-weight:700;color:var(--text);margin:0 auto 1.5rem}
 .weg-entries{max-width:840px;margin:0 auto 2.5rem;display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
 .weg-entry{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:1.4rem 1.25rem;text-align:center;transition:all .3s}
-.weg-entry:hover{transform:translateY(-4px);box-shadow:0 16px 32px rgba(0,0,0,0.07)}
+/* weg-entry: keine Hover-Animation (statische Kacheln) */
 .weg-entry .ico{width:44px;height:44px;margin:0 auto .8rem;background:rgba(55,138,221,0.1);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
 .weg-entry h4{font-family:var(--serif);font-size:1.08rem;font-weight:700;margin-bottom:.35rem}
 .weg-entry p{color:var(--muted);font-size:.85rem;line-height:1.5}
@@ -442,6 +442,55 @@ html { scroll-behavior: smooth; }
 .sport-card h4{font-size:1.1rem;font-weight:600;color:#fff;margin:0}
 .sport-card p{font-size:.98rem;color:rgba(255,255,255,0.45);line-height:1.6}
 .sport-tag{display:inline-block;margin-top:.7rem;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--blue-light);background:rgba(55,138,221,0.12);padding:4px 11px;border-radius:40px}
+
+/* === Split-Screen Treppen (Finanzberatung | Performance) === */
+.duo-tabs{display:none;gap:.5rem;max-width:1000px;margin:0 auto;justify-content:center}
+.duo-tab{font-family:var(--sans);font-size:14px;font-weight:500;padding:11px 22px;border-radius:40px;border:1px solid var(--border);background:var(--surface);color:var(--muted);cursor:pointer;transition:all .2s}
+.duo-tab.active{background:var(--dark);color:#fff;border-color:var(--dark)}
+.duo-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;max-width:1000px;margin:1.5rem auto 0;align-items:start}
+.duo-col{background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:1.85rem 1.6rem;position:relative;overflow:hidden;box-shadow:0 12px 30px rgba(0,0,0,0.04)}
+.duo-col::before{content:'';position:absolute;top:0;left:0;right:0;height:4px}
+.duo-fin::before{background:var(--blue)}
+.duo-perf::before{background:var(--dark)}
+.duo-col-head{display:flex;align-items:center;gap:.7rem;margin-bottom:.35rem}
+.duo-ico{font-size:1.5rem}
+.duo-col h3{font-family:var(--serif);font-size:1.5rem;font-weight:700;margin:0}
+.duo-col-sub{color:var(--muted);font-size:.95rem;margin-bottom:1.5rem;line-height:1.5}
+.duo-step{display:flex;gap:.9rem;padding-bottom:1.1rem;margin-bottom:1.1rem;border-bottom:1px solid var(--border)}
+.duo-step:last-child{border-bottom:none;padding-bottom:0;margin-bottom:0}
+.duo-num{flex:0 0 auto;width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-weight:700;font-size:1rem}
+.duo-fin .duo-num{background:rgba(55,138,221,0.12);color:var(--blue)}
+.duo-perf .duo-num{background:rgba(22,30,46,0.08);color:var(--dark)}
+.duo-step-body h4{font-size:1.1rem;font-weight:600;margin-bottom:.3rem}
+.duo-step-body p{color:var(--muted);font-size:.95rem;line-height:1.6;margin-bottom:.55rem}
+.duo-tag{display:inline-block;font-size:11px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:4px 11px;border-radius:40px}
+.duo-fin .duo-tag{color:var(--blue);background:rgba(55,138,221,0.1)}
+.duo-perf .duo-tag{color:var(--dark);background:rgba(22,30,46,0.07)}
+@media(max-width:900px){
+  .duo-tabs{display:flex}
+  .duo-grid{grid-template-columns:1fr;margin-top:1.25rem}
+  .duo-col{display:none}
+  .duo-col.active{display:block}
+}
+
+/* === Finanzberatung im Detail (hell, anklickbar) === */
+.fin-detail{padding:6rem 5rem;background:var(--surface)}
+.fin-group-label{max-width:1000px;margin:2.25rem auto 1rem;font-family:var(--serif);font-size:1.3rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:.6rem}
+.fin-group-label:first-of-type{margin-top:.5rem}
+.fin-group-label .lab-ico{font-size:1.25rem}
+.fin-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:.85rem;max-width:1000px;margin:0 auto;align-items:start}
+.fin-item{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:1.25rem 1.4rem;cursor:pointer;transition:background .3s,border-color .3s}
+.fin-item:hover{border-color:rgba(55,138,221,0.35)}
+.fin-item.open{background:rgba(55,138,221,0.04);border-color:rgba(55,138,221,0.3)}
+.fin-head{display:flex;align-items:center;gap:.7rem}
+.fin-icon{font-size:1.4rem;flex-shrink:0}
+.fin-head strong{flex:1;font-size:1.08rem;font-weight:600;color:var(--text)}
+.fin-arrow{color:var(--blue);font-size:1.4rem;line-height:1;transition:transform .3s;flex-shrink:0}
+.fin-item.open .fin-arrow{transform:rotate(90deg)}
+.fin-teaser{display:block;font-size:.92rem;color:var(--muted);line-height:1.5;margin:.45rem 0 0 2.1rem}
+.fin-more{max-height:0;overflow:hidden;opacity:0;transition:max-height .4s cubic-bezier(.16,1,.3,1),opacity .3s;font-size:.93rem;color:var(--muted);line-height:1.65;margin-left:2.1rem}
+.fin-item.open .fin-more{max-height:240px;opacity:1;margin-top:.7rem;padding-top:.7rem;border-top:1px solid var(--border)}
+@media(max-width:768px){.fin-detail{padding:4rem 1.5rem}.fin-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -474,103 +523,7 @@ html { scroll-behavior: smooth; }
   </div>
 </section>
 
-<section class="parallelen" id="parallelen">
-  <div class="section-header fade-up">
-    <span class="section-tag">Das Prinzip</span>
-    <h2>Finanzen funktionieren wie Sport.</h2>
-    <p>Wer das versteht, denkt anders über Geld — und über sich selbst.</p>
-  </div>
-  <div class="par-grid">
-    <div class="par-card fade-up">
-      <div class="par-card-inner">
-        <div class="par-front">
-          <div class="par-top"><span class="par-sport">Trainingsplan</span><span class="par-arrow">→</span><span class="par-fin">Finanzstrategie</span></div>
-          <div class="par-title">Kein Ergebnis ohne Plan.</div>
-          <div class="par-hint">↗ hover / tippen</div>
-        </div>
-        <div class="par-back">
-          <span class="par-back-label">Die Parallele</span>
-          <div class="par-back-title">Kein Ergebnis ohne Plan.</div>
-          <div class="par-back-text">Wer ins Training geht ohne Richtung, tritt auf der Stelle. Genauso beim Vermögensaufbau — Zufälle funktionieren nicht, Systeme schon.</div>
-        </div>
-      </div>
-    </div>
-    <div class="par-card fade-up">
-      <div class="par-card-inner">
-        <div class="par-front">
-          <div class="par-top"><span class="par-sport">Regeneration</span><span class="par-arrow">→</span><span class="par-fin">2-Konto-System</span></div>
-          <div class="par-title">Struktur schafft Freiheit.</div>
-          <div class="par-hint">↗ hover / tippen</div>
-        </div>
-        <div class="par-back">
-          <span class="par-back-label">Die Parallele</span>
-          <div class="par-back-title">Struktur schafft Freiheit.</div>
-          <div class="par-back-text">Klare Trennung zwischen Konsum und Aufbau gibt Sicherheit — und echten Spielraum. Im Sport wie in den Finanzen.</div>
-        </div>
-      </div>
-    </div>
-    <div class="par-card fade-up">
-      <div class="par-card-inner">
-        <div class="par-front">
-          <div class="par-top"><span class="par-sport">Umgebung</span><span class="par-arrow">→</span><span class="par-fin">Finanz-Ökosystem</span></div>
-          <div class="par-title">Umfeld entscheidet mit.</div>
-          <div class="par-hint">↗ hover / tippen</div>
-        </div>
-        <div class="par-back">
-          <span class="par-back-label">Die Parallele</span>
-          <div class="par-back-title">Umfeld entscheidet mit.</div>
-          <div class="par-back-text">Die richtigen Partner, Strukturen und Gewohnheiten machen den Unterschied — im Sport wie in den Finanzen.</div>
-        </div>
-      </div>
-    </div>
-    <div class="par-card fade-up">
-      <div class="par-card-inner">
-        <div class="par-front">
-          <div class="par-top"><span class="par-sport">Coach</span><span class="par-arrow">→</span><span class="par-fin">Finanzberater</span></div>
-          <div class="par-title">Einer, der das Ganze sieht.</div>
-          <div class="par-hint">↗ hover / tippen</div>
-        </div>
-        <div class="par-back">
-          <span class="par-back-label">Die Parallele</span>
-          <div class="par-back-title">Einer, der das Ganze sieht.</div>
-          <div class="par-back-text">Ein guter Coach sieht nicht nur die Übung — er sieht den Menschen dahinter. Ich begleite dich nicht mit Produkten, sondern mit Perspektive.</div>
-        </div>
-      </div>
-    </div>
-    <div class="par-card fade-up">
-      <div class="par-card-inner">
-        <div class="par-front">
-          <div class="par-top"><span class="par-sport">Athletentyp</span><span class="par-arrow">→</span><span class="par-fin">Finanzprofil</span></div>
-          <div class="par-title">Nicht jeder braucht dasselbe.</div>
-          <div class="par-hint">↗ hover / tippen</div>
-        </div>
-        <div class="par-back">
-          <span class="par-back-label">Die Parallele</span>
-          <div class="par-back-title">Nicht jeder braucht dasselbe.</div>
-          <div class="par-back-text">Ein Sprinter trainiert anders als ein Marathonläufer. Dein Finanzplan ist so individuell wie du — pauschale Lösungen gibt es bei mir nicht.</div>
-        </div>
-      </div>
-    </div>
-    <div class="par-card fade-up">
-      <div class="par-card-inner">
-        <div class="par-front">
-          <div class="par-top"><span class="par-sport">Großes Ziel</span><span class="par-arrow">→</span><span class="par-fin">Deine Ziele</span></div>
-          <div class="par-title">Erst das Ziel, dann der Weg.</div>
-          <div class="par-hint">↗ hover / tippen</div>
-        </div>
-        <div class="par-back">
-          <span class="par-back-label">Die Parallele</span>
-          <div class="par-back-title">Erst das Ziel, dann der Weg.</div>
-          <div class="par-back-text">Kein Athlet trainiert ins Blaue. Was ist dein Ziel — Wohntraum, Ruhestand, Freiheit? Das Gespräch beginnt immer hier.</div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="par-cta fade-up">
-    <p>Neugierig, wie dein persönlicher Finanzplan aussieht?</p>
-    <a href="https://outlook.office.com/book/ThorbenReimer1@thorbenreimer.de/" target="_blank" class="btn-primary" style="font-size:14px;padding:13px 28px">Jetzt gemeinsam starten</a>
-  </div>
-</section>
+
 
 <section class="ueber" id="ueber-mich">
   <div class="ueber-inner">
@@ -584,12 +537,34 @@ html { scroll-behavior: smooth; }
       <p>Die meisten Berater reden über Zahlen. Ich rede über Leistung. Was mich von anderen unterscheidet: Ich denke Körper und Kapital zusammen — fundiert ausgebildet in beiden Welten.</p>
       <p>Ich weiß, dass die Prinzipien des Leistungssports — Planung, Konsequenz, Regeneration, Coaching — genauso im Finanzleben funktionieren. Wer das einmal versteht, denkt anders. Handelt anders. Erreicht mehr.</p>
       <p>Bei mir steht der Mensch im Mittelpunkt — nicht der Vertrag. Meine Kunden sind Unternehmer und Privatpersonen, die Höchstleistung nicht nur im Job wollen — sondern auch finanziell. Das ist mein Anspruch.</p>
-      <div class="ueber-facts">
-        <div class="fact"><span class="fact-num" data-target="20">0</span><span class="fact-label">Jahre im Sport</span></div>
-        <div class="fact"><span class="fact-num" data-target="10">0</span><span class="fact-label">Jahre Coaching</span></div>
-        <div class="fact"><span class="fact-num" data-target="2">0</span><span class="fact-label">Welten, eine Expertise</span></div>
-      </div>
       <a href="#leistungen" class="btn-primary" style="display:inline-block;margin-top:1.5rem">Meine Leistungen entdecken</a>
+    </div>
+  </div>
+</section>
+<section class="warum" id="warum">
+  <div class="section-header fade-up">
+    <span class="section-tag">Warum Thorben Reimer</span>
+    <h2>Was mich anders macht</h2>
+  </div>
+  <div class="punkte">
+    <div class="punkt fade-up">
+      <div class="punkt-num">01</div>
+      <div class="punkt-body"><h4>Zwei Welten — eine Expertise</h4><p>Ich bin nicht nur Finanzberater oder nur Coach. Ich verbinde beide Disziplinen auf einem Niveau, das kein anderer hat.</p></div>
+    </div>
+    <div class="punkt fade-up">
+      <div class="punkt-num">02</div>
+      <div class="punkt-body"><h4>Mensch im Mittelpunkt</h4><p>Bei mir steht nicht der Abschluss im Vordergrund — sondern deine Situation, deine Ziele und dein Leben.</p></div>
+    </div>
+    <div class="punkt fade-up">
+      <div class="punkt-num">03</div>
+      <div class="punkt-body">
+        <h4>Höchst ausgebildet in beiden Feldern</h4>
+        <p>Im Sport: akademisch ausgebildet in Prävention, Therapie &amp; Reha — über 20 Jahre in Athletik, Gesundheit &amp; Bewegung.<br><br>In den Finanzen: hauptberuflich in der Beratung, stetig weitergebildet — mit demselben Anspruch an Qualität und Tiefe.<br><br>Zusammen: über 10 Jahre Erfahrung im Coaching und im direkten Umgang mit Menschen.</p>
+      </div>
+    </div>
+    <div class="punkt fade-up">
+      <div class="punkt-num">04</div>
+      <div class="punkt-body"><h4>Mit Leichtigkeit zum Ziel</h4><p>Finanzen müssen kein trockenes Thema sein. Ich mache es verständlich, umsetzbar — und mit echtem Spaß an der Sache.</p></div>
     </div>
   </div>
 </section>
@@ -601,7 +576,7 @@ html { scroll-behavior: smooth; }
   </div>
     <div class="cards">
     <div class="card fade-up">
-      <div class="card-icon">💼</div>
+      <div class="card-icon">🏢</div>
       <h3>Firmenkundenberatung</h3>
       <p>Ganzheitliche Finanzberatung für Unternehmer und Selbständige — individuell, branchenübergreifend, auf Augenhöhe.</p>
       <p class="tag-hint">👇 Tippe auf einen Punkt für mehr</p>
@@ -637,7 +612,7 @@ html { scroll-behavior: smooth; }
         <span class="tag-pill expandable" data-detail="Du willst stärker werden — körperlich und mental. Strukturiert, sicher und mit echtem Fortschritt.">Strength Coaching</span>
         <span class="tag-pill expandable" data-detail="Du willst Körper und Geist verbinden — für mehr Klarheit, Fokus und Leistung im Alltag und im Business.">Neuro Movement</span>
         <span class="tag-pill expandable" data-detail="Du willst dich sicher bewegen — funktionell, effizient und ohne Kompensationsmuster.">Functional Movement</span>
-        <span class="tag-pill expandable" data-detail="Du willst Bewegung als Teil deines Lebens — nicht als Pflicht, sondern als Werkzeug für Höchstleistung.">Sport- & Gymnastiklehrer</span>
+        <span class="tag-pill expandable" data-detail="Ich bilde Fachkräfte aus – Studenten, Trainer und Athleten. Wissen weiterzugeben ist fester Teil meiner Arbeit.">Ausbildung</span>
       </div>
       <div class="tag-detail"></div>
     </div>
@@ -658,7 +633,7 @@ html { scroll-behavior: smooth; }
       <p>Kostenlose Impulsrunde, online oder vor Ort.</p>
     </div>
     <div class="weg-entry">
-      <div class="ico">🤝</div>
+      <div class="ico">🤝🏻</div>
       <h4>Empfehlung</h4>
       <p>Jemand, dem ich geholfen habe, bringt uns zusammen.</p>
     </div>
@@ -678,46 +653,101 @@ html { scroll-behavior: smooth; }
       <p>Wir kennen uns aus Netzwerk oder Sport-Kontakten.</p>
     </div>
     <div class="weg-entry">
-      <div class="ico">🏃</div>
+      <div class="ico">🏃🏻</div>
       <h4>In Bewegung</h4>
       <p>Wir lernen uns beim gemeinsamen Sport kennen.</p>
     </div>
   </div>
-  <div class="weg-connector fade-up">… und dann gehen wir gemeinsam diesen Weg</div>
-  <div class="weg-steps">
-    <div class="weg-step fade-up">
-      <div class="weg-num">1</div>
-      <div class="weg-card">
-        <div class="weg-card-head"><span class="weg-icon">🔍</span><h3>Analyse</h3></div>
-        <p>Wir schauen persönlich auf deinen Ist-Stand und deine Ziele. Du bekommst deine Übersicht auf einer Seite – zum Behalten und Zeigen.</p>
-        <span class="weg-tag">kostenfrei · dein OnePager</span>
-      </div>
+  <div class="weg-connector fade-up">… und dann gehen wir gemeinsam deinen Weg</div>
+
+  <div class="duo-tabs fade-up" role="tablist">
+    <button class="duo-tab active" data-duo="fin">📈 Finanzberatung</button>
+    <button class="duo-tab" data-duo="perf">🏆 Performance Coaching</button>
+  </div>
+
+  <div class="duo-grid fade-up">
+    <div class="duo-col duo-fin active" data-duo-col="fin">
+      <div class="duo-col-head"><span class="duo-ico">📈</span><h3>Finanzberatung</h3></div>
+      <p class="duo-col-sub">Dein Weg zu finanzieller Klarheit – Schritt für Schritt.</p>
+      <div class="duo-step"><div class="duo-num">1</div><div class="duo-step-body"><h4>Analyse</h4><p>Wir schauen persönlich auf deinen Ist-Stand und deine Ziele. Du bekommst deine Übersicht auf einer Seite – zum Behalten und Zeigen.</p><span class="duo-tag">kostenfrei · dein OnePager</span></div></div>
+      <div class="duo-step"><div class="duo-num">2</div><div class="duo-step-body"><h4>Auswertung</h4><p>Jetzt arbeite ich für dich: individuell, nach deinen Bedürfnissen, baue ich aus deinen Zahlen und Zielen die passende Strategie.</p><span class="duo-tag">deine Strategie entsteht</span></div></div>
+      <div class="duo-step"><div class="duo-num">3</div><div class="duo-step-body"><h4>Beratung</h4><p>Du bekommst meinen Strategievorschlag: dein konkreter Weg, die Wirkung in Euro über die Jahre – und das passende Angebot. Du entscheidest die Richtung.</p><span class="duo-tag">dein Strategievorschlag</span></div></div>
+      <div class="duo-step"><div class="duo-num">4</div><div class="duo-step-body"><h4>Zusammenarbeit</h4><p>Wir bleiben langfristig dran: feste Gespräche – mindestens einmal im Jahr. Weil sich dein Leben ändert, bleibt deine Strategie aktuell.</p><span class="duo-tag">langfristig · jährlicher Check-in</span></div></div>
     </div>
-    <div class="weg-divider fade-up">ab hier dein persönlicher Weg</div>
-    <div class="weg-step fade-up">
-      <div class="weg-num">2</div>
-      <div class="weg-card">
-        <div class="weg-card-head"><span class="weg-icon">⚙️</span><h3>Auswertung</h3></div>
-        <p>Jetzt arbeite ich für dich: individuell, nach deinen Bedürfnissen, baue ich aus deinen Zahlen und Zielen die passende Strategie.</p>
-        <span class="weg-tag">deine Strategie entsteht</span>
-      </div>
+    <div class="duo-col duo-perf" data-duo-col="perf">
+      <div class="duo-col-head"><span class="duo-ico">🏆</span><h3>Performance Coaching</h3></div>
+      <p class="duo-col-sub">Dein Weg zu mehr Energie und Belastbarkeit – Schritt für Schritt.</p>
+      <div class="duo-step"><div class="duo-num">1</div><div class="duo-step-body"><h4>Erstgespräch</h4><p>Wir lernen uns kennen und klären, ob und wie ich dir helfen kann. Unverbindlich.</p><span class="duo-tag">kostenfrei</span></div></div>
+      <div class="duo-step"><div class="duo-num">2</div><div class="duo-step-body"><h4>Check</h4><p>Standortbestimmung: Bewegung, Belastbarkeit und Ziele. Wir sehen genau, wo du stehst.</p><span class="duo-tag">kostenpflichtig · deine Analyse</span></div></div>
+      <div class="duo-step"><div class="duo-num">3</div><div class="duo-step-body"><h4>Trainingsplan</h4><p>Dein individueller Trainingsplan – abgestimmt auf Ziel, Belastbarkeit und Alltag. Kein Einheitsprogramm.</p><span class="duo-tag">dein Fahrplan</span></div></div>
+      <div class="duo-step"><div class="duo-num">4</div><div class="duo-step-body"><h4>Training</h4><p>Wir arbeiten gemeinsam: strukturiert, sicher und mit echtem Fortschritt – 1:1 oder in der Gruppe.</p><span class="duo-tag">gemeinsam stark</span></div></div>
+      <div class="duo-step"><div class="duo-num">5</div><div class="duo-step-body"><h4>Dranbleiben</h4><p>Langfristige Begleitung: nachjustieren, dranbleiben, nachhaltig verändern – bis es sitzt.</p><span class="duo-tag">langfristig</span></div></div>
     </div>
-    <div class="weg-step fade-up">
-      <div class="weg-num">3</div>
-      <div class="weg-card">
-        <div class="weg-card-head"><span class="weg-icon">🧭</span><h3>Beratung</h3></div>
-        <p>Du bekommst meinen Strategievorschlag: dein konkreter Weg, die Wirkung in Euro über die Jahre, deine Vermögens-Strategie – und das passende Angebot. Du entscheidest die Richtung.</p>
-        <span class="weg-tag">dein Strategievorschlag</span>
-      </div>
+  </div>
+</section>
+
+<section class="fin-detail" id="finanzberatung">
+  <div class="section-header fade-up">
+    <span class="section-tag">Finanzberatung</span>
+    <h2>Finanzen, ganzheitlich gedacht.</h2>
+    <p>Von der Vorsorge bis zum Vermögensaufbau — ich schaue auf das große Ganze, nicht auf einzelne Produkte. Tippe auf ein Thema für mehr.</p>
+  </div>
+
+  <div class="fin-group-label fade-up"><span class="lab-ico">👤</span>Für dich privat</div>
+  <div class="fin-grid fade-up">
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">🛋️</span><strong>Vorsorge & Ruhestand</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Im Alter so leben wie heute – oder besser.</span>
+      <div class="fin-more">Wir ermitteln deine konkrete Versorgungslücke und kombinieren staatliche, betriebliche und private Bausteine sinnvoll – flexibel genug, um sich deinem Leben anzupassen.</div>
     </div>
-    <div class="weg-step fade-up">
-      <div class="weg-num">4</div>
-      <div class="weg-card">
-        <div class="weg-card-head"><span class="weg-icon">🤝</span><h3>Zusammenarbeit</h3></div>
-        <p>Wir bleiben langfristig dran: feste Gespräche – mindestens einmal im Jahr. Weil sich dein Leben ändert, bleibt deine Strategie immer auf dem aktuellen Stand.</p>
-        <span class="weg-tag">langfristig · jährlicher Check-in</span>
-      </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">🛡️</span><strong>Absicherung</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Ruhig schlafen, auch wenn Unerwartetes passiert.</span>
+      <div class="fin-more">Einkommen, Gesundheit und Familie: Wir prüfen, welche Risiken dich wirklich treffen würden, und sichern gezielt das ab, was zählt – ohne Überversicherung.</div>
     </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">🏡</span><strong>Wohnen & Immobilien</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Eigentum aufbauen, ohne auf alles andere zu verzichten.</span>
+      <div class="fin-more">Von der Finanzierungsstruktur bis zur Anschlussplanung schauen wir, was tragbar ist und wie sich der Traum mit deinen übrigen Zielen verträgt.</div>
+    </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">📊</span><strong>Vermögensaufbau & Investment</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Dein Geld arbeitet mit – nicht nur du allein.</span>
+      <div class="fin-more">Kapitalmarktorientiert, breit gestreut und verständlich erklärt. Deine Strategie richtet sich nach Ziel und Zeithorizont – nicht nach Trend oder Bauchgefühl.</div>
+    </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">💶</span><strong>Liquidität & Überblick</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Wissen, was rein- und rausgeht – und was bleibt.</span>
+      <div class="fin-more">Ein klares System für deinen Alltag: Konsum und Aufbau getrennt, Rücklagen definiert. So behältst du Spielraum und Kontrolle.</div>
+    </div>
+  </div>
+
+  <div class="fin-group-label fade-up"><span class="lab-ico">🏢</span>Für dein Unternehmen</div>
+  <div class="fin-grid fade-up">
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">🏦</span><strong>Liquidität & Finanzierung</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Wissen, was dein Unternehmen wirklich trägt.</span>
+      <div class="fin-more">Wir schauen auf Liquidität, Finanzierungsstruktur und ungenutztes Potenzial – damit dein Betrieb finanziell stabil und handlungsfähig bleibt.</div>
+    </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">🛡️</span><strong>Betriebliche Absicherung</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Der Betrieb läuft weiter – auch wenn du es nicht kannst.</span>
+      <div class="fin-more">Absicherung von Schlüsselpersonen, Betriebsrisiken und dir selbst – für dich, dein Unternehmen und deine Familie.</div>
+    </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">🤝🏻</span><strong>Mitarbeiterbindung</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Gute Leute halten – mit mehr als Gehalt.</span>
+      <div class="fin-more">Betriebliche Vorsorge und Benefits, die wirken: ein Paket, das deine Mitarbeiter bindet und dich als Arbeitgeber attraktiv macht.</div>
+    </div>
+    <div class="fin-item">
+      <div class="fin-head"><span class="fin-icon">👨🏻‍💼</span><strong>Geschäftsführer-Vorsorge</strong><span class="fin-arrow">›</span></div>
+      <span class="fin-teaser">Privat wie geschäftlich optimal aufgestellt.</span>
+      <div class="fin-more">Als Unternehmer denkst du beides zusammen – deine private und betriebliche Strategie greifen ineinander, heute und langfristig.</div>
+    </div>
+  </div>
+
+  <div style="text-align:center;margin-top:2.5rem">
+    <a href="https://outlook.office.com/book/ThorbenReimer1@thorbenreimer.de/" target="_blank" class="btn-primary" style="display:inline-block">Erstgespräch vereinbaren</a>
   </div>
 </section>
 
@@ -730,11 +760,11 @@ html { scroll-behavior: smooth; }
 
   <div class="perf-steckbrief fade-up">
     <div class="perf-steck-item">
-      <span class="perf-steck-icon">🎾</span>
-      <div><strong>Performance Coach</strong><span>4winners – Leiter Fitness & Athletik</span></div>
+      <span class="perf-steck-icon">🏆</span>
+      <div><strong>Performance Coach</strong><span><a href="https://4winners.info/fitness/athletik" target="_blank" style="color:var(--blue-light);text-decoration:none">4winners – Leiter Fitness & Athletik ↗</a> · Workshopleiter & Dozent · leitet Athleten-Workshops</span></div>
     </div>
     <div class="perf-steck-item">
-      <span class="perf-steck-icon">🏋️</span>
+      <span class="perf-steck-icon">🏋🏻</span>
       <div><strong>Athletiktraining</strong><span>Kraft · Schnelligkeit · Ausdauer · Beweglichkeit · Gesundheit</span></div>
     </div>
     <div class="perf-steck-item">
@@ -742,101 +772,20 @@ html { scroll-behavior: smooth; }
       <div><strong>Ausbilder & Dozent</strong><span>Ausbilder für staatl. gepr. Sport- & Gymnastiklehrer an der Kiedaisch-Schule · B.Sc. Prävention, Therapie & Reha</span></div>
     </div>
     <div class="perf-steck-item">
-      <span class="perf-steck-icon">🏅</span>
+      <span class="perf-steck-icon">💪🏻</span>
       <div><strong>Functional Movement & Strength Coach</strong><span>Neuro Movement Expert · 20+ Jahre Erfahrung im Sport</span></div>
     </div>
     <div class="perf-steck-item">
       <span class="perf-steck-icon">🎯</span>
       <div><strong>Fokus</strong><span>Verletzungsprävention · individuelle Leistungssteigerung · 1:1 & Gruppe</span></div>
     </div>
-    <div class="perf-steck-item">
-      <span class="perf-steck-icon">🎽</span>
-      <div><strong>Athleten-Workshops</strong><span>Organisiert und leitet Workshops für Athleten</span></div>
-    </div>
   </div>
 
-  <div class="performance-grid">
-    <div class="performance-imgs fade-up">
-      <img src="performance.jpg" alt="Thorben Reimer beim Kreuzziehen" class="perf-img-main">
-      <div class="perf-side">
-        <img src="portrait.jpg" alt="Thorben Reimer" class="perf-portrait">
-        <div class="perf-tags">
-          <span class="perf-tag">Trainer</span>
-          <span class="perf-tag">Coach</span>
-          <span class="perf-tag">Ausbilder</span>
-          <span class="perf-tag">Dozent</span>
-        </div>
-        <a href="https://4winners.info/fitness/athletik" target="_blank" class="perf-4winners">🎾 4winners →</a>
-      </div>
-    </div>
-    <div class="performance-content fade-up">
-      <div class="sport-steps-label">So trainieren wir zusammen</div>
-      <div class="sport-steps">
-        <div class="sport-step">
-          <div class="sport-num">1</div>
-          <div class="sport-card">
-            <div class="sport-card-head"><span class="ico">🔍</span><h4>Check</h4></div>
-            <p>Standortbestimmung: Bewegung, Belastbarkeit und Ziele. Wir sehen genau, wo du stehst.</p>
-            <span class="sport-tag">kostenfrei · dein Status</span>
-          </div>
-        </div>
-        <div class="sport-step">
-          <div class="sport-num">2</div>
-          <div class="sport-card">
-            <div class="sport-card-head"><span class="ico">📋</span><h4>Plan</h4></div>
-            <p>Dein individueller Trainingsplan — abgestimmt auf Ziel, Belastbarkeit und Alltag. Kein Einheitsprogramm.</p>
-            <span class="sport-tag">dein Fahrplan</span>
-          </div>
-        </div>
-        <div class="sport-step">
-          <div class="sport-num">3</div>
-          <div class="sport-card">
-            <div class="sport-card-head"><span class="ico">🏋️</span><h4>Training</h4></div>
-            <p>Wir arbeiten gemeinsam: strukturiert, sicher und mit echtem Fortschritt — 1:1 oder in der Gruppe.</p>
-            <span class="sport-tag">gemeinsam stark</span>
-          </div>
-        </div>
-        <div class="sport-step">
-          <div class="sport-num">4</div>
-          <div class="sport-card">
-            <div class="sport-card-head"><span class="ico">🔄</span><h4>Dranbleiben</h4></div>
-            <p>Langfristige Begleitung: nachjustieren, dranbleiben, nachhaltig verändern — bis es sitzt.</p>
-            <span class="sport-tag">langfristig</span>
-          </div>
-        </div>
-      </div>
-      <a href="https://outlook.office.com/book/ThorbenReimer1@thorbenreimer.de/" target="_blank" class="btn-primary" style="margin-top:1.5rem;display:inline-block">Coaching anfragen</a>
-    </div>
+  <div style="text-align:center;margin-top:2.5rem">
+    <a href="https://outlook.office.com/book/ThorbenReimer1@thorbenreimer.de/" target="_blank" class="btn-primary" style="display:inline-block">Coaching anfragen</a>
   </div>
 </section>
 
-<section class="warum" id="warum">
-  <div class="section-header fade-up">
-    <span class="section-tag">Warum Thorben Reimer</span>
-    <h2>Was mich anders macht</h2>
-  </div>
-  <div class="punkte">
-    <div class="punkt fade-up">
-      <div class="punkt-num">01</div>
-      <div class="punkt-body"><h4>Zwei Welten — eine Expertise</h4><p>Ich bin nicht nur Finanzberater oder nur Coach. Ich verbinde beide Disziplinen auf einem Niveau, das kein anderer hat.</p></div>
-    </div>
-    <div class="punkt fade-up">
-      <div class="punkt-num">02</div>
-      <div class="punkt-body"><h4>Mensch im Mittelpunkt</h4><p>Bei mir steht nicht der Abschluss im Vordergrund — sondern deine Situation, deine Ziele und dein Leben.</p></div>
-    </div>
-    <div class="punkt fade-up">
-      <div class="punkt-num">03</div>
-      <div class="punkt-body">
-        <h4>Höchst ausgebildet in beiden Feldern</h4>
-        <p>Im Sport: akademisch ausgebildet in Prävention, Therapie &amp; Reha — über 20 Jahre in Athletik, Gesundheit &amp; Bewegung.<br><br>In den Finanzen: hauptberuflich in der Beratung, stetig weitergebildet — mit demselben Anspruch an Qualität und Tiefe.<br><br>Zusammen: über 10 Jahre Erfahrung im Coaching und im direkten Umgang mit Menschen.</p>
-      </div>
-    </div>
-    <div class="punkt fade-up">
-      <div class="punkt-num">04</div>
-      <div class="punkt-body"><h4>Mit Leichtigkeit zum Ziel</h4><p>Finanzen müssen kein trockenes Thema sein. Ich mache es verständlich, umsetzbar — und mit echtem Spaß an der Sache.</p></div>
-    </div>
-  </div>
-</section>
 
 <section class="aktuelles" id="aktuelles">
   <div class="section-header fade-up">
@@ -918,7 +867,7 @@ html { scroll-behavior: smooth; }
 </section>
 
 <footer>
-  <img src="" alt="TR" style="height:28px;width:auto;display:block;border:none;text-decoration:none">
+  <img src="logo-tr.png" alt="TR" style="height:28px;width:auto;display:block;border:none;text-decoration:none">
   <p>© 2026 Thorben Reimer · Aichtal</p>
   <div style="display:flex;gap:1.5rem">
     <a href="https://www.dvag.de/thorben.reimer/impressum.html" target="_blank">Impressum</a>
@@ -1146,7 +1095,7 @@ document.querySelectorAll('.expandable-card').forEach(function(card) {
   applyStagger('.par-grid');
   applyStagger('.news-grid');
   applyStagger('.punkte');
-  applyStagger('.perf-steckbrief');
+  // perf-steckbrief: keine Transparenz-Animation (Icons satt)
   
   // 5. Über-mich: Karikatur links rein, Text rechts rein
   const ueberImg = document.querySelector('.ueber-img');
@@ -1204,6 +1153,22 @@ document.querySelectorAll('.par-card').forEach(function(card) {
 window.addEventListener('scroll',function(){document.getElementById('nav').classList.toggle('scrolled',window.scrollY>50);});
 const obs=new IntersectionObserver(function(e){e.forEach(function(x){if(x.isIntersecting)x.target.classList.add('visible');});},{threshold:0.1,rootMargin:'0px 0px -50px 0px'});
 document.querySelectorAll('.fade-up').forEach(function(el){obs.observe(el);});
+
+// Split-Screen Tabs (Mobile-Umschaltung Finanzberatung / Performance)
+document.querySelectorAll('.duo-tab').forEach(function(tab){
+  tab.addEventListener('click', function(){
+    var key = tab.getAttribute('data-duo');
+    document.querySelectorAll('.duo-tab').forEach(function(t){ t.classList.toggle('active', t===tab); });
+    document.querySelectorAll('.duo-col').forEach(function(c){ c.classList.toggle('active', c.getAttribute('data-duo-col')===key); });
+  });
+});
+
+
+// Finanzberatung: anklickbare Kacheln (Akkordeon)
+document.querySelectorAll('.fin-item').forEach(function(item){
+  item.addEventListener('click', function(){ item.classList.toggle('open'); });
+});
+
 </script>
 </body>
 </html>
