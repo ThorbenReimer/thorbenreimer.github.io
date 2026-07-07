@@ -165,6 +165,29 @@
   }
   .match-summary strong { color: var(--lightblue); font-size: 20px; }
 
+  .gw-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .gw-label {
+    flex: 0 0 38%;
+    font-size: 14px;
+    font-weight: bold;
+    color: var(--body);
+  }
+  .gw-row input[type=text] {
+    flex: 1;
+    margin-bottom: 0;
+  }
+  .gw-resolution {
+    font-size: 12.5px;
+    color: var(--lightblue);
+    margin: 0 0 14px calc(38% + 8px);
+    min-height: 16px;
+  }
+
   .footer-note {
     text-align: center;
     font-size: 11px;
@@ -182,6 +205,7 @@
     <div class="step-dot" id="dot-1">1</div>
     <div class="step-dot" id="dot-2">2</div>
     <div class="step-dot" id="dot-3">3</div>
+    <div class="step-dot" id="dot-4">4</div>
   </div>
 
   <!-- STEP 1: Test 0 -->
@@ -222,6 +246,15 @@
     <div class="hint" style="margin-top:16px">
       Reflexionsfragen fürs Plenum: Was hat sich verändert? Welcher Wert wurde präzisiert? Wo zeigt sich eine Entgleisung (Wert ohne Gegenwert im Gleichgewicht)?
     </div>
+    <button class="primary" onclick="goToStep4()">Weiter zu den Gegenwerten</button>
+  </div>
+
+  <!-- STEP 4: Gegenwerte -->
+  <div class="panel" id="step4" style="display:none">
+    <h2>Gegenwerte finden</h2>
+    <div class="hint">Zu jedem deiner Top-Werte gibt es einen Gegenwert, der ihn im Gleichgewicht hält (Werte- und Entwicklungsquadrat). Trag ein, was du als Gegenwert vermutest – danach zeigen wir dir einen möglichen Vorschlag. Es gibt nicht die eine richtige Antwort, nur eine sinnvolle Richtung.</div>
+    <div id="gegenwerte-list"></div>
+    <button class="primary" onclick="showResolutions()">Auflösung anzeigen</button>
     <button class="secondary" onclick="restart()">Neu starten</button>
   </div>
 
@@ -229,9 +262,16 @@
 </div>
 
 <script>
+const gegenwertMap = {
+  "Freiheit":"Verantwortung","Neugier":"Fokussierung","Kreativität":"Disziplin","Abwechslung":"Beständigkeit","Abenteuer":"Sicherheit","Unabhängigkeit":"Verbundenheit","Spontaneität":"Verlässlichkeit","Selbstbestimmung":"Rücksichtnahme","Flexibilität":"Standhaftigkeit","Individualität":"Gemeinschaftssinn","Experimentierfreude":"Sorgfalt","Risikobereitschaft":"Vorsicht","Vielfalt":"Klarheit","Innovation":"Tradition","Weltoffenheit":"Verwurzelung",
+  "Erfolg":"Gelassenheit","Leistung":"Erholung","Ehrgeiz":"Zufriedenheit","Anerkennung":"Selbstakzeptanz","Einfluss":"Demut","Genuss":"Maßhalten","Lebensfreude":"Ernsthaftigkeit","Wirksamkeit":"Geduld","Status":"Bescheidenheit","Macht":"Mitgefühl","Karriere":"Familie","Perfektion":"Fehlertoleranz","Exzellenz":"Genügsamkeit","Selbstvertrauen":"Selbstkritik","Wettbewerbsfähigkeit":"Kooperation","Gesundheit":"Genussbereitschaft","Vitalität":"Gelassenheit","Bewegung":"Ruhe","Körperbewusstsein":"Unbekümmertheit","Achtsamkeit":"Spontaneität",
+  "Sicherheit":"Mut","Verlässlichkeit":"Spontaneität","Ordnung":"Flexibilität","Disziplin":"Lockerheit","Tradition":"Innovation","Loyalität":"Eigenständigkeit","Stabilität":"Wandel","Regeltreue":"Kreativität","Beständigkeit":"Abwechslung","Pflichtbewusstsein":"Leichtigkeit","Bescheidenheit":"Selbstbewusstsein","Genügsamkeit":"Ehrgeiz","Kontinuität":"Risikobereitschaft","Vorsicht":"Risikofreude","Gehorsam":"Eigenständigkeit",
+  "Fürsorge":"Grenzen setzen","Mitgefühl":"Abgrenzung","Gerechtigkeit":"Gnade","Nachhaltigkeit":"Genuss im Moment","Verantwortung":"Loslassen","Hilfsbereitschaft":"Selbstfürsorge","Toleranz":"Klare Haltung","Gemeinwohl":"Eigeninteresse","Empathie":"Distanz","Großzügigkeit":"Sparsamkeit","Dankbarkeit":"Ambition","Frieden":"Konfliktbereitschaft","Gleichheit":"Individualität","Solidarität":"Autonomie","Umweltbewusstsein":"Pragmatismus"
+};
+
 const clusters = {
   "Offenheit für Wandel": ["Freiheit","Neugier","Kreativität","Abwechslung","Abenteuer","Unabhängigkeit","Spontaneität","Selbstbestimmung","Flexibilität","Individualität","Experimentierfreude","Risikobereitschaft","Vielfalt","Innovation","Weltoffenheit"],
-  "Selbstverwirklichung": ["Erfolg","Leistung","Ehrgeiz","Anerkennung","Einfluss","Genuss","Lebensfreude","Wirksamkeit","Status","Macht","Karriere","Perfektion","Exzellenz","Selbstvertrauen","Wettbewerbsfähigkeit"],
+  "Selbstverwirklichung": ["Erfolg","Leistung","Ehrgeiz","Anerkennung","Einfluss","Genuss","Lebensfreude","Wirksamkeit","Status","Macht","Karriere","Perfektion","Exzellenz","Selbstvertrauen","Wettbewerbsfähigkeit","Gesundheit","Vitalität","Bewegung","Körperbewusstsein","Achtsamkeit"],
   "Bewahrung": ["Sicherheit","Verlässlichkeit","Ordnung","Disziplin","Tradition","Loyalität","Stabilität","Regeltreue","Beständigkeit","Pflichtbewusstsein","Bescheidenheit","Genügsamkeit","Kontinuität","Vorsicht","Gehorsam"],
   "Selbsttranszendenz": ["Fürsorge","Mitgefühl","Gerechtigkeit","Nachhaltigkeit","Verantwortung","Hilfsbereitschaft","Toleranz","Gemeinwohl","Empathie","Großzügigkeit","Dankbarkeit","Frieden","Gleichheit","Solidarität","Umweltbewusstsein"]
 };
@@ -287,7 +327,7 @@ function updateCounter() {
 }
 
 function setDot(step) {
-  for (let i = 1; i <= 3; i++) {
+  for (let i = 1; i <= 4; i++) {
     const dot = document.getElementById('dot-' + i);
     dot.classList.remove('active', 'done');
     if (i < step) dot.classList.add('done');
@@ -309,6 +349,41 @@ function goToStep3() {
   setDot(3);
   renderComparison();
   window.scrollTo(0,0);
+}
+
+function goToStep4() {
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step4').style.display = 'block';
+  setDot(4);
+  renderGegenwerte();
+  window.scrollTo(0,0);
+}
+
+function renderGegenwerte() {
+  const list = document.getElementById('gegenwerte-list');
+  list.innerHTML = '';
+  selected.forEach((v, i) => {
+    const row = document.createElement('div');
+    row.className = 'gw-row';
+    row.innerHTML =
+      '<div class="gw-label">' + v + '</div>' +
+      '<input type="text" id="gw-' + i + '" placeholder="Dein Gegenwert-Vorschlag">';
+    list.appendChild(row);
+
+    const res = document.createElement('div');
+    res.className = 'gw-resolution';
+    res.id = 'gw-resolution-' + i;
+    list.appendChild(res);
+  });
+}
+
+function showResolutions() {
+  selected.forEach((v, i) => {
+    const resEl = document.getElementById('gw-resolution-' + i);
+    const suggestion = gegenwertMap[v] || 'kein Vorschlag hinterlegt';
+    resEl.textContent = 'Möglicher Gegenwert: ' + suggestion;
+    resEl.style.display = 'block';
+  });
 }
 
 function renderComparison() {
@@ -343,7 +418,7 @@ function renderComparison() {
 function restart() {
   selected = [];
   [1,2,3,4,5].forEach(i => document.getElementById('t0-'+i).value = '');
-  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step4').style.display = 'none';
   document.getElementById('step1').style.display = 'block';
   setDot(1);
   window.scrollTo(0,0);
