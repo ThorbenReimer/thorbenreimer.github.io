@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Werte-Tool – Thorben Reimer</title>
+<style>
+  :root {
+    --bg: #161E2E;
+    --midnavy: #1E2D45;
+    --sep: #2A3A55;
+    --accent: #378ADD;
+    --lightblue: #7AB8F5;
+    --text: #FFFFFF;
+    --body: #D0DCE8;
+    --muted: #7A9CC0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Calibri, "Segoe UI", sans-serif;
+    padding: 24px 16px 60px;
+  }
+  h1 {
+    font-family: Georgia, serif;
+    font-size: 22px;
+    text-align: center;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: var(--muted);
+    font-size: 13px;
+    margin-bottom: 24px;
+  }
+  .container { max-width: 640px; margin: 0 auto; }
+  .steps {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+  .step-dot {
+    width: 28px; height: 28px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px;
+    background: var(--midnavy);
+    border: 1px solid var(--sep);
+    color: var(--muted);
+  }
+  .step-dot.active { background: var(--accent); color: white; border-color: var(--accent); }
+  .step-dot.done { background: var(--lightblue); color: var(--bg); border-color: var(--lightblue); }
+
+  .panel {
+    background: var(--midnavy);
+    border: 1px solid var(--sep);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+  }
+  .panel h2 {
+    font-family: Georgia, serif;
+    font-size: 17px;
+    margin-top: 0;
+  }
+  .hint { color: var(--body); font-size: 13px; margin-bottom: 16px; line-height: 1.5; }
+
+  input[type=text] {
+    width: 100%;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    border: 1px solid var(--sep);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+  }
+  input[type=text]::placeholder { color: var(--muted); }
+
+  .cluster { margin-bottom: 16px; }
+  .cluster-title { font-size: 13px; color: var(--lightblue); font-weight: bold; margin-bottom: 8px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    padding: 8px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--sep);
+    background: var(--bg);
+    color: var(--body);
+    font-size: 14px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s;
+  }
+  .chip.selected {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: white;
+    font-weight: bold;
+  }
+  .chip.disabled { opacity: 0.35; cursor: not-allowed; }
+
+  .counter {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    text-align: center;
+    font-size: 14px;
+    color: var(--lightblue);
+    margin-bottom: 16px;
+    font-weight: bold;
+    background: var(--midnavy);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--sep);
+  }
+
+  button.primary {
+    display: block;
+    width: 100%;
+    padding: 14px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  button.primary:disabled { background: var(--sep); color: var(--muted); cursor: not-allowed; }
+  button.secondary {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--sep);
+    background: transparent;
+    color: var(--body);
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+
+  .compare-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .compare-col h3 { font-size: 13px; color: var(--muted); margin: 0 0 8px; }
+  .compare-item {
+    padding: 8px 10px;
+    border-radius: 6px;
+    background: var(--bg);
+    margin-bottom: 6px;
+    font-size: 14px;
+  }
+  .compare-item.match { background: rgba(55, 138, 221, 0.25); border-left: 3px solid var(--accent); }
+
+  .match-summary {
+    text-align: center;
+    padding: 16px;
+    background: rgba(55, 138, 221, 0.15);
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 14px;
+  }
+  .match-summary strong { color: var(--lightblue); font-size: 20px; }
+
+  .footer-note {
+    text-align: center;
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 30px;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Werte-Tool</h1>
+  <div class="subtitle">Kommunikation, Persönlichkeit &amp; Coaching</div>
+
+  <div class="steps">
+    <div class="step-dot" id="dot-1">1</div>
+    <div class="step-dot" id="dot-2">2</div>
+    <div class="step-dot" id="dot-3">3</div>
+  </div>
+
+  <!-- STEP 1: Test 0 -->
+  <div class="panel" id="step1">
+    <h2>Test 0 – Aus dem Bauch heraus</h2>
+    <div class="hint">Schreib spontan deine 5 wichtigsten Werte auf – ohne lange nachzudenken, ohne Hilfsmittel. Es gibt kein richtig oder falsch.</div>
+    <input type="text" id="t0-1" placeholder="Wert 1">
+    <input type="text" id="t0-2" placeholder="Wert 2">
+    <input type="text" id="t0-3" placeholder="Wert 3">
+    <input type="text" id="t0-4" placeholder="Wert 4">
+    <input type="text" id="t0-5" placeholder="Wert 5">
+    <button class="primary" onclick="goToStep2()">Weiter zu Test 1</button>
+  </div>
+
+  <!-- STEP 2: Test 1 -->
+  <div class="panel" id="step2" style="display:none">
+    <h2>Test 1 – Strukturierte Auswahl</h2>
+    <div class="hint">Wähle jetzt aus der Liste deine <strong>Top 10 Werte</strong> (Schwartz'sche Wertetheorie, 4 Dimensionen). Tippe auf einen Wert zum Auswählen/Abwählen.</div>
+    <div class="counter" id="counter">0 / 10 ausgewählt</div>
+    <div id="clusters"></div>
+    <button class="primary" id="toStep3Btn" onclick="goToStep3()" disabled>Weiter zum Vergleich</button>
+  </div>
+
+  <!-- STEP 3: Vergleich -->
+  <div class="panel" id="step3" style="display:none">
+    <h2>Vergleich: Test 0 vs. Test 1</h2>
+    <div class="match-summary" id="matchSummary"></div>
+    <div class="compare-grid">
+      <div class="compare-col">
+        <h3>Test 0 (spontan)</h3>
+        <div id="col-t0"></div>
+      </div>
+      <div class="compare-col">
+        <h3>Test 1 (strukturiert)</h3>
+        <div id="col-t1"></div>
+      </div>
+    </div>
+    <div class="hint" style="margin-top:16px">
+      Reflexionsfragen fürs Plenum: Was hat sich verändert? Welcher Wert wurde präzisiert? Wo zeigt sich eine Entgleisung (Wert ohne Gegenwert im Gleichgewicht)?
+    </div>
+    <button class="secondary" onclick="restart()">Neu starten</button>
+  </div>
+
+  <div class="footer-note">Thorben Reimer · Firmenkundenberater & Performance Coach · 0151 56 165 578 · kontakt@thorbenreimer.de · @coachthorben</div>
+</div>
+
+<script>
+const clusters = {
+  "Offenheit für Wandel": ["Freiheit","Neugier","Kreativität","Abwechslung","Abenteuer","Unabhängigkeit","Spontaneität","Selbstbestimmung","Flexibilität","Individualität","Experimentierfreude","Risikobereitschaft","Vielfalt","Innovation","Weltoffenheit"],
+  "Selbstverwirklichung": ["Erfolg","Leistung","Ehrgeiz","Anerkennung","Einfluss","Genuss","Lebensfreude","Wirksamkeit","Status","Macht","Karriere","Perfektion","Exzellenz","Selbstvertrauen","Wettbewerbsfähigkeit"],
+  "Bewahrung": ["Sicherheit","Verlässlichkeit","Ordnung","Disziplin","Tradition","Loyalität","Stabilität","Regeltreue","Beständigkeit","Pflichtbewusstsein","Bescheidenheit","Genügsamkeit","Kontinuität","Vorsicht","Gehorsam"],
+  "Selbsttranszendenz": ["Fürsorge","Mitgefühl","Gerechtigkeit","Nachhaltigkeit","Verantwortung","Hilfsbereitschaft","Toleranz","Gemeinwohl","Empathie","Großzügigkeit","Dankbarkeit","Frieden","Gleichheit","Solidarität","Umweltbewusstsein"]
+};
+
+let selected = [];
+const MAX = 10;
+
+function renderClusters() {
+  const container = document.getElementById('clusters');
+  container.innerHTML = '';
+  for (const [name, values] of Object.entries(clusters)) {
+    const clusterDiv = document.createElement('div');
+    clusterDiv.className = 'cluster';
+    const title = document.createElement('div');
+    title.className = 'cluster-title';
+    title.textContent = name;
+    clusterDiv.appendChild(title);
+    const chipsDiv = document.createElement('div');
+    chipsDiv.className = 'chips';
+    values.forEach(v => {
+      const chip = document.createElement('div');
+      chip.className = 'chip';
+      chip.textContent = v;
+      chip.onclick = () => toggleValue(v, chip);
+      chipsDiv.appendChild(chip);
+    });
+    clusterDiv.appendChild(chipsDiv);
+    container.appendChild(clusterDiv);
+  }
+}
+
+function toggleValue(v, chipEl) {
+  const idx = selected.indexOf(v);
+  if (idx > -1) {
+    selected.splice(idx, 1);
+    chipEl.classList.remove('selected');
+  } else {
+    if (selected.length >= MAX) return;
+    selected.push(v);
+    chipEl.classList.add('selected');
+  }
+  updateCounter();
+}
+
+function updateCounter() {
+  document.getElementById('counter').textContent = selected.length + ' / ' + MAX + ' ausgewählt';
+  document.getElementById('toStep3Btn').disabled = selected.length === 0;
+  document.querySelectorAll('.chip').forEach(c => {
+    if (!c.classList.contains('selected')) {
+      c.classList.toggle('disabled', selected.length >= MAX);
+    }
+  });
+}
+
+function setDot(step) {
+  for (let i = 1; i <= 3; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < step) dot.classList.add('done');
+    if (i === step) dot.classList.add('active');
+  }
+}
+
+function goToStep2() {
+  document.getElementById('step1').style.display = 'none';
+  document.getElementById('step2').style.display = 'block';
+  setDot(2);
+  renderClusters();
+  window.scrollTo(0,0);
+}
+
+function goToStep3() {
+  document.getElementById('step2').style.display = 'none';
+  document.getElementById('step3').style.display = 'block';
+  setDot(3);
+  renderComparison();
+  window.scrollTo(0,0);
+}
+
+function renderComparison() {
+  const t0 = [1,2,3,4,5].map(i => document.getElementById('t0-'+i).value.trim()).filter(v => v.length > 0);
+  const t0Lower = t0.map(v => v.toLowerCase());
+  const t1Lower = selected.map(v => v.toLowerCase());
+
+  const colT0 = document.getElementById('col-t0');
+  const colT1 = document.getElementById('col-t1');
+  colT0.innerHTML = '';
+  colT1.innerHTML = '';
+
+  t0.forEach(v => {
+    const div = document.createElement('div');
+    div.className = 'compare-item' + (t1Lower.includes(v.toLowerCase()) ? ' match' : '');
+    div.textContent = v;
+    colT0.appendChild(div);
+  });
+
+  selected.forEach(v => {
+    const div = document.createElement('div');
+    div.className = 'compare-item' + (t0Lower.includes(v.toLowerCase()) ? ' match' : '');
+    div.textContent = v;
+    colT1.appendChild(div);
+  });
+
+  const matches = t0Lower.filter(v => t1Lower.includes(v)).length;
+  document.getElementById('matchSummary').innerHTML =
+    '<strong>' + matches + '</strong> von ' + t0.length + ' spontanen Werten finden sich auch in deiner strukturierten Top 10 wieder.';
+}
+
+function restart() {
+  selected = [];
+  [1,2,3,4,5].forEach(i => document.getElementById('t0-'+i).value = '');
+  document.getElementById('step3').style.display = 'none';
+  document.getElementById('step1').style.display = 'block';
+  setDot(1);
+  window.scrollTo(0,0);
+}
+
+setDot(1);
+</script>
+</body>
+</html>
