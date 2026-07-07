@@ -194,6 +194,25 @@
     color: var(--muted);
     margin-top: 30px;
   }
+
+  #print-summary { display: none; }
+
+  @media print {
+    body * { visibility: hidden; }
+    #print-summary, #print-summary * { visibility: visible; }
+    #print-summary {
+      display: block;
+      position: absolute;
+      top: 0; left: 0; width: 100%;
+      background: #fff;
+      color: #161E2E;
+      padding: 20px;
+    }
+    #print-summary h1 { font-family: Georgia, serif; font-size: 22px; margin-bottom: 4px; }
+    #print-summary h3 { font-family: Georgia, serif; font-size: 15px; color: #185FA5; margin: 18px 0 6px; }
+    #print-summary .ps-row { display: flex; justify-content: space-between; padding: 4px 0; border-bottom: 1px solid #eee; font-size: 13px; }
+    #print-summary .ps-footer { margin-top: 24px; font-size: 10px; color: #7A9CC0; }
+  }
 </style>
 </head>
 <body>
@@ -255,10 +274,29 @@
     <div class="hint">Zu jedem deiner Top-Werte gibt es einen Gegenwert, der ihn im Gleichgewicht hält (Werte- und Entwicklungsquadrat). Trag ein, was du als Gegenwert vermutest – danach zeigen wir dir einen möglichen Vorschlag. Es gibt nicht die eine richtige Antwort, nur eine sinnvolle Richtung.</div>
     <div id="gegenwerte-list"></div>
     <button class="primary" onclick="showResolutions()">Auflösung anzeigen</button>
+    <input type="text" id="student-name" placeholder="Dein Name (optional, für den Export)" style="margin-top:16px;">
+    <button class="primary" onclick="exportPDF()">Als PDF exportieren</button>
     <button class="secondary" onclick="restart()">Neu starten</button>
   </div>
 
   <div class="footer-note">Thorben Reimer · Firmenkundenberater & Performance Coach · 0151 56 165 578 · kontakt@thorbenreimer.de · @coachthorben</div>
+</div>
+
+<div id="print-summary">
+  <h1>Werte-Tool – Auswertung</h1>
+  <div id="ps-name" style="font-size:13px; color:#7A9CC0;"></div>
+  <div id="ps-date" style="font-size:11px; color:#7A9CC0; margin-bottom:10px;"></div>
+
+  <h3>Test 0 – Spontane Werte</h3>
+  <div id="ps-t0"></div>
+
+  <h3>Test 1 – Strukturierte Top-Werte</h3>
+  <div id="ps-t1"></div>
+
+  <h3>Gegenwerte</h3>
+  <div id="ps-gw"></div>
+
+  <div class="ps-footer">Thorben Reimer · Kommunikation, Persönlichkeit & Coaching · kontakt@thorbenreimer.de</div>
 </div>
 
 <script>
@@ -422,6 +460,27 @@ function restart() {
   document.getElementById('step1').style.display = 'block';
   setDot(1);
   window.scrollTo(0,0);
+}
+
+function exportPDF() {
+  const name = document.getElementById('student-name').value.trim();
+  document.getElementById('ps-name').textContent = name ? 'Name: ' + name : '';
+  document.getElementById('ps-date').textContent = new Date().toLocaleDateString('de-DE');
+
+  const t0 = [1,2,3,4,5].map(i => document.getElementById('t0-'+i).value.trim()).filter(v => v.length > 0);
+  document.getElementById('ps-t0').innerHTML = t0.map(v => '<div class="ps-row">' + v + '</div>').join('') || '<div class="ps-row">(keine Angabe)</div>';
+
+  document.getElementById('ps-t1').innerHTML = selected.map(v => '<div class="ps-row">' + v + '</div>').join('') || '<div class="ps-row">(keine Angabe)</div>';
+
+  const gwRows = selected.map((v, i) => {
+    const inputEl = document.getElementById('gw-' + i);
+    const own = inputEl ? inputEl.value.trim() : '';
+    const suggestion = gegenwertMap[v] || '–';
+    return '<div class="ps-row"><span>' + v + '</span><span>' + (own || '–') + ' / Vorschlag: ' + suggestion + '</span></div>';
+  }).join('');
+  document.getElementById('ps-gw').innerHTML = gwRows || '<div class="ps-row">(keine Angabe)</div>';
+
+  window.print();
 }
 
 setDot(1);
