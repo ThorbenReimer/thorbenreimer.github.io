@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Coaching-Simulator – Thorben Reimer</title>
+<style>
+  :root {
+    --bg: #161E2E;
+    --midnavy: #1E2D45;
+    --sep: #2A3A55;
+    --accent: #378ADD;
+    --lightblue: #7AB8F5;
+    --text: #FFFFFF;
+    --body: #D0DCE8;
+    --muted: #7A9CC0;
+    --green: #4CAF7D;
+    --red: #E0645A;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: Calibri, "Segoe UI", sans-serif;
+    padding: 20px 14px 50px;
+  }
+  h1 { font-family: Georgia, serif; font-size: 22px; text-align: center; margin: 0 0 4px; }
+  .subtitle { text-align: center; color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .container { max-width: 640px; margin: 0 auto; }
+
+  .persona-grid { display: grid; grid-template-columns: 1fr; gap: 12px; }
+  .persona-card {
+    background: var(--midnavy);
+    border: 1px solid var(--sep);
+    border-radius: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .persona-card:hover { border-color: var(--accent); }
+  .persona-card h3 { margin: 0 0 6px; font-family: Georgia, serif; font-size: 17px; }
+  .persona-card p { margin: 0; font-size: 13px; color: var(--body); line-height: 1.5; }
+
+  .meter-wrap {
+    position: sticky; top: 0; z-index: 5;
+    background: var(--midnavy);
+    border: 1px solid var(--sep);
+    border-radius: 10px;
+    padding: 10px 14px;
+    margin-bottom: 14px;
+  }
+  .meter-label { font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .meter-bar { height: 10px; border-radius: 6px; background: var(--sep); overflow: hidden; }
+  .meter-fill { height: 100%; background: linear-gradient(90deg, var(--red), var(--accent), var(--green)); transition: width 0.4s; }
+
+  .hint-questions {
+    font-size: 11.5px; color: var(--muted); background: var(--midnavy);
+    border: 1px solid var(--sep); border-radius: 8px; padding: 8px 12px; margin-bottom: 12px; line-height: 1.6;
+  }
+
+  .chat-area {
+    background: var(--midnavy);
+    border: 1px solid var(--sep);
+    border-radius: 12px;
+    padding: 14px;
+    min-height: 300px;
+    max-height: 460px;
+    overflow-y: auto;
+    margin-bottom: 12px;
+  }
+  .msg { margin-bottom: 10px; display: flex; flex-direction: column; }
+  .msg.athlete { align-items: flex-start; }
+  .msg.coach { align-items: flex-end; }
+  .bubble { max-width: 80%; padding: 10px 14px; border-radius: 14px; font-size: 14px; line-height: 1.4; }
+  .msg.athlete .bubble { background: var(--sep); border-radius: 14px 14px 14px 2px; }
+  .msg.coach .bubble { background: var(--accent); color: white; border-radius: 14px 14px 2px 14px; }
+  .msg.system .bubble { background: transparent; color: var(--muted); font-size: 12px; font-style: italic; text-align: center; }
+  .tier-note { font-size: 11px; color: var(--muted); margin-top: 3px; }
+
+  .input-row { display: flex; gap: 8px; }
+  input[type=text] {
+    flex: 1;
+    padding: 12px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--sep);
+    background: var(--bg);
+    color: var(--text);
+    font-size: 15px;
+  }
+  input[type=text]::placeholder { color: var(--muted); }
+
+  button.primary {
+    padding: 12px 20px;
+    border-radius: 8px;
+    border: none;
+    background: var(--accent);
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  button.primary:disabled { background: var(--sep); color: var(--muted); cursor: not-allowed; }
+  button.secondary {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid var(--sep);
+    background: transparent;
+    color: var(--body);
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  .hint { font-size: 12.5px; color: var(--muted); text-align: center; margin: 10px 0 16px; line-height: 1.5; }
+  .footer-note { text-align: center; font-size: 11px; color: var(--muted); margin-top: 30px; }
+
+  .eval-box {
+    background: var(--midnavy);
+    border: 1px solid var(--accent);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 14px;
+    font-size: 14px;
+    line-height: 1.6;
+    color: var(--body);
+    white-space: pre-wrap;
+  }
+
+  body.presentation .container { max-width: 900px; }
+  body.presentation h1 { font-size: 34px; }
+  body.presentation .subtitle { font-size: 18px; }
+  body.presentation .meter-label { font-size: 18px; }
+  body.presentation .meter-bar { height: 16px; }
+  body.presentation .hint-questions { font-size: 16px; line-height: 1.8; padding: 14px 18px; }
+  body.presentation .chat-area { min-height: 380px; max-height: 600px; }
+  body.presentation .bubble { font-size: 22px; padding: 14px 20px; }
+  body.presentation .tier-note { font-size: 15px; }
+  body.presentation input[type=text] { font-size: 20px; padding: 16px 18px; }
+  body.presentation button.primary { font-size: 20px; padding: 16px 26px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Coaching-Simulator</h1>
+  <div class="subtitle">Coaching Habit üben mit einem virtuellen Athleten</div>
+
+  <div id="persona-screen">
+    <div class="hint">Wähle einen Athleten. Stell ihm Coaching-Fragen (keine Ratschläge!) und beobachte, ob er sich öffnet oder verschließt.</div>
+    <div class="persona-grid">
+      <div class="persona-card" onclick="startSession('perfektionist')">
+        <h3>Der Perfektionist – Jonas (17)</h3>
+        <p>Fragt bei jeder Übung nach exakter Vorgabe, wirkt angespannt bei Änderungen.</p>
+      </div>
+      <div class="persona-card" onclick="startSession('selbstkritisch')">
+        <h3>Der Selbstkritische – Mia (19)</h3>
+        <p>Meidet Wettkampfsituationen, zerredet jede gute Leistung im Nachhinein.</p>
+      </div>
+      <div class="persona-card" onclick="startSession('einzelgaenger')">
+        <h3>Der Einzelgänger – Kevin (16)</h3>
+        <p>Meidet Teamübungen, bleibt nach dem Training sofort für sich.</p>
+      </div>
+    </div>
+    <button class="secondary" onclick="openViewerWindow()">🖥️ Zuschauer-Ansicht öffnen (für Beamer)</button>
+  </div>
+
+  <div id="chat-screen" style="display:none">
+    <div class="meter-wrap">
+      <div class="meter-label"><span>Offenheit des Athleten</span><span id="meter-value">30%</span></div>
+      <div class="meter-bar"><div class="meter-fill" id="meter-fill" style="width:30%"></div></div>
+    </div>
+    <div class="hint-questions">Coaching-Habit-Kernfragen zum Ausprobieren: "Was beschäftigt dich?" · "Und was noch?" (2x nutzbar, dann erschöpft) · "Was ist die eigentliche Herausforderung für dich?" · "Was willst du wirklich?" · "Wie kann ich dir helfen?"</div>
+    <div class="chat-area" id="chat-area"></div>
+    <div class="input-row">
+      <input type="text" id="user-input" placeholder="Deine Coaching-Frage..." onkeydown="if(event.key==='Enter')sendMessage()">
+      <button class="primary" id="send-btn" onclick="sendMessage()">Senden</button>
+    </div>
+    <button class="secondary" onclick="getEvaluation()">Auswertung anzeigen</button>
+    <button class="secondary" onclick="togglePresentation()" id="present-toggle-btn">🔍 Präsentationsmodus (große Schrift für Beamer)</button>
+    <button class="secondary" onclick="resetSession()">Anderen Athleten wählen</button>
+    <div id="eval-container"></div>
+  </div>
+
+  <div class="footer-note">Thorben Reimer · Firmenkundenberater & Performance Coach · 0151 56 165 578 · kontakt@thorbenreimer.de · @coachthorben</div>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(location.search);
+const isViewer = urlParams.get('view') === 'zuschauer';
+const channel = ('BroadcastChannel' in window) ? new BroadcastChannel('coaching-sim-sync') : null;
+let messageLog = [];
+
+function broadcastState() {
+  if (!channel) return;
+  channel.postMessage({
+    personaName: currentPersona ? currentPersona.name : null,
+    log: messageLog,
+    meter: openness
+  });
+}
+
+const personas = {
+  perfektionist: {
+    name: "Jonas (17, Turnier-Tennis)",
+    guarded: [
+      "Keine Ahnung, lass uns einfach weitertrainieren.",
+      "Muss ich da wirklich drüber reden? Ist doch nicht so wichtig.",
+      "Passt schon. Können wir zur nächsten Übung?"
+    ],
+    genericStages: [
+      ["Ich mag's halt, wenn genau klar ist, was ich tun soll.", "Ist doch besser, wenn man weiß, woran man ist, oder?"],
+      ["Wenn's chaotisch wird, krieg ich richtig Stress.", "Am liebsten hätt ich für alles eine Checkliste."],
+      ["Früher hat mein alter Trainer alles vorgegeben - eigene Entscheidungen waren da nicht so gefragt.", "Ich glaub, ich hab Angst, dass es Ärger gibt, wenn ich mal was anders mache als erwartet."],
+      ["Ich glaub, wenn ich's nicht perfekt mach, hab ich Angst, dass wieder wer über mich bestimmt.", "Am liebsten würd ich einfach mal selbst entscheiden dürfen, ohne dass mir jemand reinredet."]
+    ],
+    kickstart: "Ich weiß nicht genau... irgendwie fühl ich mich grad unter Druck, alles perfekt hinzukriegen.",
+    awe: [
+      "Und ich glaub, ich hab richtig Angst, was falsch zu machen.",
+      "Und ich merk, ich trau mich kaum, mal selbst zu entscheiden, ohne dass wer sagt, wie's richtig geht."
+    ],
+    aweExhausted: "Nein... ich glaub, das war's eigentlich, was mir grad dazu einfällt.",
+    challenge: "Ich glaub, die eigentliche Herausforderung ist, dass ich nie gelernt hab, einfach mal selbst zu entscheiden, ohne dass mir jemand reinredet.",
+    challengeDeep: "Ich glaub, ich hab richtig Angst davor, dass es nochmal so wird wie früher - dass mir wieder wer sagt, dass ich's falsch gemacht hab, sobald ich mal selbst entscheide.",
+    foundation: "Ich glaub, ich will einfach mal machen dürfen, was ich für richtig halte - auch wenn's nicht perfekt ist.",
+    foundationDeep: "Ganz konkret? Ich würd gern mal ne Trainingseinheit selbst planen dürfen, ohne dass am Ende jemand sagt, ich hätt's anders machen sollen.",
+    lazy: "Vielleicht, indem du mir auch mal Raum lässt, selbst zu entscheiden, auch wenn's dann nicht genau nach Plan läuft.",
+    lazyDeep: "Vielleicht einfach, indem du mich fragst, was ICH denke, bevor du sagst, wie's laufen soll."
+  },
+  selbstkritisch: {
+    name: "Mia (19, Schwimmen)",
+    guarded: [
+      "Ist doch egal, war eh nicht so gut.",
+      "Muss man da jetzt drüber reden?",
+      "Lass uns einfach weiterschwimmen."
+    ],
+    genericStages: [
+      ["Ich bin halt nie so richtig zufrieden mit dem, was ich mache.", "Andere schaffen das doch auch besser."],
+      ["Selbst wenn's gut lief, denk ich schon an das Nächste, was ich verbessern muss.", "Loben fällt mir bei mir selbst irgendwie richtig schwer."],
+      ["Meine Eltern haben nie direkt gesagt, dass sie stolz sind - nur wenn ich was gewonnen hab, kam sowas in die Richtung.", "Ich glaub, ich mach das schon lang so - mich nur über Leistung zu definieren."],
+      ["Es wär schön, wenn ich mal an mich glauben könnte, ohne dass ich's mir erst verdienen muss.", "Vielleicht wünsch ich mir einfach, jemand sieht mich auch dann, wenn ich mal nicht liefere."]
+    ],
+    kickstart: "Ich weiß nicht... ich bin grad ziemlich unzufrieden mit mir.",
+    awe: [
+      "Und ich merk, ich freu mich eigentlich nie richtig, egal wie gut's läuft.",
+      "Und ich glaub, ich hab das Gefühl, ich muss mir jeden guten Moment erst verdienen."
+    ],
+    aweExhausted: "Nein, ich glaub, mehr fällt mir grad dazu nicht ein.",
+    challenge: "Die eigentliche Herausforderung ist wohl, dass ich glaube, nur was wert zu sein, wenn ich perfekt abliefere.",
+    challengeDeep: "Ich glaub, dahinter steckt auch die Angst, dass ich nicht mehr gemocht werde, wenn ich mal nicht liefere.",
+    foundation: "Ich glaub, ich will einfach mal spüren, dass ich auch so genug bin - nicht nur wenn ich liefere.",
+    foundationDeep: "Ganz konkret würd ich mir wünschen, dass jemand nach einem schlechten Wettkampf trotzdem sagt 'ich bin trotzdem stolz auf dich'.",
+    lazy: "Vielleicht, wenn du mir auch mal sagst, dass es gut war, auch wenn's nicht perfekt war.",
+    lazyDeep: "Vielleicht, wenn du mich manchmal einfach fragst, wie's mir geht - nicht nur wie ich abgeschnitten hab."
+  },
+  einzelgaenger: {
+    name: "Kevin (16, Leichtathletik)",
+    guarded: [
+      "Passt schon, brauch da keine Hilfe.",
+      "Ist mir eigentlich egal.",
+      "Kann ich auch alleine machen."
+    ],
+    genericStages: [
+      ["Ich bin halt lieber für mich, stört mich nicht.", "Muss ja nicht jeder in der Gruppe hängen."],
+      ["Irgendwie fühl ich mich in Teams selten wirklich dazugehörig.", "Ich halt mich lieber zurück, bevor's unangenehm wird."],
+      ["Bei uns ist ständig umgezogen worden, ich musste immer wieder neu anfangen.", "Ich glaub, ich hab irgendwann gelernt, mich nicht mehr so reinzuhängen - tut sonst zu weh, wenn's wieder vorbei ist."],
+      ["Eigentlich wünsch ich mir schon, mal richtig Teil von was zu sein - ohne Angst, dass es wieder auseinanderfällt.", "Vielleicht ist die Unabhängigkeit auch einfach mein Schutz davor, nochmal enttäuscht zu werden."]
+    ],
+    kickstart: "Keine Ahnung... ich bin grad einfach lieber für mich.",
+    awe: [
+      "Und ich merk, in Gruppen fühl ich mich oft irgendwie fehl am Platz.",
+      "Und ich glaub, ich halt mich zurück, bevor's unangenehm wird oder ich enttäuscht werde."
+    ],
+    aweExhausted: "Nein, mehr kommt mir grad nicht in den Sinn.",
+    challenge: "Die eigentliche Herausforderung ist wohl, dass ich nie irgendwo wirklich fest dazugehört hab - ständig umgezogen, immer wieder neu.",
+    challengeDeep: "Ich glaub, dahinter steckt auch die Angst, dass es sowieso wieder vorbei geht, egal wie sehr ich mich reinhäng.",
+    foundation: "Ich glaub, ich will einfach mal irgendwo richtig dazugehören, ohne Angst, dass es wieder auseinanderfällt.",
+    foundationDeep: "Ganz konkret würd ich mir wünschen, mal in einem Team zu sein, das länger bleibt als ein, zwei Jahre.",
+    lazy: "Vielleicht, indem du mich einfach mal einbindest, auch wenn ich mich zuerst zurückzieh.",
+    lazyDeep: "Vielleicht, indem du mich einfach ab und zu direkt ansprichst, auch wenn ich mich nicht von selbst einbring."
+  }
+};
+
+const repeatResponses = {
+  perfektionist: ["Hab ich doch grad schon gesagt...", "Ich wiederhol mich ungern.", "Willst du echt dasselbe nochmal hören?"],
+  selbstkritisch: ["Das hatten wir doch gerade schon.", "Muss ich das nochmal sagen?", "Hab ich dir doch grad erzählt."],
+  einzelgaenger: ["Hab ich schon gesagt.", "Ändert sich nicht, wenn du das nochmal fragst.", "Gleiche Frage, gleiche Antwort."]
+};
+
+const personaKeyMap = { "Jonas (17, Turnier-Tennis)": "perfektionist", "Mia (19, Schwimmen)": "selbstkritisch", "Kevin (16, Leichtathletik)": "einzelgaenger" };
+
+let currentPersona = null;
+let currentKey = null;
+let openness = 30;
+let tierCounts = {};
+let lastQuestion = '';
+let aweCount = 0;
+let answeredSpecial = {};
+let answeredDeep = {};
+let pendingDeepen = null;
+
+function classify(text) {
+  const t = text.trim().toLowerCase();
+  if (!t.includes('?')) return { delta: -8, tier: 'Aussage/Ratschlag statt Frage', type: 'statement' };
+
+  const hasWord = (w) => new RegExp('\\b' + w + '\\b').test(t);
+
+  if (t.includes('was') && hasWord('willst') && hasWord('du')) {
+    return { delta: 15, tier: 'Foundation-Frage (was willst du wirklich)', type: 'foundation' };
+  }
+  if (hasWord('herausforderung')) {
+    return { delta: 15, tier: 'Focus-Frage (eigentliche Herausforderung)', type: 'challenge' };
+  }
+  if (t.includes('helfen') || (hasWord('brauchst') && t.includes('von mir'))) {
+    return { delta: 15, tier: 'Lazy-Frage (wie kann ich helfen)', type: 'lazy' };
+  }
+  if (t.includes('beschäftigt')) {
+    return { delta: 10, tier: 'Kickstart-Frage (was beschäftigt dich)', type: 'kickstart' };
+  }
+  if (t.includes('was noch') || t.includes('sonst noch') || t.includes('noch was') || t.includes('was sonst')) {
+    return { delta: 12, tier: 'AWE-Frage (und was noch)', type: 'awe' };
+  }
+  const closedStarters = /^(ist|bist|war|hast|hattest|kannst|könntest|wirst|sollst|musst|darfst)\b/;
+  if (closedStarters.test(t) || t.includes('du solltest') || t.includes('du musst') || t.includes('probier mal')) {
+    return { delta: -10, tier: 'geschlossene Frage / verdeckter Ratschlag', type: 'closed' };
+  }
+  if (/^warum\b/.test(t)) return { delta: -4, tier: '"Warum"-Frage (kann wie Vorwurf wirken)', type: 'warum' };
+  if (/^(was|wie)\b/.test(t)) return { delta: 8, tier: 'offene Frage', type: 'open' };
+  return { delta: 2, tier: 'neutrale Frage', type: 'neutral' };
+}
+
+function getStage() {
+  if (openness < 40) return 0;
+  if (openness < 70) return 1;
+  if (openness < 90) return 2;
+  return 3;
+}
+
+function startSession(key) {
+  currentKey = key;
+  currentPersona = personas[key];
+  openness = 30;
+  tierCounts = {};
+  lastQuestion = '';
+  aweCount = 0;
+  answeredSpecial = {};
+  answeredDeep = {};
+  pendingDeepen = null;
+  messageLog = [];
+  document.getElementById('persona-screen').style.display = 'none';
+  document.getElementById('chat-screen').style.display = 'block';
+  document.getElementById('chat-area').innerHTML = '';
+  document.getElementById('eval-container').innerHTML = '';
+  updateMeter();
+  addSystemMsg('Gespräch mit ' + currentPersona.name + ' beginnt. Stell deine erste Frage.');
+  broadcastState();
+}
+
+function updateMeter() {
+  openness = Math.max(0, Math.min(100, openness));
+  document.getElementById('meter-fill').style.width = openness + '%';
+  document.getElementById('meter-value').textContent = Math.round(openness) + '%';
+  broadcastState();
+}
+
+function addMsg(text, who, tierNote) {
+  messageLog.push({ text, who, tierNote: tierNote || null });
+  const chatArea = document.getElementById('chat-area');
+  const div = document.createElement('div');
+  div.className = 'msg ' + who;
+  let inner = '<div class="bubble">' + text + '</div>';
+  if (tierNote) inner += '<div class="tier-note">' + tierNote + '</div>';
+  div.innerHTML = inner;
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+  broadcastState();
+}
+
+function addSystemMsg(text) {
+  const chatArea = document.getElementById('chat-area');
+  const div = document.createElement('div');
+  div.className = 'msg system';
+  div.innerHTML = '<div class="bubble">' + text + '</div>';
+  chatArea.appendChild(div);
+  chatArea.scrollTop = chatArea.scrollHeight;
+}
+
+function pick(arr) { return arr[Math.floor(Math.random() * arr.length)]; }
+
+function sendMessage() {
+  const input = document.getElementById('user-input');
+  const text = input.value.trim();
+  if (!text || !currentPersona) return;
+  input.value = '';
+
+  addMsg(escapeHtml(text), 'coach');
+
+  const normalized = text.trim().toLowerCase().replace(/[?.!]/g, '');
+  const isExactRepeat = normalized === lastQuestion && normalized.length > 0;
+  lastQuestion = normalized;
+
+  const result = classify(text);
+  let reply, delta = result.delta, tierLabel = result.tier;
+
+  if (isExactRepeat) {
+    delta = 0;
+    tierLabel = 'Wiederholte Frage (keine neue Öffnung)';
+    reply = pick(repeatResponses[currentKey]);
+  } else if (pendingDeepen && (result.type === 'open' || result.type === 'neutral')) {
+    const deepKey = pendingDeepen + 'Deep';
+    reply = currentPersona[deepKey];
+    delta = 10;
+    tierLabel = 'Vertiefende Nachfrage (Ebene 2 zu "' + pendingDeepen + '")';
+    answeredDeep[pendingDeepen] = true;
+    pendingDeepen = null;
+  } else if (result.type === 'awe') {
+    aweCount++;
+    pendingDeepen = null;
+    if (aweCount === 1) { reply = currentPersona.awe[0]; }
+    else if (aweCount === 2) { reply = currentPersona.awe[1]; }
+    else { reply = currentPersona.aweExhausted; delta = 0; tierLabel = 'AWE-Frage erschöpft - versuch eine andere Kernfrage'; }
+  } else if (['challenge', 'foundation', 'lazy', 'kickstart'].includes(result.type)) {
+    if (answeredSpecial[result.type]) {
+      if (!answeredDeep[result.type] && currentPersona[result.type + 'Deep']) {
+        reply = currentPersona[result.type + 'Deep'];
+        delta = 10;
+        tierLabel = tierLabel + ' - Vertiefung';
+        answeredDeep[result.type] = true;
+      } else {
+        delta = 0;
+        tierLabel = tierLabel + ' (schon vertieft beantwortet)';
+        reply = pick(repeatResponses[currentKey]);
+      }
+      pendingDeepen = null;
+    } else {
+      answeredSpecial[result.type] = true;
+      reply = currentPersona[result.type];
+      pendingDeepen = (result.type === 'kickstart') ? null : result.type;
+    }
+  } else if (delta < 0) {
+    reply = pick(currentPersona.guarded);
+    pendingDeepen = null;
+  } else {
+    const stage = getStage();
+    reply = pick(currentPersona.genericStages[stage]);
+    pendingDeepen = null;
+  }
+
+  tierCounts[tierLabel] = (tierCounts[tierLabel] || 0) + 1;
+  openness += delta;
+  updateMeter();
+
+  addMsg(escapeHtml(reply), 'athlete', tierLabel + (delta ? ' (' + (delta > 0 ? '+' : '') + delta + ')' : ''));
+}
+
+function getEvaluation() {
+  const evalContainer = document.getElementById('eval-container');
+  const total = Object.values(tierCounts).reduce((a, b) => a + b, 0);
+  if (total === 0) {
+    evalContainer.innerHTML = '<div class="eval-box">Noch keine Fragen gestellt.</div>';
+    return;
+  }
+  let lines = ['Auswertung deines Gesprächs (' + total + ' Fragen):', ''];
+  for (const [tier, count] of Object.entries(tierCounts)) {
+    lines.push('- ' + count + 'x ' + tier);
+  }
+  lines.push('');
+  lines.push('Erreichte Offenheit: ' + Math.round(openness) + '%');
+  const usedSpecialCount = Object.keys(answeredSpecial).length;
+  lines.push('Genutzte Coaching-Habit-Kernfragen: ' + usedSpecialCount + ' von 4 (Kickstart, AWE, Herausforderung, Foundation, Lazy)');
+  lines.push('');
+  const closedCount = (tierCounts['geschlossene Frage / verdeckter Ratschlag'] || 0) + (tierCounts['Aussage/Ratschlag statt Frage'] || 0);
+  if (closedCount > total / 3) {
+    lines.push('Tipp: Viele deiner Fragen waren geschlossen oder eher Ratschläge. Versuch es öfter mit "Was..." oder "Wie...", statt Lösungen vorzugeben.');
+  } else if (usedSpecialCount < 3) {
+    lines.push('Tipp: Probier gezielt die Coaching-Habit-Kernfragen aus - z.B. "Was ist die eigentliche Herausforderung für dich?" oder "Was willst du wirklich?" - sie öffnen am stärksten.');
+  } else {
+    lines.push('Stark! Du hast die Kernfragen genutzt und bist bis zur eigentlichen Ursache vorgedrungen.');
+  }
+  evalContainer.innerHTML = '<div class="eval-box">' + lines.join('\\n') + '</div>';
+}
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function openViewerWindow() {
+  const url = location.href.split('?')[0] + '?view=zuschauer';
+  window.open(url, 'CoachingSimViewer', 'width=1400,height=900');
+}
+
+function togglePresentation() {
+  document.body.classList.toggle('presentation');
+  const btn = document.getElementById('present-toggle-btn');
+  const active = document.body.classList.contains('presentation');
+  btn.textContent = active ? '🔎 Normalmodus zurück' : '🔍 Präsentationsmodus (große Schrift für Beamer)';
+}
+
+function renderViewerMode() {
+  document.body.innerHTML = `
+    <div style="max-width:1100px; margin:0 auto; padding:30px;">
+      <h1 style="font-family:Georgia,serif; font-size:42px; text-align:center; margin-bottom:6px;">Coaching-Simulator</h1>
+      <div id="v-persona" style="text-align:center; font-size:24px; color:var(--muted); margin-bottom:30px;">Warte auf Start...</div>
+      <div style="background:var(--midnavy); border:1px solid var(--sep); border-radius:14px; padding:18px 24px; margin-bottom:24px;">
+        <div style="display:flex; justify-content:space-between; font-size:22px; color:var(--muted); margin-bottom:10px;">
+          <span>Offenheit des Athleten</span><span id="v-meter-value">30%</span>
+        </div>
+        <div style="height:26px; border-radius:14px; background:var(--sep); overflow:hidden;">
+          <div id="v-meter-fill" style="height:100%; width:30%; background:linear-gradient(90deg, var(--red), var(--accent), var(--green)); transition:width 0.5s;"></div>
+        </div>
+      </div>
+      <div id="v-chat" style="display:flex; flex-direction:column; gap:16px;"></div>
+    </div>
+  `;
+
+  if (channel) {
+    channel.onmessage = (event) => {
+      const data = event.data;
+      document.getElementById('v-persona').textContent = data.personaName ? 'Gespräch mit ' + data.personaName : 'Warte auf Start...';
+      document.getElementById('v-meter-fill').style.width = Math.round(data.meter) + '%';
+      document.getElementById('v-meter-value').textContent = Math.round(data.meter) + '%';
+
+      const chatDiv = document.getElementById('v-chat');
+      chatDiv.innerHTML = data.log.map(m => {
+        if (m.who === 'coach') {
+          return '<div style="align-self:flex-end; max-width:75%; background:var(--accent); color:white; padding:16px 22px; border-radius:20px 20px 4px 20px; font-size:24px; line-height:1.4;">' + m.text + '</div>';
+        } else {
+          return '<div style="align-self:flex-start;"><div style="max-width:75%; background:var(--sep); padding:16px 22px; border-radius:20px 20px 20px 4px; font-size:24px; line-height:1.4;">' + m.text + '</div>' +
+                 (m.tierNote ? '<div style="font-size:15px; color:var(--muted); margin-top:6px;">' + m.tierNote + '</div>' : '') + '</div>';
+        }
+      }).join('');
+      chatDiv.scrollTop = chatDiv.scrollHeight;
+      window.scrollTo(0, document.body.scrollHeight);
+    };
+  }
+}
+
+if (isViewer) {
+  renderViewerMode();
+}
+
+function resetSession() {
+  currentPersona = null;
+  currentKey = null;
+  messageLog = [];
+  document.getElementById('chat-screen').style.display = 'none';
+  document.getElementById('persona-screen').style.display = 'block';
+  broadcastState();
+}
+</script>
+</body>
+</html>
