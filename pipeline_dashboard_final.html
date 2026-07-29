@@ -644,7 +644,7 @@ var rpPosts=[];
 
 function loadRP(){
   try{
-    var p=JSON.parse(localStorage.getItem('rp_v1'));
+    var p=JSON.parse(localStorage.getItem('rp_v2'));
     if(p&&p.length){
       rpPosts=p.map(function(saved){var def=DEF_POSTS.filter(function(d){return d.id===saved.id;})[0]||{};return Object.assign({},def,saved);});
       DEF_POSTS.forEach(function(d){if(!rpPosts.some(function(r){return r.id===d.id;}))rpPosts.push(d);});
@@ -652,7 +652,7 @@ function loadRP(){
     } else {rpPosts=JSON.parse(JSON.stringify(DEF_POSTS));}
   } catch(e){rpPosts=JSON.parse(JSON.stringify(DEF_POSTS));}
 }
-function saveRP(){try{localStorage.setItem('rp_v1',JSON.stringify(rpPosts));}catch(e){}}
+function saveRP(){try{localStorage.setItem('rp_v2',JSON.stringify(rpPosts));}catch(e){}}
 
 function rpKanalBadges(kt){
   if(!kt||!kt.length)return'';
