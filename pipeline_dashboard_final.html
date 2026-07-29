@@ -302,9 +302,12 @@ body{font-family:var(--font);background:var(--bg);color:var(--text);min-height:1
 
     <!-- Monats-Tabs -->
     <div style="display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap">
-      <button id="mtab-apr" class="rp-mtab active" onclick="setMonth('april')">April 2026</button>
-      <button id="mtab-mai" class="rp-mtab" onclick="setMonth('mai')">Mai 2026</button>
+      <button id="mtab-offen" class="rp-mtab active" onclick="setMonth('offen')">⬜ Offen</button>
+      <button id="mtab-aug" class="rp-mtab" onclick="setMonth('aug')">Aug 2026</button>
+      <button id="mtab-sep" class="rp-mtab" onclick="setMonth('sep')">Sep 2026</button>
+      <button id="mtab-okt" class="rp-mtab" onclick="setMonth('okt')">Okt 2026</button>
       <button id="mtab-alle" class="rp-mtab" onclick="setMonth('alle')">Alle</button>
+      <button id="mtab-archiv" class="rp-mtab" onclick="setMonth('archiv')" style="color:var(--muted)">✅ Archiv</button>
     </div>
 
     <div id="rp-list"></div>
@@ -436,7 +439,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Firmenkundenberater & Finanzcoach','Export → Post3_WA.png']},
   {id:4,title:'Firmenkunden — Team als Kapital',zielgruppe:'firma',typ:'Expertise',
    kachel:'Dein Team ist dein\ngrößtes Kapital.\n\n<Schützt du es auch so?>',
-   datum:'2026-04-15',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-04-15',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Als Unternehmer trägst du Verantwortung.\n\nFür dein Business. Für deine Mitarbeiter. Für deine Familie.\n\nUnd trotzdem: Die meisten Unternehmer haben ihre eigene Absicherung, ihre Liquidität und ihre Altersvorsorge nicht wirklich im Griff.\n\nNicht weil sie es nicht wollen — sondern weil niemand das Ganze zusammendenkt.\n\nGenau das ist meine Arbeit.\n\nInteresse? Schreib mir kurz oder buch direkt einen Termin. 👇',
    hashtags:'#Firmenkunden #Unternehmer #Mittelstand #Geschäftsführer #Absicherung #Altersvorsorge #Finanzberatung #Firmenkundenberater #coachthorben #Liquidität',
    captionLI:'Eine Beobachtung aus vielen Gesprächen mit Unternehmern:\n\nDie meisten haben ihre eigene Absicherung, ihre Liquidität und ihre Altersvorsorge nicht wirklich im Griff.\n\nNicht weil sie es nicht wollen. Sondern weil niemand das Ganze zusammendenkt.\n\nGenau das ist meine Arbeit als Firmenkundenberater: Ich denke das Ganze zusammen — für Geschäftsführer und Inhaber im Mittelstand.\n\nWann hast du zuletzt das große Bild angeschaut?',
@@ -445,7 +448,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: @coachthorben','Export → Post4_WA.png']},
   {id:5,title:'Privatkunden — Gehalt vs. Vermögen',zielgruppe:'privat',typ:'Expertise',
    kachel:'Dein Gehalt ist nicht\ndein Vermögen.\n\n<Der Unterschied zählt.>',
-   datum:'2026-04-22',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-04-22',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Viele verdienen gut.\n\nAber am Ende des Monats bleibt wenig übrig. Die Altersvorsorge ist unklar. Der Wohntraum bleibt Traum.\n\nDas ist kein Versagen. Das ist fehlende Struktur.\n\nWer im Sport keine Struktur hat, kommt nicht voran — egal wie viel Talent er mitbringt.\n\nMit Geld ist es genauso.\n\nIch helfe Privatpersonen, ein System aufzubauen das wirklich zu ihrem Leben passt.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪',
    hashtags:'#Privatkunden #Vermögensaufbau #FinanzielleFreiheit #Altersvorsorge #Finanzcoach #Finanzathlet #GeldMitSystem #coachthorben #Absicherung #Ruhestand',
    captionLI:'Viele meiner Kunden verdienen gut. Sehr gut sogar.\n\nUnd trotzdem: Am Ende des Monats bleibt wenig übrig. Die Altersvorsorge ist unklar. Der Wohntraum bleibt Traum.\n\nDas ist kein Versagen — das ist fehlende Struktur.\n\nIm Sport: Talent ohne Trainingsplan kommt nicht ans Ziel. Mit Geld ist es genauso.\n\nDein Plan. Dein Tempo. Dein Ergebnis.',
@@ -454,7 +457,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.','Export → Post5_WA.png']},
   {id:6,title:'Mai Post 1 — Provokation',zielgruppe:'beide',typ:'Provokation',
    kachel:'Du planst deinen Urlaub.\nDeine Rente —\n<noch nicht.>',
-   datum:'2026-04-29',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-04-29',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Für den Urlaub: Flüge gebucht, Hotel reserviert, Koffer gepackt.\n\nFür die Rente: Irgendwann. Mal schauen. Wird schon.\n\nDer Unterschied zwischen beidem? Beim Urlaub weißt du wann er ist.\n\nBei der Rente auch — und trotzdem warten die meisten.\n\nIch helfe dir, das zu ändern. Ohne Druck. Mit Plan.\n\nLink in der Bio. 👇',
    hashtags:'#Altersvorsorge #Ruhestand #Finanzathlet #Finanzplanung #coachthorben #Vorsorge #Mittelstand #FinanzielleFreiheit #Finanzcoach #Vermögensaufbau',
    captionLI:'Warum planen wir unseren Urlaub auf den Tag genau — aber nicht unseren Ruhestand?\n\nBeim Urlaub wissen wir: wann er beginnt, wie lange er geht, was er kostet.\n\nBei der Rente? Wir wissen nur den möglichen Startpunkt.\n\nProf. Dr. Jochen Ruß vom Institut für Finanz- und Aktuarwissenschaften der Uni Ulm nennt das das Langlebigkeitsrisiko — eines der am meisten unterschätzten finanziellen Risiken.\n\nIch helfe dabei, das zu lösen. Ohne Druck. Mit Plan.',
@@ -463,7 +466,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: @coachthorben','Export → Post6_WA.png']},
   {id:7,title:'Mai Post 2 — Sport-Parallele',zielgruppe:'beide',typ:'Analogie',
    kachel:'Kein Athlet trainiert\nohne Ziel.\n<Was ist deins?>',
-   datum:'2026-05-06',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-05-06',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Ein Sprinter weiß: 100m in 10,5 Sekunden.\nEin Marathonläufer weiß: unter 3 Stunden.\n\nBeide trainieren auf ein konkretes Ziel hin.\n\nIn den Finanzen? Die meisten trainieren ins Blaue.\nKein Ziel. Kein Plan. Kein System.\n\nWas wäre dein finanzielles Ziel wenn du es konkret nennen müsstest?\n\nSchreib es in die Kommentare — ich bin gespannt. 👇',
    hashtags:'#Finanzathlet #Ziele #Finanzplanung #coachthorben #PerformanceMindset #Vermögensaufbau #Finanzcoach #Sport #Motivation #Erfolg',
    captionLI:'Ein Sprinter weiß: 100m in 10,5 Sekunden.\nEin Marathonläufer weiß: unter 3 Stunden.\n\nBeide trainieren auf ein konkretes Ziel. Jeden Tag. Mit System.\n\nIn der Finanzberatung erlebe ich das Gegenteil: Die meisten Menschen haben kein konkretes finanzielles Ziel. Kein Datum. Keine Zahl. Kein Plan.\n\nWas ist dein finanzielles Ziel, wenn du es konkret nennen müsstest?\n\nSchreib es in die Kommentare — ich antworte jedem.',
@@ -472,7 +475,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Was ist dein finanzielles Ziel?','Export → Post7_WA.png']},
   {id:8,title:'Mai Post 3 — Firmenkunden',zielgruppe:'firma',typ:'Expertise',
    kachel:'Liquidität ist\ndie Luft zum Atmen.\n<Hast du genug davon?>',
-   datum:'2026-05-13',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-05-13',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Viele Unternehmen sind profitabel — und trotzdem knapp.\n\nDas Paradox der Liquidität: Geld ist da, aber nicht verfügbar. Rechnungen kommen, aber der Puffer fehlt.\n\nWie ein Sportler, der topfit ist — aber vergessen hat zu trinken.\n\nIch helfe Firmenkunden, Liquidität als aktives Steuerungsinstrument zu nutzen.\n\nKurzes Gespräch gefällig? Link in der Bio. 👇',
    hashtags:'#Liquidität #Firmenkunden #Unternehmer #Mittelstand #Firmenkundenberater #Finanzberatung #coachthorben #Cashflow #Geschäftsführer #Absicherung',
    captionLI:'Liquidität ist das Thema das ich bei Firmenkunden am häufigsten unterschätzt sehe.\n\nDas Paradox: Viele Unternehmen sind profitabel — und trotzdem knapp.\n\nWie ein Sportler der topfit ist — aber vergessen hat zu trinken.\n\nLiquidität ist kein Zufallsprodukt. Sie ist ein aktives Steuerungsinstrument — wenn man sie als solches behandelt.\n\nWie ist das bei dir aufgestellt?',
@@ -481,7 +484,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Firmenkundenberater & Finanzcoach','Export → Post8_WA.png']},
   {id:9,title:'Mai Post 4 — Privatkunden',zielgruppe:'privat',typ:'Expertise',
    kachel:'Absicherung ist\nkein Luxus.\n<Es ist dein Fundament.>',
-   datum:'2026-05-20',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-05-20',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Stell dir vor du trainierst monatelang für einen Marathon.\n\nUnd dann brichst du dir kurz davor das Bein.\nKein Backup. Kein Plan B. Alles vorbei.\n\nGenau das passiert finanziell ohne Absicherung.\n\nBerufsunfähigkeit. Krankheit. Unfall.\nDas Leben passiert — bist du vorbereitet?\n\nIch helfe Privatpersonen, ihr Fundament zu sichern bevor sie in den Aufbau gehen.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪',
    hashtags:'#Absicherung #Berufsunfähigkeit #Privatkunden #Finanzcoach #Finanzathlet #coachthorben #Vorsorge #FinanzielleFreiheit #Fundament #Gesundheit',
    captionLI:'Stell dir vor, du trainierst monatelang für einen Marathon — und brichst dir kurz davor das Bein.\n\nGenau das passiert finanziell ohne Absicherung. Täglich.\n\nDie häufigste Reaktion: Mir wird das schon nicht passieren.\nDie zweithäufigste: Ich kümmere mich — irgendwann.\n\nIch helfe Unternehmern und Privatpersonen, ihr Fundament zu sichern bevor sie in den Aufbau gehen.\n\nDein Plan. Dein Tempo. Dein Ergebnis.',
@@ -490,7 +493,7 @@ var DEF_POSTS=[
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext wie Instagram','Graue Zeile unten: Dein Plan. Dein Tempo. Dein Ergebnis.','Export → Post9_WA.png']},
   {id:10,title:'Mai Post 5 — Story/Persönlich',zielgruppe:'beide',typ:'Persönlich',
    kachel:'Warum ich tue,\nwas ich tue.\n<Weil beides zählt.>',
-   datum:'2026-05-27',zeit:'07:00',done:false,kanalTypes:['insta','wa','li'],
+   datum:'2026-05-27',zeit:'07:00',done:true,kanalTypes:['insta','wa','li'],
    caption:'Ich bin nicht Finanzberater geworden weil ich Zahlen liebe.\n\nIch bin es geworden weil ich gesehen habe, was passiert wenn Menschen kein System haben.\n\nIn 20 Jahren Sport habe ich erlebt: Wer ein System hat, wächst. Wer keins hat, stagniert.\n\nIm Sport wie in den Finanzen.\n\nDeshalb tue ich beides. Und deshalb gehe ich keine Kompromisse ein.\n\nDein Plan. Dein Tempo. Dein Ergebnis. 💪',
    hashtags:'#ÜberMich #Finanzathlet #PerformanceCoach #Finanzcoach #coachthorben #Warum #MeinWeg #Motivation #KörperUndKapital #Vermögensaufbau',
    captionLI:'Ich bin nicht Finanzberater geworden weil ich Zahlen liebe.\n\nIch bin es geworden weil ich gesehen habe, was passiert wenn Menschen kein System haben.\n\nIn 20 Jahren Sport habe ich erlebt: Wer ein System hat, wächst. Wer keins hat, stagniert.\n\nIn der Finanzberatung ist es genauso.\n\nDeshalb verbinde ich beide Welten — weil körperliche und finanzielle Leistungsfähigkeit zusammengehören.\n\nIch mache aus Menschen Finanzathleten. Das ist mein Warum.',
@@ -506,15 +509,15 @@ var DEF_POSTS=[
    caption:'Hast du das Gefuehl, deine Finanzen im Griff zu haben?\n→ Umfrage-Sticker: "Ja, laeuft!" / "Ausbaufaehig..."',
    canva:['Story in Instagram erstellen','Dunkles Foto als Hintergrund','Umfrage-Sticker hinzufuegen']},
   {id:103,title:'Story - Gedanke Woche 2',zielgruppe:'beide',typ:'Story',kanalTypes:['story'],
-   kachel:'10 Liegestuetze taeglich.',datum:'2026-04-11',zeit:'19:00',done:false,
+   kachel:'10 Liegestuetze taeglich.',datum:'2026-04-11',zeit:'19:00',done:true,
    caption:'10 Liegestuetze taeglich.\nHeute siehst du nichts.\nIn einem Jahr bist du ein anderer Mensch.\n\nMit 100 EUR monatlich ist es genauso.',
    canva:['Foto vom Training oder Schreibtisch','Text-Sticker drauf','Fertig in 2 Min.']},
   {id:104,title:'Story - Umfrage Firmenkunden',zielgruppe:'firma',typ:'Story',kanalTypes:['story'],
-   kachel:'Groesstes Unternehmer-Thema?',datum:'2026-04-14',zeit:'11:30',done:false,
+   kachel:'Groesstes Unternehmer-Thema?',datum:'2026-04-14',zeit:'11:30',done:true,
    caption:'Was ist gerade dein groesstes Thema?\n→ Umfrage: "Liquiditaet" / "Mitarbeiter absichern"',
    canva:['Story in Instagram erstellen','Umfrage-Sticker mit beiden Optionen']},
   {id:105,title:'Story - Hinter den Kulissen',zielgruppe:'beide',typ:'Story',kanalTypes:['story'],
-   kachel:'Woche im Rueckblick.',datum:'2026-04-25',zeit:'19:00',done:false,
+   kachel:'Woche im Rueckblick.',datum:'2026-04-25',zeit:'19:00',done:true,
    caption:'Woche mit 4 Gespraechen.\nImmer dasselbe Thema: kein System.\nDas ist loesbar. Das ist mein Job.\n\nHabt ein gutes Wochenende 👋',
    canva:['Selfie im Auto, beim Kaffee, oder Text-Story','Text-Sticker drauf','Fertig in 30 Sek.']},
   {id:11,title:'Altersvorsorgedepot - Die News',zielgruppe:'beide',typ:'Aktuelles',kanalTypes:['insta','wa','li'],
@@ -549,7 +552,7 @@ var DEF_POSTS=[
   {id:36,title:'Was gute Berater und Trainer gemeinsam haben',zielgruppe:'beide',typ:'Analogie',
    kanalTypes:['insta','wa','li'],
    kachel:'Was ein guter Trainer\nund ein guter Berater\n<gemeinsam haben.>',
-   datum:'2026-06-24',zeit:'07:00',done:false,
+   datum:'2026-06-24',zeit:'07:00',done:true,
    caption:'Was macht einen guten Trainer aus?\n\nEr sieht nicht nur was du tust — sondern warum du es tust.\nEr kennt dein Ziel besser als du selbst es aussprichst.\nUnd er passt den Plan an — wenn das Leben dazwischenkommt.\n\nGenau das ist meine Arbeit als Finanzberater.\n\nIch schaue nicht nur auf Zahlen.\nIch schaue auf Muster. Auf Gewohnheiten. Auf das große Bild.\n\nBeides braucht Vertrauen. Beides braucht Zeit. Beides bringt Ergebnisse.\n\nDein Plan. Dein Tempo. Dein Ergebnis.\nLink in der Bio. 👇',
    hashtags:'#Finanzberatung #PerformanceCoaching #Finanzathlet #Trainer #Berater #coachthorben #Mittelstand #Vertrauen #System #DeinPlan',
    canva:['Hell-Vorlage oeffnen (heller Hintergrund)','Headline: Was ein guter Trainer und ein guter Berater gemeinsam haben.','Akzentfarbe #2085C5','Export Post36_Insta.png'],
@@ -559,13 +562,83 @@ var DEF_POSTS=[
   {id:37,title:'Warum Unternehmer Sport brauchen',zielgruppe:'firma',typ:'Provokation',
    kanalTypes:['insta','wa','li'],
    kachel:'Dein Unternehmen laeuft.\nDu selbst — <wann zuletzt?>',
-   datum:'2026-07-01',zeit:'07:00',done:false,
+   datum:'2026-07-01',zeit:'07:00',done:true,
    caption:'Ich kenne viele Unternehmer, die ihr Business perfekt optimieren.\n\nProzesse. Teams. Zahlen. Alles im Griff.\n\nUnd dann frage ich: Wann hast du zuletzt Sport gemacht?\n\nStille.\n\nDabei ist der Koerper der erste Indikator.\nWer koerperlich auf Reserve laeuft, laeuft auch unternehmerisch auf Reserve.\n\nKein Urteil — ich sehe das taeglich.\nUnd ich weiss aus eigener Erfahrung: Wer sich bewegt, denkt klarer.\n\nSport ist kein Hobby fuer Unternehmer.\nEs ist Fuehrungsaufgabe.\n\nWann warst du zuletzt draussen?\nLink in der Bio. 👇',
    hashtags:'#Unternehmer #Sport #Performance #Mittelstand #Fuehrung #coachthorben #Finanzathlet #Firmenkundenberater #Gesundheit #Koerperlichkeit',
    canva:['Dunkel-Vorlage oeffnen (dunkler Hintergrund #161e2e)','Headline: Dein Unternehmen laeuft. Du selbst — wann zuletzt?','Akzentfarbe #2085C5','Export Post37_Insta.png'],
    taglineWA:'@coachthorben',
    canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext','Graue Zeile: @coachthorben','Export Post37_WA.png'],
    captionLI:'Ich kenne viele Geschaeftsfuehrer, die ihr Unternehmen perfekt optimieren.\n\nProzesse, Teams, Zahlen — alles unter Kontrolle.\n\nDann stelle ich eine einfache Frage:\nWann haben Sie zuletzt Sport gemacht?\n\nMeistens kommt: lange her.\n\nDabei ist der Koerper der erste Fruehindikator fuer unternehmerische Leistungsfaehigkeit.\nWer koerperlich auf Reserve laeuft, fuehrt auch so.\n\nIch arbeite taeglich an der Schnittstelle von Performance und Finanzen — und sehe: Wer sich regelmaessig bewegt, trifft bessere Entscheidungen.\n\nSport ist keine Freizeitbeschaeftigung fuer Unternehmer.\nEs ist Fuehrungsaufgabe.\n\nWie ist das bei Ihnen?'}
+
+,
+  // ── NEUE POSTS AB AUGUST 2026 ─────────────────────────────
+  {id:200,title:'Metzingen Open — Leistungssport & Finanzen',zielgruppe:'beide',typ:'Analogie',kanalTypes:['li'],
+   kachel:'Leistung kommt nicht\nim Moment.\n<Sie wird vorher gebaut.>',
+   datum:'2026-07-30',zeit:'08:00',done:false,
+   captionLI:'Letzte Woche war ich bei den Metzingen Open.\n\nWas mich am meisten beeindruckt hat: die Explosivitaet beim Aufschlag.\n\nDiese Athleten arbeiten Jahre daran, in einem Bruchteil einer Sekunde maximale Kraft zu entfalten. Nicht durch Zufall. Nicht durch Talent allein.\n\nSondern durch konsequente Vorbereitung. Tag fuer Tag.\n\nAls Athletiktrainer sehe ich genau das: Die Geschwindigkeit auf dem Platz ist das Ergebnis von allem, was vorher passiert ist. Das Aufwaermen. Die Mobilitaet. Die Ernaehrung. Der Schlaf.\n\nFinanzen funktionieren genauso.\n\nWas du im Ernstfall abrufen kannst — im Job, bei einer Investition, in einer Krise — ist das Ergebnis von dem, was du vorher aufgebaut hast. Liquiditaet. Ruecklagen. Struktur.\n\nLeistung kommt nicht im Moment. Sie wird vorher gebaut.\n\nIm Sport. Und in deinen Finanzen.',
+   hashtags:'#Leistungssport #Tennis #MetzingenOpen #Finanzen #PerformanceCoach',
+   canva:['LinkedIn-Post erstellen (kein Bild noetig)','Text aus captionLI kopieren und einfuegen','Optional: Foto vom Event anhaengen']},
+
+  {id:201,title:'Metzingen Open — Workshop Teaser',zielgruppe:'beide',typ:'Workshop',kanalTypes:['li','insta'],
+   kachel:'Smarter vorbereiten.\n<Nicht mehr trainieren.>',
+   datum:'2026-08-05',zeit:'08:00',done:false,
+   captionLI:'Letzte Woche Metzingen Open. Diese Woche zurueck in der Realitaet.\n\nUnd eine Frage laesst mich nicht los:\n\nWie viele Tennisspieler sehen diese Athleten auf dem Platz — und fragen sich, was die anders machen?\n\nDie Antwort ist nicht: mehr trainieren.\n\nEs ist: smarter vorbereiten. Den Koerper kennen. Den Kopf trainieren. Wissen, was man isst. Wissen, wie man sich aufwaermt. Wissen, was man vom Training will.\n\nGenau das ist die Idee hinter unserem Tennis Performance Workshop im Oktober.\n\nKein Schlaeger. Keine Taktik. Sondern du — als Athlet — mit allem was dazu gehoert.\n\nBewegung. Ernaehrung. Mindset.\n\nOktober 2026. Sportschule Kidash. Limitierte Plaetze.\n\nWenn du dabei sein willst — schreib mir.',
+   caption:'Letzte Woche Metzingen Open.\n\nDiese Woche eine Frage, die mich nicht loslaesst:\n\nWas machen diese Athleten anders?\n\nNicht mehr trainieren. Sondern smarter vorbereiten.\n\nGenau darum geht es im Tennis Performance Workshop Oktober 2026.\n\nBewegung. Ernaehrung. Mindset.\n\nSportschule Kidash. Limitierte Plaetze.\nLink in der Bio. 👇',
+   hashtags:'#TennisWorkshop #PerformanceCoach #Tennis #Kidash #Athletik #MetzingenOpen',
+   canva:['Instagram-Vorlage oeffnen (dunkler Hintergrund #161E2E)','Kacheltext: Smarter vorbereiten. / Nicht mehr trainieren.','Akzentfarbe #378ADD','Unten: Oktober 2026 · Sportschule Kidash','Export Post201_Insta.png'],
+   taglineWA:'Oktober 2026 · Sportschule Kidash',
+   canvaWA:['WA-Status Vorlage oeffnen (1080x1920px)','Gleicher Kacheltext','Graue Zeile: Oktober 2026 · Sportschule Kidash','Export Post201_WA.png']},
+
+  {id:202,title:'In Bewegung — erster Anlauf',zielgruppe:'beide',typ:'Persoenlich',kanalTypes:['li'],
+   kachel:'In Bewegung.\nErste Lektion:\n<Es ist schwieriger als gedacht.>',
+   datum:'2026-08-12',zeit:'08:00',done:false,
+   captionLI:'Ich hab ein Format gestartet, das sich "In Bewegung" nennt.\n\nDie Idee: Einmal die Woche treffe ich mich mit jemandem, den ich noch nicht kenne. Tennis, Spaziergang, Sport — egal was. Einfach in Bewegung kommen. Und dabei einen Menschen kennenlernen, ohne Agenda.\n\nIch hab Kunden davon erzaehlt. Ich hab gefragt, ob sie mir jemanden empfehlen. Ich war beim Sport und hab ueberlegt, ob ich einfach jemanden anspreche.\n\nEhrlich gesagt: Es ist schwieriger als gedacht.\n\nNicht weil die Menschen nicht offen waeren. Sondern weil "hey, ich kenn dich nicht, lass uns was machen" eine seltsam hohe Huerde hat — fuer mich genauso wie fuer andere.\n\nAber genau das interessiert mich.\n\nWie viele wertvolle Gespraeche finden nie statt, weil der erste Schritt zu gross wirkt?\n\nIch bleibe dran. Und wenn du Lust hast, beim naechsten Mal dabei zu sein — schreib mir einfach.',
+   hashtags:'#InBewegung #Netzwerk #Verbindung #PerformanceCoach #Tennis',
+   canva:['LinkedIn-Post — kein Bild noetig','Text aus captionLI kopieren']},
+
+  {id:203,title:'Urlaub ohne Pump — Liquiditaetsplanung',zielgruppe:'beide',typ:'Expertise',kanalTypes:['li','insta','wa'],
+   kachel:'Urlaub ist kein Luxus.\nAber er sollte auch\n<kein Kredit sein.>',
+   datum:'2026-08-19',zeit:'08:00',done:false,
+   captionLI:'Viele goennen sich im Sommer einen Urlaub — und zahlen ihn noch im Winter ab.\n\nDas ist kein Vorwurf. Aber es ist ein Muster das sich aendert laesst.\n\nIm Sport nennt man es Periodisierung: Du planst Belastung und Erholung im Voraus. Nicht erst wenn der Koerper zusammenbricht.\n\nIn der Finanzplanung funktioniert es genauso.\n\nWer weiss, dass er jeden Sommer 3.000 Euro Urlaub macht, kann 250 Euro pro Monat zuruecklegen — und faehrt ohne Kreditkarte.\n\nLiquiditaet bedeutet nicht, kein Geld auszugeben. Sondern zu wissen, wann du was brauchst — und vorbereitet zu sein.\n\nHast du dein Urlaubsbudget schon fuer naechstes Jahr geplant?',
+   caption:'Urlaub ist kein Luxus.\n\nAber er sollte auch kein Kredit sein.\n\nWer seinen Urlaub kennt, kann ihn planen — ohne im Winter noch dafuer zu zahlen.\n\n250 Euro pro Monat = 3.000 Euro im Sommer.\n\nLiquiditaet ist kein Sparbuch. Es ist Freiheit.\n\nLink in der Bio wenn du deine Finanzplanung endlich in den Griff kriegst. 👇',
+   hashtags:'#Liquiditaet #Finanzplanung #Urlaub #Sparen #PerformanceCoach #Finanzathlet #coachthorben',
+   canva:['Instagram-Vorlage oeffnen','Kacheltext anpassen','Akzentfarbe #378ADD','Export Post203_Insta.png'],
+   taglineWA:'Firmenkundenberater & Performance Coach',
+   canvaWA:['WA-Status Vorlage oeffnen','Gleicher Kacheltext','Export Post203_WA.png']},
+
+  {id:204,title:'Regeneration als Leistungsfaktor',zielgruppe:'beide',typ:'Expertise',kanalTypes:['li','insta','wa'],
+   kachel:'Pause ist kein Schwaeche.\n<Pause ist Training.>',
+   datum:'2026-08-26',zeit:'08:00',done:false,
+   captionLI:'Im Leistungssport ist Regeneration kein Bonus. Sie ist Pflicht.\n\nKein Athlet auf Top-Niveau trainiert ohne Erholungsplanung. Die besten Trainer wissen: Wachstum passiert nicht beim Training — sondern danach.\n\nFuer Unternehmer gilt dasselbe.\n\nWer nie pausiert, arbeitet mit sinkender Effizienz. Entscheidungen werden schlechter. Der Blick enger. Die Energie weniger.\n\nRegenerieren heisst nicht: nichts tun.\nEs heisst: bewusst auftanken.\n\nSport. Familie. Natur. Schlaf. Was auch immer dich wirklich erholt.\n\nWie sieht deine Regeneration aus?',
+   caption:'Pause ist kein Schwaeche.\n\nIm Leistungssport ist Regeneration Pflicht.\n\nGilt auch fuer Unternehmer.\n\nWer nie stoppt, arbeitet mit sinkender Leistung — ohne es zu merken.\n\nWas laedt dich wirklich auf?\n\n#Regeneration #Performance #Unternehmer #coachthorben',
+   hashtags:'#Regeneration #Leistungssport #Unternehmer #PerformanceCoaching #Erholung #Urlaub #Fuehrung #coachthorben',
+   canva:['Dunkel-Vorlage oeffnen','Kacheltext: Pause ist kein Schwaeche. / Pause ist Training.','Export Post204_Insta.png'],
+   taglineWA:'@coachthorben',
+   canvaWA:['WA-Status Vorlage oeffnen','Gleicher Kacheltext','Export Post204_WA.png']},
+
+  {id:205,title:'Workshop Bewerbung September',zielgruppe:'beide',typ:'Workshop',kanalTypes:['li','insta'],
+   kachel:'Oktober 2026.\nTennis Performance Workshop.\n<Noch [X] Plaetze frei.>',
+   datum:'2026-09-09',zeit:'08:00',done:false,
+   captionLI:'Noch 6 Wochen bis zum Tennis Performance Workshop.\n\nWas dich erwartet:\n→ Bewegung & Koerper: Mobilitaet, Aufwaermen, PAPR-Modell\n→ Ernaehrung: Pre-Match, Wettkampftag, Regeneration\n→ Mindset: Glaubenssaetze, Autonomie, Commitment\n\nKein Schlaeger. Keine Taktik. Sondern du — als Athlet — mit allem was wirklich zaehlt.\n\nSamstag & Sonntag im Oktober.\nSportschule Kidash.\n449 Euro. Max. 15 Teilnehmer.\n\nNoch wenige Plaetze frei. Jetzt melden.',
+   caption:'Oktober 2026. Tennis Performance Workshop.\n\nBewegung. Ernaehrung. Mindset.\n\nSportschule Kidash · 449 Euro · Max. 15 TN\n\nNoch wenige Plaetze frei.\nLink in der Bio. 👇',
+   hashtags:'#TennisWorkshop #PerformanceCoach #Tennis #Kidash #Athletik #Mindset #Bewegung',
+   canva:['Instagram-Vorlage oeffnen (dunkel)','Kacheltext anpassen mit aktuelle Platzzahl','Datum eintragen: Oktober 2026','Export Post205_Insta.png']},
+
+  {id:206,title:'Kidash Referent — Start Oktober',zielgruppe:'beide',typ:'Persoenlich',kanalTypes:['li'],
+   kachel:'Neues Kapitel.\nAb Oktober:\n<Dozent an der Kidash Akademie.>',
+   datum:'2026-09-23',zeit:'08:00',done:false,
+   captionLI:'Ab Oktober beginnt ein neues Kapitel.\n\nIch werde als Referent an der Kidash Akademie taetig sein.\n\nWas mich daran begeistert: Wissen weitergeben. Nicht nur beraten — sondern ausbilden. Menschen begleiten, die selbst andere Menschen foerdern wollen.\n\nDie Verbindung von Bewegung, Leistung und Entwicklung — das ist der Kern meiner Arbeit.\n\nOb als Finanzberater, Performance Coach oder jetzt als Dozent: Es geht immer um dasselbe.\n\nMenschen staerker machen. Damit sie das, was in ihnen steckt, wirklich abrufen koennen.\n\nIch freue mich auf diesen naechsten Schritt.',
+   hashtags:'#Dozent #Kidash #PerformanceCoaching #Referent #Ausbildung #Lehre #coachthorben',
+   canva:['LinkedIn-Post — kein Bild noetig oder persoenliches Foto','Text aus captionLI kopieren']},
+
+  {id:207,title:'Workshop Live — Rueckblick',zielgruppe:'beide',typ:'Persoenlich',kanalTypes:['li','insta'],
+   kachel:'Das Wochenende das alles veraendert.\n<Tennis Performance Workshop — fertig.>',
+   datum:'2026-10-28',zeit:'08:00',done:false,
+   captionLI:'[Nach dem Workshop ausfullen]\n\nDas Wochenende ist vorbei.\n\nWas ich mitgenommen habe: [persoenliche Erkenntnis eintragen]\n\nWas die Teilnehmer mitgenommen haben: [ein konkretes Beispiel oder Zitat eintragen]\n\nEs geht nicht ums Tennis spielen.\nEs geht darum, als Athlet zu denken — und dieses Denken in den Alltag mitzunehmen.\n\nNaechster Workshop kommt. Wenn du dabei sein willst, schreib mir.',
+   caption:'[Nach dem Workshop ausfullen]\n\nWochenende. Sportschule Kidash. 15 Athleten.\n\nWas bleibt: [Erkenntnis eintragen]\n\nNaechster Workshop kommt.\nLink in der Bio. 👇',
+   hashtags:'#TennisWorkshop #PerformanceCoach #Tennis #Kidash #Rueckblick #Athletik',
+   canva:['Fotos vom Workshop verwenden','Authentisch — kein Hochglanz','Export Post207_Insta.png']}
+
 ];
 var rpPosts=[];
 
@@ -621,11 +694,21 @@ function renderRP(){
     else{var ddays=Math.ceil((new Date(next.datum)-new Date(today))/(1000*60*60*24));rem.style.display='flex';remTxt.textContent='Naechster Post in '+ddays+' Tag'+(ddays!==1?'en':'')+': "'+next.title+'" am '+fmtDatum(next.datum);}
   }
   var filtered=rpPosts.filter(function(p){
+    if(rpActiveMonth==='offen')return !p.done;
+    if(rpActiveMonth==='archiv')return !!p.done;
+    if(rpActiveMonth==='aug'&&!(p.datum>='2026-08-01'&&p.datum<='2026-08-31'))return false;
+    if(rpActiveMonth==='sep'&&!(p.datum>='2026-09-01'&&p.datum<='2026-09-30'))return false;
+    if(rpActiveMonth==='okt'&&!(p.datum>='2026-10-01'&&p.datum<='2026-10-31'))return false;
     if(rpActiveMonth==='april'&&!(p.datum>='2026-04-01'&&p.datum<='2026-04-30'))return false;
     if(rpActiveMonth==='mai'&&!(p.datum>='2026-05-01'&&p.datum<='2026-05-31'))return false;
     if(rpActiveKanal!=='alle'){var kt=p.kanalTypes||['insta','wa'];if(kt.indexOf(rpActiveKanal)<0)return false;}
-    if(rpActiveKanal!=='alle'){var kt=p.kanalTypes||['insta','wa'];if(kt.indexOf(rpActiveKanal)<0)return false;}
     return true;
+  });
+  // Offene Posts zuerst (nach Datum), erledigte ans Ende
+  filtered.sort(function(a,b){
+    if(a.done&&!b.done)return 1;
+    if(!a.done&&b.done)return -1;
+    return a.datum.localeCompare(b.datum);
   });
   el.innerHTML=filtered.map(function(p){
     var isOpen=!!rpOpenCards[p.id];
@@ -1082,7 +1165,7 @@ function importData(input){
 })();
 
 // ── Redaktionsplan helpers ──
-var rpActiveMonth='alle';
+var rpActiveMonth='offen';
 var rpActiveKanal='alle';
 function setRKanal(k){
   rpActiveKanal=k;
@@ -1096,7 +1179,8 @@ var rpOpenCards={};
 function setMonth(m){
   rpActiveMonth=m;
   document.querySelectorAll('.rp-mtab').forEach(function(b){b.classList.remove('active');});
-  var tb=document.getElementById('mtab-'+m);if(tb)tb.classList.add('active');
+  var idMap={offen:'offen',aug:'aug',sep:'sep',okt:'okt',alle:'alle',archiv:'archiv',april:'apr',mai:'mai'};
+  var tb=document.getElementById('mtab-'+(idMap[m]||m));if(tb)tb.classList.add('active');
   renderRP();
 }
 function togRPCard(id){
