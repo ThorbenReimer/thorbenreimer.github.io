@@ -1,0 +1,1620 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BGM-Planspiel · Musterbach Kunststofftechnik GmbH</title>
+<style>
+:root{
+  --bg:#161E2E; --mid:#1E2D45; --sep:#2A3A55; --accent:#378ADD;
+  --light:#7AB8F5; --text:#FFFFFF; --body:#D0DCE8; --muted:#7A9CC0;
+  --gruen:#3FA96B; --gelb:#D9A521; --rot:#C4553E;
+  --head:Georgia,'Times New Roman',serif;
+  --sans:Calibri,'Segoe UI',system-ui,-apple-system,'Helvetica Neue',sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--body);
+  font-family:var(--sans);font-size:16px;-webkit-text-size-adjust:100%}
+body{min-height:100vh;display:flex;flex-direction:column;
+  padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+.topbar{height:5px;background:var(--accent);flex:none}
+[hidden]{display:none!important}
+::selection{background:#2f4d7d;color:#fff}
+input,select{background:#22314b;border:1px solid var(--sep);border-radius:8px;
+  color:#fff;font-family:var(--sans);font-size:16px;padding:11px 12px;min-height:44px}
+input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px}
+
+/* ---------- Startauswahl ---------- */
+#gate{position:fixed;inset:0;background:var(--bg);z-index:50;display:flex;
+  align-items:center;justify-content:center;padding:24px}
+#gate .box{max-width:540px;width:100%;text-align:center}
+#gate h1{font-family:var(--head);font-size:31px;color:#fff;margin:0 0 6px;line-height:1.2}
+#gate .sub{color:var(--light);font-family:var(--head);font-size:17px;margin-bottom:34px}
+#gate .pick{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+#gate .pick button{flex:1 1 190px;min-height:62px;border-radius:10px;border:1px solid var(--sep);
+  background:var(--mid);color:var(--body);font-family:var(--sans);font-size:17px;cursor:pointer;padding:0 20px}
+#gate .pick button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+#pinrow{margin-top:20px}
+#pinrow input{width:180px;text-align:center;letter-spacing:3px}
+.warn{color:#E08B76;font-size:14px;margin-top:10px;min-height:20px}
+
+/* ---------- Kopf & Navigation ---------- */
+header{padding:12px 18px 10px;display:flex;flex-wrap:wrap;gap:10px;
+  align-items:baseline;justify-content:space-between;border-bottom:1px solid var(--sep)}
+header h1{font-family:var(--head);font-size:19px;color:#fff;margin:0;font-weight:700}
+header h1 span{color:var(--light);font-weight:400}
+.stand{font-size:13px;color:var(--muted);letter-spacing:.6px;text-transform:uppercase}
+.stand b{color:var(--accent);font-size:15px}
+.badge{display:inline-block;border:1px solid var(--sep);border-radius:999px;
+  padding:3px 11px;font-size:11px;letter-spacing:1.1px;text-transform:uppercase;color:var(--muted)}
+.badge.doz{border-color:var(--accent);color:var(--accent)}
+nav{display:flex;gap:6px;padding:10px 14px;flex-wrap:wrap;border-bottom:1px solid var(--sep)}
+nav button{font-family:var(--sans);font-size:14px;color:var(--body);background:transparent;
+  border:1px solid var(--sep);border-radius:999px;padding:9px 16px;cursor:pointer;min-height:42px}
+nav button[aria-selected="true"]{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+main{flex:1;padding:14px;max-width:1560px;width:100%;margin:0 auto}
+
+/* ---------- Einheit: Szene + Auftrag ---------- */
+.unit{display:flex;gap:16px;align-items:stretch}
+.stage{flex:1 1 auto;-webkit-user-select:none;user-select:none;background:var(--mid);border:1px solid var(--sep);border-radius:14px;
+  padding:8px;position:relative;overflow:hidden;min-width:0;height:min(60vh,580px);min-height:340px;transition:flex-basis .55s ease}
+.stage svg{display:block;width:100%;height:100%;touch-action:manipulation;
+  transition:transform .55s ease,opacity .35s ease}
+.stage.enter svg{opacity:0;transform:scale(.9)}
+.taskpanel{flex:0 0 0;width:0;opacity:0;overflow:hidden;
+  transition:flex-basis .55s ease,width .55s ease,opacity .4s ease .15s}
+.unit.split .stage{flex:0 0 56%}
+.unit.split .taskpanel{flex:0 0 calc(44% - 16px);width:auto;opacity:1;overflow:visible}
+@media(max-width:980px){
+  .unit{flex-direction:column}
+  .unit.split .stage,.unit.split .taskpanel{flex:1 1 auto;width:auto}
+  .taskpanel{max-height:0;transition:max-height .55s ease,opacity .4s ease}
+  .unit.split .taskpanel{max-height:2000px}
+}
+.scenetitle{-webkit-user-select:none;user-select:none;position:absolute;top:16px;left:18px;right:18px;pointer-events:none}
+.scenetitle .k{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700}
+.scenetitle .r{font-family:var(--head);font-size:23px;color:#fff;margin-top:3px}
+.hint{position:absolute;left:0;right:0;bottom:14px;text-align:center;pointer-events:none}
+.hint span{display:inline-block;background:rgba(22,30,46,.88);border:1px solid var(--sep);
+  border-radius:999px;padding:9px 20px;color:var(--light);font-size:14px}
+@keyframes pulse{0%,100%{opacity:.55}50%{opacity:1}}
+.hint span{animation:pulse 2.4s ease-in-out infinite}
+
+.card2{background:var(--mid);border:1px solid var(--sep);border-radius:14px;
+  border-left:5px solid var(--accent);padding:24px;height:100%}
+.kick{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700}
+.card2 h2{font-family:var(--head);font-size:26px;color:#fff;margin:9px 0 0;line-height:1.22}
+.rule{width:50px;height:3px;background:var(--accent);margin:13px 0 16px}
+.card2 .lead{font-size:16px;line-height:1.55;margin:0 0 18px}
+.auftrag{background:#22314b;border-radius:10px;padding:17px;border-left:3px solid var(--light)}
+.lbl{display:block;font-size:11px;text-transform:uppercase;letter-spacing:1px;
+  color:var(--muted);font-weight:400;margin-bottom:5px}
+.auftrag .lbl{color:var(--light)}
+.auftrag p{margin:0;font-size:16px;line-height:1.55;color:#fff}
+.meta{margin-top:16px;border-top:1px solid var(--sep);padding-top:14px;
+  display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.meta{grid-template-columns:1fr}}
+.meta p{margin:0;font-size:14px;line-height:1.5}
+.navbtns{display:flex;gap:8px;margin-top:20px;flex-wrap:wrap}
+.navbtns button{flex:1 1 120px;min-height:46px;border-radius:8px;border:1px solid var(--sep);
+  background:transparent;color:var(--body);font-family:var(--sans);font-size:15px;cursor:pointer}
+.navbtns button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.navbtns button:disabled{opacity:.32;cursor:default}
+
+/* ---------- Wochenleiste ---------- */
+.weeks{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.weeks button{width:40px;height:40px;border-radius:8px;border:1px solid var(--sep);
+  background:var(--mid);color:var(--muted);font-family:var(--sans);font-size:14px;cursor:pointer}
+.weeks button.done{color:var(--light);border-color:#38537d}
+.weeks button.now{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.weeks button.lock{opacity:.28;cursor:not-allowed}
+
+/* ---------- Grundriss (Übersicht) ---------- */
+.planwrap{background:var(--mid);border:1px solid var(--sep);border-radius:14px;padding:10px}
+.planwrap svg{display:block;width:100%;height:auto}
+@media(max-width:760px){.planwrap{overflow-x:auto}.planwrap svg{min-width:700px}}
+.room{cursor:pointer}
+.room rect{fill:#22314b;stroke:none;transition:fill .3s}
+.room .rw{fill:none;stroke:#3b527a;stroke-width:2;transition:stroke .3s}
+.room text{fill:var(--muted);font-family:Calibri,'Segoe UI',sans-serif;font-size:17px;pointer-events:none}
+.room .sub{font-size:13px;fill:#5d7ba3}
+.room.open rect{fill:#26385a} .room.open .rw{stroke:#4d6b9c} .room.open text{fill:var(--body)}
+.room.active rect{fill:#2f4d7d} .room.active .rw{stroke:var(--accent);stroke-width:3}
+.room.active text{fill:#fff}
+.locked{opacity:.4}
+.gnd{fill:none;stroke:#2a3a55;stroke-width:2}
+@keyframes ping{0%{r:7;opacity:.9}70%{r:26;opacity:0}100%{opacity:0}}
+.ping{fill:none;stroke:var(--accent);stroke-width:2.5;animation:ping 2.2s ease-out infinite}
+.pin{fill:var(--accent)} #marker{pointer-events:none}
+
+.aufliste{margin-top:18px;display:grid;gap:10px}
+.auf{background:var(--mid);border:1px solid var(--sep);border-radius:10px;padding:14px 16px;
+  border-left:4px solid var(--sep);cursor:pointer}
+.auf.cur{border-left-color:var(--accent)}
+.auf h4{margin:0 0 4px;font-family:var(--head);font-size:17px;color:#fff;font-weight:700}
+.auf h4 i{font-style:normal;color:var(--accent);font-size:12px;letter-spacing:1.2px;
+  text-transform:uppercase;margin-right:9px}
+.auf p{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
+
+/* ---------- Karten ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.card{background:var(--mid);border:1px solid var(--sep);border-radius:12px;padding:16px;
+  border-left:4px solid var(--accent)}
+.card h3{font-family:var(--head);font-size:19px;color:#fff;margin:0 0 2px}
+.card .role{color:var(--light);font-size:13px;margin-bottom:10px}
+.card ul{margin:0;padding-left:18px;font-size:14px;line-height:1.55}
+.card li{margin-bottom:4px}
+.card .where{margin-top:12px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.ev{background:var(--mid);border:1px solid var(--sep);border-radius:12px;cursor:pointer;
+  min-height:165px;display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;padding:22px}
+.ev .back{font-family:var(--head);font-size:38px;color:var(--accent)}
+.ev .backtxt{font-size:11px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;margin-top:8px}
+.ev.up{border-left:4px solid var(--light);text-align:left;align-items:flex-start;justify-content:flex-start}
+.ev .front{display:none} .ev.up .front{display:block}
+.ev .front .w{font-size:11px;letter-spacing:1.2px;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+.ev .front .t{font-family:var(--head);font-size:18px;color:#fff;line-height:1.35;margin-bottom:10px}
+.ev .front .q{font-size:14px;line-height:1.5}
+
+/* ---------- Punkteraster ---------- */
+.scroller{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--sep);border-radius:12px}
+table{border-collapse:collapse;font-size:14px;width:100%}
+th,td{padding:7px 6px;border-bottom:1px solid var(--sep);text-align:center}
+th{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);font-weight:400;
+  position:sticky;top:0;background:var(--bg);z-index:2}
+th.nm,td.nm{text-align:left;position:sticky;left:0;background:var(--bg);z-index:1;min-width:170px}
+th.nm{z-index:3}
+td.nm input{width:100%;min-height:38px;padding:7px 9px;font-size:14px}
+td.wk{padding:3px}
+td.wk input{width:46px;min-height:38px;padding:6px 2px;text-align:center;font-size:14px;
+  border-radius:6px;-moz-appearance:textfield}
+td.wk input::-webkit-outer-spin-button,td.wk input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.g{background:rgba(63,169,107,.26)!important;border-color:#3FA96B!important}
+.y{background:rgba(217,165,33,.24)!important;border-color:#D9A521!important}
+.r{background:rgba(196,85,62,.26)!important;border-color:#C4553E!important}
+td.ges{font-weight:700;font-size:15px;min-width:74px}
+td.ges.g{color:#7ED9A4} td.ges.y{color:#F2CE72} td.ges.r{color:#EE9C86}
+td.note{color:var(--light);min-width:56px}
+.tools{display:flex;gap:8px;margin-top:14px;flex-wrap:wrap;align-items:center}
+.tools button{min-height:44px;padding:0 18px;border-radius:8px;border:1px solid var(--sep);
+  background:transparent;color:var(--body);font-family:var(--sans);font-size:14px;cursor:pointer}
+.tools button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700}
+.tools label{font-size:14px;color:var(--muted);display:flex;align-items:center;gap:7px}
+.tools input[type=number]{width:74px;min-height:40px}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;font-size:13px;color:var(--muted)}
+.legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:7px;vertical-align:-2px}
+.note-txt{font-size:13px;color:var(--muted);line-height:1.55;margin-top:14px;max-width:820px}
+
+.codes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:12px}
+.codes div{background:var(--mid);border:1px solid var(--sep);border-radius:8px;padding:9px 11px;font-size:14px}
+.codes div b{color:var(--muted);font-weight:400;font-size:11px;display:block;
+  text-transform:uppercase;letter-spacing:.8px;margin-bottom:2px}
+.codes div span{color:#fff;letter-spacing:1.6px;font-weight:700}
+
+.unlock{background:var(--mid);border:1px solid var(--sep);border-radius:12px;padding:16px;
+  display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.unlock span{font-size:14px;color:var(--muted);flex:1 1 240px}
+.unlock input{width:170px;text-transform:uppercase;letter-spacing:2px;text-align:center}
+.unlock button{min-height:44px;padding:0 20px;border-radius:8px;border:none;
+  background:var(--accent);color:#fff;font-family:var(--sans);font-size:15px;font-weight:700;cursor:pointer}
+
+footer{border-top:1px solid var(--sep);padding:14px 18px;font-size:12px;color:var(--muted);text-align:center}
+
+/* ---------- v5: Wochenfelder, Abgabe, Fortschritt ---------- */
+.card2{overflow-y:auto}
+.chips{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;border-radius:999px;
+  border:1px solid var(--sep);font-size:12.5px;color:var(--body)}
+.chip.ph{border-color:var(--accent);color:var(--light)}
+.ziel{border-left:3px solid var(--accent);padding-left:13px;margin:0 0 16px;
+  font-size:16px;line-height:1.5;color:var(--light)}
+.begriffe{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 16px}
+.begriffe span{padding:5px 11px;border-radius:8px;font-size:13px;
+  background:rgba(55,138,221,.13);border:1px solid rgba(55,138,221,.32);color:var(--light)}
+.mlist{margin:6px 0 0;padding-left:18px;font-size:15px;line-height:1.55}
+.mlist li{margin-bottom:3px}
+.d{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}
+.d-offen{background:var(--muted)} .d-arbeit{background:var(--gelb)} .d-fertig{background:var(--gruen)}
+.abg{margin-top:18px;border-top:1px solid var(--sep);padding-top:16px}
+.seg{display:flex;gap:6px;margin:8px 0 12px;flex-wrap:wrap}
+.seg button{flex:1 1 96px;min-height:44px;border-radius:8px;border:1px solid var(--sep);
+  background:#22314b;color:var(--muted);font-family:var(--sans);font-size:14px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px}
+.seg button:hover{color:var(--body)}
+.seg button[aria-pressed="true"]{color:#fff;background:#2a3d5f}
+.seg button[aria-pressed="true"][data-st="offen"]{border-color:var(--muted)}
+.seg button[aria-pressed="true"][data-st="arbeit"]{border-color:var(--gelb)}
+.seg button[aria-pressed="true"][data-st="fertig"]{border-color:var(--gruen)}
+.abg textarea{width:100%;min-height:74px;resize:vertical;background:#22314b;
+  border:1px solid var(--sep);border-radius:8px;color:#fff;font-family:var(--sans);
+  font-size:15px;padding:10px 12px;line-height:1.5}
+.abgzeile{display:flex;gap:9px;align-items:center;flex-wrap:wrap;margin-top:11px}
+.minibtn{min-height:40px;padding:0 14px;border-radius:8px;border:1px solid var(--sep);
+  background:transparent;color:var(--body);font-family:var(--sans);font-size:13.5px;cursor:pointer}
+.minibtn:hover{border-color:var(--muted);color:#fff}
+.minibtn:disabled{opacity:.35;cursor:default}
+.fname{font-size:13px;color:var(--light);word-break:break-all}
+.stamp{margin-top:11px;font-size:13px;color:var(--gruen)}
+.tiny{font-size:12px;color:var(--muted);line-height:1.5;margin-top:10px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+.pbar{height:8px;border-radius:4px;background:var(--sep);overflow:hidden;flex:1}
+.pbar i{display:block;height:100%;background:var(--accent);border-radius:4px;transition:width .3s}
+.prow{display:flex;align-items:center;gap:13px;margin-bottom:9px}
+.prow .l{flex:0 0 118px;font-size:13px;color:var(--muted)}
+.prow .n{flex:0 0 58px;text-align:right;font-size:13px;color:var(--body)}
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(258px,1fr));gap:12px;margin:16px 0}
+.tcard{background:var(--mid);border:1px solid var(--sep);border-radius:12px;padding:15px}
+.tcard.on{border-color:var(--accent)}
+.tcard input{width:100%;margin-bottom:11px}
+table.mx{min-width:840px}
+.mx td button{width:100%;min-width:34px;min-height:40px;border:0;background:none;cursor:pointer}
+.mx td button:hover{background:rgba(55,138,221,.15)}
+.mx td .d{width:12px;height:12px}
+.ci{display:flex;gap:9px;flex-wrap:wrap;align-items:center;justify-content:center;line-height:1.8}
+.ci a{color:var(--muted);text-decoration:none}
+.ci a:hover{color:var(--light)}
+.ci svg{width:14px;height:14px;vertical-align:-2px}
+.ci .nm{color:var(--body)}
+
+/* Blättern bleibt erreichbar, auch wenn die Karte lang wird */
+.card2{position:relative;padding-bottom:0}
+@media(min-width:981px){.taskpanel{height:min(60vh,580px)}}
+.navbtns{position:sticky;bottom:0;z-index:2;background:var(--mid);
+  margin-top:20px;padding:13px 0 20px;border-top:1px solid var(--sep)}
+
+/* ---------- v7: Einzelkonto statt Teamverwaltung ---------- */
+.kontogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:11px}
+.kontogrid input{width:100%}
+.wliste{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:10px;margin:16px 0}
+.wz{display:flex;gap:11px;align-items:flex-start;text-align:left;cursor:pointer;width:100%;
+  background:var(--mid);border:1px solid var(--sep);border-radius:10px;padding:13px 14px;min-height:64px;
+  font-family:var(--sans);color:var(--body)}
+.wz:hover{border-color:var(--accent)}
+.wz:disabled{opacity:.38;cursor:default}
+.wz.jetzt{border-color:var(--accent)}
+.wz .d{margin-top:5px;width:9px;height:9px}
+.wz small{display:block;font-size:11px;color:var(--muted);letter-spacing:.9px;
+  text-transform:uppercase;margin-bottom:3px}
+.wz b{display:block;font-family:var(--head);font-size:14.5px;color:#fff;line-height:1.3;font-weight:700}
+.wz i{font-style:normal;display:block;font-size:12.5px;color:var(--muted);margin-top:3px}
+
+/* ---------- v9: Meilensteine ---------- */
+.chip.ms{border-color:#4d7fb5;color:var(--body)}
+.prow.ms{align-items:flex-start;padding:9px 11px;margin-bottom:6px;
+  border:1px solid transparent;border-radius:9px}
+.prow.ms.jetzt{border-color:var(--accent);background:rgba(55,138,221,.09)}
+.prow.ms .l{flex:0 0 260px;color:var(--body);line-height:1.35;font-size:14px}
+.prow.ms .l b{font-family:var(--head);color:var(--light);font-weight:700;margin-right:7px}
+.prow.ms .l small{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.prow.ms .pbar{margin-top:7px}
+.prow.ms .n{margin-top:5px}
+@media(max-width:640px){
+  .prow.ms{flex-wrap:wrap;gap:8px}
+  .prow.ms .l{flex:1 1 100%}
+  .prow.ms .pbar,.prow.ms .n{margin-top:0}
+}
+</style>
+</head>
+<body>
+
+<div id="gate">
+  <div class="box">
+    <h1>BGM-Planspiel</h1>
+    <div class="sub">Musterbach Kunststofftechnik GmbH</div>
+    <div class="pick">
+      <button id="asStudent" class="primary">Ich bin Teilnehmer</button>
+      <button id="asDoz">Dozentenansicht</button>
+    </div>
+    <div id="dozrow" hidden>
+      <input type="file" id="dozfile" accept=".json,application/json" class="sr">
+      <button type="button" class="minibtn" id="dozpick" style="min-height:46px">Dozentendatei wählen (dozent.json)</button>
+      <div class="warn" id="dozwarn">Einmal wählen — danach merkt sich dieses Gerät sie.</div>
+    </div>
+  </div>
+</div>
+
+<div class="topbar"></div>
+<header>
+  <h1>BGM-Planspiel <span>· Musterbach Kunststofftechnik GmbH</span></h1>
+  <div class="stand">Aufgabe <b id="wnow">1</b> von 19 &nbsp;·&nbsp; <span id="rnow">—</span>
+    &nbsp; <span class="badge" id="modebadge">Teilnehmer</span></div>
+</header>
+
+<nav role="tablist">
+  <button role="tab" aria-selected="true" data-t="unit">Einheit</button>
+  <button role="tab" aria-selected="false" data-t="plan">Spielbrett</button>
+  <button role="tab" aria-selected="false" data-t="leute">Die Belegschaft</button>
+  <button role="tab" aria-selected="false" data-t="fort">Fortschritt</button>
+  <button role="tab" aria-selected="false" data-t="karten" id="tab-karten" hidden>Ereigniskarten</button>
+  <button role="tab" aria-selected="false" data-t="punkte" id="tab-punkte" hidden>Punktestand</button>
+  <button role="tab" aria-selected="false" data-t="codes" id="tab-codes" hidden>Freischaltcodes</button>
+</nav>
+
+<main>
+
+<!-- ============ EINHEIT ============ -->
+<section class="panel" id="p-unit">
+  <div class="unlock" id="unlockbox" hidden>
+    <span id="unlocktxt">Neue Aufgabe freischalten — Code von Thorben eingeben.</span>
+    <input id="ucode" type="text" placeholder="Code" autocomplete="off" maxlength="12">
+    <button id="ubtn">Freischalten</button>
+  </div>
+
+  <div class="unit" id="unit">
+    <div class="stage" id="stage">
+      <svg id="scene" viewBox="0 0 1000 660" role="img" aria-label="Szene"></svg>
+      <div class="scenetitle"><div class="k" id="s-kick">Aufgabe 1</div><div class="r" id="s-room">Vor dem Werkstor</div></div>
+      <div class="hint" id="hintbox"><span id="hint">Tippen, um den Auftrag zu öffnen</span></div>
+    </div>
+    <aside class="taskpanel" id="taskpanel">
+      <div class="card2">
+        <div class="kick" id="i-kick">Aufgabe 1 von 19</div>
+        <h2 id="i-titel">—</h2>
+        <div class="rule"></div>
+        <div class="chips" id="i-chips"></div>
+        <p class="ziel" id="i-ziel" hidden>—</p>
+        <div class="begriffe" id="i-begriffe" hidden></div>
+        <p class="lead" id="i-text">—</p>
+        <div class="auftrag"><span class="lbl">Der Auftrag</span><p id="i-auftrag">—</p></div>
+        <div class="meta">
+          <div><span class="lbl">Um wen es geht</span><p id="i-wer">—</p></div>
+          <div><span class="lbl">Zeit</span><p id="i-zeit">60–75 Minuten in der Gruppe</p></div>
+        </div>
+        <div class="meta" style="border:0;padding-top:0;margin-top:12px;grid-template-columns:1fr">
+          <div><span class="lbl">Das kommt in deine Arbeitsdatei</span><p id="i-baustein">—</p></div>
+        </div>
+        <div class="abg">
+          <span class="lbl">Abgabe · <span id="a-team">—</span></span>
+          <div class="seg" id="a-seg">
+            <button type="button" data-st="offen"><span class="d d-offen"></span>offen</button>
+            <button type="button" data-st="arbeit"><span class="d d-arbeit"></span>in Arbeit</button>
+            <button type="button" data-st="fertig"><span class="d d-fertig"></span>abgegeben</button>
+          </div>
+          <textarea id="a-notiz" placeholder="Kurz festhalten, was ihr abgegeben habt."></textarea>
+          <div class="abgzeile">
+            <input type="file" id="a-datei" class="sr">
+            <button type="button" class="minibtn" id="a-dbtn">Datei vermerken</button>
+            <span class="fname" id="a-dname"></span>
+            <button type="button" class="minibtn" id="a-dweg" hidden>entfernen</button>
+          </div>
+          <div class="stamp" id="a-stamp" hidden></div>
+          <p class="tiny">Vermerkt wird nur der Dateiname — die Abgabe selbst läuft über Teams.</p>
+        </div>
+
+        <div class="meta" id="i-matbox" hidden style="border:0;padding-top:16px;margin-top:16px;grid-template-columns:1fr">
+          <div><span class="lbl">Material</span><ul class="mlist" id="i-material"></ul></div>
+        </div>
+        <div class="meta" id="i-eigenbox" hidden style="border:0;padding-top:0;margin-top:14px;grid-template-columns:1fr">
+          <div><span class="lbl">Bis zur nächsten Einheit</span><p id="i-eigen">—</p></div>
+        </div>
+
+        <div class="navbtns">
+          <button id="prev">← Aufgabe zurück</button>
+          <button id="next" class="primary">Aufgabe weiter →</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</section>
+
+<!-- ============ SPIELBRETT ============ -->
+<section class="panel" id="p-plan" hidden>
+  <div class="weeks" id="weeks"></div>
+  <div class="planwrap">
+    <svg viewBox="0 0 1060 620" role="img" aria-label="Grundriss">
+      <g class="room" data-r="aussen">
+        <rect x="14" y="40" width="212" height="540" rx="8"></rect>
+        <rect class="rw" x="14" y="40" width="212" height="540" rx="8"></rect>
+        <line class="gnd" x1="40" y1="300" x2="200" y2="300"></line>
+        <line class="gnd" x1="40" y1="340" x2="200" y2="340"></line>
+        <line class="gnd" x1="40" y1="380" x2="200" y2="380"></line>
+        <text x="34" y="80">Werkstor</text><text class="sub" x="34" y="102">Pforte &amp; Parkplatz</text>
+      </g>
+      <rect x="246" y="40" width="800" height="540" rx="10" fill="none" stroke="#33475f" stroke-width="2"></rect>
+      <g class="room" data-r="empfang">
+        <rect x="258" y="52" width="180" height="160" rx="6"></rect>
+        <rect class="rw" x="258" y="52" width="180" height="160" rx="6"></rect>
+        <text x="276" y="88">Empfang</text><text class="sub" x="276" y="110">Flur &amp; Aushang</text>
+      </g>
+      <g class="room" data-r="chef">
+        <rect x="450" y="52" width="210" height="160" rx="6"></rect>
+        <rect class="rw" x="450" y="52" width="210" height="160" rx="6"></rect>
+        <text x="468" y="88">Chefbüro</text><text class="sub" x="468" y="110">Markus Reiser</text>
+      </g>
+      <g class="room" data-r="personal">
+        <rect x="672" y="52" width="190" height="160" rx="6"></rect>
+        <rect class="rw" x="672" y="52" width="190" height="160" rx="6"></rect>
+        <text x="690" y="88">Personalbüro</text><text class="sub" x="690" y="110">Zahlen &amp; Akten</text>
+      </g>
+      <g class="room" data-r="pause">
+        <rect x="874" y="52" width="160" height="160" rx="6"></rect>
+        <rect class="rw" x="874" y="52" width="160" height="160" rx="6"></rect>
+        <text x="890" y="88">Pausenraum</text><text class="sub" x="890" y="110">Kantine</text>
+      </g>
+      <g class="room" data-r="flur" style="pointer-events:none">
+        <rect x="258" y="228" width="776" height="52" rx="6" opacity=".55"></rect>
+        <rect class="rw" x="258" y="228" width="776" height="52" rx="6" opacity=".55"></rect>
+        <text class="sub" x="276" y="260" opacity=".75">Flur · Treppenhaus · Nebenräume — Halina Nowaks Revier, nach Feierabend</text>
+      </g>
+      <g class="room" data-r="projekt">
+        <rect x="258" y="296" width="210" height="272" rx="6"></rect>
+        <rect class="rw" x="258" y="296" width="210" height="272" rx="6"></rect>
+        <text x="276" y="332">Projektraum</text><text class="sub" x="276" y="354">Steuerungsgruppe</text>
+      </g>
+      <g class="room" data-r="innendienst">
+        <rect x="480" y="296" width="190" height="272" rx="6"></rect>
+        <rect class="rw" x="480" y="296" width="190" height="272" rx="6"></rect>
+        <text x="498" y="332">Innendienst</text><text class="sub" x="498" y="354">Nina Kraus</text>
+      </g>
+      <g class="room" data-r="halle">
+        <rect x="682" y="296" width="352" height="272" rx="6"></rect>
+        <rect class="rw" x="682" y="296" width="352" height="272" rx="6"></rect>
+        <text x="700" y="332">Produktionshalle</text>
+        <text class="sub" x="700" y="354">Spritzguss · 3-Schicht · Elif Yılmaz</text>
+      </g>
+      <g id="marker"><circle class="ping" cx="0" cy="0" r="7"></circle><circle class="pin" cx="0" cy="0" r="6"></circle></g>
+    </svg>
+  </div>
+  <div class="aufliste" id="aufliste"></div>
+</section>
+
+<section class="panel" id="p-leute" hidden><div class="cards" id="leute"></div></section>
+
+<section class="panel" id="p-fort" hidden>
+  <div class="planwrap" style="padding:18px;margin-bottom:16px">
+    <span class="lbl">Mein Konto</span>
+    <div class="kontogrid">
+      <div>
+        <span class="lbl" style="margin-top:0">Dein Name</span>
+        <input id="k-name" placeholder="Vorname Nachname" autocomplete="name">
+      </div>
+      <div id="k-teambox" hidden>
+        <span class="lbl" style="margin-top:0">Pitch-Team (ab Aufgabe 15)</span>
+        <input id="k-team" placeholder="Teamname">
+      </div>
+      <div id="k-mitbox" hidden>
+        <span class="lbl" style="margin-top:0">Wer noch im Team ist</span>
+        <input id="k-mit" placeholder="Namen, durch Komma getrennt">
+      </div>
+    </div>
+    <p class="tiny">Bei Aufgabe 1 bis 14 werden die Trios in jeder Einheit neu gelost — deine
+      Arbeitsdatei bleibt trotzdem deine. Deshalb steht hier dein Name, nicht der der Gruppe.
+      Ab Aufgabe 15 kommt das feste Pitch-Team dazu.</p>
+  </div>
+
+  <div class="planwrap" style="padding:18px">
+    <span class="lbl">Fortschritt und Meilensteine · <span id="f-wer">—</span></span>
+    <div id="f-bars" style="margin-top:13px"></div>
+  </div>
+
+  <div class="wliste" id="f-liste"></div>
+  <div class="legend">
+    <span><i style="background:var(--muted)"></i>offen</span>
+    <span><i style="background:var(--gelb)"></i>in Arbeit</span>
+    <span><i style="background:var(--gruen)"></i>abgegeben</span>
+  </div>
+  <div class="tools" style="margin-top:20px;border-top:1px solid var(--sep);padding-top:16px">
+    <input type="file" id="jsonfile" accept=".json,application/json" class="sr">
+    <button type="button" class="minibtn" id="btn-json">Inhalte laden (wochen.json)</button>
+    <button type="button" class="minibtn" id="btn-jsonweg">Auf mitgelieferten Stand zurück</button>
+    <span class="tiny" id="jsoninfo" style="margin:0"></span>
+  </div>
+  <div class="tools" style="margin-top:14px">
+    <input type="file" id="standfile" accept=".json,application/json" class="sr">
+    <button type="button" class="minibtn" id="btn-save">Stand sichern</button>
+    <button type="button" class="minibtn" id="btn-load">Stand laden</button>
+    <span class="tiny" id="standinfo" style="margin:0"></span>
+  </div>
+  <div class="note-txt">
+    <b style="color:var(--body)">Wo liegt was.</b> Dein Name, deine Abgaben und dein Fortschritt liegen im Speicher
+    dieses Geräts und dieses Browsers. Sie überstehen das Schließen des Tabs und einen Neustart —
+    aber sie wandern nicht mit auf ein anderes Gerät und sie sind nicht der Beleg.
+    <b style="color:var(--body)">Verbindlich sind Teams und das Kursnotizbuch.</b>
+    Was hier steht, ist deine Merkhilfe.<br><br>
+    <b style="color:var(--body)">Gewertet wird fünfmal.</b> Nach jeder Aufgabe gibt es nur einen
+    kurzen Bericht ohne Punkte. Die bewertete Transferarbeit fällt an den fünf Meilensteinen an —
+    oben siehst du, auf welchen du gerade einzahlst.<br><br>
+    <b style="color:var(--body)">Damit nichts verloren geht:</b> die Seite einmal auf den
+    Home-Bildschirm legen und regelmäßig öffnen — Safari räumt den Speicher von Seiten auf,
+    die sieben Tage lang nicht besucht wurden. Vor einem Gerätewechsel oder in den Ferien
+    einmal „Stand sichern" und die Datei aufheben.
+  </div>
+</section>
+
+<section class="panel" id="p-karten" hidden>
+  <p class="note-txt" style="margin:0 0 14px">Nur in der Dozentenansicht sichtbar. Tippen zum Aufdecken — am Beamer, wenn der Plan zu glatt läuft.</p>
+  <div class="cards" id="karten"></div>
+</section>
+
+<section class="panel" id="p-punkte" hidden>
+  <div class="tools" style="margin:0 0 12px">
+    <label>Punkte je Aufgabe maximal <input id="maxw" type="number" min="1" max="20" value="6"></label>
+    <button id="addrow" class="primary">Zeile hinzufügen</button>
+    <button id="sortrow">Nach Gesamt sortieren</button>
+    <button id="notesbtn">Noten einblenden</button>
+    <button id="clearrow">Alles leeren</button>
+  </div>
+  <div class="scroller"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
+  <div class="legend">
+    <span><i style="background:var(--gruen)"></i>guter Bereich — ab 65 % der Aufgabenpunkte</span>
+    <span><i style="background:var(--gelb)"></i>bestanden — 50 bis 64 %</span>
+    <span><i style="background:var(--rot)"></i>nicht bestanden — unter 50 %</span>
+  </div>
+  <div class="note-txt">Es werden nur die Aufgaben angezeigt, die bereits gelaufen sind. Die Gesamtspalte färbt
+    sich nach demselben Maßstab. Notenwerte sind ausgeblendet — die Ampel genügt als Rückmeldung.</div>
+</section>
+
+<section class="panel" id="p-codes" hidden>
+  <p class="note-txt" style="margin:0 0 6px">Diese Codes gibst du zu Beginn jeder Einheit an die Teilnehmer
+    weiter. Erst dann können sie die Aufgabe in ihrer eigenen Kopie öffnen.</p>
+  <div class="codes" id="codelist"></div>
+</section>
+
+</main>
+<footer>
+  <div class="ci">
+    <span class="nm">Thorben Reimer</span><span>·</span>
+    <span>Firmenkundenberater &amp; Performance Coach</span><span>·</span>
+    <a href="tel:+4915156165578">0151 56 165 578</a><span>·</span>
+    <a href="mailto:kontakt@thorbenreimer.de">kontakt@thorbenreimer.de</a><span>·</span>
+    <a href="https://instagram.com/coachthorben" target="_blank" rel="noopener"><svg viewBox="0 0 24 24"
+      fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"
+      aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/>
+      <circle cx="17.5" cy="6.5" r="1.1" fill="currentColor" stroke="none"/></svg> @coachthorben</a>
+  </div>
+</footer>
+
+<script>
+"use strict";
+
+/* ===========================================================
+   Die Dozentenansicht wird nicht durch eine PIN im Quelltext
+   geöffnet, sondern durch die Datei `dozent.json`. Sie enthält
+   Wochencodes und Ereigniskarten und wird NICHT mit hochgeladen.
+   =========================================================== */
+let DOZENT = null;
+
+/* Verbirgt die Wochencodes vor dem Blick in den Quelltext.
+   Kein Schutz gegen jemanden, der gezielt ein Skript schreibt —
+   aber genau das war auch nie das Ziel. */
+function codeHash(v){
+  const s = "bgm:" + String(v||"").trim().toUpperCase();
+  let a = 5381;
+  for(let i=0;i<s.length;i++) a = (((a<<5) + a) ^ s.charCodeAt(i)) >>> 0;
+  let b = 2166136261;
+  for(let i=s.length-1;i>=0;i--) b = Math.imul(b ^ s.charCodeAt(i), 16777619) >>> 0;
+  const p = x => ("0000000" + x.toString(16)).slice(-8);
+  return "h:" + p(a) + p(b);
+}
+
+const RAEUME = {
+  aussen:"Vor dem Werkstor", empfang:"Empfang & Flur", chef:"Chefbüro",
+  personal:"Personalbüro", pause:"Pausenraum", projekt:"Projektraum",
+  innendienst:"Innendienst", halle:"Produktionshalle"
+};
+const WOHIN = {aussen:"bleibt ihr noch draußen",empfang:"geht es in den Empfang",
+  chef:"geht es ins Chefbüro",personal:"geht es ins Personalbüro",pause:"geht es in den Pausenraum",
+  projekt:"geht es in den Projektraum",innendienst:"geht es in den Innendienst",
+  halle:"geht es in die Produktionshalle"};
+
+/* ===========================================================
+   DATEN — Block 1
+   `BRETT_BASIS` ist der mitgelieferte Stand. Maßgeblich ist
+   aber `WOCHEN` im Format von BGM-Wochenschema.md; eine
+   geladene wochen.json ersetzt es vollständig.
+   `SPIELPLAN` ist Spielmechanik (Raum, Person, Freischaltcode)
+   und bleibt hier — nicht im Inhalt.
+   =========================================================== */
+const BRETT_BASIS = [
+ {n:1,r:"aussen",t:"Der Auftrag",w:"Noch niemand",c:"h:760a70fef470f5ca",
+  x:"Ihr steht vor dem Tor und wisst nichts. Genau so beginnt jedes Beratungsprojekt. Heute: die Spielregeln, der Betrieb — und die Landkarte BGM aus Arbeitsschutz, BEM und BGF.",
+  a:"Legt euer Projektbuch an. Beschreibt in genau einem Satz, was das Problem dieses Betriebs sein könnte — mit dem, was ihr von draußen sehen könnt. Notiert dazu drei Fragen, die ihr dem Geschäftsführer als Erstes stellen würdet.",
+  b:"Deckblatt und Auftragsverständnis: Wer ist der Kunde, was ist das Problem in einem Satz?"},
+ {n:2,r:"empfang",t:"Begriffe schärfen",w:"Der erste Eindruck",c:"h:375aaac43755da04",
+  x:"BGF oder BGM? Prävention auf drei Stufen. Und der Satz, der das ganze Semester trägt: Verhältnis vor Verhalten.",
+  a:"Ordnet eure Person ein: Was an ihrer Situation ist Verhalten, was ist Verhältnis? Legt für jede Zuordnung fest, wer sie überhaupt ändern könnte — die Person selbst oder der Betrieb.",
+  b:"Glossar plus Ersteinschätzung der vier Personen: Was ist Verhalten, was ist Verhältnis?"},
+ {n:3,r:"chef",t:"Der Skeptiker im Chefsessel",w:"Markus Reiser, 54",c:"h:3761ae9d776d732d",
+  x:"Reiser hält BGM für Sozialromantik. Warum es sich rechnet: Demografie, Fehlzeiten, Präsentismus, Fachkräftebindung — und die Einwände, die wirklich kommen.",
+  a:"Baut ein Argumentationsblatt für Reiser, maximal eine Seite. Drei Argumente, jedes mit einer Zahl oder einem belegbaren Effekt. Dann drei Minuten Rollenspiel: einer ist Reiser und wehrt sich.",
+  b:"Argumentationsblatt für die Geschäftsführung, maximal eine Seite."},
+ {n:4,r:"chef",t:"Rechtsrahmen und Geldquellen",w:"Markus Reiser, 54",c:"h:375a86f5aeeb8e67",
+  x:"Was Pflicht ist und was freiwillig: ArbSchG, Gefährdungsbeurteilung inklusive psychischer Belastung, BEM. Und wer zahlt: § 20b SGB V, Krankenkassen, Steuerfreibetrag.",
+  a:"Trennt für euren Betrieb sauber: Was muss Reiser ohnehin tun, was ist freiwillig, und wofür gibt es Geld von wem? Schreibt zu jeder Geldquelle eine Zeile, was sie konkret fordert.",
+  b:"Finanzierungs- und Rechtsseite: Was ist Pflicht, was fördert wer?"},
+ {n:5,r:"projekt",t:"Belastung ist nicht Beanspruchung",w:"Alle vier",c:"h:37657a1d909da07d",
+  x:"Gleiche Schicht, völlig unterschiedliche Wirkung. Belastungs-Beanspruchungs-Modell, Anforderungs-Kontroll-Modell, bio-psycho-sozial.",
+  a:"Erstellt das Belastungsprofil eurer Person nach dem Belastungs-Beanspruchungs-Modell. Benennt anschließend die eine Stellschraube, die bei ihr am meisten bewegen würde — und begründet sie mit dem Modell.",
+  b:"Belastungsprofil der zugelosten Person."},
+ {n:6,r:"personal",t:"Kennzahlen lesen — und ihnen misstrauen",w:"Die Akten",c:"h:375feee82f238952",
+  x:"Krankenstand, AU-Tage, Altersstruktur, Fluktuation. Was sie zeigen — und was sie verschweigen. Präsentismus taucht in keiner Statistik auf.",
+  a:"Wertet das Kennzahlenblatt aus. Drei Auffälligkeiten benennen, jede mit einer Zahl belegen. Dann eine Hypothese formulieren: Was steckt dahinter — und welche Zahl fehlt euch, um sicher zu sein?",
+  b:"Kennzahlen-Auswertung mit drei Auffälligkeiten und einer Hypothese."},
+ {n:7,r:"personal",t:"Fragen, die etwas bringen",w:"Die ganze Belegschaft",c:"h:239f1a602bd141cc",
+  x:"Fragebogenbau, Anonymität, Rücklauf, Datenschutz. Eine schlecht gemachte Befragung ist schlimmer als gar keine.",
+  a:"Baut acht Fragen für eure Person und testet sie am Nachbartrio: Was wird missverstanden, was traut sich niemand zu beantworten? Haltet danach einen Plan B fest, falls die Befragung nicht stattfinden darf.",
+  b:"Eigener Kurzfragebogen — plus ein Plan B ohne Befragung."},
+ {n:8,r:"halle",t:"Hingehen und hinsehen",w:"Halina Nowak, 57",c:"h:22d3e83fb375ac41",
+  x:"Begehung, Gefährdungsbeurteilung, Leitmerkmalmethode. Hier zahlt die Bewegungslehre direkt ein: beobachten heißt zielgerichtet wahrnehmen.",
+  a:"Geht mit einem klaren Beobachtungsauftrag durch das Haus und protokolliert drei Befunde — jeder mit dem, was ihr wirklich gesehen habt, nicht mit dem, was ihr vermutet. Trennt Beobachtung und Bewertung in zwei Spalten.",
+  b:"Begehungsprotokoll mit drei belegten Befunden."},
+ {n:9,r:"projekt",t:"Vom Befund zum Ziel",w:"Die Steuerungsgruppe",c:"h:375fcd0d13a4d519",
+  x:"Handlungsbedarf verdichten, Schwerpunkte setzen, SMART-Ziele mit Zwischenzielen. Warum Wirkung erst spät sichtbar wird.",
+  a:"Formuliert ein Hauptziel und drei Zwischenziele, jedes mit einem Messkriterium und einem Termin. Prüft am Ende gegenseitig: Woran genau würdet ihr in zwölf Monaten erkennen, dass ihr es erreicht habt?",
+  b:"Zielblatt: ein Hauptziel, drei Zwischenziele, je ein Messkriterium."},
+ {n:10,r:"projekt",t:"Maßnahmen wählen statt sammeln",w:"Die Steuerungsgruppe",c:"h:3758d8057c9d882d",
+  x:"Das Vier-Felder-Raster: Kultur, Organisation, Arbeitsgestaltung, Verhalten. Wirkt es aufs Ziel? Erreicht es die Zielgruppe? Ist der Zugang niedrigschwellig?",
+  a:"Sammelt zehn Maßnahmen und streicht sechs davon wieder — begründet. Die vier, die bleiben, müssen jede der drei Prüffragen bestehen. Die Streichliste kommt mit ins Buch, sie ist die halbe Leistung.",
+  b:"Maßnahmenkatalog mit Begründung — und Streichliste."},
+ {n:11,r:"projekt",t:"Projektarchitektur",w:"Die Steuerungsgruppe",c:"h:760acc21e204b897",
+  x:"Rollen, Meilensteine, Zeitplan, Beteiligung. Und die Misserfolgsfaktoren: kein Rückhalt oben, keine Beteiligung unten, niemand verantwortlich, zu kurz gedacht.",
+  a:"Baut den Zeitplan über zwölf Monate mit vier Meilensteinen. Benennt zu jeder Aufgabe eine verantwortliche Rolle. Markiert die Stelle, an der euer Projekt am wahrscheinlichsten scheitern wird.",
+  b:"Projektplan mit Rollen, Meilensteinen und Zeitachse."},
+ {n:12,r:"innendienst",t:"Ergonomie — nicht nur am Schreibtisch",w:"Nina Kraus, 29",c:"h:22c20441be0b3c59",
+  x:"Bildschirmarbeitsplatz komplett, aber gleichrangig: Zwangshaltungen in Reinigung und Produktion, Hebe- und Tragetechnik, Hilfsmittel.",
+  a:"Richtet einen echten Arbeitsplatz im Haus ein und spürt den Unterschied am eigenen Körper. Dann schreibt die Ergonomie-Empfehlung für eure Person: drei Veränderungen, jede mit Begründung und geschätzten Kosten.",
+  b:"Ergonomie-Empfehlung für die eigene Person, mit Begründung."},
+ {n:13,r:"halle",t:"Bewegung, die ankommt",w:"Elif Yılmaz, 39",c:"h:22ab5e8562c7cacd",
+  x:"Der harte Teil ist nicht die Übung, sondern der Zugang: zehn Minuten in der Halle bei Lärm und Taktung — oder um 5:30 Uhr für eine Reinigungskraft allein.",
+  a:"Baut ein Zehn-Minuten-Programm für eure Person und leitet es der Klasse an. Danach: Wie kommt dieses Programm bei ihr tatsächlich an? Wann, wo, durch wen — und was kostet es sie?",
+  b:"Zehn-Minuten-Programm plus Zugangskonzept."},
+ {n:14,r:"pause",t:"Psyche, Stress — und die eigene Grenze",w:"Alle vier",c:"h:3768158512c14c85",
+  x:"Psychische Belastung verursacht die längsten Ausfälle. Führung als Gesundheitsfaktor, Umgang mit Sucht. Und klar: Wo endet die eigene Rolle?",
+  a:"Übt ein Gespräch mit einer belasteten Person — und übt genauso die Übergabe an eine Fachstelle. Haltet danach schriftlich fest, wo eure eigene Rolle endet. Dieser Satz gehört ins Buch.",
+  b:"Modul psychische Gesundheit plus persönliche Grenzlinie."},
+ {n:15,r:"chef",t:"Das Angebot: Was kostet das?",w:"Markus Reiser, 54",c:"h:22b34f2a1fd3f7ca",
+  x:"Ab hier feste Teams. Angebotsaufbau, fixe und variable Kosten, Stundensatz, Break-even. Und: den Preis verteidigen, statt sich kleinzumachen.",
+  a:"Erste Teamleistung. Rechnet eure Kalkulation durch — fixe und variable Kosten, Stundensatz, Break-even — und schreibt das Angebot. Dann Preisverhandlung gegen Reiser, ohne den Preis zu senken.",
+  b:"Angebot mit Kalkulation — die erste Teamleistung."},
+ {n:16,r:"empfang",t:"Damit es jemand mitbekommt",w:"Die ganze Belegschaft",c:"h:760a89b6fdf3229e",
+  x:"Internes Marketing: informieren, beteiligen, Führungskräfte als Vorbild, Multiplikatoren finden. Und der Umgang mit Killerphrasen.",
+  a:"Schreibt den Kommunikationsplan: wer erfährt wann was, über welchen Kanal. Dazu ein Aushang, der Halina Nowak tatsächlich erreicht — nicht einer, der nur gut aussieht.",
+  b:"Kommunikationsplan plus ein Aushang, der wirklich jemanden hervorholt."},
+ {n:17,r:"halle",t:"Umsetzung — und was schiefgeht",w:"Alle vier",c:"h:22c2341735b4b8b3",
+  x:"Rollout, niedrigschwelliger Zugang, Dauerhaftigkeit. Große Ereigniskarten-Runde: zwei Störungen pro Team, live nachsteuern.",
+  a:"Jedes Team zieht zwei Ereigniskarten und steuert seinen Plan live nach. Dokumentiert jede Anpassung: Was war die Störung, was habt ihr geändert, was habt ihr bewusst nicht geändert?",
+  b:"Überarbeiteter Plan mit dokumentierten Anpassungen."},
+ {n:18,r:"projekt",t:"Hat es etwas gebracht?",w:"Die Steuerungsgruppe",c:"h:22b3685d3d887031",
+  x:"Struktur-, Prozess-, Ergebnisqualität. Soll-Ist, PDCA, Gesundheitszirkel. Verstetigung: vom Projekt zum Regelbetrieb. Danach Generalprobe.",
+  a:"Legt fest, woran ihr Erfolg messt — je ein Kriterium für Struktur, Prozess und Ergebnis. Dann der Verstetigungsplan: Was läuft weiter, wenn euer Auftrag endet? Zum Schluss Generalprobe für den Pitch.",
+  b:"Evaluationskonzept plus Verstetigungsplan."},
+ {n:19,r:"chef",t:"Der Pitch",w:"Die Geschäftsführung",c:"h:22afaf11aec3ce29",
+  x:"Jedes Team präsentiert sein BGM-Konzept. Bewertet werden Fachlichkeit, Passung, Wirtschaftlichkeit, Überzeugungskraft. Ein Team bekommt den Auftrag.",
+  a:"Zehn Minuten Pitch vor der Geschäftsführung, danach fünf Minuten Rückfragen. Ihr verkauft kein Wissen, sondern eine Entscheidung: Warum soll Reiser genau euch beauftragen?",
+  b:"Das fertige Projektbuch — der eigene, vollständige BGM-Projektplan."}
+];
+
+/* --- Phasen laut BGM-Programm-Stand.md, Stand 2026-09-10 --- */
+function phaseVon(w){
+  return w<=4?"Einstieg":w<=8?"Analyse":w<=11?"Planung":w<=14?"Maßnahmen":
+         w<=17?"Umsetzung":w<=18?"Evaluation":"Abschluss";
+}
+
+/* --- Spielmechanik je Woche: Raum, Fokusperson, Freischaltcode --- */
+const SPIELPLAN = {};
+BRETT_BASIS.forEach(e => SPIELPLAN[e.n] = {raum:e.r, person:e.w, code:e.c});
+
+/* --- Mitgelieferter Inhalt im Format des Wochenschemas.
+       lernziel, kernbegriffe, material und eigenarbeit sind
+       leer — die füllt Chat B über wochen.json. --- */
+const WOCHEN_STD = BRETT_BASIS.map(e => ({
+  woche:e.n, phase:phaseVon(e.n), titel:e.t, lernziel:"", kernbegriffe:[],
+  input:e.x, spielzug:e.a, artefakt:e.b, material:[], eigenarbeit:"",
+  dauer_min:90, status:"rohentwurf"
+}));
+
+let WOCHEN = WOCHEN_STD;
+let EINHEITEN = [];
+
+/* Übersetzt das Wochenschema in das, was das Brett intern nutzt.
+   raum, person und code dürfen in wochen.json stehen, müssen aber
+   nicht — sonst greift SPIELPLAN. */
+function baueEinheiten(){
+  EINHEITEN = WOCHEN.slice().sort((a,b)=>a.woche-b.woche).map(w=>{
+    const s = SPIELPLAN[w.woche] || {};
+    return {
+      n:w.woche, r:w.raum||s.raum||"projekt", t:w.titel,
+      w:w.person||s.person||"—", c:w.code||s.code||"",
+      x:w.input, a:w.spielzug, b:w.artefakt,
+      phase:w.phase, ziel:w.lernziel, begriffe:w.kernbegriffe||[],
+      material:w.material||[], eigen:w.eigenarbeit, dauer:w.dauer_min
+    };
+  });
+}
+baueEinheiten();
+
+const LEUTE = [
+ {n:"Markus Reiser",a:"54 · Geschäftsführer",r:"chef",p:[
+  "60-Stunden-Woche, viel unterwegs, ständig erreichbar",
+  "Rückenschmerzen, die er nicht ernst nimmt",
+  "Zweite Generation, fühlt sich für alle verantwortlich",
+  "Hält BGM zunächst für nette Beigabe — muss überzeugt werden"]},
+ {n:"Elif Yılmaz",a:"39 · Produktion, Spritzguss",r:"halle",p:[
+  "Drei-Schicht-Betrieb, getaktete Pausen",
+  "Heben und Tragen, monotone Bewegungsmuster, Lärm",
+  "Zwei Kinder, kaum Zeitsouveränität",
+  "Würde mitmachen — wenn es in die Schicht passt"]},
+ {n:"Halina Nowak",a:"57 · Reinigungskraft",r:"flur",p:[
+  "Teilzeit in den Randzeiten, meist Alleinarbeit",
+  "Zwangshaltungen, Überkopfarbeit, Treppen",
+  "Deutsch als Zweitsprache",
+  "Wird von Angeboten praktisch nie erreicht"]},
+ {n:"Nina Kraus",a:"29 · Sachbearbeitung Innendienst",r:"innendienst",p:[
+  "Acht Stunden Bildschirm, zwei Tage Homeoffice",
+  "Termindruck, ständige Unterbrechungen",
+  "Bewegungsmangel, Schlafprobleme",
+  "Motiviert, aber sie glaubt nicht, dass sich hier etwas ändert"]}
+];
+
+let KARTEN = [];   /* kommt aus dozent.json */
+
+
+/* ================= Isometrie ================= */
+const NS="http://www.w3.org/2000/svg";
+const CO=0.866, SN=0.5;
+function el(t,at){const e=document.createElementNS(NS,t);for(const k in at)e.setAttribute(k,at[k]);return e;}
+function I(x,y,z){return [(x-y)*CO, (x+y)*SN-(z||0)];}
+function pts(a){return a.map(p=>p[0].toFixed(1)+","+p[1].toFixed(1)).join(" ");}
+function poly(g,p,fill,stroke,sw){
+  const e=el("polygon",{points:pts(p),fill:fill||"none",stroke:stroke||"none",
+    "stroke-width":sw||0,"stroke-linejoin":"round"});
+  g.appendChild(e); return e;
+}
+const PAL={
+  m:["#3a5a8c","#304b76","#284066"], h:["#4870ab","#3d5f92","#33507d"],
+  a:["#4f9de8","#3a7cc0","#2f68a3"], d:["#2c4368","#243756","#1e2e49"],
+  w:["#7AB8F5","#5f9ad4","#4d80b5"]
+};
+function box(g,x,y,z,w,d,h,p){
+  const c=PAL[p]||PAL.m;
+  poly(g,[I(x,y,z+h),I(x+w,y,z+h),I(x+w,y+d,z+h),I(x,y+d,z+h)],c[0],"#4a6a9c",1);
+  poly(g,[I(x+w,y,z),I(x+w,y+d,z),I(x+w,y+d,z+h),I(x+w,y,z+h)],c[1],"#3b527a",1);
+  poly(g,[I(x+w,y+d,z),I(x,y+d,z),I(x,y+d,z+h),I(x+w,y+d,z+h)],c[2],"#3b527a",1);
+}
+function floor(g,x0,y0,x1,y1,fill,stroke){
+  return poly(g,[I(x0,y0,0),I(x1,y0,0),I(x1,y1,0),I(x0,y1,0)],fill,stroke||"#2b3d5c",1.5);
+}
+function wallY(g,x0,x1,y,h,c){ // Wand entlang der x-Achse
+  poly(g,[I(x0,y,0),I(x1,y,0),I(x1,y,h),I(x0,y,h)],c||"#24365a","#3b527a",1.5);
+  poly(g,[I(x0,y,h),I(x1,y,h),I(x1,y+4,h),I(x0,y+4,h)],"#3b527a");
+}
+function wallX(g,y0,y1,x,h,c){ // Wand entlang der y-Achse
+  poly(g,[I(x,y0,0),I(x,y1,0),I(x,y1,h),I(x,y0,h)],c||"#1e2e4c","#3b527a",1.5);
+  poly(g,[I(x,y0,h),I(x,y1,h),I(x+4,y1,h),I(x+4,y0,h)],"#3b527a");
+}
+function plant(g,x,y){
+  box(g,x,y,0,14,14,12,"d");
+  const t=I(x+7,y+7,30);
+  g.appendChild(el("circle",{cx:t[0],cy:t[1],r:15,fill:"#294a41",stroke:"#3a6c5b","stroke-width":2}));
+}
+/* ------------------------------------------------------------------
+   Figuren. Gezeichnet statt aus Quadern gebaut: Kopf, Schultern,
+   Arme, Beine. Die Figur steht aufrecht im Bild und wird am
+   Bodenpunkt verankert — in einer isometrischen Ansicht ist das
+   sauberer als ein gekippter Körper aus Kisten.
+   Koordinaten der Zeichnung: Füße bei y=0, Scheitel bei y=1.
+   ------------------------------------------------------------------ */
+const HAUTFARBEN = {}; /* Platzhalter, damit die Palette an einer Stelle steht */
+
+function personPfad(pal){
+  return `
+    <ellipse cx="0" cy="0.012" rx="0.20" ry="0.035" fill="rgba(0,0,0,.34)"/>
+    <path d="M-0.115 0.02 h0.095 v0.44 h-0.095 z" fill="${pal.hose}"/>
+    <path d="M 0.020 0.02 h0.095 v0.44 h-0.095 z" fill="${pal.hose}"/>
+    <path d="M-0.125 0 h0.115 v0.045 h-0.115 z" fill="${pal.schuh}"/>
+    <path d="M 0.010 0 h0.115 v0.045 h-0.115 z" fill="${pal.schuh}"/>
+    <path d="M-0.135 0.40 q0.135 0.07 0.27 0 v0.06 q-0.135 0.07 -0.27 0 z" fill="${pal.hose}" opacity=".55"/>
+    <path d="M-0.150 0.42 q0 -0.04 0.03 -0.05 h0.24 q0.03 0.01 0.03 0.05
+             l0.012 0.30 q0.005 0.05 -0.03 0.075 h-0.264 q-0.035 -0.025 -0.03 -0.075 z" fill="${pal.hemd}"/>
+    <path d="M-0.185 0.735 q0.185 0.075 0.37 0 l-0.02 -0.06 q-0.165 0.06 -0.33 0 z" fill="${pal.hemd}" opacity=".8"/>
+    <path d="M-0.196 0.700 q0.05 0.055 0.05 0.055 l-0.028 -0.245 q-0.006 -0.05 0.03 -0.06
+             l0.036 -0.01 l0.02 0.30 q-0.05 0.045 -0.108 -0.04 z" fill="${pal.hemd}"/>
+    <path d="M 0.196 0.700 q-0.05 0.055 -0.05 0.055 l0.028 -0.245 q0.006 -0.05 -0.03 -0.06
+             l-0.036 -0.01 l-0.02 0.30 q0.05 0.045 0.108 -0.04 z" fill="${pal.hemd}"/>
+    <circle cx="-0.168" cy="0.455" r="0.032" fill="${pal.haut}"/>
+    <circle cx=" 0.168" cy="0.455" r="0.032" fill="${pal.haut}"/>
+    <path d="M-0.032 0.745 h0.064 v0.055 h-0.064 z" fill="${pal.haut}"/>
+    <ellipse cx="0" cy="0.868" rx="0.077" ry="0.092" fill="${pal.haut}"/>
+    <path d="M-0.081 0.884 q0.004 -0.086 0.081 -0.089 q0.077 0.003 0.081 0.089
+             q0.004 0.030 -0.006 0.049 q-0.014 -0.052 -0.075 -0.056
+             q-0.061 0.004 -0.075 0.056 q-0.010 -0.019 -0.006 -0.049 z" fill="${pal.haar}"/>
+    <circle cx="-0.028" cy="0.878" r="0.0085" fill="#2a2320"/>
+    <circle cx=" 0.028" cy="0.878" r="0.0085" fill="#2a2320"/>
+    <path d="M-0.018 0.838 q0.018 0.012 0.036 0" stroke="#8a5f4a" stroke-width="0.007"
+          fill="none" stroke-linecap="round"/>`;
+}
+
+/* Aussehen der vier Musterpersonen und der eigenen Figur */
+const FIGUR_PAL = {
+  ich:     {haut:"#e8c49c", haar:"#4a3a2c", hemd:"#4f9de8", hose:"#2f3d55", schuh:"#232a35"},
+  reiser:  {haut:"#e0b48c", haar:"#8f9096", hemd:"#3d5f92", hose:"#333d4d", schuh:"#22252b"},
+  yilmaz:  {haut:"#c98d5f", haar:"#2b2119", hemd:"#d98a3c", hose:"#39445a", schuh:"#22252b"},
+  nowak:   {haut:"#eac6a4", haar:"#b9b2a6", hemd:"#79b4c4", hose:"#4a5568", schuh:"#2b2f36"},
+  kraus:   {haut:"#f0c9a4", haar:"#7a4f33", hemd:"#c98f86", hose:"#39445a", schuh:"#2b2f36"}
+};
+
+function figur(g,x,y,pal,hoehe){
+  const hh = hoehe || 54;
+  const aussen = el("g",{});
+  const innen  = el("g",{transform:"scale("+hh+","+(-hh)+")"});
+  innen.innerHTML = personPfad(pal || FIGUR_PAL.ich);
+  aussen.appendChild(innen);
+  if(x || y){
+    const p = I(x,y,0);
+    aussen.setAttribute("transform","translate("+p[0].toFixed(1)+","+p[1].toFixed(1)+")");
+  }
+  g.appendChild(aussen);
+  return aussen;
+}
+
+/* ================= Das Gebäude ================= */
+const RAUM={
+ aussen:      {x0:-270,y0:55,x1:-25,y1:345, c:[-235,196], wp:[-235,196]},
+ empfang:     {x0:0,  y0:0,  x1:150, y1:170, c:[70,80],   wp:[75,200]},
+ chef:        {x0:150,y0:0,  x1:310, y1:170, c:[225,80],  wp:[230,200]},
+ personal:    {x0:310,y0:0,  x1:440, y1:170, c:[372,80],  wp:[375,200]},
+ pause:       {x0:440,y0:0,  x1:570, y1:170, c:[500,80],  wp:[505,200]},
+ projekt:     {x0:0,  y0:230,x1:180, y1:400, c:[88,320],  wp:[90,200]},
+ innendienst: {x0:180,y0:230,x1:330, y1:400, c:[252,320], wp:[255,200]},
+ halle:       {x0:330,y0:230,x1:570, y1:400, c:[445,320], wp:[450,200]}
+};
+const TOR=[-186,200], TUER=[-10,200];
+
+const MOEBEL={
+ empfang:[["b",20,110,0,110,26,44,"m"],["b",16,106,44,118,34,6,"h"],["b",62,80,0,20,20,26,"d"],
+   ["b",15,20,0,28,28,22,"m"],["b",15,58,0,28,28,22,"m"],["b",56,34,0,24,24,16,"h"],["pl",126,14]],
+ chef:[["b",165,8,0,92,18,58,"m"],["b",190,95,0,95,42,34,"m"],["b",186,91,34,103,50,6,"h"],
+   ["b",226,110,40,28,7,22,"a"],["b",228,58,0,22,22,26,"d"],["b",228,54,26,22,5,26,"d"],["pl",288,140]],
+ personal:[["b",320,10,0,32,18,64,"m"],["b",358,10,0,32,18,64,"m"],["b",396,10,0,32,18,64,"m"],
+   ["b",340,105,0,85,40,34,"m"],["b",336,101,34,93,48,6,"h"],["b",352,114,40,18,18,18,"a"],
+   ["b",378,114,40,18,18,11,"h"],["b",376,68,0,22,22,26,"d"],["pl",425,146]],
+ pause:[["b",450,10,0,100,20,48,"m"],["b",446,6,48,108,28,5,"h"],["b",470,14,53,18,14,20,"a"],
+   ["b",546,10,0,20,20,62,"h"],["b",455,72,0,60,12,16,"d"],["b",455,90,0,60,32,28,"m"],
+   ["b",451,86,28,68,40,5,"h"],["b",455,126,0,60,12,16,"d"]],
+ projekt:[["b",150,238,0,14,14,6,"m"],["b",152,240,6,5,40,48,"w"],
+   ["b",10,282,0,20,20,26,"d"],["b",10,322,0,20,20,26,"d"],
+   ["b",35,275,0,110,70,30,"m"],["b",31,271,30,118,78,6,"h"],
+   ["b",152,282,0,20,20,26,"d"],["b",152,322,0,20,20,26,"d"],["pl",14,376]],
+ innendienst:[["b",185,240,0,14,72,54,"m"],
+   ["b",195,250,0,85,36,34,"m"],["b",191,246,34,93,44,6,"h"],["b",226,260,40,26,7,20,"a"],
+   ["b",296,256,0,22,22,26,"d"],
+   ["b",195,330,0,85,36,34,"m"],["b",191,326,34,93,44,6,"h"],["b",226,340,40,26,7,20,"a"],
+   ["b",296,336,0,22,22,26,"d"],["pl",306,376]],
+ halle:[["b",350,255,0,105,60,54,"m"],["b",370,268,54,50,38,28,"h"],["b",452,268,16,6,34,28,"a"],
+   ["b",480,255,0,40,40,12,"h"],["b",480,255,12,40,40,12,"h"],["b",480,306,0,40,36,34,"m"],
+   ["b",350,340,0,180,24,24,"m"],["b",346,336,24,188,32,5,"h"]]
+};
+const BESCHRIFT={empfang:"Empfang",chef:"Chefbüro",personal:"Personalbüro",pause:"Pausenraum",
+  projekt:"Projektraum",innendienst:"Innendienst",halle:"Produktionshalle"};
+
+let world=null, schranke=null, tuer=null, raumFlaeche={}, raumLabel={}, avatar=null, infopt=null;
+
+function buildWorld(svg){
+  while(svg.firstChild) svg.removeChild(svg.firstChild);
+  world=el("g",{id:"world"}); svg.appendChild(world);
+
+  /* --- Vorplatz --- */
+  const gA=el("g",{}); world.appendChild(gA);
+  floor(gA,-270,55,-25,345,"#1a2740","#26364f");
+  floor(gA,-190,170,-25,230,"#1d2b45","#2b3d5c");           // Zufahrt
+  floor(gA,-250,250,-140,335,"#1d2b45","#2b3d5c");          // Parkplatz
+  for(let i=1;i<3;i++){const y=250+i*28,a=I(-250,y,0),b=I(-140,y,0);
+    gA.appendChild(el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:"#2b3d5c","stroke-width":2}));}
+  box(gA,-244,256,0,52,18,14,"d"); box(gA,-232,258,14,26,14,9,"m");
+  box(gA,-244,312,0,52,18,14,"d"); box(gA,-232,314,14,26,14,9,"m");
+  // Zaun
+  for(let i=0;i<8;i++){const y=60+i*13,a=I(-268,y,0),b=I(-268,y,32);
+    gA.appendChild(el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:"#3b527a","stroke-width":2.5}));}
+  for(let i=0;i<7;i++){const x=-268+i*11,a=I(x,168,0),b=I(x,168,32);
+    gA.appendChild(el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:"#3b527a","stroke-width":2.5}));}
+  for(let i=0;i<7;i++){const x=-268+i*11,a=I(x,232,0),b=I(x,232,32);
+    gA.appendChild(el("line",{x1:a[0],y1:a[1],x2:b[0],y2:b[1],stroke:"#3b527a","stroke-width":2.5}));}
+  // Pforte
+  box(gA,-262,72,0,58,58,48,"m"); box(gA,-268,66,48,70,70,6,"h");
+  poly(gA,[I(-220,130,14),I(-204,130,14),I(-204,130,40),I(-220,130,40)],"#7AB8F5","#9fd0ff",1.5);
+  const pl=I(-262,100,66);
+  const pt=el("text",{x:pl[0]-14,y:pl[1],fill:"#7AB8F5","font-family":"Calibri, sans-serif","font-size":"13"});
+  pt.textContent="Pforte"; gA.appendChild(pt);
+  // Schranke
+  box(gA,-192,164,0,10,10,26,"d");
+  schranke=el("line",{stroke:"#4f9de8","stroke-width":5,"stroke-linecap":"round"});
+  gA.appendChild(schranke); setSchranke(0);
+  [[-258,196],[-60,320],[-60,80]].forEach(([bx,by])=>{
+    const b=I(bx,by,0),t=I(bx,by,42);
+    gA.appendChild(el("line",{x1:b[0],y1:b[1],x2:t[0],y2:t[1],stroke:"#33507d","stroke-width":4}));
+    gA.appendChild(el("circle",{cx:t[0],cy:t[1]-5,r:17,fill:"#294a41",stroke:"#3a6c5b","stroke-width":2}));
+  });
+
+  /* --- Gebäudeboden --- */
+  const gB=el("g",{}); world.appendChild(gB);
+  floor(gB,-14,-14,584,414,"#182640","#33475f");
+  floor(gB,0,170,570,230,"#22314b","#2b3d5c");   // Flur
+  Object.keys(BESCHRIFT).forEach(k=>{
+    const r=RAUM[k];
+    raumFlaeche[k]=floor(gB,r.x0,r.y0,r.x1,r.y1,"#1c2a44","#2b3d5c");
+  });
+
+  /* --- Wände --- */
+  const gW=el("g",{}); world.appendChild(gW);
+  wallY(gW,0,570,0,58);                       // Außenwand Nord
+  wallX(gW,0,180,0,58); wallX(gW,220,400,0,58); // Außenwand West mit Türöffnung
+  tuer=poly(gW,[I(0,180,0),I(0,220,0),I(0,220,44),I(0,180,44)],"#7AB8F5","#9fd0ff",2);
+  [150,310,440].forEach(x=>wallX(gW,0,170,x,24));
+  [180,330].forEach(x=>wallX(gW,230,400,x,24));
+  wallY(gW,0,570,170,20); wallY(gW,0,570,230,20);
+  poly(gW,[I(0,400,0),I(570,400,0),I(570,400,7),I(0,400,7)],"#243756","#3b527a",1);
+  poly(gW,[I(570,0,0),I(570,400,0),I(570,400,7),I(570,0,7)],"#27395c","#3b527a",1);
+
+  /* --- Möbel, nach Tiefe sortiert --- */
+  const gM=el("g",{}); world.appendChild(gM);
+  const alle=[];
+  Object.keys(MOEBEL).forEach(k=>MOEBEL[k].forEach(it=>alle.push(it)));
+  alle.sort((a,b)=>(a[1]+a[2])-(b[1]+b[2]));
+  alle.forEach(it=>{ if(it[0]==="b") box(gM,it[1],it[2],it[3],it[4],it[5],it[6],it[7]);
+    else plant(gM,it[1],it[2]); });
+
+  /* --- Raumschilder --- */
+  const gT=el("g",{}); world.appendChild(gT);
+  Object.keys(BESCHRIFT).forEach(k=>{
+    const r=RAUM[k], p=I(r.x0+10, r.y0+10, 74);
+    const t=el("text",{x:p[0],y:p[1],fill:"#6f92bd","font-family":"Calibri, sans-serif",
+      "font-size":"15","letter-spacing":"0.6"});
+    t.textContent=BESCHRIFT[k]; gT.appendChild(t); raumLabel[k]=t;
+  });
+
+  /* --- Infopunkt + Figur --- */
+  infopt=el("g",{id:"infopt",style:"cursor:pointer"});
+  infopt.appendChild(el("circle",{class:"ping",r:9,cx:0,cy:0}));
+  infopt.appendChild(el("circle",{r:13,cx:0,cy:0,fill:"#378ADD",stroke:"#a9d3fb","stroke-width":2}));
+  const q=el("text",{x:0,y:5,fill:"#fff","font-family":"Georgia, serif","font-size":"16",
+    "text-anchor":"middle"}); q.textContent="i"; infopt.appendChild(q);
+  infopt.addEventListener("click",ev=>{ev.stopPropagation();openTask();});
+
+  /* Die vier Musterpersonen an ihren Plätzen. Vor der eigenen Figur
+     einsortiert, damit die eigene Figur immer obenauf läuft. */
+  const gP=el("g",{}); world.appendChild(gP);
+  [[230, 55,"reiser"], [408,300,"yilmaz"], [96,196,"nowak"], [246,292,"kraus"]]
+    .forEach(([px,py,k])=>figur(gP, px, py, FIGUR_PAL[k], 50));
+
+  avatar=figur(world,0,0,FIGUR_PAL.ich,54);
+  world.appendChild(infopt);
+}
+function setSchranke(t){ // t=0 zu, t=1 offen
+  const a=I(-187,170,26), b=I(-187,170+58*(1-t),26+70*t);
+  schranke.setAttribute("x1",a[0]); schranke.setAttribute("y1",a[1]);
+  schranke.setAttribute("x2",b[0]); schranke.setAttribute("y2",b[1]);
+}
+
+/* ================= Kamera & Figur ================= */
+const VW=1000, VH=620;
+const LOOK={aussen:[-70,200],empfang:[70,80],chef:[225,80],personal:[372,80],
+  pause:[500,80],projekt:[88,320],innendienst:[252,320],halle:[445,320]};
+const KIN=1.6, KOUT=0.85;
+let pos={x:-235,y:196}, look={x:-70,y:200}, lookT={x:-70,y:200};
+let cam={k:KOUT}, kT=KOUT, anim=null, camLoop=null;
+
+function place(){
+  const a=I(pos.x,pos.y,0), c=I(look.x,look.y,0);
+  avatar.setAttribute("transform","translate("+a[0]+","+a[1]+")");
+  world.setAttribute("transform","translate("+(VW/2)+","+(VH/2+20)+") scale("+cam.k.toFixed(3)+
+    ") translate("+(-c[0]).toFixed(1)+","+(-c[1]).toFixed(1)+")");
+}
+function camTick(){
+  const dx=lookT.x-look.x, dy=lookT.y-look.y, dk=kT-cam.k;
+  look.x+=dx*0.11; look.y+=dy*0.11; cam.k+=dk*0.11;
+  place();
+  if(Math.abs(dx)+Math.abs(dy)>0.4||Math.abs(dk)>0.002) camLoop=requestAnimationFrame(camTick);
+  else{look.x=lookT.x;look.y=lookT.y;cam.k=kT;place();camLoop=null;}
+}
+function camGo(x,y,k){lookT={x:x,y:y};kT=k;if(!camLoop)camLoop=requestAnimationFrame(camTick);}
+function setInfo(room){
+  const r=RAUM[room];
+  infopt.style.display="";
+  const p=(room==="aussen") ? I(r.c[0]+40,r.c[1]-10,54) : I(r.c[0]+48,r.c[1]-8,58);
+  infopt.setAttribute("transform","translate("+p[0]+","+p[1]+")");
+}
+function pathTo(from,to){
+  const A=RAUM[from], B=RAUM[to], P=[];
+  if(from==="aussen"&&to!=="aussen"){P.push(TOR,TUER,B.wp,B.c);}
+  else if(to==="aussen"&&from!=="aussen"){P.push(A.wp,TUER,TOR,RAUM.aussen.c);}
+  else if(from===to){P.push(B.c);}
+  else{P.push(A.wp,B.wp,B.c);}
+  return P.map(p=>({x:p[0],y:p[1]}));
+}
+function walk(from,to,done){
+  const P=pathTo(from,to);
+  const schrankeAuf=(from==="aussen"&&to!=="aussen");
+  const schrankeZu =(to==="aussen"&&from!=="aussen");
+  const durOf=(u,v)=>Math.max(280,Math.hypot(v.x-u.x,v.y-u.y)/165*1000);
+  const total=P.reduce((s,q,i)=>s+durOf(i?P[i-1]:{x:pos.x,y:pos.y},q),0);
+  let seg=0,a={x:pos.x,y:pos.y},b=P[0],dur=durOf(a,b),t0=performance.now(),done0=0;
+  if(anim)cancelAnimationFrame(anim);
+  infopt.style.display="none";
+  kT=(to==="aussen")?KOUT:KIN;
+  function step(now){
+    const e=Math.min(1,(now-t0)/dur);
+    const ease=e<.5?2*e*e:1-Math.pow(-2*e+2,2)/2;
+    pos.x=a.x+(b.x-a.x)*ease; pos.y=a.y+(b.y-a.y)*ease;
+    const g=Math.min(1,(done0+e*dur)/total);
+    if(schrankeAuf) setSchranke(Math.min(1,g*3));
+    if(schrankeZu)  setSchranke(Math.max(0,1-Math.max(0,g-0.5)*2.6));
+    if(tuer) tuer.setAttribute("opacity",(pos.x>-70&&pos.x<50)?0.2:1);
+    camGo(pos.x,pos.y,kT);
+    if(e<1){anim=requestAnimationFrame(step);}
+    else{
+      done0+=dur;seg++;
+      if(seg<P.length){a={x:b.x,y:b.y};b=P[seg];dur=durOf(a,b);t0=performance.now();
+        anim=requestAnimationFrame(step);}
+      else{anim=null;
+        if(!schrankeZu)setSchranke(from==="aussen"?1:(to==="aussen"?0:1));
+        if(tuer)tuer.setAttribute("opacity",1);
+        const L=LOOK[to]; camGo(L[0],L[1],kT);
+        setInfo(to); if(done)done();}
+    }
+  }
+  anim=requestAnimationFrame(step);
+}
+function teleport(room){
+  if(anim){cancelAnimationFrame(anim);anim=null;}
+  const r=RAUM[room], L=LOOK[room];
+  pos.x=r.c[0];pos.y=r.c[1];
+  look={x:L[0],y:L[1]};lookT={x:L[0],y:L[1]};
+  cam.k=(room==="aussen")?KOUT:KIN;kT=cam.k;
+  setSchranke(room==="aussen"?0:1);
+  if(tuer)tuer.setAttribute("opacity",1);
+  place();setInfo(room);
+}
+
+/* ================= Zustand ================= */
+/* Der Schlüssel bleibt über alle künftigen Fassungen gleich —
+   sonst verlieren die Teilnehmer bei jedem Update ihren Stand. */
+const KEY="bgm-spielbrett";
+let S={v:7,mode:"student",woche:1,frei:1,karten:[],punkte:[],maxw:6,noten:false,
+       name:"",team:"",teamMit:"",abgaben:{}};
+
+/* Ab dieser Aufgabe endet die Rotation und es zählt die Teamleistung. */
+const TEAM_AB = 15;
+
+/* ------------------------------------------------------------------
+   Die fünf bewerteten Meilensteine. Nach jeder Aufgabe gibt es nur
+   einen kurzen Bericht ohne Punkte; gewertet wird fünfmal im Semester.
+   Quelle: claude/BGM_Freischaltung_und_Abgabe.md
+   ------------------------------------------------------------------ */
+const MEILENSTEINE = [
+  {nr:1, titel:"Das Unternehmen und der Anlass",   von:1,  bis:5,  faellig:"fällig vor Einheit 6"},
+  {nr:2, titel:"Die Analyse",                      von:6,  bis:8,  faellig:"fällig vor Einheit 9"},
+  {nr:3, titel:"Zielbild und Maßnahmenentwurf",    von:9,  bis:11, faellig:"fällig vor Einheit 12"},
+  {nr:4, titel:"Maßnahmenpaket und Angebot",       von:12, bis:15, faellig:"fällig vor Einheit 16"},
+  {nr:5, titel:"Gesamtdokument und Pitch",         von:16, bis:19, faellig:"fällig nach dem Pitch"}
+];
+function msVon(n){ return MEILENSTEINE.find(m => n>=m.von && n<=m.bis) || null; }
+function load(){
+  try{const raw=localStorage.getItem(KEY);
+    if(raw){const o=JSON.parse(raw);
+      if(o&&typeof o==="object"){
+        S.mode=o.mode==="doz"?"doz":"student";
+        S.woche=Math.min(19,Math.max(1,o.woche|0||1));
+        S.frei=Math.min(19,Math.max(1,o.frei|0||1));
+        S.karten=Array.isArray(o.karten)?o.karten:[];
+        S.punkte=Array.isArray(o.punkte)?o.punkte:[];
+        S.maxw=Math.min(20,Math.max(1,o.maxw|0||6));
+        S.noten=!!o.noten;
+        S.name=typeof o.name==="string"?o.name:"";
+        S.team=typeof o.team==="string"?o.team:"";
+        S.teamMit=typeof o.teamMit==="string"?o.teamMit:"";
+        if(o.abgaben&&typeof o.abgaben==="object")S.abgaben=migriere(o.abgaben,o);
+      }}}catch(e){}
+  if(!S.punkte.length)S.punkte=[{name:"",w:{}},{name:"",w:{}},{name:"",w:{}},{name:"",w:{}}];
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+
+/* Ein Stand aus der Teamfassung wird auf das Einzelkonto gehoben,
+   damit niemand beim Update seine Häkchen verliert. */
+function migriere(a,o){
+  const flach = k => a[k] && typeof a[k]==="object" &&
+    ("st" in a[k] || "notiz" in a[k] || "zeit" in a[k]);
+  if(Object.keys(a).some(flach)) return a;
+  const erst = (o && o.team && a[o.team]) || a[Object.keys(a)[0]];
+  return (erst && typeof erst==="object") ? erst : {};
+}
+const isDoz=()=>S.mode==="doz";
+const maxWeek=()=>isDoz()?19:S.frei;
+
+/* ================= Einheit ================= */
+const unitEl=document.getElementById("unit");
+const hintEl=document.getElementById("hintbox");
+let raumJetzt="aussen";
+
+function fuelleKarte(){
+  const e=EINHEITEN[S.woche-1];
+  document.getElementById("s-kick").textContent="Aufgabe "+e.n+" von 19";
+  document.getElementById("s-room").textContent=RAEUME[e.r]||"";
+  document.getElementById("wnow").textContent=e.n;
+  document.getElementById("rnow").textContent=(RAEUME[e.r]||"").toLowerCase();
+  document.getElementById("i-kick").textContent="Aufgabe "+e.n+" von 19";
+  document.getElementById("i-titel").textContent=e.t;
+  document.getElementById("i-text").textContent=e.x;
+  document.getElementById("i-auftrag").textContent=e.a;
+  document.getElementById("i-wer").textContent=e.w;
+  document.getElementById("i-baustein").textContent=e.b;
+  document.getElementById("prev").disabled=S.woche<=1;
+  document.getElementById("next").disabled=S.woche>=maxWeek();
+  fuelleExtras(e);
+  renderAbgabe();
+}
+function markiereRaum(){
+  const e=EINHEITEN[S.woche-1];
+  Object.keys(raumFlaeche).forEach(k=>{
+    const an = (k===e.r);
+    raumFlaeche[k].setAttribute("fill", an ? "#2e4d7e" : "#1c2a44");
+    raumFlaeche[k].setAttribute("stroke", an ? "#378ADD" : "#2b3d5c");
+    raumFlaeche[k].setAttribute("stroke-width", an ? 3 : 1.5);
+    if(raumLabel[k]){ raumLabel[k].setAttribute("fill", an ? "#FFFFFF" : "#6f92bd");
+      raumLabel[k].setAttribute("font-size", an ? 17 : 15); }
+  });
+}
+function gehZu(n,sofort){
+  const e=EINHEITEN[n-1];
+  S.woche=n; save(); fuelleKarte(); markiereRaum(); renderPlan();
+  unitEl.classList.remove("split"); hintEl.hidden=true;
+  if(sofort){ teleport(e.r); raumJetzt=e.r; zeigeHinweis(); return; }
+  walk(raumJetzt,e.r,()=>{ raumJetzt=e.r; zeigeHinweis(); });
+}
+function zeigeHinweis(){
+  const e=EINHEITEN[S.woche-1];
+  document.getElementById("hint").textContent=
+    (e.r==="aussen" ? "Ihr steht vor dem Werkstor" : "Angekommen im "+RAEUME[e.r])+
+    " — auf den blauen Punkt tippen";
+  hintEl.hidden=false;
+}
+function openTask(){
+  unitEl.classList.add("split"); hintEl.hidden=true;
+  const e=EINHEITEN[S.woche-1], L=LOOK[e.r];
+  camGo(L[0],L[1],(e.r==="aussen")?KOUT*0.86:KIN*0.74);
+}
+
+document.getElementById("prev").addEventListener("click",ev=>{
+  ev.stopPropagation(); if(S.woche>1) gehZu(S.woche-1);});
+document.getElementById("next").addEventListener("click",ev=>{
+  ev.stopPropagation(); if(S.woche<maxWeek()) gehZu(S.woche+1);});
+
+/* ================= Spielbrett-Übersicht ================= */
+const weeksEl=document.getElementById("weeks");
+function baueWochenleiste(){
+  weeksEl.innerHTML="";
+  EINHEITEN.forEach(e=>{
+    const b=document.createElement("button");b.type="button";b.textContent=e.n;
+    b.setAttribute("aria-label","Aufgabe "+e.n);
+    b.addEventListener("click",()=>{if(e.n>maxWeek())return;showTab("unit");gehZu(e.n);});
+    weeksEl.appendChild(b);
+  });
+}
+baueWochenleiste();
+const ROOMBOX={aussen:[120,310],empfang:[348,132],chef:[555,132],personal:[767,132],
+  pause:[954,132],projekt:[363,432],innendienst:[575,432],halle:[858,432]};
+function renderPlan(){
+  const e=EINHEITEN[S.woche-1];
+  [...weeksEl.children].forEach((b,i)=>{const n=i+1;
+    b.className=n>maxWeek()?"lock":(n<S.woche?"done":(n===S.woche?"now":""));});
+  const offen=new Set(EINHEITEN.slice(0,S.woche).map(x=>x.r));
+  document.querySelectorAll(".room").forEach(g=>{const r=g.dataset.r;
+    g.classList.toggle("open",offen.has(r));
+    g.classList.toggle("active",r===e.r);
+    g.classList.toggle("locked",!offen.has(r)&&r!=="flur");});
+  const m=document.getElementById("marker"),bx=ROOMBOX[e.r];
+  if(bx){m.querySelectorAll("circle").forEach(c=>{c.setAttribute("cx",bx[0]);c.setAttribute("cy",bx[1]);});
+    m.style.display="";}else m.style.display="none";
+  const li=document.getElementById("aufliste"); li.innerHTML="";
+  EINHEITEN.slice(0,maxWeek()).forEach(x=>{
+    const d=document.createElement("div"); d.className="auf"+(x.n===S.woche?" cur":"");
+    d.innerHTML="<h4><i></i><span></span></h4><p></p>";
+    d.querySelector("i").textContent="Aufgabe "+x.n;
+    d.querySelector("span").textContent=x.t;
+    d.querySelector("p").textContent=x.a;
+    d.addEventListener("click",()=>{showTab("unit");gehZu(x.n);});
+    li.appendChild(d);
+  });
+}
+document.querySelectorAll(".room").forEach(g=>{
+  g.addEventListener("click",()=>{const r=g.dataset.r;if(r==="flur")return;
+    const tr=EINHEITEN.filter(x=>x.r===r&&x.n<=Math.min(S.woche,maxWeek()));
+    if(!tr.length)return; showTab("unit"); gehZu(tr[tr.length-1].n);});
+});
+
+/* ================= Freischalten ================= */
+document.getElementById("ubtn").addEventListener("click",()=>{
+  const v=(document.getElementById("ucode").value||"").trim().toUpperCase();
+  const hit=EINHEITEN.find(e=>e.c && (e.c===v || e.c===codeHash(v)));
+  const t=document.getElementById("unlocktxt");
+  if(hit){S.frei=Math.max(S.frei,hit.n);save();
+    t.textContent="Aufgabe "+hit.n+" freigeschaltet: "+hit.t;
+    document.getElementById("ucode").value=""; gehZu(hit.n);}
+  else t.textContent="Der Code passt nicht. Noch einmal versuchen.";
+});
+/* ================= Belegschaft ================= */
+const leuteEl=document.getElementById("leute");
+LEUTE.forEach(p=>{
+  const d=document.createElement("div");d.className="card";
+  d.innerHTML="<h3></h3><div class='role'></div><ul>"+p.p.map(()=>"<li></li>").join("")+"</ul><div class='where'></div>";
+  d.querySelector("h3").textContent=p.n;
+  d.querySelector(".role").textContent=p.a;
+  d.querySelectorAll("li").forEach((li,i)=>li.textContent=p.p[i]);
+  d.querySelector(".where").textContent=p.r==="flur"?"Überall im Haus — nach Feierabend":RAEUME[p.r];
+  leuteEl.appendChild(d);
+});
+
+/* ================= Ereigniskarten ================= */
+const kartenEl=document.getElementById("karten");
+function baueKarten(){
+ kartenEl.innerHTML="";
+ KARTEN.forEach((k,i)=>{
+  const d=document.createElement("div");d.className="ev";d.tabIndex=0;d.setAttribute("role","button");
+  d.innerHTML="<div class='backwrap'><div class='back'>?</div><div class='backtxt'>Ereigniskarte</div></div>"+
+    "<div class='front'><div class='w'></div><div class='t'></div><div class='q'></div></div>";
+  d.querySelector(".front .w").textContent=k.w;
+  d.querySelector(".front .t").textContent=k.t;
+  d.querySelector(".front .q").textContent=k.q;
+  const flip=()=>{const up=d.classList.toggle("up");
+    d.querySelector(".backwrap").style.display=up?"none":"block";S.karten[i]=up;save();};
+  d.addEventListener("click",flip);
+  d.addEventListener("keydown",ev=>{if(ev.key==="Enter"||ev.key===" "){ev.preventDefault();flip();}});
+  if(S.karten[i]){d.classList.add("up");d.querySelector(".backwrap").style.display="none";}
+  kartenEl.appendChild(d);
+ });
+}
+
+/* ================= Wochencodes ================= */
+const codeEl=document.getElementById("codelist");
+function baueCodes(){
+  codeEl.innerHTML="";
+  EINHEITEN.forEach(e=>{const d=document.createElement("div");
+    d.innerHTML="<b>Aufgabe "+e.n+"</b><span></span>";
+    d.querySelector("span").textContent=(DOZENT&&DOZENT.codes&&DOZENT.codes[e.n])||"—";
+    codeEl.appendChild(d);});
+}
+baueCodes();
+
+/* ================= Punkteraster ================= */
+function ampel(p,max){if(p===""||p===null||p===undefined||isNaN(p))return"";
+  const q=Number(p)/max;return q>=0.65?"g":(q>=0.5?"y":"r");}
+function note(p,max){if(!max)return"—";const q=Math.round(Number(p)/max*100);
+  if(q>=95)return"1,0";if(q>=90)return"1,3";if(q>=85)return"1,7";if(q>=80)return"2,0";
+  if(q>=75)return"2,3";if(q>=70)return"2,7";if(q>=65)return"3,0";if(q>=60)return"3,3";
+  if(q>=55)return"3,7";if(q>=50)return"4,0";return"5,0";}
+function renderPunkte(){
+  const bis=S.woche,th=document.getElementById("thead"),tb=document.getElementById("tbody");
+  let h="<tr><th class='nm'>Teilnehmer / Team</th>";
+  for(let w=1;w<=bis;w++)h+="<th>"+w+"</th>";
+  h+="<th>Gesamt</th>"+(S.noten?"<th>Note</th>":"")+"</tr>";
+  th.innerHTML=h;tb.innerHTML="";
+  S.punkte.forEach((row,i)=>{
+    const tr=document.createElement("tr");
+    const tdn=document.createElement("td");tdn.className="nm";
+    const inp=document.createElement("input");inp.type="text";inp.placeholder="Name oder Team";
+    inp.value=row.name||"";
+    inp.addEventListener("input",()=>{S.punkte[i].name=inp.value;save();});
+    tdn.appendChild(inp);tr.appendChild(tdn);
+    for(let w=1;w<=bis;w++){
+      const td=document.createElement("td");td.className="wk";
+      const v=document.createElement("input");v.type="number";v.min="0";v.max="30";
+      const cur=(row.w&&row.w[w]!==undefined)?row.w[w]:"";
+      v.value=cur;v.className=ampel(cur,S.maxw);
+      v.addEventListener("input",()=>{
+        if(!S.punkte[i].w)S.punkte[i].w={};
+        if(v.value==="")delete S.punkte[i].w[w];else S.punkte[i].w[w]=v.value;
+        v.className=ampel(v.value,S.maxw);save();updateGes(tr,i,bis);});
+      td.appendChild(v);tr.appendChild(td);}
+    const tdg=document.createElement("td");tdg.className="ges";tr.appendChild(tdg);
+    if(S.noten){const t2=document.createElement("td");t2.className="note";tr.appendChild(t2);}
+    tb.appendChild(tr);updateGes(tr,i,bis);
+  });
+}
+function updateGes(tr,i,bis){
+  const row=S.punkte[i];let sum=0,gez=0;
+  for(let w=1;w<=bis;w++){const v=row.w&&row.w[w];
+    if(v!==undefined&&v!==""){sum+=Number(v)||0;gez++;}}
+  const tdg=tr.querySelector("td.ges"),maxges=gez*S.maxw;
+  tdg.textContent=gez?sum:"—";
+  tdg.className="ges "+(gez?ampel(sum,maxges||1):"");
+  const tdn=tr.querySelector("td.note");
+  if(tdn)tdn.textContent=gez?note(sum,maxges):"—";
+}
+document.getElementById("addrow").addEventListener("click",()=>{S.punkte.push({name:"",w:{}});save();renderPunkte();});
+document.getElementById("sortrow").addEventListener("click",()=>{
+  const sum=r=>Object.values(r.w||{}).reduce((a,b)=>a+(Number(b)||0),0);
+  S.punkte.sort((a,b)=>sum(b)-sum(a));save();renderPunkte();});
+document.getElementById("clearrow").addEventListener("click",()=>{
+  S.punkte=[{name:"",w:{}},{name:"",w:{}},{name:"",w:{}},{name:"",w:{}}];save();renderPunkte();});
+document.getElementById("maxw").addEventListener("input",e=>{
+  S.maxw=Math.max(1,Math.min(20,Number(e.target.value)||6));save();renderPunkte();});
+document.getElementById("notesbtn").addEventListener("click",e=>{
+  S.noten=!S.noten;e.target.textContent=S.noten?"Noten ausblenden":"Noten einblenden";save();renderPunkte();});
+
+/* ================= Tabs ================= */
+const TABS=["unit","plan","leute","fort","karten","punkte","codes"];
+function showTab(t){
+  document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.t===t?"true":"false"));
+  TABS.forEach(k=>{document.getElementById("p-"+k).hidden=(k!==t);});
+  if(t==="punkte")renderPunkte();
+  if(t==="fort")renderFort();
+}
+document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.t)));
+
+/* ================= Modus ================= */
+function applyMode(){
+  const doz=isDoz();
+  document.getElementById("tab-karten").hidden=!doz;
+  document.getElementById("tab-punkte").hidden=!doz;
+  document.getElementById("tab-codes").hidden=!doz;
+  document.getElementById("unlockbox").hidden=doz;
+  const bd=document.getElementById("modebadge");
+  bd.textContent=doz?"Dozent":"Teilnehmer";bd.className="badge"+(doz?" doz":"");
+  document.getElementById("maxw").value=S.maxw;
+  document.getElementById("notesbtn").textContent=S.noten?"Noten ausblenden":"Noten einblenden";
+  if(!doz)S.woche=Math.min(S.woche,S.frei);
+}
+function dozSetzen(o){
+  if(!o||typeof o!=="object")throw new Error("Die Datei hat nicht das erwartete Format.");
+  if(!o.codes||typeof o.codes!=="object")throw new Error("Es fehlt der Abschnitt \"codes\".");
+  DOZENT=o; KARTEN=Array.isArray(o.karten)?o.karten:[];
+  baueKarten(); baueCodes();
+}
+function start(mode){S.mode=mode;save();applyMode();
+  document.getElementById("gate").hidden=true;showTab("unit");
+  buildWorld(document.getElementById("scene"));
+  fuelleKarte();markiereRaum();renderPlan();
+  raumJetzt=EINHEITEN[S.woche-1].r;teleport(raumJetzt);zeigeHinweis();}
+document.getElementById("asStudent").addEventListener("click",()=>start("student"));
+document.getElementById("asDoz").addEventListener("click",()=>{
+  if(DOZENT){start("doz");return;}
+  const row=document.getElementById("dozrow");
+  if(row.hidden){row.hidden=false;return;}
+  document.getElementById("dozfile").click();
+});
+document.getElementById("dozpick").addEventListener("click",()=>document.getElementById("dozfile").click());
+document.getElementById("dozfile").addEventListener("change",()=>{
+  const f=document.getElementById("dozfile").files&&document.getElementById("dozfile").files[0];
+  if(!f)return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      dozSetzen(JSON.parse(fr.result));
+      try{localStorage.setItem(KEY+".doz",fr.result);}catch(e){}
+      start("doz");
+    }catch(err){document.getElementById("dozwarn").textContent=err.message;}
+    document.getElementById("dozfile").value="";
+  };
+  fr.readAsText(f,"utf-8");
+});
+
+
+/* ================= v5: Abgaben, Fortschritt, wochen.json ================= */
+const $=i=>document.getElementById(i);
+const STAT=[{id:"offen",l:"offen",d:"d-offen"},{id:"arbeit",l:"in Arbeit",d:"d-arbeit"},
+            {id:"fertig",l:"abgegeben",d:"d-fertig"}];
+const statInfo=id=>STAT.find(s=>s.id===id)||STAT[0];
+function zeitTxt(iso){if(!iso)return"";
+  try{return new Date(iso).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",
+    year:"numeric",hour:"2-digit",minute:"2-digit"});}catch(e){return iso;}}
+function kbTxt(b){if(b==null)return"";
+  return b<1048576?Math.max(1,Math.round(b/1024))+" KB":(b/1048576).toFixed(1).replace(".",",")+" MB";}
+
+/* ---------- Wochenfelder in der Auftragskarte ---------- */
+function fuelleExtras(e){
+  const ch=$("i-chips");ch.innerHTML="";
+  const chip=(txt,cls)=>{const s=document.createElement("span");
+    s.className="chip"+(cls?" "+cls:"");s.textContent=txt;ch.appendChild(s);};
+  if(e.phase)chip(e.phase,"ph");
+  chip("Aufgabe "+e.n+" von "+EINHEITEN.length);
+  const ms=msVon(e.n);
+  if(ms)chip("zahlt auf Meilenstein "+ms.nr+" ein","ms");
+  if(e.dauer)chip(e.dauer+" Min Präsenz");
+  $("i-ziel").textContent=e.ziel||"";$("i-ziel").hidden=!e.ziel;
+  const bg=$("i-begriffe");bg.innerHTML="";
+  (e.begriffe||[]).forEach(b=>{const s=document.createElement("span");s.textContent=b;bg.appendChild(s);});
+  bg.hidden=!(e.begriffe&&e.begriffe.length);
+  const ml=$("i-material");ml.innerHTML="";
+  (e.material||[]).forEach(m=>{const li=document.createElement("li");li.textContent=m;ml.appendChild(li);});
+  $("i-matbox").hidden=!(e.material&&e.material.length);
+  $("i-eigen").textContent=e.eigen||"";$("i-eigenbox").hidden=!e.eigen;
+  if(e.dauer)$("i-zeit").textContent=e.dauer+" Minuten Präsenz, davon rund 50 in der Gruppe";
+}
+
+/* Wer diese Woche abgibt: bis Einheit 14 die Person, danach das Team. */
+function traeger(w){
+  if(w>=TEAM_AB) return S.team ? "Team "+S.team : "dein Pitch-Team";
+  return S.name || "deine Arbeitsdatei";
+}
+function abg(w){return S.abgaben[w]||(S.abgaben[w]={st:"offen",notiz:"",datei:null,zeit:null});}
+function abgLies(w){return S.abgaben[w]||{st:"offen",notiz:"",datei:null,zeit:null};}
+function fertigZahl(){return EINHEITEN.filter(e=>abgLies(e.n).st==="fertig").length;}
+
+/* ---------- Abgabe der laufenden Woche ---------- */
+function renderAbgabe(){
+  const a=abgLies(S.woche);
+  $("a-team").textContent=traeger(S.woche);
+  [...$("a-seg").children].forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.st===a.st)));
+  const n=$("a-notiz");if(document.activeElement!==n)n.value=a.notiz||"";
+  $("a-dname").textContent=a.datei?(a.datei.name+" · "+kbTxt(a.datei.size)):"";
+  $("a-dweg").hidden=!a.datei;
+  $("a-stamp").hidden=!a.zeit;
+  if(a.zeit)$("a-stamp").textContent="Abgegeben am "+zeitTxt(a.zeit);
+}
+[...$("a-seg").children].forEach(b=>b.addEventListener("click",()=>{
+  const r=abg(S.woche);
+  r.st=b.dataset.st;r.zeit=(r.st==="fertig")?new Date().toISOString():null;
+  save();renderAbgabe();}));
+$("a-notiz").addEventListener("input",()=>{abg(S.woche).notiz=$("a-notiz").value;save();});
+$("a-dbtn").addEventListener("click",()=>$("a-datei").click());
+$("a-datei").addEventListener("change",()=>{
+  const f=$("a-datei").files&&$("a-datei").files[0];if(!f)return;
+  abg(S.woche).datei={name:f.name,size:f.size};
+  save();renderAbgabe();$("a-datei").value="";});
+$("a-dweg").addEventListener("click",()=>{abg(S.woche).datei=null;save();renderAbgabe();});
+
+/* ---------- Mein Konto ---------- */
+function phasenListe(){
+  const o=[];EINHEITEN.forEach(e=>{const p=e.phase||"ohne Phase";
+    const l=o[o.length-1];if(l&&l.name===p)l.wo.push(e);else o.push({name:p,wo:[e]});});
+  return o;
+}
+function renderFort(){
+  const ges=EINHEITEN.length||1;
+  $("f-wer").textContent=S.name||"noch ohne Namen";
+
+  const teamZeit = S.woche>=TEAM_AB || S.frei>=TEAM_AB;
+  $("k-teambox").hidden=!teamZeit;
+  $("k-mitbox").hidden=!teamZeit;
+  if(document.activeElement!==$("k-name"))$("k-name").value=S.name||"";
+  if(document.activeElement!==$("k-team"))$("k-team").value=S.team||"";
+  if(document.activeElement!==$("k-mit"))$("k-mit").value=S.teamMit||"";
+
+  const bal=(l,f,g)=>'<div class="prow"><span class="l">'+l+'</span><span class="pbar"><i style="width:'+
+    (f/g*100).toFixed(1)+'%"></i></span><span class="n">'+f+"/"+g+"</span></div>";
+  let hb=bal("Gesamt",fertigZahl(),ges);
+
+  /* Der nächste Meilenstein ist der erste, der noch nicht vollständig
+     abgehakt ist — der bekommt den Rahmen. */
+  const stand = MEILENSTEINE.map(m=>{
+    const wo = EINHEITEN.filter(e=>e.n>=m.von && e.n<=m.bis);
+    return {m:m, wo:wo, fertig:wo.filter(e=>abgLies(e.n).st==="fertig").length};
+  });
+  const naechster = stand.find(s=>s.fertig < s.wo.length);
+
+  stand.forEach(s=>{
+    const jetzt = (naechster && s.m.nr===s.m.nr && naechster.m.nr===s.m.nr);
+    hb += '<div class="prow ms'+(jetzt?" jetzt":"")+'">'+
+          '<span class="l"><b>M'+s.m.nr+'</b>'+s.m.titel+
+            '<small>Aufgabe '+s.m.von+"–"+s.m.bis+" · "+s.m.faellig+
+            (jetzt?" · als Nächstes":"")+'</small></span>'+
+          '<span class="pbar"><i style="width:'+
+            (s.wo.length? (s.fertig/s.wo.length*100).toFixed(1) : 0)+'%"></i></span>'+
+          '<span class="n">'+s.fertig+"/"+s.wo.length+"</span></div>";
+  });
+  $("f-bars").innerHTML=hb;
+
+  const li=$("f-liste");li.innerHTML="";
+  EINHEITEN.forEach(e=>{
+    const si=statInfo(abgLies(e.n).st);
+    const zu=e.n>maxWeek();
+    const b=document.createElement("button");
+    b.type="button";
+    b.className="wz"+(e.n===S.woche?" jetzt":"");
+    b.disabled=zu;
+    b.innerHTML="<span class='d "+si.d+"'></span><span><small></small><b></b><i></i></span>";
+    b.querySelector("small").textContent="Aufgabe "+e.n+" · "+(e.phase||"")+" · M"+(msVon(e.n)||{nr:"—"}).nr;
+    b.querySelector("b").textContent=zu?"noch nicht freigeschaltet":e.t;
+    b.querySelector("i").textContent=zu?"":si.l+" · "+(e.b||"");
+    if(!zu)b.addEventListener("click",()=>{showTab("unit");gehZu(e.n);});
+    li.appendChild(b);
+  });
+}
+[["k-name","name"],["k-team","team"],["k-mit","teamMit"]].forEach(([id,feld])=>{
+  $(id).addEventListener("input",()=>{
+    S[feld]=$(id).value;save();
+    $("f-wer").textContent=S.name||"noch ohne Namen";
+    $("a-team").textContent=traeger(S.woche);
+  });
+});
+
+/* ---------- Inhalte: wochen.json ---------- */
+const PFLICHT=["woche","phase","titel","lernziel","kernbegriffe","input","spielzug",
+               "artefakt","material","eigenarbeit","dauer_min","status"];
+function pruefeWochen(d){
+  if(!Array.isArray(d)||!d.length)throw new Error("Die Datei enthält keine Liste von Aufgaben.");
+  d.forEach((w,i)=>{const f=PFLICHT.filter(k=>!(k in w));
+    if(f.length)throw new Error("Objekt "+(i+1)+": es fehlt "+f.join(", "));});
+  return d.slice().sort((a,b)=>a.woche-b.woche);
+}
+function setzeWochen(d,quelle){
+  WOCHEN=d;baueEinheiten();
+  S.woche=Math.min(Math.max(1,S.woche),EINHEITEN.length);
+  S.frei=Math.min(Math.max(1,S.frei),EINHEITEN.length);
+  save();baueWochenleiste();baueCodes();
+  $("jsoninfo").textContent=quelle==="json"
+    ? "Inhalte aus wochen.json — "+EINHEITEN.length+" Aufgaben"
+    : "Mitgelieferter Stand — "+EINHEITEN.length+" Aufgaben";
+  if($("gate").hidden){fuelleKarte();markiereRaum();renderPlan();renderFort();}
+}
+$("btn-json").addEventListener("click",()=>$("jsonfile").click());
+$("jsonfile").addEventListener("change",()=>{
+  const f=$("jsonfile").files&&$("jsonfile").files[0];if(!f)return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      const d=pruefeWochen(JSON.parse(fr.result));
+      setzeWochen(d,"json");
+      try{localStorage.setItem(KEY+".wochen",fr.result);}catch(e){}
+    }catch(err){alert("Die Datei passt nicht zum Wochenschema:\n\n"+err.message);}
+    $("jsonfile").value="";
+  };
+  fr.readAsText(f,"utf-8");
+});
+/* ---------- Stand sichern und laden ---------- */
+function standInfo(t){$("standinfo").textContent=t||"";}
+$("btn-save").addEventListener("click",()=>{
+  const paket={typ:"bgm-spielstand",gespeichert:new Date().toISOString(),stand:S};
+  const blob=new Blob([JSON.stringify(paket,null,2)],{type:"application/json"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download="bgm-spielstand-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),3000);
+  standInfo("Gesichert.");
+});
+$("btn-load").addEventListener("click",()=>$("standfile").click());
+$("standfile").addEventListener("change",()=>{
+  const f=$("standfile").files&&$("standfile").files[0];if(!f)return;
+  const fr=new FileReader();
+  fr.onload=()=>{
+    try{
+      const p=JSON.parse(fr.result);
+      const st=(p&&p.stand)?p.stand:p;
+      if(!st||typeof st!=="object"||!st.abgaben)
+        throw new Error("Das ist keine gesicherte Spielstandsdatei.");
+      if(!confirm("Der Stand auf diesem Gerät wird durch die Datei ersetzt. Fortfahren?"))return;
+      ["woche","frei","maxw"].forEach(k=>{if(typeof st[k]==="number")S[k]=st[k];});
+      ["name","team","teamMit"].forEach(k=>{if(typeof st[k]==="string")S[k]=st[k];});
+      S.abgaben=migriere(st.abgaben,st);
+      S.punkte=Array.isArray(st.punkte)?st.punkte:S.punkte;
+      S.karten=Array.isArray(st.karten)?st.karten:[];
+      save();
+      S.woche=Math.min(Math.max(1,S.woche),EINHEITEN.length);
+      fuelleKarte();markiereRaum();renderPlan();renderFort();renderAbgabe();
+      standInfo("Geladen — Stand vom "+((p&&p.gespeichert)?p.gespeichert.slice(0,10):"?")+".");
+    }catch(err){alert("Stand konnte nicht geladen werden:\n\n"+err.message);}
+    $("standfile").value="";
+  };
+  fr.readAsText(f,"utf-8");
+});
+
+$("btn-jsonweg").addEventListener("click",()=>{
+  try{localStorage.removeItem(KEY+".wochen");}catch(e){}
+  setzeWochen(WOCHEN_STD,"std");});
+
+load();
+/* Dozentendatei von diesem Gerät wiederherstellen */
+try{
+  const dz=localStorage.getItem(KEY+".doz");
+  if(dz)dozSetzen(JSON.parse(dz));
+}catch(e){}
+applyMode();
+(function(){
+  let ok=false;
+  try{const raw=localStorage.getItem(KEY+".wochen");
+    if(raw){setzeWochen(pruefeWochen(JSON.parse(raw)),"json");ok=true;}}catch(e){}
+  if(!ok){
+    setzeWochen(WOCHEN_STD,"std");
+    if(/^https?:$/.test(location.protocol))
+      fetch("wochen.json",{cache:"no-store"})
+        .then(r=>r.ok?r.json():null)
+        .then(j=>{if(j)setzeWochen(pruefeWochen(j),"json");})
+        .catch(()=>{});
+  }
+})();
+</script>
+</body>
+</html>

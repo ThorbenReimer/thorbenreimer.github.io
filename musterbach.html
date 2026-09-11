@@ -1,0 +1,457 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Musterbach Kunststofftechnik GmbH — Präzision aus Kunststoff</title>
+<style>
+:root{
+  --ink:#1c2b24; --body:#3c4a43; --muted:#6d7d75;
+  --line:#dfe5e1; --bg:#ffffff; --soft:#f2f5f3;
+  --acc:#2f6b4f; --acc2:#4e9b74; --warn:#8a5a12; --warnbg:#fff6e5;
+}
+*{box-sizing:border-box}
+body{margin:0;font:16px/1.6 "Segoe UI",Tahoma,Geneva,Verdana,sans-serif;color:var(--body);background:var(--bg)}
+h1,h2,h3{color:var(--ink);line-height:1.25;margin:0 0 .5em}
+h1{font-size:clamp(28px,4.5vw,42px)}
+h2{font-size:clamp(22px,3vw,30px);margin-top:0}
+h3{font-size:18px}
+a{color:var(--acc)}
+img{max-width:100%}
+.wrap{max-width:1060px;margin:0 auto;padding:0 20px}
+
+/* Hinweisband */
+.fake{background:var(--warnbg);border-bottom:2px solid #e6c27a;color:var(--warn);
+  font-size:13px;padding:10px 0;text-align:center}
+.fake b{color:#6d4509}
+
+/* Kopf */
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:#fff;z-index:5}
+.head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:14px 0;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+.mark{width:38px;height:38px;flex:0 0 38px}
+.logo .n{font-weight:700;color:var(--ink);font-size:19px;letter-spacing:.2px;line-height:1.1}
+.logo .s{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:none;border:0;font:inherit;font-size:15px;color:var(--body);
+  padding:8px 12px;border-radius:4px;cursor:pointer}
+nav button:hover{background:var(--soft)}
+nav button[aria-current="true"]{color:var(--acc);font-weight:600;box-shadow:inset 0 -2px 0 var(--acc)}
+
+/* Bühne */
+.hero{background:var(--soft);border-bottom:1px solid var(--line)}
+.hero .wrap{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:center;padding:48px 20px}
+.hero p.lead{font-size:18px;max-width:46ch}
+.kicker{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--acc);font-weight:700;margin-bottom:10px}
+
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:24px}
+.card{border:1px solid var(--line);border-radius:6px;padding:20px;background:#fff}
+.card h3{margin-top:0}
+section.pad{padding:44px 0}
+.soft{background:var(--soft)}
+.fig{border-radius:6px;overflow:hidden;border:1px solid var(--line);background:#fff}
+.zahlen{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;text-align:center}
+.zahlen .z{font-size:30px;font-weight:700;color:var(--acc);line-height:1}
+.zahlen small{display:block;color:var(--muted);margin-top:6px;font-size:13px}
+ul.tick{list-style:none;padding:0;margin:0}
+ul.tick li{padding-left:24px;position:relative;margin-bottom:8px}
+ul.tick li::before{content:"›";position:absolute;left:6px;color:var(--acc);font-weight:700}
+.job{border:1px solid var(--line);border-left:4px solid var(--acc2);border-radius:5px;padding:20px;margin-bottom:18px;background:#fff}
+.job .meta{font-size:13px;color:var(--muted);margin-bottom:10px}
+.tag{display:inline-block;background:var(--soft);border:1px solid var(--line);border-radius:99px;
+  padding:2px 10px;font-size:12px;color:var(--body);margin:0 6px 6px 0}
+.news{border-bottom:1px solid var(--line);padding:16px 0}
+.news:last-child{border-bottom:0}
+.news .d{font-size:12px;color:var(--muted);letter-spacing:1px;text-transform:uppercase}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--ink);background:var(--soft);font-weight:600}
+footer{background:var(--ink);color:#c8d4ce;padding:34px 0;font-size:14px;margin-top:20px}
+footer a{color:#9fd0b6}
+footer .grid3{gap:28px}
+footer h4{color:#fff;font-size:14px;margin:0 0 10px;letter-spacing:1px;text-transform:uppercase}
+.page{display:none}
+.page.on{display:block}
+@media(max-width:800px){
+  .hero .wrap{grid-template-columns:1fr;padding:32px 20px}
+  .grid3,.grid2{grid-template-columns:1fr}
+  .zahlen{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<div class="fake">
+  <b>Fiktives Lehrbeispiel.</b> Diese Firma gibt es nicht. Erstellt für das Modul
+  Betriebliches Gesundheitsmanagement an der Kiedaisch-Akademie. Alle Namen, Zahlen,
+  Adressen und Stellenanzeigen sind erfunden.
+</div>
+
+<header>
+ <div class="wrap head">
+  <a class="logo" href="#" onclick="go('start');return false">
+    <svg class="mark" viewBox="0 0 40 40" aria-hidden="true">
+      <rect x="1" y="1" width="38" height="38" rx="7" fill="#2f6b4f"/>
+      <path d="M10 28V13l10 8 10-8v15" fill="none" stroke="#fff" stroke-width="2.6" stroke-linejoin="round" stroke-linecap="round"/>
+    </svg>
+    <span>
+      <span class="n">Musterbach</span><br>
+      <span class="s">Kunststofftechnik</span>
+    </span>
+  </a>
+  <nav id="nav"></nav>
+ </div>
+</header>
+
+<!-- ================= START ================= -->
+<main id="start" class="page on">
+ <div class="hero">
+  <div class="wrap">
+   <div>
+     <div class="kicker">Seit 1978 in Familienhand</div>
+     <h1>Präzision aus Kunststoff.<br>Serie für Serie.</h1>
+     <p class="lead">Wir fertigen technische Kunststoffteile im Spritzguss — für Automobilzulieferer,
+     Elektroindustrie und Medizintechnik. Vom Werkzeug bis zur geprüften Baugruppe, alles unter einem Dach.</p>
+     <p><a href="#" onclick="go('fertigung');return false">Unsere Fertigung ansehen →</a></p>
+   </div>
+   <div class="fig">
+     <svg viewBox="0 0 420 300" role="img" aria-label="Schematische Darstellung einer Spritzgießmaschine">
+       <rect width="420" height="300" fill="#eef2f0"/>
+       <rect x="40" y="120" width="230" height="70" rx="6" fill="#c9d6cf"/>
+       <rect x="60" y="95" width="90" height="30" rx="4" fill="#9fb3a8"/>
+       <rect x="160" y="80" width="70" height="45" rx="4" fill="#2f6b4f"/>
+       <circle cx="300" cy="155" r="34" fill="#9fb3a8"/>
+       <circle cx="300" cy="155" r="16" fill="#eef2f0"/>
+       <rect x="40" y="190" width="330" height="10" rx="3" fill="#b4c4bb"/>
+       <rect x="290" y="205" width="80" height="55" rx="4" fill="#c9d6cf"/>
+       <rect x="300" y="215" width="60" height="12" rx="2" fill="#9fb3a8"/>
+       <rect x="300" y="233" width="60" height="12" rx="2" fill="#9fb3a8"/>
+     </svg>
+   </div>
+  </div>
+ </div>
+
+ <section class="pad"><div class="wrap">
+   <div class="zahlen">
+     <div><div class="z">1978</div><small>gegründet</small></div>
+     <div><div class="z">rund 120</div><small>Mitarbeitende</small></div>
+     <div><div class="z">14</div><small>Spritzgießmaschinen</small></div>
+     <div><div class="z">3</div><small>Schichten, Mo–Fr</small></div>
+   </div>
+ </div></section>
+
+ <section class="pad soft"><div class="wrap">
+   <h2>Was uns ausmacht</h2>
+   <div class="grid3">
+     <div class="card"><h3>Werkzeugbau im Haus</h3>
+       <p>Eigener Werkzeugbau mit fünf Mitarbeitern. Änderungen am Werkzeug laufen bei uns
+       nicht über Wochen, sondern über Tage.</p></div>
+     <div class="card"><h3>Serie ab Losgröße 5.000</h3>
+       <p>Vom Erstmuster bis zur Großserie. Unsere Maschinen decken 35 bis 450 Tonnen
+       Schließkraft ab.</p></div>
+     <div class="card"><h3>Geprüft und dokumentiert</h3>
+       <p>Qualitätssicherung mit Messmaschine und Sichtprüfung, IATF&nbsp;16949 und
+       ISO&nbsp;9001 zertifiziert.</p></div>
+   </div>
+ </div></section>
+
+ <section class="pad"><div class="wrap">
+   <h2>Aktuelles</h2>
+   <div class="news"><div class="d">August 2026</div>
+     <h3>Neue Maschine mit 450 Tonnen Schließkraft in Betrieb</h3>
+     <p>Damit fertigen wir jetzt auch größere Gehäuseteile in einem Schuss. Die Maschine
+     ersetzt zwei ältere Anlagen in Halle 1.</p></div>
+   <div class="news"><div class="d">Juni 2026</div>
+     <h3>Wir suchen Verstärkung — in der Fertigung und im Werkzeugbau</h3>
+     <p>Mehrere Stellen sind offen, teils seit längerer Zeit. Wer jemanden kennt: Unsere
+     Mitarbeiterempfehlung bringt 500 Euro nach bestandener Probezeit.
+     <a href="#" onclick="go('karriere');return false">Zu den Stellen</a></p></div>
+   <div class="news"><div class="d">Mai 2026</div>
+     <h3>Vier Jubilare geehrt</h3>
+     <p>Bei unserem Betriebsfest haben wir zwei Kollegen für 25 Jahre und zwei für
+     40 Jahre bei Musterbach geehrt. Zusammen sind das 130 Jahre Erfahrung.</p></div>
+   <div class="news"><div class="d">September 2024</div>
+     <h3>Gesundheitstag bei Musterbach</h3>
+     <p>Rückenscreening, Sehtest und ein Vortrag zur Ernährung — unsere Krankenkasse war
+     mit einem Stand im Foyer. Rund 30 Kolleginnen und Kollegen haben teilgenommen.</p></div>
+ </div></section>
+</main>
+
+<!-- ================= UNTERNEHMEN ================= -->
+<main id="unternehmen" class="page">
+ <section class="pad"><div class="wrap">
+  <div class="kicker">Unternehmen</div>
+  <h1>Zwei Generationen, ein Standort</h1>
+  <div class="grid2">
+   <div>
+    <p>1978 hat Helmut Reiser in einer angemieteten Halle mit zwei Maschinen angefangen.
+    Heute steht Musterbach Kunststofftechnik auf einem eigenen Grundstück am Ortsrand,
+    mit zwei Produktionshallen, Werkzeugbau, Lager und Verwaltung.</p>
+    <p>Seit 2011 führt sein Sohn Markus Reiser das Unternehmen. Gewachsen ist es in dieser
+    Zeit von 70 auf rund 120 Mitarbeitende. Der Standort ist derselbe geblieben —
+    und ein großer Teil der Belegschaft auch.</p>
+    <p>Wir liefern überwiegend an Kunden im Umkreis von 200 Kilometern. Rund 60 Prozent
+    unseres Umsatzes kommen aus der Automobilzulieferung, der Rest aus Elektro- und
+    Medizintechnik.</p>
+   </div>
+   <div class="fig">
+     <svg viewBox="0 0 420 320" role="img" aria-label="Lageplan des Werksgeländes">
+       <rect width="420" height="320" fill="#eef2f0"/>
+       <rect x="30" y="40" width="170" height="120" rx="4" fill="#c9d6cf" stroke="#9fb3a8"/>
+       <text x="115" y="105" font-size="14" fill="#3c4a43" text-anchor="middle">Halle 1</text>
+       <rect x="210" y="40" width="120" height="120" rx="4" fill="#c9d6cf" stroke="#9fb3a8"/>
+       <text x="270" y="105" font-size="14" fill="#3c4a43" text-anchor="middle">Halle 2</text>
+       <rect x="30" y="175" width="110" height="70" rx="4" fill="#d9e2dd" stroke="#9fb3a8"/>
+       <text x="85" y="215" font-size="12" fill="#3c4a43" text-anchor="middle">Werkzeugbau</text>
+       <rect x="150" y="175" width="80" height="70" rx="4" fill="#d9e2dd" stroke="#9fb3a8"/>
+       <text x="190" y="215" font-size="12" fill="#3c4a43" text-anchor="middle">Lager</text>
+       <rect x="240" y="175" width="90" height="70" rx="4" fill="#2f6b4f"/>
+       <text x="285" y="215" font-size="12" fill="#fff" text-anchor="middle">Verwaltung</text>
+       <rect x="340" y="40" width="50" height="205" rx="4" fill="#e4eae7" stroke="#9fb3a8" stroke-dasharray="4 3"/>
+       <text x="365" y="145" font-size="11" fill="#6d7d75" text-anchor="middle" transform="rotate(90 365 145)">Parkplatz</text>
+       <rect x="30" y="262" width="360" height="14" rx="3" fill="#b4c4bb"/>
+       <text x="210" y="296" font-size="11" fill="#6d7d75" text-anchor="middle">Industriestraße</text>
+     </svg>
+   </div>
+  </div>
+ </div></section>
+
+ <section class="pad soft"><div class="wrap">
+  <h2>Unsere Bereiche</h2>
+  <table>
+   <tr><th style="width:26%">Bereich</th><th style="width:16%">Arbeitszeit</th><th>Was dort passiert</th></tr>
+   <tr><td>Spritzguss, Halle 1 und 2</td><td>Drei Schichten, Mo–Fr</td>
+     <td>Maschinen beschicken, Teile entnehmen und sichtprüfen, Kisten packen und auf Wagen stellen, Werkzeugwechsel begleiten.</td></tr>
+   <tr><td>Werkzeugbau</td><td>Eine Schicht, Gleitzeit</td>
+     <td>Werkzeuge instand setzen und ändern, Fräsen und Erodieren, Einfahren neuer Werkzeuge an der Maschine.</td></tr>
+   <tr><td>Qualitätssicherung</td><td>Zwei Schichten</td>
+     <td>Messmaschine bedienen, Erstmusterprüfung, Dokumentation, Reklamationen bearbeiten.</td></tr>
+   <tr><td>Lager und Versand</td><td>Eine Schicht, ab 6 Uhr</td>
+     <td>Wareneingang, Kommissionieren, Stapler fahren, Ladungen für die Spedition bereitstellen.</td></tr>
+   <tr><td>Vertriebsinnendienst</td><td>Gleitzeit, Mo–Fr</td>
+     <td>Angebote und Auftragsabwicklung, Kundentelefonie, Termine mit der Fertigung abstimmen.</td></tr>
+   <tr><td>Verwaltung</td><td>Gleitzeit, Mo–Fr</td>
+     <td>Buchhaltung, Personal, Einkauf.</td></tr>
+  </table>
+ </div></section>
+
+ <section class="pad"><div class="wrap">
+  <h2>Zertifikate</h2>
+  <p><span class="tag">IATF 16949</span><span class="tag">ISO 9001</span>
+     <span class="tag">Sicherheitsunterweisung jährlich</span>
+     <span class="tag">Ersthelfer ausgebildet</span></p>
+ </div></section>
+</main>
+
+<!-- ================= FERTIGUNG ================= -->
+<main id="fertigung" class="page">
+ <section class="pad"><div class="wrap">
+  <div class="kicker">Was wir fertigen</div>
+  <h1>Vom Werkzeug bis zur geprüften Baugruppe</h1>
+  <div class="grid3">
+   <div class="card"><h3>Werkzeugbau</h3>
+     <ul class="tick"><li>Änderungen und Reparaturen</li><li>Fräsen, Erodieren, Schleifen</li>
+     <li>Einfahren an der Maschine</li></ul></div>
+   <div class="card"><h3>Spritzguss</h3>
+     <ul class="tick"><li>14 Maschinen, 35 bis 450 t</li><li>Thermoplaste, teilweise mit Glasfaser</li>
+     <li>Dreischichtbetrieb Montag bis Freitag</li></ul></div>
+   <div class="card"><h3>Nacharbeit und Montage</h3>
+     <ul class="tick"><li>Entgraten, Bedrucken, Ultraschallschweißen</li>
+     <li>Montage kleiner Baugruppen</li><li>Verpackung nach Kundenvorgabe</li></ul></div>
+  </div>
+ </div></section>
+
+ <section class="pad soft"><div class="wrap">
+  <h2>Ein Blick in die Halle</h2>
+  <div class="grid2">
+    <div class="fig">
+      <svg viewBox="0 0 420 260" role="img" aria-label="Maschinenreihe in der Produktionshalle">
+        <rect width="420" height="260" fill="#eef2f0"/>
+        <rect x="0" y="200" width="420" height="60" fill="#dbe3df"/>
+        <g fill="#c9d6cf" stroke="#9fb3a8">
+          <rect x="20" y="110" width="90" height="90" rx="4"/>
+          <rect x="130" y="110" width="90" height="90" rx="4"/>
+          <rect x="240" y="110" width="90" height="90" rx="4"/>
+          <rect x="350" y="110" width="60" height="90" rx="4"/>
+        </g>
+        <g fill="#2f6b4f"><rect x="40" y="90" width="50" height="22" rx="3"/>
+          <rect x="150" y="90" width="50" height="22" rx="3"/>
+          <rect x="260" y="90" width="50" height="22" rx="3"/></g>
+        <g fill="#b4c4bb"><rect x="25" y="205" width="55" height="36" rx="3"/>
+          <rect x="135" y="205" width="55" height="36" rx="3"/>
+          <rect x="245" y="205" width="55" height="36" rx="3"/></g>
+        <rect x="0" y="0" width="420" height="34" fill="#e4eae7"/>
+      </svg>
+    </div>
+    <div>
+      <p>In Halle 1 stehen die großen Maschinen, in Halle 2 die kleineren. Jede Maschine hat
+      einen Arbeitsplatz davor: Entnahme, Sichtprüfung, Verpackung. Die gepackten Kisten
+      kommen auf Rollwagen und werden ins Lager gebracht.</p>
+      <p>Die Hallen laufen im Dreischichtbetrieb. Nachts ist eine kleinere Besetzung im Haus.</p>
+      <p>Gehörschutz ist in beiden Hallen vorgeschrieben und wird gestellt.</p>
+    </div>
+  </div>
+ </div></section>
+</main>
+
+<!-- ================= KARRIERE ================= -->
+<main id="karriere" class="page">
+ <section class="pad"><div class="wrap">
+  <div class="kicker">Karriere</div>
+  <h1>Arbeiten bei Musterbach</h1>
+  <p class="lead">Kurze Wege, feste Ansprechpartner und Kollegen, die seit Jahrzehnten hier sind.
+  Wer bei uns anfängt, bleibt meistens.</p>
+
+  <h2 style="margin-top:36px">Offene Stellen</h2>
+
+  <div class="job">
+    <div class="meta">Veröffentlicht am 14. Januar 2026 · Vollzeit · ab sofort</div>
+    <h3>Maschinenbediener Spritzguss (m/w/d)</h3>
+    <p><b>Ihre Aufgaben:</b> Maschinen beschicken und überwachen, Teile entnehmen und
+    sichtprüfen, fertige Teile in Kisten verpacken und auf Rollwagen stellen, Störungen
+    melden, Schichtübergabe dokumentieren.</p>
+    <p><b>Das bringen Sie mit:</b> Bereitschaft zum Dreischichtbetrieb, technisches
+    Verständnis, sorgfältige Arbeitsweise, gute Deutschkenntnisse. Eine Ausbildung ist
+    nicht zwingend — wir arbeiten Sie ein.</p>
+    <p><span class="tag">Drei Schichten</span><span class="tag">Halle 1 und 2</span>
+       <span class="tag">Schichtzulage</span></p>
+  </div>
+
+  <div class="job">
+    <div class="meta">Veröffentlicht am 3. März 2026 · Vollzeit · ab sofort</div>
+    <h3>Werkzeugmechaniker (m/w/d)</h3>
+    <p><b>Ihre Aufgaben:</b> Spritzgusswerkzeuge instand setzen und ändern, Fräsen und
+    Erodieren, neue Werkzeuge an der Maschine einfahren, Ersatzteile disponieren.</p>
+    <p><b>Das bringen Sie mit:</b> Abgeschlossene Ausbildung als Werkzeugmechaniker oder
+    vergleichbar, Erfahrung im Spritzgusswerkzeugbau von Vorteil.</p>
+    <p><span class="tag">Gleitzeit</span><span class="tag">Werkzeugbau</span></p>
+  </div>
+
+  <div class="job">
+    <div class="meta">Veröffentlicht am 20. Juli 2026 · Vollzeit oder Teilzeit</div>
+    <h3>Sachbearbeiter Vertriebsinnendienst (m/w/d)</h3>
+    <p><b>Ihre Aufgaben:</b> Angebote erstellen, Aufträge erfassen und nachverfolgen,
+    Kundentelefonie, Abstimmung mit der Fertigung, Reklamationen aufnehmen.</p>
+    <p><b>Das bringen Sie mit:</b> Kaufmännische Ausbildung, sicherer Umgang mit ERP und
+    Excel, Freude am Telefonieren.</p>
+    <p><span class="tag">Bis zu 2 Tage mobiles Arbeiten</span><span class="tag">Gleitzeit</span>
+       <span class="tag">Verwaltung</span></p>
+  </div>
+
+  <h2 style="margin-top:36px">Das bieten wir</h2>
+  <div class="grid3">
+    <div class="card"><h3>Sicherheit</h3>
+      <ul class="tick"><li>Unbefristete Verträge</li><li>Pünktliche Bezahlung nach Haustarif</li>
+      <li>Schichtzulagen</li></ul></div>
+    <div class="card"><h3>Im Alltag</h3>
+      <ul class="tick"><li>Kostenlose Getränke</li><li>Parkplätze direkt am Haus</li>
+      <li>Betriebsfest im Frühjahr</li><li>Zuschuss Fitnessstudio: 15 € im Monat</li></ul></div>
+    <div class="card"><h3>Entwicklung</h3>
+      <ul class="tick"><li>Einarbeitung durch erfahrene Kollegen</li>
+      <li>Schulungen nach Bedarf</li><li>Ausbildungsplätze jedes Jahr</li></ul></div>
+  </div>
+
+  <p style="margin-top:26px">Bewerbungen bitte an
+  <a href="#" onclick="return false">personal@musterbach-kunststofftechnik.example</a>
+  oder per Post an die Adresse im Impressum. Fragen beantwortet Ihnen die Personalabteilung
+  unter 0 71 00 / 00 00-24.</p>
+ </div></section>
+</main>
+
+<!-- ================= KONTAKT ================= -->
+<main id="kontakt" class="page">
+ <section class="pad"><div class="wrap">
+  <div class="kicker">Kontakt</div>
+  <h1>So erreichen Sie uns</h1>
+  <div class="grid2">
+   <div>
+    <h3>Anschrift</h3>
+    <p>Musterbach Kunststofftechnik GmbH<br>
+       Industriestraße 7<br>
+       70000 Musterbach</p>
+    <h3>Zentrale</h3>
+    <p>Telefon 0 71 00 / 00 00-0<br>
+       info@musterbach-kunststofftechnik.example</p>
+    <h3>Erreichbarkeit</h3>
+    <p>Verwaltung und Vertriebsinnendienst: Montag bis Donnerstag 8 bis 17 Uhr,
+       Freitag 8 bis 13 Uhr.<br>
+       Warenannahme: Montag bis Freitag ab 6 Uhr.</p>
+   </div>
+   <div>
+    <h3>Ansprechpartner</h3>
+    <table>
+      <tr><th>Bereich</th><th>Durchwahl</th></tr>
+      <tr><td>Geschäftsführung — Markus Reiser</td><td>-10</td></tr>
+      <tr><td>Vertriebsinnendienst</td><td>-15</td></tr>
+      <tr><td>Einkauf</td><td>-18</td></tr>
+      <tr><td>Personal</td><td>-24</td></tr>
+      <tr><td>Qualitätssicherung</td><td>-31</td></tr>
+      <tr><td>Werkzeugbau</td><td>-40</td></tr>
+      <tr><td>Lager und Versand</td><td>-45</td></tr>
+    </table>
+   </div>
+  </div>
+ </div></section>
+
+ <section class="pad soft"><div class="wrap">
+  <h2>Impressum</h2>
+  <p><b>Hinweis:</b> Diese Website ist ein erfundenes Lehrbeispiel. Es gibt keine
+  Musterbach Kunststofftechnik GmbH. Firma, Personen, Adresse, Telefonnummern,
+  Zahlen und Stellenanzeigen sind für den Unterricht erfunden worden. Die Seite
+  wurde für das Modul Betriebliches Gesundheitsmanagement an der Kiedaisch-Akademie
+  erstellt und dient ausschließlich Übungszwecken.</p>
+  <p>Ähnlichkeiten mit bestehenden Unternehmen sind nicht beabsichtigt.</p>
+ </div></section>
+</main>
+
+<footer>
+ <div class="wrap grid3">
+  <div>
+    <h4>Musterbach Kunststofftechnik GmbH</h4>
+    <p>Industriestraße 7 · 70000 Musterbach<br>
+       Telefon 0 71 00 / 00 00-0</p>
+  </div>
+  <div>
+    <h4>Schnell hin</h4>
+    <p><a href="#" onclick="go('unternehmen');return false">Unternehmen</a> ·
+       <a href="#" onclick="go('fertigung');return false">Fertigung</a> ·
+       <a href="#" onclick="go('karriere');return false">Karriere</a> ·
+       <a href="#" onclick="go('kontakt');return false">Kontakt</a></p>
+  </div>
+  <div>
+    <h4>Fiktives Lehrbeispiel</h4>
+    <p>Diese Firma existiert nicht. Erstellt für den Unterricht an der
+       Kiedaisch-Akademie.</p>
+  </div>
+ </div>
+</footer>
+
+<script>
+var SEITEN = [
+  ["start","Start"],["unternehmen","Unternehmen"],["fertigung","Fertigung"],
+  ["karriere","Karriere"],["kontakt","Kontakt"]
+];
+var nav = document.getElementById("nav");
+SEITEN.forEach(function(s){
+  var b = document.createElement("button");
+  b.textContent = s[1];
+  b.setAttribute("data-id", s[0]);
+  b.onclick = function(){ go(s[0]); };
+  nav.appendChild(b);
+});
+function go(id){
+  SEITEN.forEach(function(s){
+    var el = document.getElementById(s[0]);
+    if(el) el.classList.toggle("on", s[0] === id);
+  });
+  Array.prototype.forEach.call(nav.children, function(b){
+    b.setAttribute("aria-current", b.getAttribute("data-id") === id ? "true" : "false");
+  });
+  window.scrollTo(0,0);
+}
+go("start");
+</script>
+</body>
+</html>
