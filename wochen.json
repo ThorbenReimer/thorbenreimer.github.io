@@ -2,436 +2,267 @@
   {
     "woche": 1,
     "phase": "Einstieg",
-    "titel": "Lorem ipsum dolor sit",
-    "lernziel": "Die Studenten können lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor",
-    "kernbegriffe": [
-      "Lorem",
-      "Ipsum",
-      "Dolor"
-    ],
-    "input": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "spielzug": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "artefakt": "Platzhalter-Artefakt 1",
-    "material": [
-      "Vorlage Platzhalter (1 Seite)",
-      "Handout Blindtext"
-    ],
-    "eigenarbeit": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
+    "titel": "Der Auftrag",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Ihr steht vor dem Tor und wisst nichts. Genau so beginnt jedes Beratungsprojekt. Heute: die Spielregeln, der Betrieb — und die Landkarte BGM aus Arbeitsschutz, BEM und BGF.",
+    "spielzug": "Legt euer Projektbuch an. Beschreibt in genau einem Satz, was das Problem dieses Betriebs sein könnte — mit dem, was ihr von draußen sehen könnt. Notiert dazu drei Fragen, die ihr dem Geschäftsführer als Erstes stellen würdet.",
+    "artefakt": "Deckblatt und Auftragsverständnis: Wer ist der Kunde, was ist das Problem in einem Satz?",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   },
   {
     "woche": 2,
     "phase": "Einstieg",
-    "titel": "Consetetur sadipscing",
-    "lernziel": "Die Studenten können at vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren",
-    "kernbegriffe": [
-      "Sit amet",
-      "Consetetur",
-      "Sadipscing",
-      "Elitr"
-    ],
-    "input": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
-    "spielzug": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-    "artefakt": "Platzhalter-Artefakt 2",
-    "material": [
-      "Handout Blindtext",
-      "Kartenset Lorem",
-      "Arbeitsblatt Ipsum"
-    ],
-    "eigenarbeit": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
+    "titel": "Begriffe schärfen",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "BGF oder BGM? Prävention auf drei Stufen. Und der Satz, der das ganze Semester trägt: Verhältnis vor Verhalten.",
+    "spielzug": "Ordnet eure Person ein: Was an ihrer Situation ist Verhalten, was ist Verhältnis? Legt für jede Zuordnung fest, wer sie überhaupt ändern könnte — die Person selbst oder der Betrieb.",
+    "artefakt": "Glossar plus Ersteinschätzung der vier Personen: Was ist Verhalten, was ist Verhältnis?",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
     "status": "rohentwurf"
   },
   {
     "woche": 3,
     "phase": "Einstieg",
-    "titel": "Sed diam nonumy",
-    "lernziel": "Die Studenten können duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat",
-    "kernbegriffe": [
-      "Elitr",
-      "Nonumy",
-      "Eirmod",
-      "Tempor",
-      "Invidunt"
-    ],
-    "input": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "spielzug": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-    "artefakt": "Platzhalter-Artefakt 3",
-    "material": [
-      "Kartenset Lorem",
-      "Arbeitsblatt Ipsum",
-      "Checkliste Dolor",
-      "Datenblatt Placeholder"
-    ],
-    "eigenarbeit": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
+    "titel": "Der Skeptiker im Chefsessel",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Reiser hält BGM für Sozialromantik. Warum es sich rechnet: Demografie, Fehlzeiten, Präsentismus, Fachkräftebindung — und die Einwände, die wirklich kommen.",
+    "spielzug": "Baut ein Argumentationsblatt für Reiser, maximal eine Seite. Drei Argumente, jedes mit einer Zahl oder einem belegbaren Effekt. Dann drei Minuten Rollenspiel: einer ist Reiser und wehrt sich.",
+    "artefakt": "Argumentationsblatt für die Geschäftsführung, maximal eine Seite.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "fertig"
+    "status": "rohentwurf"
   },
   {
     "woche": 4,
     "phase": "Einstieg",
-    "titel": "Tempor invidunt",
-    "lernziel": "Die Studenten können nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod",
-    "kernbegriffe": [
-      "Tempor",
-      "Invidunt",
-      "Labore"
-    ],
-    "input": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-    "spielzug": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
-    "artefakt": "Platzhalter-Artefakt 4",
-    "material": [
-      "Arbeitsblatt Ipsum",
-      "Checkliste Dolor"
-    ],
-    "eigenarbeit": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
+    "titel": "Rechtsrahmen und Geldquellen",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Was Pflicht ist und was freiwillig: ArbSchG, Gefährdungsbeurteilung inklusive psychischer Belastung, BEM. Und wer zahlt: § 20b SGB V, Krankenkassen, Steuerfreibetrag.",
+    "spielzug": "Trennt für euren Betrieb sauber: Was muss Reiser ohnehin tun, was ist freiwillig, und wofür gibt es Geld von wem? Schreibt zu jeder Geldquelle eine Zeile, was sie konkret fordert.",
+    "artefakt": "Finanzierungs- und Rechtsseite: Was ist Pflicht, was fördert wer?",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   },
   {
     "woche": 5,
     "phase": "Analyse",
-    "titel": "Dolore magna aliquyam",
-    "lernziel": "Die Studenten können ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis",
-    "kernbegriffe": [
-      "Aliquyam",
-      "Voluptua",
-      "Accusam",
-      "Gubergren"
-    ],
-    "input": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-    "spielzug": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "artefakt": "Platzhalter-Artefakt 5",
-    "material": [
-      "Checkliste Dolor",
-      "Datenblatt Placeholder",
-      "Kurzanleitung Sit amet"
-    ],
-    "eigenarbeit": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
+    "titel": "Belastung ist nicht Beanspruchung",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Gleiche Schicht, völlig unterschiedliche Wirkung. Belastungs-Beanspruchungs-Modell, Anforderungs-Kontroll-Modell, bio-psycho-sozial.",
+    "spielzug": "Erstellt das Belastungsprofil eurer Person nach dem Belastungs-Beanspruchungs-Modell. Benennt anschließend die eine Stellschraube, die bei ihr am meisten bewegen würde — und begründet sie mit dem Modell.",
+    "artefakt": "Belastungsprofil der zugelosten Person.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
     "status": "rohentwurf"
   },
   {
     "woche": 6,
     "phase": "Analyse",
-    "titel": "Sed diam voluptua",
-    "lernziel": "Die Studenten können stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet",
-    "kernbegriffe": [
-      "Gubergren",
-      "Lorem",
-      "Ipsum",
-      "Dolor",
-      "Sit amet"
-    ],
-    "input": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
-    "spielzug": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
-    "artefakt": "Platzhalter-Artefakt 6",
-    "material": [
-      "Datenblatt Placeholder",
-      "Kurzanleitung Sit amet",
-      "Raster Consetetur",
-      "Vorlage Platzhalter (1 Seite)"
-    ],
-    "eigenarbeit": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
+    "titel": "Kennzahlen lesen — und ihnen misstrauen",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Krankenstand, AU-Tage, Altersstruktur, Fluktuation. Was sie zeigen — und was sie verschweigen. Präsentismus taucht in keiner Statistik auf.",
+    "spielzug": "Wertet das Kennzahlenblatt aus. Drei Auffälligkeiten benennen, jede mit einer Zahl belegen. Dann eine Hypothese formulieren: Was steckt dahinter — und welche Zahl fehlt euch, um sicher zu sein?",
+    "artefakt": "Kennzahlen-Auswertung mit drei Auffälligkeiten und einer Hypothese.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "fertig"
+    "status": "rohentwurf"
   },
   {
     "woche": 7,
     "phase": "Analyse",
-    "titel": "At vero eos",
-    "lernziel": "Die Studenten können lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor",
-    "kernbegriffe": [
-      "Dolor",
-      "Sit amet",
-      "Consetetur"
-    ],
-    "input": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "spielzug": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "artefakt": "Platzhalter-Artefakt 7",
-    "material": [
-      "Kurzanleitung Sit amet",
-      "Raster Consetetur"
-    ],
-    "eigenarbeit": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
+    "titel": "Fragen, die etwas bringen",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Fragebogenbau, Anonymität, Rücklauf, Datenschutz. Eine schlecht gemachte Befragung ist schlimmer als gar keine.",
+    "spielzug": "Baut acht Fragen für eure Person und testet sie am Nachbartrio: Was wird missverstanden, was traut sich niemand zu beantworten? Haltet danach einen Plan B fest, falls die Befragung nicht stattfinden darf.",
+    "artefakt": "Eigener Kurzfragebogen — plus ein Plan B ohne Befragung.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   },
   {
     "woche": 8,
     "phase": "Analyse",
-    "titel": "Justo duo dolores",
-    "lernziel": "Die Studenten können at vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren",
-    "kernbegriffe": [
-      "Sadipscing",
-      "Elitr",
-      "Nonumy",
-      "Eirmod"
-    ],
-    "input": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
-    "spielzug": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-    "artefakt": "Platzhalter-Artefakt 8",
-    "material": [
-      "Raster Consetetur",
-      "Vorlage Platzhalter (1 Seite)",
-      "Handout Blindtext"
-    ],
-    "eigenarbeit": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
+    "titel": "Hingehen und hinsehen",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Begehung, Gefährdungsbeurteilung, Leitmerkmalmethode. Hier zahlt die Bewegungslehre direkt ein: beobachten heißt zielgerichtet wahrnehmen.",
+    "spielzug": "Geht mit einem klaren Beobachtungsauftrag durch das Haus und protokolliert drei Befunde — jeder mit dem, was ihr wirklich gesehen habt, nicht mit dem, was ihr vermutet. Trennt Beobachtung und Bewertung in zwei Spalten.",
+    "artefakt": "Begehungsprotokoll mit drei belegten Befunden.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
     "status": "rohentwurf"
   },
   {
     "woche": 9,
     "phase": "Planung",
-    "titel": "Stet clita kasd",
-    "lernziel": "Die Studenten können duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat",
-    "kernbegriffe": [
-      "Eirmod",
-      "Tempor",
-      "Invidunt",
-      "Labore",
-      "Aliquyam"
-    ],
-    "input": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "spielzug": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-    "artefakt": "Platzhalter-Artefakt 9",
-    "material": [
-      "Vorlage Platzhalter (1 Seite)",
-      "Handout Blindtext",
-      "Kartenset Lorem",
-      "Arbeitsblatt Ipsum"
-    ],
-    "eigenarbeit": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
+    "titel": "Vom Befund zum Ziel",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Handlungsbedarf verdichten, Schwerpunkte setzen, SMART-Ziele mit Zwischenzielen. Warum Wirkung erst spät sichtbar wird.",
+    "spielzug": "Formuliert ein Hauptziel und drei Zwischenziele, jedes mit einem Messkriterium und einem Termin. Prüft am Ende gegenseitig: Woran genau würdet ihr in zwölf Monaten erkennen, dass ihr es erreicht habt?",
+    "artefakt": "Zielblatt: ein Hauptziel, drei Zwischenziele, je ein Messkriterium.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "fertig"
+    "status": "rohentwurf"
   },
   {
     "woche": 10,
     "phase": "Planung",
-    "titel": "No sea takimata",
-    "lernziel": "Die Studenten können nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod",
-    "kernbegriffe": [
-      "Labore",
-      "Aliquyam",
-      "Voluptua"
-    ],
-    "input": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-    "spielzug": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
-    "artefakt": "Platzhalter-Artefakt 10",
-    "material": [
-      "Handout Blindtext",
-      "Kartenset Lorem"
-    ],
-    "eigenarbeit": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
+    "titel": "Maßnahmen wählen statt sammeln",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Das Vier-Felder-Raster: Kultur, Organisation, Arbeitsgestaltung, Verhalten. Wirkt es aufs Ziel? Erreicht es die Zielgruppe? Ist der Zugang niedrigschwellig?",
+    "spielzug": "Sammelt zehn Maßnahmen und streicht sechs davon wieder — begründet. Die vier, die bleiben, müssen jede der drei Prüffragen bestehen. Die Streichliste kommt mit ins Buch, sie ist die halbe Leistung.",
+    "artefakt": "Maßnahmenkatalog mit Begründung — und Streichliste.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   },
   {
     "woche": 11,
     "phase": "Planung",
-    "titel": "Lorem ipsum amet",
-    "lernziel": "Die Studenten können ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis",
-    "kernbegriffe": [
-      "Accusam",
-      "Gubergren",
-      "Lorem",
-      "Ipsum"
-    ],
-    "input": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-    "spielzug": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "artefakt": "Platzhalter-Artefakt 11",
-    "material": [
-      "Kartenset Lorem",
-      "Arbeitsblatt Ipsum",
-      "Checkliste Dolor"
-    ],
-    "eigenarbeit": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
+    "titel": "Projektarchitektur",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Rollen, Meilensteine, Zeitplan, Beteiligung. Und die Misserfolgsfaktoren: kein Rückhalt oben, keine Beteiligung unten, niemand verantwortlich, zu kurz gedacht.",
+    "spielzug": "Baut den Zeitplan über zwölf Monate mit vier Meilensteinen. Benennt zu jeder Aufgabe eine verantwortliche Rolle. Markiert die Stelle, an der euer Projekt am wahrscheinlichsten scheitern wird.",
+    "artefakt": "Projektplan mit Rollen, Meilensteinen und Zeitachse.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
     "status": "rohentwurf"
   },
   {
     "woche": 12,
     "phase": "Maßnahmen",
-    "titel": "Duis autem vel",
-    "lernziel": "Die Studenten können stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet",
-    "kernbegriffe": [
-      "Ipsum",
-      "Dolor",
-      "Sit amet",
-      "Consetetur",
-      "Sadipscing"
-    ],
-    "input": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
-    "spielzug": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
-    "artefakt": "Platzhalter-Artefakt 12",
-    "material": [
-      "Arbeitsblatt Ipsum",
-      "Checkliste Dolor",
-      "Datenblatt Placeholder",
-      "Kurzanleitung Sit amet"
-    ],
-    "eigenarbeit": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
+    "titel": "Ergonomie — nicht nur am Schreibtisch",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Bildschirmarbeitsplatz komplett, aber gleichrangig: Zwangshaltungen in Reinigung und Produktion, Hebe- und Tragetechnik, Hilfsmittel.",
+    "spielzug": "Richtet einen echten Arbeitsplatz im Haus ein und spürt den Unterschied am eigenen Körper. Dann schreibt die Ergonomie-Empfehlung für eure Person: drei Veränderungen, jede mit Begründung und geschätzten Kosten.",
+    "artefakt": "Ergonomie-Empfehlung für die eigene Person, mit Begründung.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "fertig"
+    "status": "rohentwurf"
   },
   {
     "woche": 13,
     "phase": "Maßnahmen",
-    "titel": "Nam liber tempor",
-    "lernziel": "Die Studenten können lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor",
-    "kernbegriffe": [
-      "Consetetur",
-      "Sadipscing",
-      "Elitr"
-    ],
-    "input": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "spielzug": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "artefakt": "Platzhalter-Artefakt 13",
-    "material": [
-      "Checkliste Dolor",
-      "Datenblatt Placeholder"
-    ],
-    "eigenarbeit": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
+    "titel": "Bewegung, die ankommt",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Der harte Teil ist nicht die Übung, sondern der Zugang: zehn Minuten in der Halle bei Lärm und Taktung — oder um 5:30 Uhr für eine Reinigungskraft allein.",
+    "spielzug": "Baut ein Zehn-Minuten-Programm für eure Person und leitet es der Klasse an. Danach: Wie kommt dieses Programm bei ihr tatsächlich an? Wann, wo, durch wen — und was kostet es sie?",
+    "artefakt": "Zehn-Minuten-Programm plus Zugangskonzept.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   },
   {
     "woche": 14,
     "phase": "Maßnahmen",
-    "titel": "Ut wisi enim",
-    "lernziel": "Die Studenten können at vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren",
-    "kernbegriffe": [
-      "Nonumy",
-      "Eirmod",
-      "Tempor",
-      "Invidunt"
-    ],
-    "input": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
-    "spielzug": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-    "artefakt": "Platzhalter-Artefakt 14",
-    "material": [
-      "Datenblatt Placeholder",
-      "Kurzanleitung Sit amet",
-      "Raster Consetetur"
-    ],
-    "eigenarbeit": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
+    "titel": "Psyche, Stress — und die eigene Grenze",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Psychische Belastung verursacht die längsten Ausfälle. Führung als Gesundheitsfaktor, Umgang mit Sucht. Und klar: Wo endet die eigene Rolle?",
+    "spielzug": "Übt ein Gespräch mit einer belasteten Person — und übt genauso die Übergabe an eine Fachstelle. Haltet danach schriftlich fest, wo eure eigene Rolle endet. Dieser Satz gehört ins Buch.",
+    "artefakt": "Modul psychische Gesundheit plus persönliche Grenzlinie.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
     "status": "rohentwurf"
   },
   {
     "woche": 15,
     "phase": "Umsetzung",
-    "titel": "Quis nostrud exerci",
-    "lernziel": "Die Studenten können duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat",
-    "kernbegriffe": [
-      "Invidunt",
-      "Labore",
-      "Aliquyam",
-      "Voluptua",
-      "Accusam"
-    ],
-    "input": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "spielzug": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-    "artefakt": "Platzhalter-Artefakt 15",
-    "material": [
-      "Kurzanleitung Sit amet",
-      "Raster Consetetur",
-      "Vorlage Platzhalter (1 Seite)",
-      "Handout Blindtext"
-    ],
-    "eigenarbeit": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
+    "titel": "Das Angebot: Was kostet das?",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Ab hier feste Teams. Angebotsaufbau, fixe und variable Kosten, Stundensatz, Break-even. Und: den Preis verteidigen, statt sich kleinzumachen.",
+    "spielzug": "Erste Teamleistung. Rechnet eure Kalkulation durch — fixe und variable Kosten, Stundensatz, Break-even — und schreibt das Angebot. Dann Preisverhandlung gegen Reiser, ohne den Preis zu senken.",
+    "artefakt": "Angebot mit Kalkulation — die erste Teamleistung.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "fertig"
+    "status": "rohentwurf"
   },
   {
     "woche": 16,
     "phase": "Umsetzung",
-    "titel": "Ullamcorper suscipit",
-    "lernziel": "Die Studenten können nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod",
-    "kernbegriffe": [
-      "Voluptua",
-      "Accusam",
-      "Gubergren"
-    ],
-    "input": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet.",
-    "spielzug": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
-    "artefakt": "Platzhalter-Artefakt 16",
-    "material": [
-      "Raster Consetetur",
-      "Vorlage Platzhalter (1 Seite)"
-    ],
-    "eigenarbeit": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
+    "titel": "Damit es jemand mitbekommt",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Internes Marketing: informieren, beteiligen, Führungskräfte als Vorbild, Multiplikatoren finden. Und der Umgang mit Killerphrasen.",
+    "spielzug": "Schreibt den Kommunikationsplan: wer erfährt wann was, über welchen Kanal. Dazu ein Aushang, der Halina Nowak tatsächlich erreicht — nicht einer, der nur gut aussieht.",
+    "artefakt": "Kommunikationsplan plus ein Aushang, der wirklich jemanden hervorholt.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   },
   {
     "woche": 17,
     "phase": "Umsetzung",
-    "titel": "Nisl ut aliquip",
-    "lernziel": "Die Studenten können ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis",
-    "kernbegriffe": [
-      "Lorem",
-      "Ipsum",
-      "Dolor",
-      "Sit amet"
-    ],
-    "input": "Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis. Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor.",
-    "spielzug": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "artefakt": "Platzhalter-Artefakt 17",
-    "material": [
-      "Vorlage Platzhalter (1 Seite)",
-      "Handout Blindtext",
-      "Kartenset Lorem"
-    ],
-    "eigenarbeit": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
+    "titel": "Umsetzung — und was schiefgeht",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Rollout, niedrigschwelliger Zugang, Dauerhaftigkeit. Große Ereigniskarten-Runde: zwei Störungen pro Team, live nachsteuern.",
+    "spielzug": "Jedes Team zieht zwei Ereigniskarten und steuert seinen Plan live nach. Dokumentiert jede Anpassung: Was war die Störung, was habt ihr geändert, was habt ihr bewusst nicht geändert?",
+    "artefakt": "Überarbeiteter Plan mit dokumentierten Anpassungen.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
     "status": "rohentwurf"
   },
   {
     "woche": 18,
     "phase": "Evaluation",
-    "titel": "Consequat vel illum",
-    "lernziel": "Die Studenten können stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet",
-    "kernbegriffe": [
-      "Sit amet",
-      "Consetetur",
-      "Sadipscing",
-      "Elitr",
-      "Nonumy"
-    ],
-    "input": "Stet clita kasd gubergren, no sea takimata sanctus est lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren.",
-    "spielzug": "At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
-    "artefakt": "Platzhalter-Artefakt 18",
-    "material": [
-      "Handout Blindtext",
-      "Kartenset Lorem",
-      "Arbeitsblatt Ipsum",
-      "Checkliste Dolor"
-    ],
-    "eigenarbeit": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
+    "titel": "Hat es etwas gebracht?",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Struktur-, Prozess-, Ergebnisqualität. Soll-Ist, PDCA, Gesundheitszirkel. Verstetigung: vom Projekt zum Regelbetrieb. Danach Generalprobe.",
+    "spielzug": "Legt fest, woran ihr Erfolg messt — je ein Kriterium für Struktur, Prozess und Ergebnis. Dann der Verstetigungsplan: Was läuft weiter, wenn euer Auftrag endet? Zum Schluss Generalprobe für den Pitch.",
+    "artefakt": "Evaluationskonzept plus Verstetigungsplan.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "fertig"
+    "status": "rohentwurf"
   },
   {
     "woche": 19,
     "phase": "Abschluss",
-    "titel": "Eu feugiat nulla",
-    "lernziel": "Die Studenten können lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor",
-    "kernbegriffe": [
-      "Elitr",
-      "Nonumy",
-      "Eirmod"
-    ],
-    "input": "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor. At vero eos et accusam et justo duo dolores et ea rebum, stet clita kasd gubergren. Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat.",
-    "spielzug": "Duis autem vel eum iriure dolor in hendrerit in vulputate velit esse molestie consequat. Ut wisi enim ad minim veniam, quis nostrud exerci tation ullamcorper suscipit lobortis.",
-    "artefakt": "Platzhalter-Artefakt 19",
-    "material": [
-      "Kartenset Lorem",
-      "Arbeitsblatt Ipsum"
-    ],
-    "eigenarbeit": "Nam liber tempor cum soluta nobis eleifend option congue nihil imperdiet doming id quod.",
+    "titel": "Der Pitch",
+    "lernziel": "",
+    "kernbegriffe": [],
+    "input": "Jedes Team präsentiert sein BGM-Konzept. Bewertet werden Fachlichkeit, Passung, Wirtschaftlichkeit, Überzeugungskraft. Ein Team bekommt den Auftrag.",
+    "spielzug": "Zehn Minuten Pitch vor der Geschäftsführung, danach fünf Minuten Rückfragen. Ihr verkauft kein Wissen, sondern eine Entscheidung: Warum soll Reiser genau euch beauftragen?",
+    "artefakt": "Das fertige Projektbuch — der eigene, vollständige BGM-Projektplan.",
+    "material": [],
+    "eigenarbeit": "",
     "dauer_min": 90,
-    "status": "leer"
+    "status": "rohentwurf"
   }
 ]
