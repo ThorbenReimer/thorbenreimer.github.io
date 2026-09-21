@@ -2,267 +2,457 @@
   {
     "woche": 1,
     "phase": "Einstieg",
-    "titel": "Der Auftrag",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Ihr steht vor dem Tor und wisst nichts. Genau so beginnt jedes Beratungsprojekt. Heute: die Spielregeln, der Betrieb — und die Landkarte BGM aus Arbeitsschutz, BEM und BGF.",
-    "spielzug": "Legt euer Projektbuch an. Beschreibt in genau einem Satz, was das Problem dieses Betriebs sein könnte — mit dem, was ihr von draußen sehen könnt. Notiert dazu drei Fragen, die ihr dem Geschäftsführer als Erstes stellen würdet.",
-    "artefakt": "Deckblatt und Auftragsverständnis: Wer ist der Kunde, was ist das Problem in einem Satz?",
-    "material": [],
-    "eigenarbeit": "",
+    "titel": "Der Auftrag: Was BGM ist und was nicht",
+    "lernziel": "Die Schüler können BGM, BGF, Arbeitsschutz und BEM voneinander abgrenzen und den Auftrag eines Betriebs in einem Satz fassen.",
+    "kernbegriffe": [
+      "BGM",
+      "BGF",
+      "Arbeitsschutz",
+      "BEM",
+      "Setting Betrieb"
+    ],
+    "input": "BGM ist das Dach über drei Säulen: Arbeits- und Gesundheitsschutz und BEM sind Pflicht, BGF ist freiwillig. BGF ist damit ein Teil von BGM und nicht sein Synonym — wer beides verwechselt, verkauft Einzelmaßnahmen als Konzept. Ohne dieses Dach verpuffen Angebote: keine Ziele, keine Verantwortung, keine Wirkungsmessung. Und der Betrieb unterscheidet sich vom einzelnen Klienten in zwei Punkten — man erreicht Menschen, die von sich aus nie kämen, und man kann Bedingungen verändern statt nur Verhalten.",
+    "spielzug": "Ihr steht vor dem Werkstor und wisst nichts. Genau so beginnt jedes Beratungsprojekt: Fassade, Parkplatz, Homepage — daraus muss eine erste Vermutung werden. Heute geht es nicht darum, recht zu haben, sondern darum, eure Vermutung an etwas festzumachen.\n\n1 Legt euren Team-Steckbrief an: Wer ist im Team, wer übernimmt welche Rolle?\n2 Geht auf die Homepage von Musterbach und lest den Einseiter. Sammelt, was ihr erfahrt: Größe, Tätigkeiten, Schichten, Altersstruktur.\n3 Schreibt euer Auftragsverständnis in genau einem Satz — was soll dieser Betrieb am Ende von euch bekommen?\n4 Notiert drei Fragen, die ihr Markus Reiser als Erstes stellen würdet.\n5 Formuliert eine erste Hypothese, was in diesem Betrieb los sein könnte. Schreibt dazu, woran ihr sie festmacht.\n6 Tragt eure Hypothese im Plenum vor. Zwei Minuten, ohne Blatt.\n\nZeit · 20 Min Planspiel, Regeln und Einrichtung · 20 Min Input drei Säulen · 30 Min Teamarbeit · 15 Min Hypothesen im Plenum · 5 Min Ergebnissicherung",
+    "artefakt": "Team-Steckbrief, Auftragsverständnis in einem Satz, drei Fragen an die Geschäftsführung und eine erste Hypothese mit Beleg.",
+    "material": [
+      "Homepage Musterbach · thorbenreimer.de/musterbach.html",
+      "Einseiter Fallbetrieb",
+      "Vorlage Team-Steckbrief",
+      "Drei-Säulen-Abbildung"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 1 — du schreibst Kapitel 1 · Der Betrieb.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 2,
     "phase": "Einstieg",
-    "titel": "Begriffe schärfen",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "BGF oder BGM? Prävention auf drei Stufen. Und der Satz, der das ganze Semester trägt: Verhältnis vor Verhalten.",
-    "spielzug": "Ordnet eure Person ein: Was an ihrer Situation ist Verhalten, was ist Verhältnis? Legt für jede Zuordnung fest, wer sie überhaupt ändern könnte — die Person selbst oder der Betrieb.",
-    "artefakt": "Glossar plus Ersteinschätzung der vier Personen: Was ist Verhalten, was ist Verhältnis?",
-    "material": [],
-    "eigenarbeit": "",
+    "titel": "Verhalten oder Verhältnis: der entscheidende Schnitt",
+    "lernziel": "Die Schüler können verhaltens- und verhältnisbezogene Ansatzpunkte unterscheiden und begründen, warum Verhältnisprävention zuerst kommt.",
+    "kernbegriffe": [
+      "Verhaltensprävention",
+      "Verhältnisprävention",
+      "Primärprävention",
+      "Absentismus",
+      "Präsentismus"
+    ],
+    "input": "Verhaltensprävention setzt am Menschen an, Verhältnisprävention an den Bedingungen — und die Reihenfolge entscheidet über die Wirkung. Wer nur am Verhalten schraubt, produziert Rückfälle und schiebt die Verantwortung auf die Beschäftigten ab. BGF ist dabei primärpräventiv: sie setzt an, bevor Symptome da sind. Und neben dem Fehlen gibt es das Anwesendsein trotz Krankheit — Präsentismus taucht in keiner Statistik auf und kostet meist mehr als Absentismus.",
+    "spielzug": "Vier Menschen arbeiten bei Musterbach, und jeder erlebt denselben Betrieb anders. Heute bekommt jedes Team einen von ihnen — und ist danach die einzige Quelle im Raum für diese Person. Wer bei den anderen nicht zuhört, hat am Ende ein Profil statt vier.\n\n1 Hört das Interview eurer Person an. Der Text steht im Reiter Die Belegschaft. Macht Notizen, während ihr hört.\n2 Stellt eure Person den anderen vor: Wer ist das, was tut sie den ganzen Tag, was ist daran schwer? Fünf Minuten.\n3 Schreibt bei den anderen drei Vorstellungen mit. Diese Profile kommen nicht wieder.\n4 Sortiert für eure Person in zwei Spalten: Was liegt am Verhalten, was liegt an den Bedingungen?\n5 Schreibt zu jeder Zeile auf der Verhältnis-Seite dazu, wer in diesem Betrieb es tatsächlich in der Hand hätte.\n\nZeit · 15 Min Input · 15 Min Interview hören und auswerten · 25 Min Vorstellungsrunde, vier mal fünf Minuten · 25 Min Zwei-Spalten-Einordnung · 10 Min Ergebnissicherung",
+    "artefakt": "Notizen zu allen vier Personen und die Zwei-Spalten-Einordnung für die eigene Person, mit Zuständigkeit je Verhältnis-Zeile.",
+    "material": [
+      "Die vier Interviews · im Reiter Die Belegschaft",
+      "Vorlage Zwei-Spalten-Einordnung",
+      "Glossar Verhalten und Verhältnis"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 2 — du schreibst Kapitel 2 · Was dort schwer ist.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 3,
     "phase": "Einstieg",
-    "titel": "Der Skeptiker im Chefsessel",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Reiser hält BGM für Sozialromantik. Warum es sich rechnet: Demografie, Fehlzeiten, Präsentismus, Fachkräftebindung — und die Einwände, die wirklich kommen.",
-    "spielzug": "Baut ein Argumentationsblatt für Reiser, maximal eine Seite. Drei Argumente, jedes mit einer Zahl oder einem belegbaren Effekt. Dann drei Minuten Rollenspiel: einer ist Reiser und wehrt sich.",
-    "artefakt": "Argumentationsblatt für die Geschäftsführung, maximal eine Seite.",
-    "material": [],
-    "eigenarbeit": "",
+    "titel": "Warum ein Betrieb Geld dafür ausgibt",
+    "lernziel": "Die Schüler können den Nutzen von BGM mit Zahlen belegen, eine einfache Wirtschaftlichkeitsrechnung aufstellen und typische Einwände entkräften.",
+    "kernbegriffe": [
+      "Ausfallkosten",
+      "Fachkräftebindung",
+      "Krankenstand",
+      "Langzeitfälle",
+      "Einwandbehandlung"
+    ],
+    "input": "Eine Firma gibt kein Geld aus, weil Gesundheit schön ist. 2025 lag der Krankenstand bei 23,3 Fehltagen je Beschäftigtem; 3,3 Prozent der Fälle dauern länger als sechs Wochen und verursachen über 40 Prozent aller Fehltage. Ein Fehltag kostet rund 144 Euro Produktionsausfall und rund 249 Euro Bruttowertschöpfung. Für Musterbach heißt das: 120 Beschäftigte mal 23,3 Tage sind rund 2.800 Ausfalltage, bei 144 Euro also rund 403.000 Euro im Jahr — fünf Prozent weniger sind 140 Tage und rund 20.000 Euro. Fünf Einwände kommen wirklich: keine Zeit, kein Geld, bringt nichts, interessiert niemanden, Datenschutz.",
+    "spielzug": "Reiser ist nicht gegen BGM. Er ist gegen Geld, das nicht zurückkommt. Aber er ist nicht einer, sondern vier: Jedes Team bekommt heute eine andere Grundhaltung desselben Chefs und kennt die der anderen nicht. Euer Ziel ist nicht, ihn zu überzeugen — euer Ziel ist ein Argument, das bei genau diesem Reiser zieht.\n\n1 Zieht eure Positionskarte und lest sie. Klärt zuerst: Was fürchtet dieser Chef wirklich, hinter dem Satz, den er sagt?\n2 Füllt das Argumentationsblatt aus — alle sechs Felder: was er wirklich will · euer EINES Argument · woran ihr es festmacht · der Weg (Verhältnis oder Verhalten, Pflicht oder Kür) · wer mitzahlt · sein stärkster Einwand und eure Antwort.\n3 Nehmt genau ein Argument. Nicht vier. Wer vier bringt, hat keins.\n4 Tandem, erste Runde: Ihr tragt eurem Partnerteam vor, fünf Minuten. Danach bekommt es eure Positionskarte und spielt diesen Reiser — es hält dagegen, fünf Minuten.\n5 Tandem, zweite Runde: Tauscht die Rollen.\n6 Im Plenum ein Satz je Team: Welcher Einwand hat euch kalt erwischt?\n\nZeit · 10 Min Einführung und Positionen verteilen · 30 Min Argumentationsblatt · 25 Min Tandem · 15 Min Plenum · 10 Min Auflösung, die vier Positionen nebeneinander",
+    "artefakt": "Vier Argumentationsblätter, eins je Grundhaltung — alle für denselben Chef.",
+    "material": [
+      "Vier Positionskarten Reiser (A Rechner · B Suchender · C Enttäuschter · D Korrekter)",
+      "Vorlage Argumentationsblatt mit sechs Feldern",
+      "Zahlenblatt Ausfallkosten"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 3 — du schreibst Kapitel 3 · Warum sich das für die Firma lohnt.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 4,
     "phase": "Einstieg",
-    "titel": "Rechtsrahmen und Geldquellen",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Was Pflicht ist und was freiwillig: ArbSchG, Gefährdungsbeurteilung inklusive psychischer Belastung, BEM. Und wer zahlt: § 20b SGB V, Krankenkassen, Steuerfreibetrag.",
-    "spielzug": "Trennt für euren Betrieb sauber: Was muss Reiser ohnehin tun, was ist freiwillig, und wofür gibt es Geld von wem? Schreibt zu jeder Geldquelle eine Zeile, was sie konkret fordert.",
-    "artefakt": "Finanzierungs- und Rechtsseite: Was ist Pflicht, was fördert wer?",
-    "material": [],
-    "eigenarbeit": "",
+    "titel": "Pflicht, Kür und wer dafür zahlt",
+    "lernziel": "Die Schüler können unterscheiden, was ein Betrieb gesetzlich tun muss und was freiwillig ist, und die passenden Finanzierungsquellen mit ihren Bedingungen benennen.",
+    "kernbegriffe": [
+      "Gefährdungsbeurteilung",
+      "§ 5 ArbSchG",
+      "BEM nach § 167 SGB IX",
+      "§ 20b SGB V",
+      "§ 3 Nr. 34 EStG"
+    ],
+    "input": "Dasselbe Drei-Säulen-Bild wie in Einheit 1, jetzt mit Paragrafen und Beträgen daneben. Das Arbeitsschutzgesetz verpflichtet zur Gefährdungsbeurteilung, nach § 5 ausdrücklich auch der psychischen Belastung. BEM ist Pflicht ab mehr als sechs Wochen Arbeitsunfähigkeit innerhalb eines Jahres, § 167 SGB IX. Alles darüber hinaus ist freiwillig — und genau dort arbeiten externe Anbieter. Vier Wege zahlen mit: Krankenkassen nach § 20b SGB V und dem Leitfaden Prävention, die Unfallversicherungsträger mit in der Regel kostenfreier Beratung, und der Steuerfreibetrag nach § 3 Nr. 34 EStG mit 600 Euro je Arbeitnehmer und Jahr — nur zertifiziert und nur zusätzlich zum Arbeitslohn.",
+    "spielzug": "„Pflicht oder Kür\" klingt nach einer Frage, ist aber vier Fragen: In der Halle gilt anderes als im Lager und wieder anderes im Büro. Deshalb trennt ihr heute nicht pauschal, sondern Bereich für Bereich. Was Pflicht ist, gehört nie in euer Angebot — das schuldet der Betrieb ohnehin.\n\n1 Geht auf die Homepage des Fallbetriebs. Schaut euch an, was diese Firma hat: Maschinen, Schichten, Lager, Büro, Altersstruktur.\n2 Füllt das Pflicht-Kür-Raster für vier Bereiche getrennt aus — Produktion/Spritzguss (Lärm, Gehörschutz, Maschinen, Hitze, Stehen, Schicht) · Lager/Logistik (Heben, Tragen, Kommissionieren, Flurförderzeuge) · Verwaltung/Auftragsbearbeitung (Bildschirmarbeit, Arbeitsplatzgestaltung, Großraum, psychische Belastung) · über alle Bereiche (Gefährdungsbeurteilung, BEM, Ersthelfer, Betriebsarzt, Unterweisungen).\n3 Stellt zu jedem Bereich zwei Fragen: Was muss der Betrieb hier auf jeden Fall? Was wäre hier Kür — und wer könnte es zahlen?\n4 Recherchiert eure Geldquelle in die Tiefe. Je Team eine: Krankenkasse · Unfallversicherungsträger · Steuerfreibetrag § 3 Nr. 34 EStG · Leitfaden Prävention.\n5 Tragt vor, was eure Quelle konkret verlangt — Bedingungen, Grenzen, Stolperstellen.\n6 Kreuzcheck: Gebt euer Raster dem Nachbarteam. Wo steht bei ihm Kür, wo bei euch Pflicht steht?\n\nZeit · 10 Min gemeinsames Raster an der Tafel · 20 Min Input · 25 Min Raster je Bereich füllen · 15 Min Geldquelle recherchieren · 15 Min Vorträge · 5 Min Kreuzcheck",
+    "artefakt": "Pflicht-Kür-Raster des Fallbetriebs nach vier Bereichen und ein Steckbrief je Geldquelle.",
+    "material": [
+      "Leeres Pflicht-Kür-Raster (Bereich | Pflicht | Kür | wer zahlt)",
+      "Vier Geldquellen-Steckbriefe",
+      "Homepage Musterbach · thorbenreimer.de/musterbach.html"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 4 — du ergänzt Kapitel 3 · Warum sich das für die Firma lohnt.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 5,
     "phase": "Analyse",
     "titel": "Belastung ist nicht Beanspruchung",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Gleiche Schicht, völlig unterschiedliche Wirkung. Belastungs-Beanspruchungs-Modell, Anforderungs-Kontroll-Modell, bio-psycho-sozial.",
-    "spielzug": "Erstellt das Belastungsprofil eurer Person nach dem Belastungs-Beanspruchungs-Modell. Benennt anschließend die eine Stellschraube, die bei ihr am meisten bewegen würde — und begründet sie mit dem Modell.",
-    "artefakt": "Belastungsprofil der zugelosten Person.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können erklären, warum dieselbe Arbeit bei zwei Menschen völlig unterschiedlich wirkt.",
+    "kernbegriffe": [
+      "Belastungs-Beanspruchungs-Modell",
+      "Anforderungs-Kontroll-Modell",
+      "Bio-psycho-soziales Modell",
+      "Handlungsspielraum",
+      "Ressourcen"
+    ],
+    "input": "Belastung ist das, was von außen auf einen Menschen einwirkt. Beanspruchung ist das, was daraus in ihm wird — je nach Voraussetzungen völlig verschieden. Drei Modelle beschreiben das: das Belastungs-Beanspruchungs-Modell an Halina Nowak, das Anforderungs-Kontroll-Modell an Elif Yılmaz, nach dem Stress aus hoher Anforderung ohne Handlungsspielraum entsteht, und das bio-psycho-soziale Modell an Nina Kraus als Gegenentwurf zur rein körperlichen Betrachtung. Dazu die Gegenkraft: Ressourcen federn Belastung ab.",
+    "spielzug": "Dieselbe Schicht, zwei Menschen, zwei völlig verschiedene Abende. Heute baut ihr das Belastungsprofil eurer Person und legt dann zwei weitere Modelle als Suchraster darüber. Am Ende steht keine Liste, sondern eine begründete Reihenfolge — und die Begründung ist die Leistung.\n\n1 Baut das Belastungsprofil eurer Person nach Modell 1, dem Belastungs-Beanspruchungs-Modell: zwei getrennte Spalten, links die Belastung, rechts die Beanspruchung. Speist es aus euren Notizen von Einheit 2.\n2 Legt Modell 2 darüber, das Anforderungs-Kontroll-Modell: Wo fehlt eurer Person Handlungsspielraum?\n3 Legt Modell 3 darüber, das bio-psycho-soziale Modell: Welche der drei Ebenen ist bei ihr unbesetzt?\n4 Benennt daraus zwei bis drei Ansatzbereiche.\n5 Priorisiert sie mit den vier Prüffragen, in dieser Reihenfolge: Ist es Pflicht? Pflicht vor Kür. — Wen erreicht es? Verhältnis vor Verhalten, wegen Reichweite und Dauer. — Wo kommt es an? Beanspruchung vor Belastung; nicht wo die Last am größten ist, sondern wo sie den Menschen am stärksten trifft. — Was kostet nichts? Handlungsspielraum zuerst.\n6 Schreibt zu jeder Prüffrage die Quittung dazu: aus welcher Einheit stammt sie? (1 aus Einheit 4 · 2 aus Einheit 2 · 3 und 4 aus heute.)\n\nZeit · 25 Min Input drei Modelle · 25 Min Belastungsprofil · 20 Min Modell 2 und 3 als Suchraster · 15 Min Priorisierung nach den vier Prüffragen · 5 Min Ergebnissicherung",
+    "artefakt": "Belastungsprofil der eigenen Person in zwei Spalten und zwei bis drei Ansatzbereiche, priorisiert nach den vier Prüffragen.",
+    "material": [
+      "Vorlage Belastungsprofil, zwei Spalten",
+      "Priorisierungsblatt mit den vier Prüffragen",
+      "Die vier Interviews · im Reiter Die Belegschaft"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 5 — du ergänzt Kapitel 2. Meilenstein 1 wird heute abgegeben; dafür brauchst du ein Feldstück.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 6,
     "phase": "Analyse",
     "titel": "Kennzahlen lesen — und ihnen misstrauen",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Krankenstand, AU-Tage, Altersstruktur, Fluktuation. Was sie zeigen — und was sie verschweigen. Präsentismus taucht in keiner Statistik auf.",
-    "spielzug": "Wertet das Kennzahlenblatt aus. Drei Auffälligkeiten benennen, jede mit einer Zahl belegen. Dann eine Hypothese formulieren: Was steckt dahinter — und welche Zahl fehlt euch, um sicher zu sein?",
-    "artefakt": "Kennzahlen-Auswertung mit drei Auffälligkeiten und einer Hypothese.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können betriebliche Kennzahlen auswerten und benennen, was sie nicht zeigen.",
+    "kernbegriffe": [
+      "Krankenstand",
+      "AU-Tage",
+      "Altersstruktur",
+      "Fluktuation",
+      "Präsentismus",
+      "Hypothese"
+    ],
+    "input": "Krankenstand, AU-Tage, Altersstruktur, Fluktuation, Unfallzahlen — jede Zahl sagt etwas anderes. Kurzzeit und Langzeit unterscheiden sich grundlegend: 3,3 Prozent der Fälle dauern länger als sechs Wochen und verursachen über 40 Prozent aller Fehltage, psychische Erkrankungen liegen bei 28,5 Fehltagen je Fall. Dazu die blinden Flecken, die keine Statistik zeigt: Präsentismus, innere Kündigung, Dunkelziffer bei psychischen Belastungen. Quantitative Größen liefern eine Zahl, qualitative eine Einschätzung — man braucht beides. Denn Kennzahlen zeigen, wo etwas ist, nicht warum.",
+    "spielzug": "Alle Teams bekommen heute dasselbe Kennzahlenblatt. Die Vielfalt entsteht nicht in den Daten, sondern im Blickwinkel — sonst ist am Ende nichts vergleichbar und es entsteht kein Gesamtbild. Ihr geht denselben Vier-Schritt-Weg: die Zahl, die Auffälligkeit, die Hypothese, die Lücke.\n\n1 Nehmt euren Auswertungsfokus: Team 1 Altersstruktur (Produktion Ø 47, Halina 49 — wer geht in fünf Jahren?) · Team 2 Abteilungsvergleich (Lager 9,4 % gegen Betriebsschnitt 7,2 %) · Team 3 Diagnosegruppen (wo sitzt Muskel-Skelett, wo die Psyche?) · Team 4 Fluktuation (Verwaltung dreimal so hoch wie Produktion).\n2 Findet drei Auffälligkeiten — jede mit der Zahl, an der ihr sie festmacht.\n3 Formuliert genau eine Hypothese: Warum könnte das so sein?\n4 Benennt die Zahl, die fehlt, um eure Hypothese zu prüfen.\n5 Tragt vor. Hört bei den anderen drei mit — euer Fokus ist ein Viertel des Bildes.\n6 Setzt im Plenum zusammen: Welches Bild ergeben die vier Hypothesen gemeinsam?\n\nZeit · 20 Min Input · 30 Min Auswertung im Team · 25 Min Vorstellungsrunde, vier mal gut fünf Minuten · 10 Min Gesamtbild im Plenum · 5 Min Ergebnissicherung",
+    "artefakt": "Je Team drei belegte Auffälligkeiten, eine Hypothese und die fehlende Zahl — zusammen das Gesamtbild des Betriebs.",
+    "material": [
+      "Kennzahlenblatt Musterbach · für alle Teams dasselbe",
+      "Vorlage Vier-Schritt-Weg (Zahl → Auffälligkeit → Hypothese → Lücke)"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 6 — du schreibst Kapitel 4 · Was du weißt und was nicht.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 7,
     "phase": "Analyse",
     "titel": "Fragen, die etwas bringen",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Fragebogenbau, Anonymität, Rücklauf, Datenschutz. Eine schlecht gemachte Befragung ist schlimmer als gar keine.",
-    "spielzug": "Baut acht Fragen für eure Person und testet sie am Nachbartrio: Was wird missverstanden, was traut sich niemand zu beantworten? Haltet danach einen Plan B fest, falls die Befragung nicht stattfinden darf.",
-    "artefakt": "Eigener Kurzfragebogen — plus ein Plan B ohne Befragung.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können eine Mitarbeiterbefragung so anlegen, dass sie brauchbare Antworten liefert.",
+    "kernbegriffe": [
+      "Fragebogenbau",
+      "Anonymität",
+      "Rücklaufquote",
+      "Skalen",
+      "No-Gos"
+    ],
+    "input": "Ein Fragebogen ist gebaut, nicht gesammelt: geschlossene und offene Fragen, Skalen, Länge, Reihenfolge. Anonymität und Datenschutz entscheiden über den Rücklauf — und die härteste Grenze ist die kleine Abteilung: Wer in einem Sechs-Personen-Team gleichzeitig nach Alter, Geschlecht und Beschwerden fragt, hat die Anonymität aufgehoben. Zehn bis zwölf Fragen sind das Maß; mit fünf begründet man kein Konzept, über zwölf kostet es Rücklauf. Und eine schlecht gemachte Befragung ist schlimmer als gar keine: sie verbrennt Vertrauen für Jahre.",
+    "spielzug": "Ihr bekommt heute keinen Musterbogen, sondern die Bauanleitung. Wer die hat, baut jeden Bogen — für Musterbach und später für jeden eigenen Fall. Getestet wird sofort, und zwar am Nachbarteam: Der beste Test ist jemand, der die Frage zum ersten Mal liest.\n\n1 Erarbeitet gemeinsam den Baukasten: Was muss zwingend in jeden Bogen? (Zweck, Anonymitätszusage, Rücklauffrist, Ansprechpartner, Länge.) Welche Fragetypen gibt es? Was sind die No-Gos?\n2 Baut damit acht Fragen für Musterbach. Mindestens zwei offene.\n3 Tauscht mit dem Nachbarteam und beantwortet dessen Bogen ehrlich.\n4 Gebt Rückmeldung an zwei Punkten: Was habt ihr missverstanden? Welche Frage würdet ihr nicht ehrlich beantworten — und warum?\n5 Überarbeitet eure acht Fragen mit dem, was ihr gehört habt.\n6 Schreibt einen Plan B: Was macht ihr, wenn die Befragung nicht stattfinden darf?\n\nZeit · 25 Min Baukasten gemeinsam · 25 Min acht Fragen bauen · 20 Min Test am Nachbarteam und Rückmeldung · 10 Min überarbeiten · 10 Min Plan B und Ergebnissicherung",
+    "artefakt": "Acht getestete Fragen für den Fallbetrieb, überarbeitet nach der Rückmeldung, plus ein Plan B ohne Befragung.",
+    "material": [
+      "Fragebogen-Baukasten (Pflichtbestandteile, Fragetypen, No-Go-Liste, Prüfschritte)",
+      "Vorlage Kurzfragebogen"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 7 — du schreibst Kapitel 5 · Wie du es genauer herausfindest.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 8,
     "phase": "Analyse",
     "titel": "Hingehen und hinsehen",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Begehung, Gefährdungsbeurteilung, Leitmerkmalmethode. Hier zahlt die Bewegungslehre direkt ein: beobachten heißt zielgerichtet wahrnehmen.",
-    "spielzug": "Geht mit einem klaren Beobachtungsauftrag durch das Haus und protokolliert drei Befunde — jeder mit dem, was ihr wirklich gesehen habt, nicht mit dem, was ihr vermutet. Trennt Beobachtung und Bewertung in zwei Spalten.",
-    "artefakt": "Begehungsprotokoll mit drei belegten Befunden.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können eine Arbeitsplatzbegehung durchführen und Beobachtung von Bewertung trennen.",
+    "kernbegriffe": [
+      "Begehung",
+      "Beobachtungsauftrag",
+      "Gefährdungsbeurteilung",
+      "Leitmerkmalmethode",
+      "Beobachtung und Bewertung"
+    ],
+    "input": "Begehung ist eine Methode, kein Rundgang: Vorbereitung, Beobachtungsauftrag, Protokoll. Sie ist zugleich das Handwerkszeug der Gefährdungsbeurteilung, und für körperliche Belastung gibt es mit der Leitmerkmalmethode ein eigenes Verfahren. Der Anschluss an die Bewegungslehre ist direkt: Beobachten heißt zielgerichtet wahrnehmen, nicht schauen. Wer ohne Auftrag losgeht, sieht das, was ihm ohnehin auffällt.",
+    "spielzug": "An sechs Stellen im Haus hängen heute die Arbeitsplätze von Musterbach — als Bild mit Faktenkasten. Die Räume der Schule sind nur die Aufhängeorte; beurteilt wird der Fallbetrieb. Der eigentliche Punkt kommt aber vorher: Ihr schreibt auf, worauf ihr achten wollt, bevor jemand losläuft. Am Ende vergleicht ihr, ob ihr gefunden habt, was ihr gesucht habt.\n\n1 Schreibt vier Leitsätze, einen je Person, nach der Schablone: Ich achte bei ________ auf ________, weil ________. Speist sie aus den Interviews von Einheit 2 und den drei Modellen von Einheit 5.\n2 Geht den Parcours: sechs Stationen, sieben Minuten je Station, Wechsel auf Signal. Jedes Team startet woanders.\n3 Protokolliert an jeder Station zweispaltig — links, was wirklich zu sehen ist, rechts eure Bewertung. Beides getrennt halten.\n4 An Station 5 und 6 gibt es keine zugeordnete Person und keinen Leitsatz. Geht trotzdem hin und merkt, wie viel schwerer das ist.\n5 Wählt drei Befunde aus und bereitet die Begründung vor.\n6 Stellt im Plenum einen Befund vor. Die anderen prüfen: War das Beobachtung oder schon Bewertung?\n7 Beantwortet zum Schluss zwei Fragen — habt ihr gefunden, worauf ihr achten wolltet, oder etwas ganz anderes? Und: Was haben die anderen an derselben Station gesehen, das ihr übersehen habt?\n\nZeit · 15 Min vier Leitsätze schreiben · 45 Min Parcours, sechs Stationen à sieben Minuten · 10 Min drei Befunde auswählen · 20 Min Plenum",
+    "artefakt": "Vier Leitsätze, ein zweispaltiges Begehungsprotokoll über sechs Stationen und drei ausgewählte Befunde mit Begründung.",
+    "material": [
+      "Sechs Stationskarten mit Bild und Faktenkasten",
+      "Protokollbogen zweispaltig",
+      "Leitsatzblatt für die vier Personen"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 8 — du ergänzt Kapitel 5. Meilenstein 2 wird heute abgegeben; dafür brauchst du ein Feldstück.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 9,
     "phase": "Planung",
     "titel": "Vom Befund zum Ziel",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Handlungsbedarf verdichten, Schwerpunkte setzen, SMART-Ziele mit Zwischenzielen. Warum Wirkung erst spät sichtbar wird.",
-    "spielzug": "Formuliert ein Hauptziel und drei Zwischenziele, jedes mit einem Messkriterium und einem Termin. Prüft am Ende gegenseitig: Woran genau würdet ihr in zwölf Monaten erkennen, dass ihr es erreicht habt?",
-    "artefakt": "Zielblatt: ein Hauptziel, drei Zwischenziele, je ein Messkriterium.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können aus Analyseergebnissen überprüfbare Ziele ableiten und ihre Reihenfolge begründen.",
+    "kernbegriffe": [
+      "SMART-Ziel",
+      "Strukturziel",
+      "Prozessziel",
+      "Ergebnisziel",
+      "Messkriterium",
+      "Priorisierung"
+    ],
+    "input": "Aus einem Dutzend Auffälligkeiten wird erst dann ein Konzept, wenn Schwerpunkte gesetzt sind. Ziele werden SMART formuliert und brauchen Zwischenziele, weil Effekte erst mittel- bis langfristig sichtbar werden. Drei Ebenen liegen übereinander: Das Strukturziel fragt, was da ist — sofort prüfbar. Das Prozessziel fragt, ob es genutzt wird — nach Wochen prüfbar. Das Ergebnisziel fragt, ob sich etwas geändert hat — nach einem Jahr. Wer nur Ergebnisziele schreibt, steht im Dezember mit leeren Händen da.",
+    "spielzug": "Heute bekommen alle Teams dieselben drei Befunde. Das bricht bewusst das Muster der letzten Einheiten — denn die Kompetenz, um die es geht, ist die begründete Reihenfolge, und die lässt sich nur vergleichen, wenn alle von derselben Grundlage ausgehen.\n\n1 Lest die drei Befunde: A das Lager (täglich Heben aus Bodenhöhe, Krankenstand 9,4 %, 14 Betroffene) · B die Verwaltung (Bildschirmarbeitsplätze nicht anpassbar, dreifache Fluktuation, 4 Betroffene) · C die Rückkehr (kein Rückkehrgespräch nach langer Krankheit, potenziell alle 120).\n2 Schreibt je Befund genau ein Ziel. Für jedes Ziel alle fünf Pflichtfelder: Ziel in einem Satz · Ebene (Struktur, Prozess oder Ergebnis) · Messkriterium, woran genau, ohne zu diskutieren · Termin als Datum · wer prüft, als Rolle mit Namen, nicht als Abteilung.\n3 Achtet auf die Auflage: Eure drei Ziele müssen mindestens zwei verschiedene Ebenen abdecken.\n4 Legt die Reihenfolge fest und begründet sie in drei Sätzen — warum die anderen beiden warten.\n5 Kreuzprüfung: Tauscht die Zielblätter. Kreuzt zu jedem Ziel an, ob Musterbach in zwölf Monaten ohne neue Erhebung feststellen könnte, ob es erreicht ist. Bei Nein ein Satz, woran es scheitert.\n6 Im Plenum die eine Frage: Wer hat Befund C nicht zuerst — und warum nicht?\n\nZeit · 10 Min Befunde lesen und Zielblatt erklären · 30 Min drei Ziele bauen · 15 Min Reihenfolge begründen · 20 Min Kreuzprüfung · 15 Min Plenum",
+    "artefakt": "Drei Ziele mit je fünf Pflichtfeldern, eine begründete Reihenfolge und ein ausgefülltes Kreuzprüfungs-Formular vom Nachbarteam.",
+    "material": [
+      "Befundblatt A, B und C mit Belegen",
+      "Zielblatt mit den fünf Pflichtfeldern, dreifach",
+      "Kreuzprüfungs-Formular"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 9 — du schreibst Kapitel 6 · Deine Ziele.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 10,
     "phase": "Planung",
     "titel": "Maßnahmen wählen statt sammeln",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Das Vier-Felder-Raster: Kultur, Organisation, Arbeitsgestaltung, Verhalten. Wirkt es aufs Ziel? Erreicht es die Zielgruppe? Ist der Zugang niedrigschwellig?",
-    "spielzug": "Sammelt zehn Maßnahmen und streicht sechs davon wieder — begründet. Die vier, die bleiben, müssen jede der drei Prüffragen bestehen. Die Streichliste kommt mit ins Buch, sie ist die halbe Leistung.",
-    "artefakt": "Maßnahmenkatalog mit Begründung — und Streichliste.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können Maßnahmen begründet auswählen — und begründet verwerfen.",
+    "kernbegriffe": [
+      "Vier-Felder-Raster",
+      "Prüffragen",
+      "Verhältnis vor Verhalten",
+      "Niedrigschwelligkeit",
+      "Streichliste"
+    ],
+    "input": "Maßnahmen sortieren sich in vier Felder: Unternehmenskultur, Organisationsgestaltung, Arbeitsgestaltung und gesundes Verhalten im Alltag. Drei Prüffragen entscheiden über jede einzelne: Wirkt sie auf das Ziel? Erreicht sie die Zielgruppe? Ist der Zugang niedrigschwellig? Dazu der Wiederaufgriff aus Einheit 2, jetzt in der Anwendung: Verhältnis vor Verhalten. Das Formatspektrum reicht von der aktiven Pause bis zum Gesundheitstag — und die meisten Kataloge bestehen aus Standardware, die überall auftaucht.",
+    "spielzug": "Maßnahmen sammeln kann jeder. Die Leistung liegt im Streichen — und darin, das Streichen zu begründen. Deshalb kommt die Streichliste heute mit ins Ergebnis; sie ist die halbe Arbeit.\n\n1 Sammelt zehn Maßnahmen für eure drei Ziele aus Einheit 9. Schnell, ohne zu filtern.\n2 Ordnet jede in das Vier-Felder-Raster ein: Unternehmenskultur · Organisationsgestaltung · Arbeitsgestaltung · gesundes Verhalten im Alltag.\n3 Prüft jede gegen die drei Fragen: Wirkt sie auf das Ziel? Erreicht sie die Zielgruppe? Ist der Zugang niedrigschwellig?\n4 Streicht sechs. Schreibt zu jeder gestrichenen einen Satz, warum sie hier nicht funktioniert.\n5 Die vier verbleibenden müssen jede der drei Prüffragen bestehen. Prüft nach — und wenn eine durchfällt, streicht auch sie.\n6 Zählt zum Schluss: Wie viele eurer vier liegen auf der Verhältnisseite? Wenn keine, fangt noch einmal an.\n\nZeit · 20 Min Input · 15 Min zehn Maßnahmen sammeln · 25 Min einordnen und prüfen · 20 Min sechs streichen mit Begründung · 10 Min Kontrolle Verhältnisseite",
+    "artefakt": "Vier geprüfte Maßnahmen im Vier-Felder-Raster und die Streichliste mit sechs begründeten Absagen.",
+    "material": [
+      "Vier-Felder-Raster",
+      "Prüffragen-Blatt",
+      "Vorlage Streichliste"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 10 — du schreibst Kapitel 7 · Deine Maßnahmen.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 11,
     "phase": "Planung",
     "titel": "Projektarchitektur",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Rollen, Meilensteine, Zeitplan, Beteiligung. Und die Misserfolgsfaktoren: kein Rückhalt oben, keine Beteiligung unten, niemand verantwortlich, zu kurz gedacht.",
-    "spielzug": "Baut den Zeitplan über zwölf Monate mit vier Meilensteinen. Benennt zu jeder Aufgabe eine verantwortliche Rolle. Markiert die Stelle, an der euer Projekt am wahrscheinlichsten scheitern wird.",
-    "artefakt": "Projektplan mit Rollen, Meilensteinen und Zeitachse.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können ein BGM-Vorhaben als Projekt aufsetzen und die typischen Scheiterpunkte benennen.",
+    "kernbegriffe": [
+      "Projektauftrag",
+      "Steuerungsgruppe",
+      "Meilenstein",
+      "Beteiligung",
+      "Misserfolgsfaktoren"
+    ],
+    "input": "Ein Vorhaben wird zum Projekt durch fünf Dinge: Auftrag, Ziel, Zeit, Ressourcen, Verantwortung. Die Steuerungsgruppe entscheidet über Rückhalt — ihre Zusammensetzung ist keine Formalie, sondern die halbe Miete. Dazu Meilensteine, Zeitplan und die Beteiligung der Belegschaft. Die vier Misserfolgsfaktoren sind immer dieselben: kein Rückhalt oben, keine Beteiligung unten, niemand verantwortlich, zu kurz angelegt.",
+    "spielzug": "Bis hierher habt ihr Ziele und Maßnahmen. Heute wird daraus ein Vorhaben mit Kalender, Namen und Verantwortung — und ihr sagt vorher, wo es kippen wird. Wer den Scheiterpunkt erst hinterher kennt, hat ihn nicht gekannt.\n\n1 Baut den Zeitplan über zwölf Monate mit vier Meilensteinen.\n2 Ordnet jeder Aufgabe im Plan eine verantwortliche Rolle zu. Rollen, keine Abteilungen.\n3 Besetzt den Steuerkreis. Achtet darauf, wer aus der Belegschaft dabei sein muss, damit es getragen wird — nicht nur Führungskräfte.\n4 Benennt den einen Menschen, ohne den es nicht läuft.\n5 Markiert die Stelle im Plan, an der euer Projekt am wahrscheinlichsten scheitert. Eine Stelle, nicht drei.\n6 Schreibt zu dieser Stelle einen Satz: Woran würdet ihr merken, dass es gerade passiert?\n\nZeit · 20 Min Input · 30 Min Zeitplan und Rollen · 20 Min Steuerkreis besetzen · 15 Min Scheiterpunkt markieren und begründen · 5 Min Ergebnissicherung",
+    "artefakt": "Projektplan über zwölf Monate mit vier Meilensteinen, Rollen, Steuerkreis-Besetzung und markiertem Scheiterpunkt.",
+    "material": [
+      "Vorlage Zwölf-Monats-Plan",
+      "Vorlage Steuerkreis-Besetzung",
+      "Word-Gerüst der Konzeptskizze"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 11 — du schreibst Kapitel 8 · Wer macht was und wann. Meilenstein 3 wird heute abgegeben.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 12,
     "phase": "Maßnahmen",
     "titel": "Ergonomie — nicht nur am Schreibtisch",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Bildschirmarbeitsplatz komplett, aber gleichrangig: Zwangshaltungen in Reinigung und Produktion, Hebe- und Tragetechnik, Hilfsmittel.",
-    "spielzug": "Richtet einen echten Arbeitsplatz im Haus ein und spürt den Unterschied am eigenen Körper. Dann schreibt die Ergonomie-Empfehlung für eure Person: drei Veränderungen, jede mit Begründung und geschätzten Kosten.",
-    "artefakt": "Ergonomie-Empfehlung für die eigene Person, mit Begründung.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können Arbeitsplätze beurteilen und konkrete Veränderungen begründet vorschlagen — innerhalb ihrer Rolle.",
+    "kernbegriffe": [
+      "Arbeitsstättenverordnung",
+      "Bildschirmarbeitsplatz",
+      "Zwangshaltung",
+      "Sitz-Steh-Wechsel",
+      "dynamisches Sitzen"
+    ],
+    "input": "Zuerst die Grenze: Die ergonomische Grundausstattung schuldet der Arbeitgeber ohnehin — Arbeitsstättenverordnung und Gefährdungsbeurteilung, also Arbeitsschutz. Ihr dürft einweisen, individuell anpassen und schulen. Ihr dürft nicht nach Verordnung beurteilen. Wer das verwischt, verkauft eine Leistung, die er nicht erbringen darf. Danach der Arbeitsplatz vollständig: Stuhl, Tisch, Bildschirmhöhe, Sehabstand, Beleuchtung, Sitz-Steh-Wechsel — und gleichrangig Zwangshaltungen in Reinigung und Produktion, Überkopfarbeit, Heben und Tragen. Die beste Haltung ist immer die nächste.",
+    "spielzug": "Ergonomie versteht man nicht am Bild, sondern am eigenen Rücken. Deshalb richtet ihr heute einen echten Arbeitsplatz im Haus ein und setzt euch hinein — einmal falsch, einmal richtig. Erst danach schreibt ihr die Empfehlung.\n\n1 Richtet einen Arbeitsplatz im Haus ein, wie ihr ihn typischerweise vorfindet. Setzt euch hinein und arbeitet zwei Minuten.\n2 Richtet denselben Platz richtig ein: Stuhlhöhe, Tischhöhe, Bildschirmhöhe, Sehabstand, Licht. Setzt euch wieder hinein.\n3 Schreibt in einem Satz, was sich am eigenen Körper geändert hat.\n4 Sortiert jede denkbare Veränderung in zwei Stapel: Arbeitsschutz-Pflicht des Betriebs oder freiwillige Gesundheitsförderung.\n5 Schreibt die Ergonomie-Empfehlung: drei Veränderungen, jede mit Begründung und geschätzten Kosten. Was auf dem Pflicht-Stapel liegt, gehört nicht hinein.\n6 Notiert zum Schluss: Was müsstet ihr vor Ort sehen, um sicher zu sein, dass es das Richtige ist?\n\nZeit · 25 Min Input mit der Arbeitsschutzgrenze zuerst · 25 Min Arbeitsplatz einrichten und ausprobieren · 25 Min Empfehlung schreiben · 10 Min Pflicht-Kür-Sortierung prüfen · 5 Min Ergebnissicherung",
+    "artefakt": "Ergonomie-Empfehlung mit drei begründeten Veränderungen und geschätzten Kosten, sauber getrennt von der Arbeitsschutz-Pflicht.",
+    "material": [
+      "Vorlage Ergonomie-Empfehlung",
+      "Checkliste Bildschirmarbeitsplatz",
+      "Pflicht-Kür-Raster aus Einheit 4"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 12 — du ergänzt Kapitel 7 · Deine Maßnahmen.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 13,
     "phase": "Maßnahmen",
     "titel": "Bewegung, die ankommt",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Der harte Teil ist nicht die Übung, sondern der Zugang: zehn Minuten in der Halle bei Lärm und Taktung — oder um 5:30 Uhr für eine Reinigungskraft allein.",
-    "spielzug": "Baut ein Zehn-Minuten-Programm für eure Person und leitet es der Klasse an. Danach: Wie kommt dieses Programm bei ihr tatsächlich an? Wann, wo, durch wen — und was kostet es sie?",
-    "artefakt": "Zehn-Minuten-Programm plus Zugangskonzept.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können ein betriebliches Bewegungsangebot so zuschneiden, dass die Zielgruppe es tatsächlich nutzt.",
+    "kernbegriffe": [
+      "Aktive Pause",
+      "Zugangskonzept",
+      "Niedrigschwelligkeit",
+      "Taktung",
+      "Randzeiten"
+    ],
+    "input": "Formate gibt es genug: aktive Pause, Rückenkurs, betriebsspezifisches Übungsprogramm, Lauftreff. Der harte Teil ist nie die Übung, sondern der Zugang — Schicht, Taktung, Lärm, Randzeiten, Alleinarbeit. Niedrigschwelligkeit ist deshalb kein Adjektiv, sondern eine Liste: Ort, Zeit, Kleidung, Dauer, wer anleitet. Und ein Programm kostet immer dreierlei — Zeit, Geld und die Aufmerksamkeit derer, die mitmachen sollen.",
+    "spielzug": "Das Programm bekommt ihr überall. Bewertet wird heute, ob es bei eurer Person tatsächlich ankommt — bei einer Schichtführerin, die um vier Uhr zwanzig aufsteht, oder bei einer Lagerkraft, die abends noch ihre Mutter versorgt.\n\n1 Baut ein Zehn-Minuten-Programm für eure Person. Passend zu ihrer Tätigkeit, nicht allgemein.\n2 Leitet es der Klasse an. Alle machen mit.\n3 Schreibt das Zugangskonzept: Wann im Tagesablauf? An welchem Ort? Durch wen angeleitet? In welcher Kleidung?\n4 Beantwortet die harte Frage: Warum sollte jemand mitmachen, der nach der Schicht nach Hause will?\n5 Rechnet, was es eure Person kostet — an Zeit, an Weg, an Aufmerksamkeit. Zehn Minuten Programm sind selten zehn Minuten Abwesenheit.\n6 Prüft gegen Einheit 2: Scheitert euer Zugang an genau dem, woran der Rückenkurs von Reiser gescheitert ist?\n\nZeit · 20 Min Input · 20 Min Programm bauen · 20 Min Anleiten vor der Klasse · 20 Min Zugangskonzept · 10 Min Gegenprobe an Einheit 2",
+    "artefakt": "Ein Zehn-Minuten-Programm für die eigene Person plus das Zugangskonzept — bewertet wird das Zugangskonzept.",
+    "material": [
+      "Vorlage Zugangskonzept",
+      "Übungskartei aktive Pause",
+      "Die vier Interviews · im Reiter Die Belegschaft"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 13 — du ergänzt Kapitel 7. Dafür brauchst du ein Feldstück.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 14,
     "phase": "Maßnahmen",
     "titel": "Psyche, Stress — und die eigene Grenze",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Psychische Belastung verursacht die längsten Ausfälle. Führung als Gesundheitsfaktor, Umgang mit Sucht. Und klar: Wo endet die eigene Rolle?",
-    "spielzug": "Übt ein Gespräch mit einer belasteten Person — und übt genauso die Übergabe an eine Fachstelle. Haltet danach schriftlich fest, wo eure eigene Rolle endet. Dieser Satz gehört ins Buch.",
-    "artefakt": "Modul psychische Gesundheit plus persönliche Grenzlinie.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können psychische Belastung im Betrieb einordnen und wissen, wo ihre eigene Rolle endet.",
+    "kernbegriffe": [
+      "psychische Belastung",
+      "Rollenunklarheit",
+      "Führung als Gesundheitsfaktor",
+      "Abgrenzung",
+      "Verweisliste"
+    ],
+    "input": "Psychische Erkrankungen verursachen die längsten Ausfallzeiten — im Schnitt 28,5 Fehltage je Fall. Die Belastungsfaktoren sind benennbar: Termindruck, Unterbrechungen, fehlende Anerkennung, Rollenunklarheit. Führung wirkt dabei als eigener Gesundheitsfaktor. Für den Umgang gibt es Werkzeuge — Sender-Empfänger, Vier-Ohren-Modell, aktives Zuhören — und für Sucht Anzeichen, Ansprache und Beratungsstellen. Das Wichtigste ist aber die Abgrenzung: Was gehört in die eigene Rolle, und wo wird verwiesen?",
+    "spielzug": "Heute geht es zweimal um eine Grenze: einmal um die zwischen Bedingung und Person, einmal um die eurer eigenen Rolle. Der interessante Stapel ist der, bei dem ihr euch nicht einig werdet.\n\n1 Sortiert die fünfzehn Situationskarten auf drei Stapel: gehört in meine Rolle · gehört nicht in meine Rolle · unsicher.\n2 Nehmt den Unsicher-Stapel und diskutiert ihn Karte für Karte. Er ist der eigentliche Lerngegenstand.\n3 Zieht eure Grenzlinie in einem Satz: Wo endet eure Rolle?\n4 Baut die Verweisliste: Betriebsarzt · externe Mitarbeiterberatung · Beratungsstellen · Hausarzt · Krisendienste. Zu jeder Stelle, was sie macht und wie man sie erreicht.\n5 Formuliert eine Übergabe wörtlich — so, dass sie nicht über den Kopf der Person hinweg geht.\n6 Prüft eure Maßnahmen aus Einheit 10: Welche liegt auf der Bedingungsseite und nicht bei der Person?\n\nZeit · 25 Min Input · 20 Min Sortierübung · 15 Min Unsicher-Stapel im Plenum · 20 Min Verweisliste und Übergabe · 10 Min Ergebnissicherung",
+    "artefakt": "Das Sortierergebnis mit begründeter Grenzlinie und eine Verweisliste für die Region, mit einer wörtlich formulierten Übergabe.",
+    "material": [
+      "Fünfzehn Situationskarten",
+      "Vorlage Verweisliste",
+      "Merkblatt Gesprächswerkzeuge"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 14 — du ergänzt Kapitel 7 · Deine Maßnahmen.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 15,
     "phase": "Umsetzung",
     "titel": "Das Angebot: Was kostet das?",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Ab hier feste Teams. Angebotsaufbau, fixe und variable Kosten, Stundensatz, Break-even. Und: den Preis verteidigen, statt sich kleinzumachen.",
-    "spielzug": "Erste Teamleistung. Rechnet eure Kalkulation durch — fixe und variable Kosten, Stundensatz, Break-even — und schreibt das Angebot. Dann Preisverhandlung gegen Reiser, ohne den Preis zu senken.",
-    "artefakt": "Angebot mit Kalkulation — die erste Teamleistung.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können ein Angebot kalkulieren, den Preis begründen und ihren Vorschlag so aufbauen, dass er trägt.",
+    "kernbegriffe": [
+      "Stundensatz",
+      "fixe und variable Kosten",
+      "Break-even",
+      "Why–How–What",
+      "Preisverhandlung"
+    ],
+    "input": "Ein Angebot hat einen festen Aufbau: Ausgangslage, Leistungen, Teilnahmebedingungen, Preis. Dahinter liegt die Kalkulation aus fixen und variablen Kosten, Stundensatz und Break-even — und in einen Stundensatz gehören Vorbereitung, Fahrt, Nachbereitung und Ausfallrisiko. Die Beispielrechnung aus Einheit 3 kommt hier zurück und wird gegen die eigenen Kosten gestellt. Für den Aufbau des Vorschlags gilt Why–How–What: zuerst warum, dann wie, zuletzt was. Das ist die Reihenfolge, in der ein Entscheider zuhört. Und der Preis wird verteidigt, nicht kleingeredet.",
+    "spielzug": "Erste Teamleistung, und die erste, bei der es um Geld geht. Ihr rechnet, ihr schreibt, und ihr verteidigt — ohne den Preis zu senken. Wer im ersten Gespräch nachlässt, hat den Preis nie gehabt.\n\n1 Rechnet die Kalkulation durch: fixe und variable Kosten, euer Stundensatz mit Vorbereitung, Fahrt, Nachbereitung und Ausfallrisiko.\n2 Bestimmt den Break-even: Ab wie vielen vermiedenen Ausfalltagen trägt sich euer Paket? Nehmt die Rechnung aus Einheit 3 als Gegenprobe.\n3 Schreibt das Angebot: Ausgangslage, Leistungen, Teilnahmebedingungen, Preis.\n4 Baut den Vorschlag nach Why–How–What auf: zuerst warum überhaupt, dann wie ihr vorgeht, zuletzt was genau ihr liefert. Nicht umgekehrt.\n5 Verhandelt gegen die Geschäftsführung. Der Preis bleibt.\n6 Notiert nach der Verhandlung einen Satz: An welcher Stelle wolltet ihr nachgeben — und warum habt ihr es nicht getan?\n\nZeit · 20 Min Input · 25 Min Kalkulation · 20 Min Angebot schreiben und nach Why–How–What aufbauen · 20 Min Preisverhandlung · 5 Min Ergebnissicherung",
+    "artefakt": "Ein kalkuliertes Teamangebot mit Break-even, aufgebaut nach Why–How–What, und die Notiz aus der Preisverhandlung.",
+    "material": [
+      "Kalkulationsvorlage (Excel, Break-even rechnet automatisch)",
+      "Vorlage Angebot",
+      "Merkblatt Why–How–What"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 15 — du schreibst Kapitel 9 · Was es kostet. Meilenstein 4 wird heute abgegeben.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 16,
     "phase": "Umsetzung",
     "titel": "Damit es jemand mitbekommt",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Internes Marketing: informieren, beteiligen, Führungskräfte als Vorbild, Multiplikatoren finden. Und der Umgang mit Killerphrasen.",
-    "spielzug": "Schreibt den Kommunikationsplan: wer erfährt wann was, über welchen Kanal. Dazu ein Aushang, der Halina Nowak tatsächlich erreicht — nicht einer, der nur gut aussieht.",
-    "artefakt": "Kommunikationsplan plus ein Aushang, der wirklich jemanden hervorholt.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können ein Angebot im Betrieb so kommunizieren, dass die Zielgruppe es wahrnimmt.",
+    "kernbegriffe": [
+      "internes Marketing",
+      "Multiplikatoren",
+      "Kanalreichweite",
+      "Killerphrasen"
+    ],
+    "input": "Internes Marketing beantwortet vier Fragen: wer erfährt wann was, über welchen Kanal. Führungskräfte sind dabei Vorbild und Multiplikator zugleich — ohne sie verpufft jeder Aushang. Die Kanäle haben sehr unterschiedliche Reichweite: Aushang, Intranet, E-Mail, Teamrunde, Lohnzettelbeilage erreichen jeweils andere Gruppen, und was eine Gruppe nicht erreicht, ist für diese Gruppe kein Kanal. Dazu der Umgang mit Killerphrasen, die verlässlich kommen.",
+    "spielzug": "Ein Aushang von außen verpufft, wenn niemand im Betrieb dahintersteht. Der eigentliche Hebel sind die Abteilungsleiter — und die überzeugt man nicht mit dem Konzept, sondern mit dem, was sie davon haben.\n\n1 Baut einen Drei-Minuten-Pitch vor den Abteilungsleitern. Die Frage, die er beantworten muss: Warum sollen ausgerechnet sie das gut finden und ihren Leuten empfehlen?\n2 Tragt vor. Die anderen Teams spielen die Abteilungsleiter und bringen ihre Einwände: meine Leute haben keine Zeit, das kostet Produktionszeit, wir haben gerade andere Sorgen.\n3 Notiert den Einwand, auf den ihr keine Antwort hattet.\n4 Schreibt den Kommunikationsplan: wer erfährt wann was, über welchen Kanal, und wer trägt es weiter.\n5 Geht die Kanäle einzeln durch und fragt bei jedem: Erreicht das die Spätschicht? Das Lager? Die Verwaltung?\n6 Entwerft den Aushang. Er ist eines der Mittel, nicht die Hauptleistung.\n\nZeit · 15 Min Input · 20 Min Pitch bauen · 25 Min Pitches mit Einwänden · 20 Min Kommunikationsplan und Kanalprüfung · 10 Min Aushang",
+    "artefakt": "Kommunikationsplan mit Multiplikatorenweg, geprüft auf Kanalreichweite, plus Aushang.",
+    "material": [
+      "Vorlage Kommunikationsplan",
+      "Kanalübersicht mit Reichweite",
+      "Einwandkarten Abteilungsleiter"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 16 — du schreibst Kapitel 10 · Wie die Mitarbeiter davon erfahren.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 17,
     "phase": "Umsetzung",
     "titel": "Umsetzung — und was schiefgeht",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Rollout, niedrigschwelliger Zugang, Dauerhaftigkeit. Große Ereigniskarten-Runde: zwei Störungen pro Team, live nachsteuern.",
-    "spielzug": "Jedes Team zieht zwei Ereigniskarten und steuert seinen Plan live nach. Dokumentiert jede Anpassung: Was war die Störung, was habt ihr geändert, was habt ihr bewusst nicht geändert?",
-    "artefakt": "Überarbeiteter Plan mit dokumentierten Anpassungen.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können einen laufenden Plan an Störungen anpassen, ohne das Ziel aufzugeben.",
+    "kernbegriffe": [
+      "Rollout",
+      "Pilotgruppe",
+      "Verstetigung",
+      "Störung",
+      "Plan B"
+    ],
+    "input": "Ein Rollout hat eine Reihenfolge, eine Pilotgruppe und ein Startsignal. Niedrigschwelliger Zugang ist in der Praxis etwas anderes als auf dem Papier. Und Gesundheitsförderung wirkt erst, wenn sie bleibt — Dauerhaftigkeit ist kein Extra, sondern die Bedingung. Die typischen Störungen sind bekannt: Schlüsselperson fällt aus, Auftragsspitze, Budget gekürzt, Raum weg. Sie gehören in den Plan, bevor sie eintreten.",
+    "spielzug": "Euer Plan trifft heute auf die Wirklichkeit. Jedes Team zieht zwei Ereigniskarten und steuert live nach. Dokumentiert wird nicht nur, was ihr geändert habt, sondern auch, was ihr bewusst stehen lasst — das ist die schwerere Entscheidung.\n\n1 Zieht zwei Ereigniskarten.\n2 Beschreibt zu jeder in zwei Sätzen, was sie für euren Plan bedeutet.\n3 Passt den Plan an. Ändert so wenig wie möglich.\n4 Dokumentiert je Störung drei Dinge: was die Störung war, was ihr geändert habt, was ihr bewusst nicht geändert habt.\n5 Prüft nach jeder Anpassung: Steht das Ziel aus Einheit 9 noch? Wenn nicht, habt ihr das Ziel aufgegeben statt den Weg.\n6 Benennt zu einer der beiden Störungen ein Frühwarnzeichen — woran hättet ihr es früher gemerkt?\n\nZeit · 15 Min Input · 15 Min Karten ziehen und einordnen · 30 Min Plan anpassen · 20 Min dokumentieren · 10 Min Frühwarnzeichen",
+    "artefakt": "Der überarbeitete Plan mit dokumentierten Anpassungen — einschließlich dessen, was bewusst nicht geändert wurde.",
+    "material": [
+      "Ereigniskarten",
+      "Vorlage Anpassungsprotokoll",
+      "Projektplan aus Einheit 11"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 17 — du ergänzt Kapitel 8 · Wer macht was und wann.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 18,
     "phase": "Evaluation",
     "titel": "Hat es etwas gebracht?",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Struktur-, Prozess-, Ergebnisqualität. Soll-Ist, PDCA, Gesundheitszirkel. Verstetigung: vom Projekt zum Regelbetrieb. Danach Generalprobe.",
-    "spielzug": "Legt fest, woran ihr Erfolg messt — je ein Kriterium für Struktur, Prozess und Ergebnis. Dann der Verstetigungsplan: Was läuft weiter, wenn euer Auftrag endet? Zum Schluss Generalprobe für den Pitch.",
-    "artefakt": "Evaluationskonzept plus Verstetigungsplan.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können Wirkung messen und ein Vorhaben in den Regelbetrieb überführen.",
+    "kernbegriffe": [
+      "Strukturqualität",
+      "Prozessqualität",
+      "Ergebnisqualität",
+      "PDCA",
+      "Gesundheitszirkel",
+      "Verstetigung"
+    ],
+    "input": "Qualität hat drei Ebenen, und jede braucht ihr eigenes Kriterium: Struktur, Prozess, Ergebnis. Der Soll-Ist-Vergleich und der PDCA-Zyklus geben dem Ganzen einen Takt. Der Gesundheitszirkel ist das Instrument der Beteiligung — Messen ohne die Beteiligten führt zu Zahlen, die niemand erklären kann. Quantitative und qualitative Instrumente ergänzen sich, Assessments und Fragebögen decken verschiedene Fragen ab. Am Ende steht die Verstetigung: vom Projekt in den Regelbetrieb.",
+    "spielzug": "Ein Messplan, den niemand bedienen kann, ist kein Messplan. Heute legt ihr fest, woran Erfolg erkennbar ist — und prüft bei jeder Größe, ob es im Betrieb überhaupt jemanden gibt, der sie liefern kann.\n\n1 Legt drei Kriterien fest, eins je Ebene: Struktur, Prozess, Ergebnis.\n2 Schreibt zu jedem Kriterium die Quelle dazu: Wer im Betrieb liefert diese Zahl?\n3 Schreibt zu jedem den Messzeitpunkt: Struktur sofort, Prozess nach Wochen, Ergebnis nach einem Jahr.\n4 Streicht jede Größe, die niemand liefern kann. Das ist kein Kriterium, sondern ein Wunsch.\n5 Schreibt den Verstetigungsplan: Was läuft nach dem Projektende weiter, wer verantwortet es, aus welchem Budget?\n6 Generalprobe für den Pitch: zehn Minuten durchspielen, mit Uhr.\n\nZeit · 20 Min Input · 25 Min drei Kriterien mit Quelle und Zeitpunkt · 15 Min Verstetigungsplan · 25 Min Generalprobe · 5 Min Rückmeldungen",
+    "artefakt": "Evaluationskonzept mit drei Kriterien, Quelle und Messzeitpunkt, dazu der Verstetigungsplan.",
+    "material": [
+      "Vorlage Messplan (Kriterium | Ebene | Quelle | Zeitpunkt)",
+      "Vorlage Verstetigungsplan",
+      "Zielblatt aus Einheit 9"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 18 — du schreibst Kapitel 11 · Woran du merkst, ob es gewirkt hat.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   },
   {
     "woche": 19,
     "phase": "Abschluss",
     "titel": "Der Pitch",
-    "lernziel": "",
-    "kernbegriffe": [],
-    "input": "Jedes Team präsentiert sein BGM-Konzept. Bewertet werden Fachlichkeit, Passung, Wirtschaftlichkeit, Überzeugungskraft. Ein Team bekommt den Auftrag.",
-    "spielzug": "Zehn Minuten Pitch vor der Geschäftsführung, danach fünf Minuten Rückfragen. Ihr verkauft kein Wissen, sondern eine Entscheidung: Warum soll Reiser genau euch beauftragen?",
-    "artefakt": "Das fertige Projektbuch — der eigene, vollständige BGM-Projektplan.",
-    "material": [],
-    "eigenarbeit": "",
+    "lernziel": "Die Schüler können ihr Konzept vor einer Entscheiderrunde vertreten.",
+    "kernbegriffe": [
+      "Pitch",
+      "Entscheidung verkaufen",
+      "Rückfragen",
+      "Priorisierung begründen"
+    ],
+    "input": "Kein neuer Input. Es geht um die Bewertungskriterien und den Ablauf — und um eine einzige Einsicht: Verkauft wird kein Wissen, sondern eine Entscheidung.",
+    "spielzug": "Zehn Minuten vor der Geschäftsführung, danach fünf Minuten Rückfragen. Ihr verkauft kein Wissen — ihr verkauft eine Entscheidung. Die Frage im Raum ist nicht, ob ihr etwas verstanden habt, sondern warum der Auftrag an genau euer Team gehen soll.\n\n1 Baut den Pitch nach Why–How–What, so wie in Einheit 15 geübt.\n2 Zehn Minuten, ohne Blatt. Uhr läuft.\n3 Haltet die eine Frage aus, die alles trägt: Warum steht eure Maßnahme zwei vor Maßnahme drei?\n4 Fünf Minuten Rückfragen. Eine Antwort darf lauten: Das wissen wir noch nicht — hier ist, wie wir es herausfinden würden.\n5 Hört den anderen Pitches zu und notiert je Team einen Satz: Was hat der besser gemacht als wir?\n6 Tragt nach dem Pitch nach, was im Gespräch aufgefallen ist. Das ist erfahrungsgemäß das Nützlichste am ganzen Semester.\n\nZeit · 10 Min Ablauf und Kriterien · 60 Min vier Pitches à zehn Minuten plus fünf Minuten Rückfragen · 15 Min Entscheidung und Begründung · 5 Min Abschluss",
+    "artefakt": "Der Team-Pitch am Fallbetrieb, zehn Minuten frei gehalten, plus die Notizen aus den Rückfragen.",
+    "material": [
+      "Bewertungsraster Pitch",
+      "Merkblatt Why–How–What",
+      "Gesamtdokument des Teams"
+    ],
+    "eigenarbeit": "Arbeitsheft, Einheit 19 — du schreibst Kapitel 12 · Was schiefgehen kann. Meilenstein 5 wird nach dem Pitch abgegeben.",
     "dauer_min": 90,
-    "status": "rohentwurf"
+    "status": "fertig"
   }
 ]

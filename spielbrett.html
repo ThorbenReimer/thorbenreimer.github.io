@@ -74,7 +74,7 @@ main{flex:1;padding:14px;max-width:1560px;width:100%;margin:0 auto}
 }
 .scenetitle{-webkit-user-select:none;user-select:none;position:absolute;top:16px;left:18px;right:18px;pointer-events:none}
 .scenetitle .k{font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:var(--accent);font-weight:700}
-.scenetitle .r{font-family:var(--head);font-size:23px;color:#fff;margin-top:3px}
+.scenetitle .rm{font-family:var(--head);font-size:23px;color:#fff;margin-top:3px}
 .hint{position:absolute;left:0;right:0;bottom:14px;text-align:center;pointer-events:none}
 .hint span{display:inline-block;background:rgba(22,30,46,.88);border:1px solid var(--sep);
   border-radius:999px;padding:9px 20px;color:var(--light);font-size:14px}
@@ -138,14 +138,32 @@ main{flex:1;padding:14px;max-width:1560px;width:100%;margin:0 auto}
 .auf p{margin:0;font-size:14px;line-height:1.5;color:var(--muted)}
 
 /* ---------- Karten ---------- */
-.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;align-items:start}
 .card{background:var(--mid);border:1px solid var(--sep);border-radius:12px;padding:16px;
   border-left:4px solid var(--accent)}
+.card{display:flex;flex-direction:column}
+.card .kopf{display:flex;gap:13px;align-items:center;margin-bottom:12px}
+.card .bild{width:66px;height:66px;flex:0 0 66px;border-radius:50%;object-fit:cover;
+  object-position:50% 22%;border:2px solid var(--sep);background:var(--bg);display:block}
+.card .bild.ini{display:flex;align-items:center;justify-content:center;font-family:var(--head);
+  font-size:22px;color:var(--light);background:var(--bg)}
+.card .kopf>div{min-width:0}
+.card .who{margin-top:auto}
 .card h3{font-family:var(--head);font-size:19px;color:#fff;margin:0 0 2px}
 .card .role{color:var(--light);font-size:13px;margin-bottom:10px}
 .card ul{margin:0;padding-left:18px;font-size:14px;line-height:1.55}
 .card li{margin-bottom:4px}
 .card .where{margin-top:12px;font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px}
+.card .ivbtn{margin-top:13px;align-self:flex-start;background:transparent;color:var(--light);
+  border:1px solid var(--sep);border-radius:9px;padding:7px 13px;font-size:13px;cursor:pointer;
+  font-family:inherit}
+.card .ivbtn:hover{border-color:var(--accent);color:#fff}
+.card .iv{margin-top:12px;border-top:1px solid var(--sep);padding-top:12px;font-size:14px;
+  line-height:1.62;color:var(--body);max-height:300px;overflow-y:auto}
+.card .iv p{margin:0 0 10px}
+.card .iv p:last-child{margin-bottom:0}
+.card .iv .q{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.8px;
+  margin-bottom:9px}
 .ev{background:var(--mid);border:1px solid var(--sep);border-radius:12px;cursor:pointer;
   min-height:165px;display:flex;flex-direction:column;justify-content:center;
   align-items:center;text-align:center;padding:22px}
@@ -185,6 +203,8 @@ td.note{color:var(--light);min-width:56px}
 .legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;font-size:13px;color:var(--muted)}
 .legend i{display:inline-block;width:13px;height:13px;border-radius:3px;margin-right:7px;vertical-align:-2px}
 .note-txt{font-size:13px;color:var(--muted);line-height:1.55;margin-top:14px;max-width:820px}
+.note-txt a{color:var(--light);text-decoration:underline;text-underline-offset:2px}
+.note-txt a:hover{color:#fff}
 
 .codes{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:8px;margin-top:12px}
 .codes div{background:var(--mid);border:1px solid var(--sep);border-radius:8px;padding:9px 11px;font-size:14px}
@@ -216,6 +236,37 @@ footer{border-top:1px solid var(--sep);padding:14px 18px;font-size:12px;color:va
 .mlist li{margin-bottom:3px}
 .d{display:inline-block;width:8px;height:8px;border-radius:50%;flex:none}
 .d-offen{background:var(--muted)} .d-arbeit{background:var(--gelb)} .d-fertig{background:var(--gruen)}
+/* ---------- v13: Auftrag im neuen Format ---------- */
+.auftrag .einl{margin:0 0 12px;line-height:1.62}
+.auftrag ol{margin:0;padding-left:0;list-style:none;counter-reset:az}
+.auftrag ol li{counter-increment:az;position:relative;padding-left:30px;
+  margin-bottom:9px;line-height:1.58}
+.auftrag ol li::before{content:counter(az);position:absolute;left:0;top:1px;
+  width:21px;height:21px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:12px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;font-variant-numeric:tabular-nums}
+.auftrag .zeit{margin:14px 0 0;padding-top:11px;border-top:1px solid var(--sep);
+  font-size:12.5px;color:var(--muted);line-height:1.6}
+.auftrag .zeit b{color:var(--light);font-weight:600}
+/* Vorlagen-Stelle */
+.vorlagen{margin-top:16px;border-top:1px solid var(--sep);padding-top:15px}
+.vorlagen ul{margin:8px 0 0;padding-left:18px;font-size:13.5px;line-height:1.6}
+.vorlagen li{margin-bottom:4px}
+.vorlagen .tlink{display:inline-flex;align-items:center;gap:7px;margin-top:11px;
+  background:transparent;border:1px solid var(--sep);border-radius:9px;
+  padding:8px 13px;font-size:13px;color:var(--light);cursor:pointer;
+  text-decoration:none;font-family:inherit}
+.vorlagen .tlink:hover{border-color:var(--accent);color:#fff}
+.vorlagen .tlink[aria-disabled="true"]{opacity:.45;cursor:default}
+.vorlagen .tlink[aria-disabled="true"]:hover{border-color:var(--sep);color:var(--light)}
+/* Muster-Hinweis */
+.muster{margin-top:12px;font-size:12.5px;color:var(--muted);line-height:1.6;
+  background:rgba(55,138,221,.08);border-left:2px solid var(--accent);
+  border-radius:0 8px 8px 0;padding:10px 13px}
+.muster b{color:var(--light);font-weight:600}
+/* Fiktiv-Band */
+.fiktiv{background:rgba(217,165,33,.13);border-bottom:1px solid rgba(217,165,33,.35);
+  color:#E8C566;font-size:12.5px;padding:7px 18px;text-align:center;letter-spacing:.2px}
 .abg{margin-top:18px;border-top:1px solid var(--sep);padding-top:16px}
 .seg{display:flex;gap:6px;margin:8px 0 12px;flex-wrap:wrap}
 .seg button{flex:1 1 96px;min-height:44px;border-radius:8px;border:1px solid var(--sep);
@@ -262,7 +313,8 @@ table.mx{min-width:840px}
 .card2{position:relative;padding-bottom:0}
 @media(min-width:981px){.taskpanel{height:min(60vh,580px)}}
 .navbtns{position:sticky;bottom:0;z-index:2;background:var(--mid);
-  margin-top:20px;padding:13px 0 20px;border-top:1px solid var(--sep)}
+  margin-top:22px;padding:13px 0 20px;border-top:1px solid var(--sep)}
+.auftrag .zeit{padding-bottom:2px}
 
 /* ---------- v7: Einzelkonto statt Teamverwaltung ---------- */
 .kontogrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:11px}
@@ -322,13 +374,14 @@ table.mx{min-width:840px}
     &nbsp; <span class="badge" id="modebadge">Teilnehmer</span></div>
 </header>
 
+<div class="fiktiv">Musterbach Kunststofftechnik GmbH ist ein erfundener Betrieb.
+  Alle Personen, Zahlen und Dokumente sind für dieses Modul geschrieben.</div>
+
 <nav role="tablist">
   <button role="tab" aria-selected="true" data-t="unit">Einheit</button>
   <button role="tab" aria-selected="false" data-t="plan">Spielbrett</button>
   <button role="tab" aria-selected="false" data-t="leute">Die Belegschaft</button>
-  <button role="tab" aria-selected="false" data-t="fort">Fortschritt</button>
   <button role="tab" aria-selected="false" data-t="karten" id="tab-karten" hidden>Ereigniskarten</button>
-  <button role="tab" aria-selected="false" data-t="punkte" id="tab-punkte" hidden>Punktestand</button>
   <button role="tab" aria-selected="false" data-t="codes" id="tab-codes" hidden>Freischaltcodes</button>
 </nav>
 
@@ -345,7 +398,7 @@ table.mx{min-width:840px}
   <div class="unit" id="unit">
     <div class="stage" id="stage">
       <svg id="scene" viewBox="0 0 1000 660" role="img" aria-label="Szene"></svg>
-      <div class="scenetitle"><div class="k" id="s-kick">Aufgabe 1</div><div class="r" id="s-room">Vor dem Werkstor</div></div>
+      <div class="scenetitle"><div class="k" id="s-kick">Aufgabe 1</div><div class="rm" id="s-room">Vor dem Werkstor</div></div>
       <div class="hint" id="hintbox"><span id="hint">Tippen, um den Auftrag zu öffnen</span></div>
     </div>
     <aside class="taskpanel" id="taskpanel">
@@ -357,38 +410,30 @@ table.mx{min-width:840px}
         <p class="ziel" id="i-ziel" hidden>—</p>
         <div class="begriffe" id="i-begriffe" hidden></div>
         <p class="lead" id="i-text">—</p>
-        <div class="auftrag"><span class="lbl">Der Auftrag</span><p id="i-auftrag">—</p></div>
-        <div class="meta">
-          <div><span class="lbl">Um wen es geht</span><p id="i-wer">—</p></div>
-          <div><span class="lbl">Zeit</span><p id="i-zeit">60–75 Minuten in der Gruppe</p></div>
+        <div class="auftrag"><span class="lbl">Der Auftrag</span><div id="i-auftrag">—</div></div>
+        <div class="muster" id="i-muster" hidden></div>
+        <div class="vorlagen" id="i-vorlagen" hidden>
+          <span class="lbl">Material für heute</span>
+          <ul id="i-vorlagenliste"></ul>
+          <a class="tlink" id="i-teams" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor"
+              stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M14 3h7v7"/><path d="M10 14 21 3"/>
+              <path d="M21 14v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h6"/></svg>
+            Vorlagen in Teams öffnen</a>
         </div>
-        <div class="meta" style="border:0;padding-top:0;margin-top:12px;grid-template-columns:1fr">
-          <div><span class="lbl">Das kommt in deine Arbeitsdatei</span><p id="i-baustein">—</p></div>
-        </div>
-        <div class="abg">
-          <span class="lbl">Abgabe · <span id="a-team">—</span></span>
-          <div class="seg" id="a-seg">
-            <button type="button" data-st="offen"><span class="d d-offen"></span>offen</button>
-            <button type="button" data-st="arbeit"><span class="d d-arbeit"></span>in Arbeit</button>
-            <button type="button" data-st="fertig"><span class="d d-fertig"></span>abgegeben</button>
+        <div class="meta" style="grid-template-columns:1fr">
+          <div>
+            <span class="lbl">Das hältst du im Kursnotizbuch fest</span>
+            <p id="i-baustein">—</p>
+            <p class="tiny" style="margin-top:8px">Dein Kursnotizbuch liegt in Teams (OneNote),
+              im Abschnitt dieser Einheit. Am Ende des Semesters gibst du es als PDF mit ab.</p>
           </div>
-          <textarea id="a-notiz" placeholder="Kurz festhalten, was ihr abgegeben habt."></textarea>
-          <div class="abgzeile">
-            <input type="file" id="a-datei" class="sr">
-            <button type="button" class="minibtn" id="a-dbtn">Datei vermerken</button>
-            <span class="fname" id="a-dname"></span>
-            <button type="button" class="minibtn" id="a-dweg" hidden>entfernen</button>
-          </div>
-          <div class="stamp" id="a-stamp" hidden></div>
-          <p class="tiny">Vermerkt wird nur der Dateiname — die Abgabe selbst läuft über Teams.</p>
         </div>
-
-        <div class="meta" id="i-matbox" hidden style="border:0;padding-top:16px;margin-top:16px;grid-template-columns:1fr">
-          <div><span class="lbl">Material</span><ul class="mlist" id="i-material"></ul></div>
+        <div class="meta" style="margin-top:16px;padding-top:16px;grid-template-columns:1fr">
+          <div><span class="lbl">Nach der Stunde · dein Arbeitsheft</span><p id="i-heft">—</p></div>
         </div>
-        <div class="meta" id="i-eigenbox" hidden style="border:0;padding-top:0;margin-top:14px;grid-template-columns:1fr">
-          <div><span class="lbl">Bis zur nächsten Einheit</span><p id="i-eigen">—</p></div>
-        </div>
+        <div style="height:8px"></div>
 
         <div class="navbtns">
           <button id="prev">← Aufgabe zurück</button>
@@ -460,67 +505,12 @@ table.mx{min-width:840px}
   <div class="aufliste" id="aufliste"></div>
 </section>
 
-<section class="panel" id="p-leute" hidden><div class="cards" id="leute"></div></section>
-
-<section class="panel" id="p-fort" hidden>
-  <div class="planwrap" style="padding:18px;margin-bottom:16px">
-    <span class="lbl">Mein Konto</span>
-    <div class="kontogrid">
-      <div>
-        <span class="lbl" style="margin-top:0">Dein Name</span>
-        <input id="k-name" placeholder="Vorname Nachname" autocomplete="name">
-      </div>
-      <div id="k-teambox" hidden>
-        <span class="lbl" style="margin-top:0">Pitch-Team (ab Aufgabe 15)</span>
-        <input id="k-team" placeholder="Teamname">
-      </div>
-      <div id="k-mitbox" hidden>
-        <span class="lbl" style="margin-top:0">Wer noch im Team ist</span>
-        <input id="k-mit" placeholder="Namen, durch Komma getrennt">
-      </div>
-    </div>
-    <p class="tiny">Bei Aufgabe 1 bis 14 werden die Trios in jeder Einheit neu gelost — deine
-      Arbeitsdatei bleibt trotzdem deine. Deshalb steht hier dein Name, nicht der der Gruppe.
-      Ab Aufgabe 15 kommt das feste Pitch-Team dazu.</p>
-  </div>
-
-  <div class="planwrap" style="padding:18px">
-    <span class="lbl">Fortschritt und Meilensteine · <span id="f-wer">—</span></span>
-    <div id="f-bars" style="margin-top:13px"></div>
-  </div>
-
-  <div class="wliste" id="f-liste"></div>
-  <div class="legend">
-    <span><i style="background:var(--muted)"></i>offen</span>
-    <span><i style="background:var(--gelb)"></i>in Arbeit</span>
-    <span><i style="background:var(--gruen)"></i>abgegeben</span>
-  </div>
-  <div class="tools" style="margin-top:20px;border-top:1px solid var(--sep);padding-top:16px">
-    <input type="file" id="jsonfile" accept=".json,application/json" class="sr">
-    <button type="button" class="minibtn" id="btn-json">Inhalte laden (wochen.json)</button>
-    <button type="button" class="minibtn" id="btn-jsonweg">Auf mitgelieferten Stand zurück</button>
-    <span class="tiny" id="jsoninfo" style="margin:0"></span>
-  </div>
-  <div class="tools" style="margin-top:14px">
-    <input type="file" id="standfile" accept=".json,application/json" class="sr">
-    <button type="button" class="minibtn" id="btn-save">Stand sichern</button>
-    <button type="button" class="minibtn" id="btn-load">Stand laden</button>
-    <span class="tiny" id="standinfo" style="margin:0"></span>
-  </div>
-  <div class="note-txt">
-    <b style="color:var(--body)">Wo liegt was.</b> Dein Name, deine Abgaben und dein Fortschritt liegen im Speicher
-    dieses Geräts und dieses Browsers. Sie überstehen das Schließen des Tabs und einen Neustart —
-    aber sie wandern nicht mit auf ein anderes Gerät und sie sind nicht der Beleg.
-    <b style="color:var(--body)">Verbindlich sind Teams und das Kursnotizbuch.</b>
-    Was hier steht, ist deine Merkhilfe.<br><br>
-    <b style="color:var(--body)">Gewertet wird fünfmal.</b> Nach jeder Aufgabe gibt es nur einen
-    kurzen Bericht ohne Punkte. Die bewertete Transferarbeit fällt an den fünf Meilensteinen an —
-    oben siehst du, auf welchen du gerade einzahlst.<br><br>
-    <b style="color:var(--body)">Damit nichts verloren geht:</b> die Seite einmal auf den
-    Home-Bildschirm legen und regelmäßig öffnen — Safari räumt den Speicher von Seiten auf,
-    die sieben Tage lang nicht besucht wurden. Vor einem Gerätewechsel oder in den Ferien
-    einmal „Stand sichern" und die Datei aufheben.
-  </div>
+<section class="panel" id="p-leute" hidden>
+  <p class="note-txt" style="margin:0 0 14px">Die vier Menschen im Betrieb. Jeder hat ein
+    Gespräch gegeben — aufklappen und lesen, am Beamer oder auf dem eigenen Gerät. Alles,
+    was ihr über Musterbach wisst, steht hier und auf
+    <a href="musterbach.html" target="_blank" rel="noopener">der Homepage der Firma</a>.</p>
+  <div class="cards" id="leute"></div>
 </section>
 
 <section class="panel" id="p-karten" hidden>
@@ -528,28 +518,20 @@ table.mx{min-width:840px}
   <div class="cards" id="karten"></div>
 </section>
 
-<section class="panel" id="p-punkte" hidden>
-  <div class="tools" style="margin:0 0 12px">
-    <label>Punkte je Aufgabe maximal <input id="maxw" type="number" min="1" max="20" value="6"></label>
-    <button id="addrow" class="primary">Zeile hinzufügen</button>
-    <button id="sortrow">Nach Gesamt sortieren</button>
-    <button id="notesbtn">Noten einblenden</button>
-    <button id="clearrow">Alles leeren</button>
-  </div>
-  <div class="scroller"><table><thead id="thead"></thead><tbody id="tbody"></tbody></table></div>
-  <div class="legend">
-    <span><i style="background:var(--gruen)"></i>guter Bereich — ab 65 % der Aufgabenpunkte</span>
-    <span><i style="background:var(--gelb)"></i>bestanden — 50 bis 64 %</span>
-    <span><i style="background:var(--rot)"></i>nicht bestanden — unter 50 %</span>
-  </div>
-  <div class="note-txt">Es werden nur die Aufgaben angezeigt, die bereits gelaufen sind. Die Gesamtspalte färbt
-    sich nach demselben Maßstab. Notenwerte sind ausgeblendet — die Ampel genügt als Rückmeldung.</div>
-</section>
-
 <section class="panel" id="p-codes" hidden>
   <p class="note-txt" style="margin:0 0 6px">Diese Codes gibst du zu Beginn jeder Einheit an die Teilnehmer
     weiter. Erst dann können sie die Aufgabe in ihrer eigenen Kopie öffnen.</p>
   <div class="codes" id="codelist"></div>
+
+  <div class="tools" style="margin-top:22px;border-top:1px solid var(--sep);padding-top:16px">
+    <input type="file" id="jsonfile" accept=".json,application/json" class="sr">
+    <button type="button" class="minibtn" id="btn-json">Inhalte laden (wochen.json)</button>
+    <button type="button" class="minibtn" id="btn-jsonweg">Auf mitgelieferten Stand zurück</button>
+    <span class="tiny" id="jsoninfo" style="margin:0"></span>
+  </div>
+  <p class="note-txt" style="margin-top:10px">Liegt <code>wochen.json</code> neben der Seite
+    auf dem Server, wird sie beim Öffnen von selbst geladen. Der Knopf ist nur zum Ausprobieren
+    einer neuen Fassung, bevor du sie hochlädst.</p>
 </section>
 
 </main>
@@ -608,82 +590,82 @@ const WOHIN = {aussen:"bleibt ihr noch draußen",empfang:"geht es in den Empfang
    und bleibt hier — nicht im Inhalt.
    =========================================================== */
 const BRETT_BASIS = [
- {n:1,r:"aussen",t:"Der Auftrag",w:"Noch niemand",c:"h:760a70fef470f5ca",
-  x:"Ihr steht vor dem Tor und wisst nichts. Genau so beginnt jedes Beratungsprojekt. Heute: die Spielregeln, der Betrieb — und die Landkarte BGM aus Arbeitsschutz, BEM und BGF.",
-  a:"Legt euer Projektbuch an. Beschreibt in genau einem Satz, was das Problem dieses Betriebs sein könnte — mit dem, was ihr von draußen sehen könnt. Notiert dazu drei Fragen, die ihr dem Geschäftsführer als Erstes stellen würdet.",
-  b:"Deckblatt und Auftragsverständnis: Wer ist der Kunde, was ist das Problem in einem Satz?"},
- {n:2,r:"empfang",t:"Begriffe schärfen",w:"Der erste Eindruck",c:"h:375aaac43755da04",
-  x:"BGF oder BGM? Prävention auf drei Stufen. Und der Satz, der das ganze Semester trägt: Verhältnis vor Verhalten.",
-  a:"Ordnet eure Person ein: Was an ihrer Situation ist Verhalten, was ist Verhältnis? Legt für jede Zuordnung fest, wer sie überhaupt ändern könnte — die Person selbst oder der Betrieb.",
-  b:"Glossar plus Ersteinschätzung der vier Personen: Was ist Verhalten, was ist Verhältnis?"},
- {n:3,r:"chef",t:"Der Skeptiker im Chefsessel",w:"Markus Reiser, 54",c:"h:3761ae9d776d732d",
-  x:"Reiser hält BGM für Sozialromantik. Warum es sich rechnet: Demografie, Fehlzeiten, Präsentismus, Fachkräftebindung — und die Einwände, die wirklich kommen.",
-  a:"Baut ein Argumentationsblatt für Reiser, maximal eine Seite. Drei Argumente, jedes mit einer Zahl oder einem belegbaren Effekt. Dann drei Minuten Rollenspiel: einer ist Reiser und wehrt sich.",
-  b:"Argumentationsblatt für die Geschäftsführung, maximal eine Seite."},
- {n:4,r:"chef",t:"Rechtsrahmen und Geldquellen",w:"Markus Reiser, 54",c:"h:375a86f5aeeb8e67",
-  x:"Was Pflicht ist und was freiwillig: ArbSchG, Gefährdungsbeurteilung inklusive psychischer Belastung, BEM. Und wer zahlt: § 20b SGB V, Krankenkassen, Steuerfreibetrag.",
-  a:"Trennt für euren Betrieb sauber: Was muss Reiser ohnehin tun, was ist freiwillig, und wofür gibt es Geld von wem? Schreibt zu jeder Geldquelle eine Zeile, was sie konkret fordert.",
-  b:"Finanzierungs- und Rechtsseite: Was ist Pflicht, was fördert wer?"},
+ {n:1,r:"aussen",t:"Der Auftrag: Was BGM ist und was nicht",w:"Noch niemand",c:"h:760a70fef470f5ca",
+  x:"BGM ist das Dach über drei Säulen: Arbeits- und Gesundheitsschutz und BEM sind Pflicht, BGF ist freiwillig. BGF ist damit ein Teil von BGM und nicht sein Synonym — wer beides verwechselt, verkauft Einzelmaßnahmen als Konzept. Ohne dieses Dach verpuffen Angebote: keine Ziele, keine Verantwortung, keine Wirkungsmessung. Und der Betrieb unterscheidet sich vom einzelnen Klienten in zwei Punkten — man erreicht Menschen, die von sich aus nie kämen, und man kann Bedingungen verändern statt nur Verhalten.",
+  a:"Ihr steht vor dem Werkstor und wisst nichts. Genau so beginnt jedes Beratungsprojekt: Fassade, Parkplatz, Homepage — daraus muss eine erste Vermutung werden. Heute geht es nicht darum, recht zu haben, sondern darum, eure Vermutung an etwas festzumachen.\n\n1 Legt euren Team-Steckbrief an: Wer ist im Team, wer übernimmt welche Rolle?\n2 Geht auf die Homepage von Musterbach und lest den Einseiter. Sammelt, was ihr erfahrt: Größe, Tätigkeiten, Schichten, Altersstruktur.\n3 Schreibt euer Auftragsverständnis in genau einem Satz — was soll dieser Betrieb am Ende von euch bekommen?\n4 Notiert drei Fragen, die ihr Markus Reiser als Erstes stellen würdet.\n5 Formuliert eine erste Hypothese, was in diesem Betrieb los sein könnte. Schreibt dazu, woran ihr sie festmacht.\n6 Tragt eure Hypothese im Plenum vor. Zwei Minuten, ohne Blatt.\n\nZeit · 20 Min Planspiel, Regeln und Einrichtung · 20 Min Input drei Säulen · 30 Min Teamarbeit · 15 Min Hypothesen im Plenum · 5 Min Ergebnissicherung",
+  b:"Team-Steckbrief, Auftragsverständnis in einem Satz, drei Fragen an die Geschäftsführung und eine erste Hypothese mit Beleg."},
+ {n:2,r:"empfang",t:"Verhalten oder Verhältnis: der entscheidende Schnitt",w:"Der erste Eindruck",c:"h:375aaac43755da04",
+  x:"Verhaltensprävention setzt am Menschen an, Verhältnisprävention an den Bedingungen — und die Reihenfolge entscheidet über die Wirkung. Wer nur am Verhalten schraubt, produziert Rückfälle und schiebt die Verantwortung auf die Beschäftigten ab. BGF ist dabei primärpräventiv: sie setzt an, bevor Symptome da sind. Und neben dem Fehlen gibt es das Anwesendsein trotz Krankheit — Präsentismus taucht in keiner Statistik auf und kostet meist mehr als Absentismus.",
+  a:"Vier Menschen arbeiten bei Musterbach, und jeder erlebt denselben Betrieb anders. Heute bekommt jedes Team einen von ihnen — und ist danach die einzige Quelle im Raum für diese Person. Wer bei den anderen nicht zuhört, hat am Ende ein Profil statt vier.\n\n1 Hört das Interview eurer Person an. Der Text steht im Reiter Die Belegschaft. Macht Notizen, während ihr hört.\n2 Stellt eure Person den anderen vor: Wer ist das, was tut sie den ganzen Tag, was ist daran schwer? Fünf Minuten.\n3 Schreibt bei den anderen drei Vorstellungen mit. Diese Profile kommen nicht wieder.\n4 Sortiert für eure Person in zwei Spalten: Was liegt am Verhalten, was liegt an den Bedingungen?\n5 Schreibt zu jeder Zeile auf der Verhältnis-Seite dazu, wer in diesem Betrieb es tatsächlich in der Hand hätte.\n\nZeit · 15 Min Input · 15 Min Interview hören und auswerten · 25 Min Vorstellungsrunde, vier mal fünf Minuten · 25 Min Zwei-Spalten-Einordnung · 10 Min Ergebnissicherung",
+  b:"Notizen zu allen vier Personen und die Zwei-Spalten-Einordnung für die eigene Person, mit Zuständigkeit je Verhältnis-Zeile."},
+ {n:3,r:"chef",t:"Warum ein Betrieb Geld dafür ausgibt",w:"Markus Reiser, 56",c:"h:3761ae9d776d732d",
+  x:"Eine Firma gibt kein Geld aus, weil Gesundheit schön ist. 2025 lag der Krankenstand bei 23,3 Fehltagen je Beschäftigtem; 3,3 Prozent der Fälle dauern länger als sechs Wochen und verursachen über 40 Prozent aller Fehltage. Ein Fehltag kostet rund 144 Euro Produktionsausfall und rund 249 Euro Bruttowertschöpfung. Für Musterbach heißt das: 120 Beschäftigte mal 23,3 Tage sind rund 2.800 Ausfalltage, bei 144 Euro also rund 403.000 Euro im Jahr — fünf Prozent weniger sind 140 Tage und rund 20.000 Euro. Fünf Einwände kommen wirklich: keine Zeit, kein Geld, bringt nichts, interessiert niemanden, Datenschutz.",
+  a:"Reiser ist nicht gegen BGM. Er ist gegen Geld, das nicht zurückkommt. Aber er ist nicht einer, sondern vier: Jedes Team bekommt heute eine andere Grundhaltung desselben Chefs und kennt die der anderen nicht. Euer Ziel ist nicht, ihn zu überzeugen — euer Ziel ist ein Argument, das bei genau diesem Reiser zieht.\n\n1 Zieht eure Positionskarte und lest sie. Klärt zuerst: Was fürchtet dieser Chef wirklich, hinter dem Satz, den er sagt?\n2 Füllt das Argumentationsblatt aus — alle sechs Felder: was er wirklich will · euer EINES Argument · woran ihr es festmacht · der Weg (Verhältnis oder Verhalten, Pflicht oder Kür) · wer mitzahlt · sein stärkster Einwand und eure Antwort.\n3 Nehmt genau ein Argument. Nicht vier. Wer vier bringt, hat keins.\n4 Tandem, erste Runde: Ihr tragt eurem Partnerteam vor, fünf Minuten. Danach bekommt es eure Positionskarte und spielt diesen Reiser — es hält dagegen, fünf Minuten.\n5 Tandem, zweite Runde: Tauscht die Rollen.\n6 Im Plenum ein Satz je Team: Welcher Einwand hat euch kalt erwischt?\n\nZeit · 10 Min Einführung und Positionen verteilen · 30 Min Argumentationsblatt · 25 Min Tandem · 15 Min Plenum · 10 Min Auflösung, die vier Positionen nebeneinander",
+  b:"Vier Argumentationsblätter, eins je Grundhaltung — alle für denselben Chef."},
+ {n:4,r:"chef",t:"Pflicht, Kür und wer dafür zahlt",w:"Markus Reiser, 56",c:"h:375a86f5aeeb8e67",
+  x:"Dasselbe Drei-Säulen-Bild wie in Einheit 1, jetzt mit Paragrafen und Beträgen daneben. Das Arbeitsschutzgesetz verpflichtet zur Gefährdungsbeurteilung, nach § 5 ausdrücklich auch der psychischen Belastung. BEM ist Pflicht ab mehr als sechs Wochen Arbeitsunfähigkeit innerhalb eines Jahres, § 167 SGB IX. Alles darüber hinaus ist freiwillig — und genau dort arbeiten externe Anbieter. Vier Wege zahlen mit: Krankenkassen nach § 20b SGB V und dem Leitfaden Prävention, die Unfallversicherungsträger mit in der Regel kostenfreier Beratung, und der Steuerfreibetrag nach § 3 Nr. 34 EStG mit 600 Euro je Arbeitnehmer und Jahr — nur zertifiziert und nur zusätzlich zum Arbeitslohn.",
+  a:"„Pflicht oder Kür\" klingt nach einer Frage, ist aber vier Fragen: In der Halle gilt anderes als im Lager und wieder anderes im Büro. Deshalb trennt ihr heute nicht pauschal, sondern Bereich für Bereich. Was Pflicht ist, gehört nie in euer Angebot — das schuldet der Betrieb ohnehin.\n\n1 Geht auf die Homepage des Fallbetriebs. Schaut euch an, was diese Firma hat: Maschinen, Schichten, Lager, Büro, Altersstruktur.\n2 Füllt das Pflicht-Kür-Raster für vier Bereiche getrennt aus — Produktion/Spritzguss (Lärm, Gehörschutz, Maschinen, Hitze, Stehen, Schicht) · Lager/Logistik (Heben, Tragen, Kommissionieren, Flurförderzeuge) · Verwaltung/Auftragsbearbeitung (Bildschirmarbeit, Arbeitsplatzgestaltung, Großraum, psychische Belastung) · über alle Bereiche (Gefährdungsbeurteilung, BEM, Ersthelfer, Betriebsarzt, Unterweisungen).\n3 Stellt zu jedem Bereich zwei Fragen: Was muss der Betrieb hier auf jeden Fall? Was wäre hier Kür — und wer könnte es zahlen?\n4 Recherchiert eure Geldquelle in die Tiefe. Je Team eine: Krankenkasse · Unfallversicherungsträger · Steuerfreibetrag § 3 Nr. 34 EStG · Leitfaden Prävention.\n5 Tragt vor, was eure Quelle konkret verlangt — Bedingungen, Grenzen, Stolperstellen.\n6 Kreuzcheck: Gebt euer Raster dem Nachbarteam. Wo steht bei ihm Kür, wo bei euch Pflicht steht?\n\nZeit · 10 Min gemeinsames Raster an der Tafel · 20 Min Input · 25 Min Raster je Bereich füllen · 15 Min Geldquelle recherchieren · 15 Min Vorträge · 5 Min Kreuzcheck",
+  b:"Pflicht-Kür-Raster des Fallbetriebs nach vier Bereichen und ein Steckbrief je Geldquelle."},
  {n:5,r:"projekt",t:"Belastung ist nicht Beanspruchung",w:"Alle vier",c:"h:37657a1d909da07d",
-  x:"Gleiche Schicht, völlig unterschiedliche Wirkung. Belastungs-Beanspruchungs-Modell, Anforderungs-Kontroll-Modell, bio-psycho-sozial.",
-  a:"Erstellt das Belastungsprofil eurer Person nach dem Belastungs-Beanspruchungs-Modell. Benennt anschließend die eine Stellschraube, die bei ihr am meisten bewegen würde — und begründet sie mit dem Modell.",
-  b:"Belastungsprofil der zugelosten Person."},
+  x:"Belastung ist das, was von außen auf einen Menschen einwirkt. Beanspruchung ist das, was daraus in ihm wird — je nach Voraussetzungen völlig verschieden. Drei Modelle beschreiben das: das Belastungs-Beanspruchungs-Modell an Halina Nowak, das Anforderungs-Kontroll-Modell an Elif Yılmaz, nach dem Stress aus hoher Anforderung ohne Handlungsspielraum entsteht, und das bio-psycho-soziale Modell an Nina Kraus als Gegenentwurf zur rein körperlichen Betrachtung. Dazu die Gegenkraft: Ressourcen federn Belastung ab.",
+  a:"Dieselbe Schicht, zwei Menschen, zwei völlig verschiedene Abende. Heute baut ihr das Belastungsprofil eurer Person und legt dann zwei weitere Modelle als Suchraster darüber. Am Ende steht keine Liste, sondern eine begründete Reihenfolge — und die Begründung ist die Leistung.\n\n1 Baut das Belastungsprofil eurer Person nach Modell 1, dem Belastungs-Beanspruchungs-Modell: zwei getrennte Spalten, links die Belastung, rechts die Beanspruchung. Speist es aus euren Notizen von Einheit 2.\n2 Legt Modell 2 darüber, das Anforderungs-Kontroll-Modell: Wo fehlt eurer Person Handlungsspielraum?\n3 Legt Modell 3 darüber, das bio-psycho-soziale Modell: Welche der drei Ebenen ist bei ihr unbesetzt?\n4 Benennt daraus zwei bis drei Ansatzbereiche.\n5 Priorisiert sie mit den vier Prüffragen, in dieser Reihenfolge: Ist es Pflicht? Pflicht vor Kür. — Wen erreicht es? Verhältnis vor Verhalten, wegen Reichweite und Dauer. — Wo kommt es an? Beanspruchung vor Belastung; nicht wo die Last am größten ist, sondern wo sie den Menschen am stärksten trifft. — Was kostet nichts? Handlungsspielraum zuerst.\n6 Schreibt zu jeder Prüffrage die Quittung dazu: aus welcher Einheit stammt sie? (1 aus Einheit 4 · 2 aus Einheit 2 · 3 und 4 aus heute.)\n\nZeit · 25 Min Input drei Modelle · 25 Min Belastungsprofil · 20 Min Modell 2 und 3 als Suchraster · 15 Min Priorisierung nach den vier Prüffragen · 5 Min Ergebnissicherung",
+  b:"Belastungsprofil der eigenen Person in zwei Spalten und zwei bis drei Ansatzbereiche, priorisiert nach den vier Prüffragen."},
  {n:6,r:"personal",t:"Kennzahlen lesen — und ihnen misstrauen",w:"Die Akten",c:"h:375feee82f238952",
-  x:"Krankenstand, AU-Tage, Altersstruktur, Fluktuation. Was sie zeigen — und was sie verschweigen. Präsentismus taucht in keiner Statistik auf.",
-  a:"Wertet das Kennzahlenblatt aus. Drei Auffälligkeiten benennen, jede mit einer Zahl belegen. Dann eine Hypothese formulieren: Was steckt dahinter — und welche Zahl fehlt euch, um sicher zu sein?",
-  b:"Kennzahlen-Auswertung mit drei Auffälligkeiten und einer Hypothese."},
+  x:"Krankenstand, AU-Tage, Altersstruktur, Fluktuation, Unfallzahlen — jede Zahl sagt etwas anderes. Kurzzeit und Langzeit unterscheiden sich grundlegend: 3,3 Prozent der Fälle dauern länger als sechs Wochen und verursachen über 40 Prozent aller Fehltage, psychische Erkrankungen liegen bei 28,5 Fehltagen je Fall. Dazu die blinden Flecken, die keine Statistik zeigt: Präsentismus, innere Kündigung, Dunkelziffer bei psychischen Belastungen. Quantitative Größen liefern eine Zahl, qualitative eine Einschätzung — man braucht beides. Denn Kennzahlen zeigen, wo etwas ist, nicht warum.",
+  a:"Alle Teams bekommen heute dasselbe Kennzahlenblatt. Die Vielfalt entsteht nicht in den Daten, sondern im Blickwinkel — sonst ist am Ende nichts vergleichbar und es entsteht kein Gesamtbild. Ihr geht denselben Vier-Schritt-Weg: die Zahl, die Auffälligkeit, die Hypothese, die Lücke.\n\n1 Nehmt euren Auswertungsfokus: Team 1 Altersstruktur (Produktion Ø 47, Halina 49 — wer geht in fünf Jahren?) · Team 2 Abteilungsvergleich (Lager 9,4 % gegen Betriebsschnitt 7,2 %) · Team 3 Diagnosegruppen (wo sitzt Muskel-Skelett, wo die Psyche?) · Team 4 Fluktuation (Verwaltung dreimal so hoch wie Produktion).\n2 Findet drei Auffälligkeiten — jede mit der Zahl, an der ihr sie festmacht.\n3 Formuliert genau eine Hypothese: Warum könnte das so sein?\n4 Benennt die Zahl, die fehlt, um eure Hypothese zu prüfen.\n5 Tragt vor. Hört bei den anderen drei mit — euer Fokus ist ein Viertel des Bildes.\n6 Setzt im Plenum zusammen: Welches Bild ergeben die vier Hypothesen gemeinsam?\n\nZeit · 20 Min Input · 30 Min Auswertung im Team · 25 Min Vorstellungsrunde, vier mal gut fünf Minuten · 10 Min Gesamtbild im Plenum · 5 Min Ergebnissicherung",
+  b:"Je Team drei belegte Auffälligkeiten, eine Hypothese und die fehlende Zahl — zusammen das Gesamtbild des Betriebs."},
  {n:7,r:"personal",t:"Fragen, die etwas bringen",w:"Die ganze Belegschaft",c:"h:239f1a602bd141cc",
-  x:"Fragebogenbau, Anonymität, Rücklauf, Datenschutz. Eine schlecht gemachte Befragung ist schlimmer als gar keine.",
-  a:"Baut acht Fragen für eure Person und testet sie am Nachbartrio: Was wird missverstanden, was traut sich niemand zu beantworten? Haltet danach einen Plan B fest, falls die Befragung nicht stattfinden darf.",
-  b:"Eigener Kurzfragebogen — plus ein Plan B ohne Befragung."},
+  x:"Ein Fragebogen ist gebaut, nicht gesammelt: geschlossene und offene Fragen, Skalen, Länge, Reihenfolge. Anonymität und Datenschutz entscheiden über den Rücklauf — und die härteste Grenze ist die kleine Abteilung: Wer in einem Sechs-Personen-Team gleichzeitig nach Alter, Geschlecht und Beschwerden fragt, hat die Anonymität aufgehoben. Zehn bis zwölf Fragen sind das Maß; mit fünf begründet man kein Konzept, über zwölf kostet es Rücklauf. Und eine schlecht gemachte Befragung ist schlimmer als gar keine: sie verbrennt Vertrauen für Jahre.",
+  a:"Ihr bekommt heute keinen Musterbogen, sondern die Bauanleitung. Wer die hat, baut jeden Bogen — für Musterbach und später für jeden eigenen Fall. Getestet wird sofort, und zwar am Nachbarteam: Der beste Test ist jemand, der die Frage zum ersten Mal liest.\n\n1 Erarbeitet gemeinsam den Baukasten: Was muss zwingend in jeden Bogen? (Zweck, Anonymitätszusage, Rücklauffrist, Ansprechpartner, Länge.) Welche Fragetypen gibt es? Was sind die No-Gos?\n2 Baut damit acht Fragen für Musterbach. Mindestens zwei offene.\n3 Tauscht mit dem Nachbarteam und beantwortet dessen Bogen ehrlich.\n4 Gebt Rückmeldung an zwei Punkten: Was habt ihr missverstanden? Welche Frage würdet ihr nicht ehrlich beantworten — und warum?\n5 Überarbeitet eure acht Fragen mit dem, was ihr gehört habt.\n6 Schreibt einen Plan B: Was macht ihr, wenn die Befragung nicht stattfinden darf?\n\nZeit · 25 Min Baukasten gemeinsam · 25 Min acht Fragen bauen · 20 Min Test am Nachbarteam und Rückmeldung · 10 Min überarbeiten · 10 Min Plan B und Ergebnissicherung",
+  b:"Acht getestete Fragen für den Fallbetrieb, überarbeitet nach der Rückmeldung, plus ein Plan B ohne Befragung."},
  {n:8,r:"halle",t:"Hingehen und hinsehen",w:"Halina Nowak, 57",c:"h:22d3e83fb375ac41",
-  x:"Begehung, Gefährdungsbeurteilung, Leitmerkmalmethode. Hier zahlt die Bewegungslehre direkt ein: beobachten heißt zielgerichtet wahrnehmen.",
-  a:"Geht mit einem klaren Beobachtungsauftrag durch das Haus und protokolliert drei Befunde — jeder mit dem, was ihr wirklich gesehen habt, nicht mit dem, was ihr vermutet. Trennt Beobachtung und Bewertung in zwei Spalten.",
-  b:"Begehungsprotokoll mit drei belegten Befunden."},
+  x:"Begehung ist eine Methode, kein Rundgang: Vorbereitung, Beobachtungsauftrag, Protokoll. Sie ist zugleich das Handwerkszeug der Gefährdungsbeurteilung, und für körperliche Belastung gibt es mit der Leitmerkmalmethode ein eigenes Verfahren. Der Anschluss an die Bewegungslehre ist direkt: Beobachten heißt zielgerichtet wahrnehmen, nicht schauen. Wer ohne Auftrag losgeht, sieht das, was ihm ohnehin auffällt.",
+  a:"An sechs Stellen im Haus hängen heute die Arbeitsplätze von Musterbach — als Bild mit Faktenkasten. Die Räume der Schule sind nur die Aufhängeorte; beurteilt wird der Fallbetrieb. Der eigentliche Punkt kommt aber vorher: Ihr schreibt auf, worauf ihr achten wollt, bevor jemand losläuft. Am Ende vergleicht ihr, ob ihr gefunden habt, was ihr gesucht habt.\n\n1 Schreibt vier Leitsätze, einen je Person, nach der Schablone: Ich achte bei ________ auf ________, weil ________. Speist sie aus den Interviews von Einheit 2 und den drei Modellen von Einheit 5.\n2 Geht den Parcours: sechs Stationen, sieben Minuten je Station, Wechsel auf Signal. Jedes Team startet woanders.\n3 Protokolliert an jeder Station zweispaltig — links, was wirklich zu sehen ist, rechts eure Bewertung. Beides getrennt halten.\n4 An Station 5 und 6 gibt es keine zugeordnete Person und keinen Leitsatz. Geht trotzdem hin und merkt, wie viel schwerer das ist.\n5 Wählt drei Befunde aus und bereitet die Begründung vor.\n6 Stellt im Plenum einen Befund vor. Die anderen prüfen: War das Beobachtung oder schon Bewertung?\n7 Beantwortet zum Schluss zwei Fragen — habt ihr gefunden, worauf ihr achten wolltet, oder etwas ganz anderes? Und: Was haben die anderen an derselben Station gesehen, das ihr übersehen habt?\n\nZeit · 15 Min vier Leitsätze schreiben · 45 Min Parcours, sechs Stationen à sieben Minuten · 10 Min drei Befunde auswählen · 20 Min Plenum",
+  b:"Vier Leitsätze, ein zweispaltiges Begehungsprotokoll über sechs Stationen und drei ausgewählte Befunde mit Begründung."},
  {n:9,r:"projekt",t:"Vom Befund zum Ziel",w:"Die Steuerungsgruppe",c:"h:375fcd0d13a4d519",
-  x:"Handlungsbedarf verdichten, Schwerpunkte setzen, SMART-Ziele mit Zwischenzielen. Warum Wirkung erst spät sichtbar wird.",
-  a:"Formuliert ein Hauptziel und drei Zwischenziele, jedes mit einem Messkriterium und einem Termin. Prüft am Ende gegenseitig: Woran genau würdet ihr in zwölf Monaten erkennen, dass ihr es erreicht habt?",
-  b:"Zielblatt: ein Hauptziel, drei Zwischenziele, je ein Messkriterium."},
+  x:"Aus einem Dutzend Auffälligkeiten wird erst dann ein Konzept, wenn Schwerpunkte gesetzt sind. Ziele werden SMART formuliert und brauchen Zwischenziele, weil Effekte erst mittel- bis langfristig sichtbar werden. Drei Ebenen liegen übereinander: Das Strukturziel fragt, was da ist — sofort prüfbar. Das Prozessziel fragt, ob es genutzt wird — nach Wochen prüfbar. Das Ergebnisziel fragt, ob sich etwas geändert hat — nach einem Jahr. Wer nur Ergebnisziele schreibt, steht im Dezember mit leeren Händen da.",
+  a:"Heute bekommen alle Teams dieselben drei Befunde. Das bricht bewusst das Muster der letzten Einheiten — denn die Kompetenz, um die es geht, ist die begründete Reihenfolge, und die lässt sich nur vergleichen, wenn alle von derselben Grundlage ausgehen.\n\n1 Lest die drei Befunde: A das Lager (täglich Heben aus Bodenhöhe, Krankenstand 9,4 %, 14 Betroffene) · B die Verwaltung (Bildschirmarbeitsplätze nicht anpassbar, dreifache Fluktuation, 4 Betroffene) · C die Rückkehr (kein Rückkehrgespräch nach langer Krankheit, potenziell alle 120).\n2 Schreibt je Befund genau ein Ziel. Für jedes Ziel alle fünf Pflichtfelder: Ziel in einem Satz · Ebene (Struktur, Prozess oder Ergebnis) · Messkriterium, woran genau, ohne zu diskutieren · Termin als Datum · wer prüft, als Rolle mit Namen, nicht als Abteilung.\n3 Achtet auf die Auflage: Eure drei Ziele müssen mindestens zwei verschiedene Ebenen abdecken.\n4 Legt die Reihenfolge fest und begründet sie in drei Sätzen — warum die anderen beiden warten.\n5 Kreuzprüfung: Tauscht die Zielblätter. Kreuzt zu jedem Ziel an, ob Musterbach in zwölf Monaten ohne neue Erhebung feststellen könnte, ob es erreicht ist. Bei Nein ein Satz, woran es scheitert.\n6 Im Plenum die eine Frage: Wer hat Befund C nicht zuerst — und warum nicht?\n\nZeit · 10 Min Befunde lesen und Zielblatt erklären · 30 Min drei Ziele bauen · 15 Min Reihenfolge begründen · 20 Min Kreuzprüfung · 15 Min Plenum",
+  b:"Drei Ziele mit je fünf Pflichtfeldern, eine begründete Reihenfolge und ein ausgefülltes Kreuzprüfungs-Formular vom Nachbarteam."},
  {n:10,r:"projekt",t:"Maßnahmen wählen statt sammeln",w:"Die Steuerungsgruppe",c:"h:3758d8057c9d882d",
-  x:"Das Vier-Felder-Raster: Kultur, Organisation, Arbeitsgestaltung, Verhalten. Wirkt es aufs Ziel? Erreicht es die Zielgruppe? Ist der Zugang niedrigschwellig?",
-  a:"Sammelt zehn Maßnahmen und streicht sechs davon wieder — begründet. Die vier, die bleiben, müssen jede der drei Prüffragen bestehen. Die Streichliste kommt mit ins Buch, sie ist die halbe Leistung.",
-  b:"Maßnahmenkatalog mit Begründung — und Streichliste."},
+  x:"Maßnahmen sortieren sich in vier Felder: Unternehmenskultur, Organisationsgestaltung, Arbeitsgestaltung und gesundes Verhalten im Alltag. Drei Prüffragen entscheiden über jede einzelne: Wirkt sie auf das Ziel? Erreicht sie die Zielgruppe? Ist der Zugang niedrigschwellig? Dazu der Wiederaufgriff aus Einheit 2, jetzt in der Anwendung: Verhältnis vor Verhalten. Das Formatspektrum reicht von der aktiven Pause bis zum Gesundheitstag — und die meisten Kataloge bestehen aus Standardware, die überall auftaucht.",
+  a:"Maßnahmen sammeln kann jeder. Die Leistung liegt im Streichen — und darin, das Streichen zu begründen. Deshalb kommt die Streichliste heute mit ins Ergebnis; sie ist die halbe Arbeit.\n\n1 Sammelt zehn Maßnahmen für eure drei Ziele aus Einheit 9. Schnell, ohne zu filtern.\n2 Ordnet jede in das Vier-Felder-Raster ein: Unternehmenskultur · Organisationsgestaltung · Arbeitsgestaltung · gesundes Verhalten im Alltag.\n3 Prüft jede gegen die drei Fragen: Wirkt sie auf das Ziel? Erreicht sie die Zielgruppe? Ist der Zugang niedrigschwellig?\n4 Streicht sechs. Schreibt zu jeder gestrichenen einen Satz, warum sie hier nicht funktioniert.\n5 Die vier verbleibenden müssen jede der drei Prüffragen bestehen. Prüft nach — und wenn eine durchfällt, streicht auch sie.\n6 Zählt zum Schluss: Wie viele eurer vier liegen auf der Verhältnisseite? Wenn keine, fangt noch einmal an.\n\nZeit · 20 Min Input · 15 Min zehn Maßnahmen sammeln · 25 Min einordnen und prüfen · 20 Min sechs streichen mit Begründung · 10 Min Kontrolle Verhältnisseite",
+  b:"Vier geprüfte Maßnahmen im Vier-Felder-Raster und die Streichliste mit sechs begründeten Absagen."},
  {n:11,r:"projekt",t:"Projektarchitektur",w:"Die Steuerungsgruppe",c:"h:760acc21e204b897",
-  x:"Rollen, Meilensteine, Zeitplan, Beteiligung. Und die Misserfolgsfaktoren: kein Rückhalt oben, keine Beteiligung unten, niemand verantwortlich, zu kurz gedacht.",
-  a:"Baut den Zeitplan über zwölf Monate mit vier Meilensteinen. Benennt zu jeder Aufgabe eine verantwortliche Rolle. Markiert die Stelle, an der euer Projekt am wahrscheinlichsten scheitern wird.",
-  b:"Projektplan mit Rollen, Meilensteinen und Zeitachse."},
+  x:"Ein Vorhaben wird zum Projekt durch fünf Dinge: Auftrag, Ziel, Zeit, Ressourcen, Verantwortung. Die Steuerungsgruppe entscheidet über Rückhalt — ihre Zusammensetzung ist keine Formalie, sondern die halbe Miete. Dazu Meilensteine, Zeitplan und die Beteiligung der Belegschaft. Die vier Misserfolgsfaktoren sind immer dieselben: kein Rückhalt oben, keine Beteiligung unten, niemand verantwortlich, zu kurz angelegt.",
+  a:"Bis hierher habt ihr Ziele und Maßnahmen. Heute wird daraus ein Vorhaben mit Kalender, Namen und Verantwortung — und ihr sagt vorher, wo es kippen wird. Wer den Scheiterpunkt erst hinterher kennt, hat ihn nicht gekannt.\n\n1 Baut den Zeitplan über zwölf Monate mit vier Meilensteinen.\n2 Ordnet jeder Aufgabe im Plan eine verantwortliche Rolle zu. Rollen, keine Abteilungen.\n3 Besetzt den Steuerkreis. Achtet darauf, wer aus der Belegschaft dabei sein muss, damit es getragen wird — nicht nur Führungskräfte.\n4 Benennt den einen Menschen, ohne den es nicht läuft.\n5 Markiert die Stelle im Plan, an der euer Projekt am wahrscheinlichsten scheitert. Eine Stelle, nicht drei.\n6 Schreibt zu dieser Stelle einen Satz: Woran würdet ihr merken, dass es gerade passiert?\n\nZeit · 20 Min Input · 30 Min Zeitplan und Rollen · 20 Min Steuerkreis besetzen · 15 Min Scheiterpunkt markieren und begründen · 5 Min Ergebnissicherung",
+  b:"Projektplan über zwölf Monate mit vier Meilensteinen, Rollen, Steuerkreis-Besetzung und markiertem Scheiterpunkt."},
  {n:12,r:"innendienst",t:"Ergonomie — nicht nur am Schreibtisch",w:"Nina Kraus, 29",c:"h:22c20441be0b3c59",
-  x:"Bildschirmarbeitsplatz komplett, aber gleichrangig: Zwangshaltungen in Reinigung und Produktion, Hebe- und Tragetechnik, Hilfsmittel.",
-  a:"Richtet einen echten Arbeitsplatz im Haus ein und spürt den Unterschied am eigenen Körper. Dann schreibt die Ergonomie-Empfehlung für eure Person: drei Veränderungen, jede mit Begründung und geschätzten Kosten.",
-  b:"Ergonomie-Empfehlung für die eigene Person, mit Begründung."},
+  x:"Zuerst die Grenze: Die ergonomische Grundausstattung schuldet der Arbeitgeber ohnehin — Arbeitsstättenverordnung und Gefährdungsbeurteilung, also Arbeitsschutz. Ihr dürft einweisen, individuell anpassen und schulen. Ihr dürft nicht nach Verordnung beurteilen. Wer das verwischt, verkauft eine Leistung, die er nicht erbringen darf. Danach der Arbeitsplatz vollständig: Stuhl, Tisch, Bildschirmhöhe, Sehabstand, Beleuchtung, Sitz-Steh-Wechsel — und gleichrangig Zwangshaltungen in Reinigung und Produktion, Überkopfarbeit, Heben und Tragen. Die beste Haltung ist immer die nächste.",
+  a:"Ergonomie versteht man nicht am Bild, sondern am eigenen Rücken. Deshalb richtet ihr heute einen echten Arbeitsplatz im Haus ein und setzt euch hinein — einmal falsch, einmal richtig. Erst danach schreibt ihr die Empfehlung.\n\n1 Richtet einen Arbeitsplatz im Haus ein, wie ihr ihn typischerweise vorfindet. Setzt euch hinein und arbeitet zwei Minuten.\n2 Richtet denselben Platz richtig ein: Stuhlhöhe, Tischhöhe, Bildschirmhöhe, Sehabstand, Licht. Setzt euch wieder hinein.\n3 Schreibt in einem Satz, was sich am eigenen Körper geändert hat.\n4 Sortiert jede denkbare Veränderung in zwei Stapel: Arbeitsschutz-Pflicht des Betriebs oder freiwillige Gesundheitsförderung.\n5 Schreibt die Ergonomie-Empfehlung: drei Veränderungen, jede mit Begründung und geschätzten Kosten. Was auf dem Pflicht-Stapel liegt, gehört nicht hinein.\n6 Notiert zum Schluss: Was müsstet ihr vor Ort sehen, um sicher zu sein, dass es das Richtige ist?\n\nZeit · 25 Min Input mit der Arbeitsschutzgrenze zuerst · 25 Min Arbeitsplatz einrichten und ausprobieren · 25 Min Empfehlung schreiben · 10 Min Pflicht-Kür-Sortierung prüfen · 5 Min Ergebnissicherung",
+  b:"Ergonomie-Empfehlung mit drei begründeten Veränderungen und geschätzten Kosten, sauber getrennt von der Arbeitsschutz-Pflicht."},
  {n:13,r:"halle",t:"Bewegung, die ankommt",w:"Elif Yılmaz, 39",c:"h:22ab5e8562c7cacd",
-  x:"Der harte Teil ist nicht die Übung, sondern der Zugang: zehn Minuten in der Halle bei Lärm und Taktung — oder um 5:30 Uhr für eine Reinigungskraft allein.",
-  a:"Baut ein Zehn-Minuten-Programm für eure Person und leitet es der Klasse an. Danach: Wie kommt dieses Programm bei ihr tatsächlich an? Wann, wo, durch wen — und was kostet es sie?",
-  b:"Zehn-Minuten-Programm plus Zugangskonzept."},
+  x:"Formate gibt es genug: aktive Pause, Rückenkurs, betriebsspezifisches Übungsprogramm, Lauftreff. Der harte Teil ist nie die Übung, sondern der Zugang — Schicht, Taktung, Lärm, Randzeiten, Alleinarbeit. Niedrigschwelligkeit ist deshalb kein Adjektiv, sondern eine Liste: Ort, Zeit, Kleidung, Dauer, wer anleitet. Und ein Programm kostet immer dreierlei — Zeit, Geld und die Aufmerksamkeit derer, die mitmachen sollen.",
+  a:"Das Programm bekommt ihr überall. Bewertet wird heute, ob es bei eurer Person tatsächlich ankommt — bei einer Schichtführerin, die um vier Uhr zwanzig aufsteht, oder bei einer Lagerkraft, die abends noch ihre Mutter versorgt.\n\n1 Baut ein Zehn-Minuten-Programm für eure Person. Passend zu ihrer Tätigkeit, nicht allgemein.\n2 Leitet es der Klasse an. Alle machen mit.\n3 Schreibt das Zugangskonzept: Wann im Tagesablauf? An welchem Ort? Durch wen angeleitet? In welcher Kleidung?\n4 Beantwortet die harte Frage: Warum sollte jemand mitmachen, der nach der Schicht nach Hause will?\n5 Rechnet, was es eure Person kostet — an Zeit, an Weg, an Aufmerksamkeit. Zehn Minuten Programm sind selten zehn Minuten Abwesenheit.\n6 Prüft gegen Einheit 2: Scheitert euer Zugang an genau dem, woran der Rückenkurs von Reiser gescheitert ist?\n\nZeit · 20 Min Input · 20 Min Programm bauen · 20 Min Anleiten vor der Klasse · 20 Min Zugangskonzept · 10 Min Gegenprobe an Einheit 2",
+  b:"Ein Zehn-Minuten-Programm für die eigene Person plus das Zugangskonzept — bewertet wird das Zugangskonzept."},
  {n:14,r:"pause",t:"Psyche, Stress — und die eigene Grenze",w:"Alle vier",c:"h:3768158512c14c85",
-  x:"Psychische Belastung verursacht die längsten Ausfälle. Führung als Gesundheitsfaktor, Umgang mit Sucht. Und klar: Wo endet die eigene Rolle?",
-  a:"Übt ein Gespräch mit einer belasteten Person — und übt genauso die Übergabe an eine Fachstelle. Haltet danach schriftlich fest, wo eure eigene Rolle endet. Dieser Satz gehört ins Buch.",
-  b:"Modul psychische Gesundheit plus persönliche Grenzlinie."},
- {n:15,r:"chef",t:"Das Angebot: Was kostet das?",w:"Markus Reiser, 54",c:"h:22b34f2a1fd3f7ca",
-  x:"Ab hier feste Teams. Angebotsaufbau, fixe und variable Kosten, Stundensatz, Break-even. Und: den Preis verteidigen, statt sich kleinzumachen.",
-  a:"Erste Teamleistung. Rechnet eure Kalkulation durch — fixe und variable Kosten, Stundensatz, Break-even — und schreibt das Angebot. Dann Preisverhandlung gegen Reiser, ohne den Preis zu senken.",
-  b:"Angebot mit Kalkulation — die erste Teamleistung."},
+  x:"Psychische Erkrankungen verursachen die längsten Ausfallzeiten — im Schnitt 28,5 Fehltage je Fall. Die Belastungsfaktoren sind benennbar: Termindruck, Unterbrechungen, fehlende Anerkennung, Rollenunklarheit. Führung wirkt dabei als eigener Gesundheitsfaktor. Für den Umgang gibt es Werkzeuge — Sender-Empfänger, Vier-Ohren-Modell, aktives Zuhören — und für Sucht Anzeichen, Ansprache und Beratungsstellen. Das Wichtigste ist aber die Abgrenzung: Was gehört in die eigene Rolle, und wo wird verwiesen?",
+  a:"Heute geht es zweimal um eine Grenze: einmal um die zwischen Bedingung und Person, einmal um die eurer eigenen Rolle. Der interessante Stapel ist der, bei dem ihr euch nicht einig werdet.\n\n1 Sortiert die fünfzehn Situationskarten auf drei Stapel: gehört in meine Rolle · gehört nicht in meine Rolle · unsicher.\n2 Nehmt den Unsicher-Stapel und diskutiert ihn Karte für Karte. Er ist der eigentliche Lerngegenstand.\n3 Zieht eure Grenzlinie in einem Satz: Wo endet eure Rolle?\n4 Baut die Verweisliste: Betriebsarzt · externe Mitarbeiterberatung · Beratungsstellen · Hausarzt · Krisendienste. Zu jeder Stelle, was sie macht und wie man sie erreicht.\n5 Formuliert eine Übergabe wörtlich — so, dass sie nicht über den Kopf der Person hinweg geht.\n6 Prüft eure Maßnahmen aus Einheit 10: Welche liegt auf der Bedingungsseite und nicht bei der Person?\n\nZeit · 25 Min Input · 20 Min Sortierübung · 15 Min Unsicher-Stapel im Plenum · 20 Min Verweisliste und Übergabe · 10 Min Ergebnissicherung",
+  b:"Das Sortierergebnis mit begründeter Grenzlinie und eine Verweisliste für die Region, mit einer wörtlich formulierten Übergabe."},
+ {n:15,r:"chef",t:"Das Angebot: Was kostet das?",w:"Markus Reiser, 56",c:"h:22b34f2a1fd3f7ca",
+  x:"Ein Angebot hat einen festen Aufbau: Ausgangslage, Leistungen, Teilnahmebedingungen, Preis. Dahinter liegt die Kalkulation aus fixen und variablen Kosten, Stundensatz und Break-even — und in einen Stundensatz gehören Vorbereitung, Fahrt, Nachbereitung und Ausfallrisiko. Die Beispielrechnung aus Einheit 3 kommt hier zurück und wird gegen die eigenen Kosten gestellt. Für den Aufbau des Vorschlags gilt Why–How–What: zuerst warum, dann wie, zuletzt was. Das ist die Reihenfolge, in der ein Entscheider zuhört. Und der Preis wird verteidigt, nicht kleingeredet.",
+  a:"Erste Teamleistung, und die erste, bei der es um Geld geht. Ihr rechnet, ihr schreibt, und ihr verteidigt — ohne den Preis zu senken. Wer im ersten Gespräch nachlässt, hat den Preis nie gehabt.\n\n1 Rechnet die Kalkulation durch: fixe und variable Kosten, euer Stundensatz mit Vorbereitung, Fahrt, Nachbereitung und Ausfallrisiko.\n2 Bestimmt den Break-even: Ab wie vielen vermiedenen Ausfalltagen trägt sich euer Paket? Nehmt die Rechnung aus Einheit 3 als Gegenprobe.\n3 Schreibt das Angebot: Ausgangslage, Leistungen, Teilnahmebedingungen, Preis.\n4 Baut den Vorschlag nach Why–How–What auf: zuerst warum überhaupt, dann wie ihr vorgeht, zuletzt was genau ihr liefert. Nicht umgekehrt.\n5 Verhandelt gegen die Geschäftsführung. Der Preis bleibt.\n6 Notiert nach der Verhandlung einen Satz: An welcher Stelle wolltet ihr nachgeben — und warum habt ihr es nicht getan?\n\nZeit · 20 Min Input · 25 Min Kalkulation · 20 Min Angebot schreiben und nach Why–How–What aufbauen · 20 Min Preisverhandlung · 5 Min Ergebnissicherung",
+  b:"Ein kalkuliertes Teamangebot mit Break-even, aufgebaut nach Why–How–What, und die Notiz aus der Preisverhandlung."},
  {n:16,r:"empfang",t:"Damit es jemand mitbekommt",w:"Die ganze Belegschaft",c:"h:760a89b6fdf3229e",
-  x:"Internes Marketing: informieren, beteiligen, Führungskräfte als Vorbild, Multiplikatoren finden. Und der Umgang mit Killerphrasen.",
-  a:"Schreibt den Kommunikationsplan: wer erfährt wann was, über welchen Kanal. Dazu ein Aushang, der Halina Nowak tatsächlich erreicht — nicht einer, der nur gut aussieht.",
-  b:"Kommunikationsplan plus ein Aushang, der wirklich jemanden hervorholt."},
+  x:"Internes Marketing beantwortet vier Fragen: wer erfährt wann was, über welchen Kanal. Führungskräfte sind dabei Vorbild und Multiplikator zugleich — ohne sie verpufft jeder Aushang. Die Kanäle haben sehr unterschiedliche Reichweite: Aushang, Intranet, E-Mail, Teamrunde, Lohnzettelbeilage erreichen jeweils andere Gruppen, und was eine Gruppe nicht erreicht, ist für diese Gruppe kein Kanal. Dazu der Umgang mit Killerphrasen, die verlässlich kommen.",
+  a:"Ein Aushang von außen verpufft, wenn niemand im Betrieb dahintersteht. Der eigentliche Hebel sind die Abteilungsleiter — und die überzeugt man nicht mit dem Konzept, sondern mit dem, was sie davon haben.\n\n1 Baut einen Drei-Minuten-Pitch vor den Abteilungsleitern. Die Frage, die er beantworten muss: Warum sollen ausgerechnet sie das gut finden und ihren Leuten empfehlen?\n2 Tragt vor. Die anderen Teams spielen die Abteilungsleiter und bringen ihre Einwände: meine Leute haben keine Zeit, das kostet Produktionszeit, wir haben gerade andere Sorgen.\n3 Notiert den Einwand, auf den ihr keine Antwort hattet.\n4 Schreibt den Kommunikationsplan: wer erfährt wann was, über welchen Kanal, und wer trägt es weiter.\n5 Geht die Kanäle einzeln durch und fragt bei jedem: Erreicht das die Spätschicht? Das Lager? Die Verwaltung?\n6 Entwerft den Aushang. Er ist eines der Mittel, nicht die Hauptleistung.\n\nZeit · 15 Min Input · 20 Min Pitch bauen · 25 Min Pitches mit Einwänden · 20 Min Kommunikationsplan und Kanalprüfung · 10 Min Aushang",
+  b:"Kommunikationsplan mit Multiplikatorenweg, geprüft auf Kanalreichweite, plus Aushang."},
  {n:17,r:"halle",t:"Umsetzung — und was schiefgeht",w:"Alle vier",c:"h:22c2341735b4b8b3",
-  x:"Rollout, niedrigschwelliger Zugang, Dauerhaftigkeit. Große Ereigniskarten-Runde: zwei Störungen pro Team, live nachsteuern.",
-  a:"Jedes Team zieht zwei Ereigniskarten und steuert seinen Plan live nach. Dokumentiert jede Anpassung: Was war die Störung, was habt ihr geändert, was habt ihr bewusst nicht geändert?",
-  b:"Überarbeiteter Plan mit dokumentierten Anpassungen."},
+  x:"Ein Rollout hat eine Reihenfolge, eine Pilotgruppe und ein Startsignal. Niedrigschwelliger Zugang ist in der Praxis etwas anderes als auf dem Papier. Und Gesundheitsförderung wirkt erst, wenn sie bleibt — Dauerhaftigkeit ist kein Extra, sondern die Bedingung. Die typischen Störungen sind bekannt: Schlüsselperson fällt aus, Auftragsspitze, Budget gekürzt, Raum weg. Sie gehören in den Plan, bevor sie eintreten.",
+  a:"Euer Plan trifft heute auf die Wirklichkeit. Jedes Team zieht zwei Ereigniskarten und steuert live nach. Dokumentiert wird nicht nur, was ihr geändert habt, sondern auch, was ihr bewusst stehen lasst — das ist die schwerere Entscheidung.\n\n1 Zieht zwei Ereigniskarten.\n2 Beschreibt zu jeder in zwei Sätzen, was sie für euren Plan bedeutet.\n3 Passt den Plan an. Ändert so wenig wie möglich.\n4 Dokumentiert je Störung drei Dinge: was die Störung war, was ihr geändert habt, was ihr bewusst nicht geändert habt.\n5 Prüft nach jeder Anpassung: Steht das Ziel aus Einheit 9 noch? Wenn nicht, habt ihr das Ziel aufgegeben statt den Weg.\n6 Benennt zu einer der beiden Störungen ein Frühwarnzeichen — woran hättet ihr es früher gemerkt?\n\nZeit · 15 Min Input · 15 Min Karten ziehen und einordnen · 30 Min Plan anpassen · 20 Min dokumentieren · 10 Min Frühwarnzeichen",
+  b:"Der überarbeitete Plan mit dokumentierten Anpassungen — einschließlich dessen, was bewusst nicht geändert wurde."},
  {n:18,r:"projekt",t:"Hat es etwas gebracht?",w:"Die Steuerungsgruppe",c:"h:22b3685d3d887031",
-  x:"Struktur-, Prozess-, Ergebnisqualität. Soll-Ist, PDCA, Gesundheitszirkel. Verstetigung: vom Projekt zum Regelbetrieb. Danach Generalprobe.",
-  a:"Legt fest, woran ihr Erfolg messt — je ein Kriterium für Struktur, Prozess und Ergebnis. Dann der Verstetigungsplan: Was läuft weiter, wenn euer Auftrag endet? Zum Schluss Generalprobe für den Pitch.",
-  b:"Evaluationskonzept plus Verstetigungsplan."},
+  x:"Qualität hat drei Ebenen, und jede braucht ihr eigenes Kriterium: Struktur, Prozess, Ergebnis. Der Soll-Ist-Vergleich und der PDCA-Zyklus geben dem Ganzen einen Takt. Der Gesundheitszirkel ist das Instrument der Beteiligung — Messen ohne die Beteiligten führt zu Zahlen, die niemand erklären kann. Quantitative und qualitative Instrumente ergänzen sich, Assessments und Fragebögen decken verschiedene Fragen ab. Am Ende steht die Verstetigung: vom Projekt in den Regelbetrieb.",
+  a:"Ein Messplan, den niemand bedienen kann, ist kein Messplan. Heute legt ihr fest, woran Erfolg erkennbar ist — und prüft bei jeder Größe, ob es im Betrieb überhaupt jemanden gibt, der sie liefern kann.\n\n1 Legt drei Kriterien fest, eins je Ebene: Struktur, Prozess, Ergebnis.\n2 Schreibt zu jedem Kriterium die Quelle dazu: Wer im Betrieb liefert diese Zahl?\n3 Schreibt zu jedem den Messzeitpunkt: Struktur sofort, Prozess nach Wochen, Ergebnis nach einem Jahr.\n4 Streicht jede Größe, die niemand liefern kann. Das ist kein Kriterium, sondern ein Wunsch.\n5 Schreibt den Verstetigungsplan: Was läuft nach dem Projektende weiter, wer verantwortet es, aus welchem Budget?\n6 Generalprobe für den Pitch: zehn Minuten durchspielen, mit Uhr.\n\nZeit · 20 Min Input · 25 Min drei Kriterien mit Quelle und Zeitpunkt · 15 Min Verstetigungsplan · 25 Min Generalprobe · 5 Min Rückmeldungen",
+  b:"Evaluationskonzept mit drei Kriterien, Quelle und Messzeitpunkt, dazu der Verstetigungsplan."},
  {n:19,r:"chef",t:"Der Pitch",w:"Die Geschäftsführung",c:"h:22afaf11aec3ce29",
-  x:"Jedes Team präsentiert sein BGM-Konzept. Bewertet werden Fachlichkeit, Passung, Wirtschaftlichkeit, Überzeugungskraft. Ein Team bekommt den Auftrag.",
-  a:"Zehn Minuten Pitch vor der Geschäftsführung, danach fünf Minuten Rückfragen. Ihr verkauft kein Wissen, sondern eine Entscheidung: Warum soll Reiser genau euch beauftragen?",
-  b:"Das fertige Projektbuch — der eigene, vollständige BGM-Projektplan."}
+  x:"Kein neuer Input. Es geht um die Bewertungskriterien und den Ablauf — und um eine einzige Einsicht: Verkauft wird kein Wissen, sondern eine Entscheidung.",
+  a:"Zehn Minuten vor der Geschäftsführung, danach fünf Minuten Rückfragen. Ihr verkauft kein Wissen — ihr verkauft eine Entscheidung. Die Frage im Raum ist nicht, ob ihr etwas verstanden habt, sondern warum der Auftrag an genau euer Team gehen soll.\n\n1 Baut den Pitch nach Why–How–What, so wie in Einheit 15 geübt.\n2 Zehn Minuten, ohne Blatt. Uhr läuft.\n3 Haltet die eine Frage aus, die alles trägt: Warum steht eure Maßnahme zwei vor Maßnahme drei?\n4 Fünf Minuten Rückfragen. Eine Antwort darf lauten: Das wissen wir noch nicht — hier ist, wie wir es herausfinden würden.\n5 Hört den anderen Pitches zu und notiert je Team einen Satz: Was hat der besser gemacht als wir?\n6 Tragt nach dem Pitch nach, was im Gespräch aufgefallen ist. Das ist erfahrungsgemäß das Nützlichste am ganzen Semester.\n\nZeit · 10 Min Ablauf und Kriterien · 60 Min vier Pitches à zehn Minuten plus fünf Minuten Rückfragen · 15 Min Entscheidung und Begründung · 5 Min Abschluss",
+  b:"Der Team-Pitch am Fallbetrieb, zehn Minuten frei gehalten, plus die Notizen aus den Rückfragen."}
 ];
 
 /* --- Phasen laut BGM-Programm-Stand.md, Stand 2026-09-10 --- */
@@ -726,27 +708,41 @@ function baueEinheiten(){
 baueEinheiten();
 
 const LEUTE = [
- {n:"Markus Reiser",a:"54 · Geschäftsführer",r:"chef",p:[
-  "60-Stunden-Woche, viel unterwegs, ständig erreichbar",
-  "Rückenschmerzen, die er nicht ernst nimmt",
-  "Zweite Generation, fühlt sich für alle verantwortlich",
-  "Hält BGM zunächst für nette Beigabe — muss überzeugt werden"]},
- {n:"Elif Yılmaz",a:"39 · Produktion, Spritzguss",r:"halle",p:[
-  "Drei-Schicht-Betrieb, getaktete Pausen",
-  "Heben und Tragen, monotone Bewegungsmuster, Lärm",
-  "Zwei Kinder, kaum Zeitsouveränität",
-  "Würde mitmachen — wenn es in die Schicht passt"]},
- {n:"Halina Nowak",a:"57 · Reinigungskraft",r:"flur",p:[
-  "Teilzeit in den Randzeiten, meist Alleinarbeit",
-  "Zwangshaltungen, Überkopfarbeit, Treppen",
-  "Deutsch als Zweitsprache",
-  "Wird von Angeboten praktisch nie erreicht"]},
- {n:"Nina Kraus",a:"29 · Sachbearbeitung Innendienst",r:"innendienst",p:[
-  "Acht Stunden Bildschirm, zwei Tage Homeoffice",
-  "Termindruck, ständige Unterbrechungen",
-  "Bewegungsmangel, Schlafprobleme",
-  "Motiviert, aber sie glaubt nicht, dass sich hier etwas ändert"]}
+ {k:"reiser",n:"Markus Reiser",a:"56 · Geschäftsführer",r:"chef",p:[
+  "Zweite Generation — der Vater gründete 1979, er übernahm 2011",
+  "120 Beschäftigte, Spritzguss, Zweischichtbetrieb Früh und Spät",
+  "Eine Stelle in der Produktion seit acht Monaten unbesetzt",
+  "Hat 2.400 Euro in einen Rückenkurs gesteckt und ihn nach drei Terminen abgebrochen",
+  "Bereit, Geld auszugeben — will aber wissen, was es bringt"]},
+ {k:"yilmaz",n:"Elif Yılmaz",a:"31 · Schichtführerin Produktion",r:"halle",p:[
+  "Zwölf Leute an sechs Maschinen, Früh und Spät im Wochenwechsel",
+  "Acht Stunden Stehen, die Teilekiste steht am Boden — 200 bis 300 Mal bücken je Schicht",
+  "Bis 34 Grad in der Halle im Sommer, Gehörschutz Pflicht, Verständigung per Handzeichen",
+  "Ein Kind, sechs Jahre — der Schichtplan kommt zu kurzfristig",
+  "Geht auch krank hin, weil sonst niemand die Schicht führt"]},
+ {k:"nowak",n:"Halina Nowak",a:"49 · Lagerlogistik, Kommissionierung",r:"halle",p:[
+  "Seit 19 Jahren im Betrieb, kennt jede Position im Lager",
+  "Kartons bis 18 Kilo aus Bodenhöhe und über Kopf, einer von zwei Hubwagen defekt",
+  "Zugluft am Rolltor, wenn der LKW steht",
+  "Sechs Wochen Schulter — kein Rückkehrgespräch, keine Veränderung danach",
+  "Versorgt zu Hause ihre Mutter, kommt abends zu keinem Angebot mehr"]},
+ {k:"kraus",n:"Nina Kraus",a:"25 · Auftragsbearbeitung",r:"innendienst",p:[
+  "Seit zwei Jahren dabei, direkt nach der Ausbildung",
+  "Fünf Personen in einem Raum, fester Tisch auf 72 cm, Monitor unter Augenhöhe",
+  "Acht Stunden sitzen, Kopfschmerzen ab drei, isst meist am Schreibtisch",
+  "Rollenunklarheit — macht, was liegen bleibt, auch wenn es nicht ihr Job ist",
+  "Wünscht sich einen Platz zum Stehen und eine klare Aufgabengrenze"]}
 ];
+
+const PORTRAIT = {};
+
+/* Die vier Interviews. Quelle: BGM/Unterlagen/Interviews. */
+const INTERVIEW = {
+ "reiser": "Also, die Firma hat mein Vater 1979 gegründet. Damals waren wir zu acht in einer gemieteten Halle. Heute sind wir hundertzwanzig. Ich hab das 2011 übernommen, und ehrlich gesagt kenne ich immer noch jeden mit Namen. Das ist mir wichtig.\n\nWas wir machen: Spritzguss. Technische Teile, viel für Automobilzulieferer, ein bisschen Medizintechnik. Zwei Schichten, Früh und Spät. Im Lager und in der Verwaltung normale Tagschicht.\n\nWas mich umtreibt? Zwei Sachen. Erstens: Ich krieg keine Leute mehr. Eine Stelle in der Produktion ist seit acht Monaten offen. Acht Monate. Früher hatte ich dreißig Bewerbungen, heute kriege ich zwei, und eine davon ist nicht ernst gemeint.\n\nZweitens: Der Krankenstand. Ich hab mir das mal ausrechnen lassen. Wir liegen über dem Branchenschnitt, und es wird nicht besser. Im Januar hatte ich Tage, da haben in der Spätschicht drei von zwölf gefehlt. Drei von zwölf. Die Schicht läuft trotzdem, irgendwie, aber die anderen neun machen die Arbeit mit.\n\nUnd das Ding ist: Meine Leute werden älter. Der Altersschnitt in der Produktion liegt bei siebenundvierzig. Die Halina im Lager, die ist seit neunzehn Jahren da. Die kennt jede Schraube. Wenn die ausfällt, hab ich ein echtes Problem.\n\nIch hab da ja auch schon was gemacht. Vor zwei Jahren hab ich einen Rückenkurs eingekauft. Zehn Termine, ein externer Trainer, donnerstags um achtzehn Uhr. Kostete mich zweitausendvierhundert Euro. Beim ersten Termin waren sieben da, beim dritten noch drei, dann hab ich es abgebrochen.\n\nUnd das versteh ich halt nicht. Ich biete denen was an, es kostet sie nichts, und keiner kommt. Da muss doch auch mal jeder ein bisschen was für sich selber tun, oder? Ich meine, ich geh auch laufen, wenn ich Zeit hab.\n\nObst hab ich auch mal hingestellt, in den Pausenraum. Das hat ganz gut funktioniert, muss ich sagen. War immer leer. Aber ob das jetzt was bringt bei den Krankheitstagen, das kann ich nicht sagen. Wir haben es nach vier Monaten wieder eingestellt, weil die Kollegin, die das immer besorgt hat, in Rente ging.\n\nWas ich brauche — ehrlich gesagt weiß ich es nicht. Ich weiß nur, dass es so nicht weitergeht. Ich kann nicht jedes Jahr mehr Überstunden fahren, weil Leute fehlen. Und ich kann auch nicht ständig Zeitarbeiter reinholen, das kostet mich das Doppelte und die kennen die Maschinen nicht.\n\nWas ich Ihnen sagen kann: Ich bin bereit, Geld in die Hand zu nehmen. Aber ich will wissen, was es bringt. Ich bin kein Wohlfahrtsverein. Wenn Sie mir sagen können, das spart mir am Ende Ausfalltage, dann rede ich mit Ihnen. Wenn Sie mir sagen, das ist gut fürs Betriebsklima — dann haben wir ein kurzes Gespräch.",
+ "yilmaz": "Ich bin seit sieben Jahren hier, die letzten zwei als Schichtführerin. Wir fahren Früh und Spät im Wechsel, immer eine Woche. Frühschicht heißt aufstehen um vier Uhr zwanzig. Spätschicht heißt, ich bin um halb elf zu Hause und dann noch zwei Stunden wach.\n\nMeine Schicht sind zwölf Leute an sechs Maschinen. Spritzguss. Die Maschine macht das Teil, das dauert je nach Artikel zwanzig bis fünfzig Sekunden, dann geht die Form auf, ich nehm das Teil raus, entgrate, sichtprüfe, leg es in die Kiste. Und dann wieder. Und wieder.\n\nDas hört sich einfach an. Aber ich steh dabei acht Stunden. Wir haben Gummimatten, aber die sind an zwei Plätzen durchgelaufen, da steht man auf Beton. Und die Kiste, in die ich die Teile lege, die steht auf dem Boden. Also beug ich mich runter. Zweihundertmal in der Schicht, vielleicht dreihundert. Rechnen Sie mal hoch.\n\nWarm ist es auch. Die Maschinen heizen das Granulat auf zweihundert Grad, das strahlt ab. Im Sommer hatten wir vierunddreißig Grad in der Halle. Da hat uns der Chef Wasser hingestellt, das war gut. Aber vierunddreißig Grad bleiben vierunddreißig Grad.\n\nUnd laut. Wir tragen Gehörschutz, klar, das ist Vorschrift. Aber dann versteh ich meine Leute nicht, und wir arbeiten halt mit Handzeichen.\n\nWas mich am meisten nervt: die Schichtwechsel. Eine Woche früh, eine Woche spät. Mein Körper weiß nie, wann er schlafen soll. Am Sonntagabend vor der Frühschicht lieg ich wach und weiß, in fünf Stunden klingelt es.\n\nKrank melden? Mach ich nicht gern. Wenn ich fehle, fehlt die Schichtführerin, und dann muss einer von den anderen das übernehmen, der das nicht gelernt hat. Im Februar hatte ich eine Erkältung, richtig mit Fieber. Ich bin drei Tage hin und hab dann doch zwei Tage zu Hause gelegen. Die drei Tage hätte ich mir sparen können, glaub ich.\n\nDer Rückenkurs damals? Donnerstag um sechs. Ich hatte Spätschicht. Ich hab um vierzehn Uhr angefangen. Wie soll ich da hin?\n\nWas mir helfen würde — soll ich ehrlich sein? Die Kiste auf einen Tisch. Nicht auf den Boden. Das kostet nichts, das ist ein Rollwagen mit der richtigen Höhe. Ich hab das dem Meister schon zweimal gesagt. Der sagt, er kümmert sich.\n\nUnd: einen Schichtplan, den ich vier Wochen im Voraus kenne. Ich hab ein Kind, sechs Jahre alt. Wenn ich am Mittwoch erfahre, dass nächste Woche alles anders ist, dann ist das schwierig.\n\nDie Leute hier sind gut, das will ich sagen. Wir helfen uns. Aber wir sind müde.",
+ "nowak": "Neunzehn Jahre. Angefangen hab ich 2007, damals noch in der alten Halle. Ich mach Kommissionierung, also ich stell die Aufträge zusammen, die rausgehen.\n\nEin normaler Tag: Ich krieg morgens die Liste, dann geh ich durchs Lager und hol die Teile. Manches sind Kleinteile, das ist leicht. Aber wir haben auch Kartons mit fertigen Formteilen, die wiegen fünfzehn, manchmal achtzehn Kilo. Die hol ich aus dem Regal und stapel sie auf die Palette.\n\nDie unteren Fächer sind das Problem. Wenn der Karton ganz unten liegt, muss ich in die Hocke oder ich beug mich. Und die obersten, die krieg ich nur mit der Leiter, und dann hab ich den Karton über Kopf. Das ist nicht schön, aber das ist halt so.\n\nWir haben zwei elektrische Hubwagen. Einer ist seit November kaputt. Also nehmen wir den handbetriebenen, wenn der andere grad wo anders ist. Das geht auch, das ist nur — man merkt es abends.\n\nAm Tor zieht es. Das Rolltor steht offen, wenn der LKW kommt, und das kann eine halbe Stunde sein. Im Winter ist das unangenehm. Ich zieh mich halt warm an.\n\nDie Schulter, ja. Letztes Jahr im März, da ging es nicht mehr. Ich war sechs Wochen raus. Sechs Wochen und vier Tage, glaub ich. Und dann bin ich wiedergekommen und hab genau dasselbe gemacht wie vorher. Es hat niemand mit mir gesprochen, was man vielleicht ändern könnte. Ich hab auch nicht gefragt, ehrlich gesagt.\n\nIch mein, der Chef ist in Ordnung. Der Herr Reiser fragt schon mal, wie es geht. Aber dann sagt man ja auch: passt schon.\n\nWenn es zwickt, geh ich trotzdem hin. Ich hab da so meine Tabletten aus der Apotheke, die nehm ich morgens, dann geht es. Zu Hause bleiben bringt ja nichts, die Aufträge müssen trotzdem raus, und dann macht das die Kollegin, und die ist vierundzwanzig und soll sich das nicht auch noch kaputt machen.\n\nDer Kurs vor zwei Jahren — ich war beim ersten Mal da. Das war ganz nett. Aber donnerstags um sechs, da bin ich seit halb sechs zu Hause, und dann soll ich nochmal los. Ich hab noch meine Mutter zu versorgen.\n\nWas besser wäre? Der zweite Hubwagen, dass der mal repariert wird. Und die schweren Kartons nicht ganz unten und nicht ganz oben, sondern in der Mitte. Das hab ich mal beim Meister angesprochen. Da hieß es, das Lager ist so gewachsen.\n\nIch will mich nicht beschweren. Ich arbeite gern hier, die Leute sind nett. Ich weiß nur nicht, ob ich das noch fünfzehn Jahre so machen kann.",
+ "kraus": "Ich bin seit zwei Jahren hier, direkt nach der Ausbildung. Auftragsbearbeitung, also ich nehme die Bestellungen an, pflege sie ins System, koordiniere mit dem Lager und mach die Lieferpapiere.\n\nWir sitzen zu fünft in einem Raum. Das ist manchmal gut, weil man schnell was fragen kann. Und manchmal ist es furchtbar, weil drei gleichzeitig telefonieren und ich versuche, eine Reklamation zu bearbeiten.\n\nMein Arbeitsplatz: ein Tisch, ein Stuhl, zwei Bildschirme. Der Tisch ist fest, also nicht höhenverstellbar. Der Stuhl ist okay, den hab ich mir selber eingestellt, nachdem ich ein Video geschaut hab. Gezeigt hat es mir keiner.\n\nIch sitze ungefähr acht Stunden. Manchmal steh ich auf, um was zu holen, aber im Grunde sitze ich. Am Nachmittag kriege ich oft Kopfschmerzen, so ab drei. Und der Nacken ist abends steif.\n\nDie Mittagspause — ehrlich? Ich ess oft am Schreibtisch. Nicht weil es verboten wäre, sondern weil um zwölf die meisten Anrufe kommen. Wenn ich weggehe, hab ich danach fünf Rückrufe.\n\nDer Stress kommt in Wellen. Wenn ein Auftrag nicht rausgeht, weil im Lager was fehlt, dann ruft der Kunde bei mir an. Nicht beim Lager, bei mir. Und ich kann nichts dafür, muss es aber erklären.\n\nWas mich wirklich stört: Ich weiß nie genau, was meine Aufgabe ist und was nicht. Wenn was liegen bleibt, mach ich es halt. Letzte Woche hab ich für den Vertrieb eine Preisliste gebaut. Das ist nicht mein Job, aber es hat sonst keiner gemacht.\n\nKrank war ich einmal, letzten Herbst, drei Tage. Da hat mir dann jemand aus dem Vertrieb die E-Mails mitgemacht, und als ich wiederkam, war einiges durcheinander. Seitdem geh ich lieber hin und mach halbe Kraft, als dass ich hinterher zwei Tage aufräume.\n\nDer Rückenkurs? Da war ich noch nicht in der Firma. Aber ich hätte nichts dagegen gehabt, ehrlich. Nur nicht um achtzehn Uhr donnerstags, da hab ich Volleyball.\n\nWas ich mir wünschen würde: Ein Tisch, an dem ich auch mal stehen kann. Das haben sie bei meiner Freundin in der Firma, die arbeitet bei einer Versicherung. Und einen Raum, in den man gehen kann, wenn man telefonieren muss. Wir haben einen Besprechungsraum, aber da sitzt immer wer drin.\n\nUnd: dass mal jemand sagt, was zu meinem Job gehört und was nicht. Das würde schon viel bringen."
+};
 
 let KARTEN = [];   /* kommt aus dozent.json */
 
@@ -975,7 +971,7 @@ function buildWorld(svg){
   /* Die vier Musterpersonen an ihren Plätzen. Vor der eigenen Figur
      einsortiert, damit die eigene Figur immer obenauf läuft. */
   const gP=el("g",{}); world.appendChild(gP);
-  [[230, 55,"reiser"], [408,300,"yilmaz"], [96,196,"nowak"], [246,292,"kraus"]]
+  [[230, 55,"reiser"], [408,300,"yilmaz"], [470,345,"nowak"], [246,292,"kraus"]]
     .forEach(([px,py,k])=>figur(gP, px, py, FIGUR_PAL[k], 50));
 
   avatar=figur(world,0,0,FIGUR_PAL.ich,54);
@@ -1071,8 +1067,7 @@ function teleport(room){
 /* Der Schlüssel bleibt über alle künftigen Fassungen gleich —
    sonst verlieren die Teilnehmer bei jedem Update ihren Stand. */
 const KEY="bgm-spielbrett";
-let S={v:7,mode:"student",woche:1,frei:1,karten:[],punkte:[],maxw:6,noten:false,
-       name:"",team:"",teamMit:"",abgaben:{}};
+let S={v:13,mode:"student",woche:1,frei:1,karten:[]};
 
 /* Ab dieser Aufgabe endet die Rotation und es zählt die Teamleistung. */
 const TEAM_AB = 15;
@@ -1083,12 +1078,14 @@ const TEAM_AB = 15;
    Quelle: claude/BGM_Freischaltung_und_Abgabe.md
    ------------------------------------------------------------------ */
 const MEILENSTEINE = [
-  {nr:1, titel:"Das Unternehmen und der Anlass",   von:1,  bis:5,  faellig:"fällig vor Einheit 6"},
-  {nr:2, titel:"Die Analyse",                      von:6,  bis:8,  faellig:"fällig vor Einheit 9"},
-  {nr:3, titel:"Zielbild und Maßnahmenentwurf",    von:9,  bis:11, faellig:"fällig vor Einheit 12"},
-  {nr:4, titel:"Maßnahmenpaket und Angebot",       von:12, bis:15, faellig:"fällig vor Einheit 16"},
-  {nr:5, titel:"Gesamtdokument und Pitch",         von:16, bis:19, faellig:"fällig nach dem Pitch"}
+  {nr:1, titel:"Das Unternehmen und der Anlass",  von:1,  bis:5,  faellig:"Abgabe in Einheit 5"},
+  {nr:2, titel:"Die Analyse",                     von:6,  bis:8,  faellig:"Abgabe in Einheit 8"},
+  {nr:3, titel:"Ziele und Aufbau",                von:9,  bis:11, faellig:"Abgabe in Einheit 11"},
+  {nr:4, titel:"Maßnahmen und Angebot",           von:12, bis:15, faellig:"Abgabe in Einheit 15"},
+  {nr:5, titel:"Das Ganze und der Pitch",         von:16, bis:19, faellig:"Abgabe in Einheit 19"}
 ];
+
+
 function msVon(n){ return MEILENSTEINE.find(m => n>=m.von && n<=m.bis) || null; }
 function load(){
   try{const raw=localStorage.getItem(KEY);
@@ -1098,27 +1095,10 @@ function load(){
         S.woche=Math.min(19,Math.max(1,o.woche|0||1));
         S.frei=Math.min(19,Math.max(1,o.frei|0||1));
         S.karten=Array.isArray(o.karten)?o.karten:[];
-        S.punkte=Array.isArray(o.punkte)?o.punkte:[];
-        S.maxw=Math.min(20,Math.max(1,o.maxw|0||6));
-        S.noten=!!o.noten;
-        S.name=typeof o.name==="string"?o.name:"";
-        S.team=typeof o.team==="string"?o.team:"";
-        S.teamMit=typeof o.teamMit==="string"?o.teamMit:"";
-        if(o.abgaben&&typeof o.abgaben==="object")S.abgaben=migriere(o.abgaben,o);
       }}}catch(e){}
-  if(!S.punkte.length)S.punkte=[{name:"",w:{}},{name:"",w:{}},{name:"",w:{}},{name:"",w:{}}];
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
 
-/* Ein Stand aus der Teamfassung wird auf das Einzelkonto gehoben,
-   damit niemand beim Update seine Häkchen verliert. */
-function migriere(a,o){
-  const flach = k => a[k] && typeof a[k]==="object" &&
-    ("st" in a[k] || "notiz" in a[k] || "zeit" in a[k]);
-  if(Object.keys(a).some(flach)) return a;
-  const erst = (o && o.team && a[o.team]) || a[Object.keys(a)[0]];
-  return (erst && typeof erst==="object") ? erst : {};
-}
 const isDoz=()=>S.mode==="doz";
 const maxWeek=()=>isDoz()?19:S.frei;
 
@@ -1136,13 +1116,11 @@ function fuelleKarte(){
   document.getElementById("i-kick").textContent="Aufgabe "+e.n+" von 19";
   document.getElementById("i-titel").textContent=e.t;
   document.getElementById("i-text").textContent=e.x;
-  document.getElementById("i-auftrag").textContent=e.a;
-  document.getElementById("i-wer").textContent=e.w;
+  zeigeAuftrag(e.a);
   document.getElementById("i-baustein").textContent=e.b;
   document.getElementById("prev").disabled=S.woche<=1;
   document.getElementById("next").disabled=S.woche>=maxWeek();
   fuelleExtras(e);
-  renderAbgabe();
 }
 function markiereRaum(){
   const e=EINHEITEN[S.woche-1];
@@ -1235,13 +1213,59 @@ document.getElementById("ubtn").addEventListener("click",()=>{
 });
 /* ================= Belegschaft ================= */
 const leuteEl=document.getElementById("leute");
+const initialen=n=>n.split(/\s+/).map(w=>w[0]).join("").slice(0,2).toUpperCase();
+
 LEUTE.forEach(p=>{
   const d=document.createElement("div");d.className="card";
-  d.innerHTML="<h3></h3><div class='role'></div><ul>"+p.p.map(()=>"<li></li>").join("")+"</ul><div class='where'></div>";
-  d.querySelector("h3").textContent=p.n;
-  d.querySelector(".role").textContent=p.a;
-  d.querySelectorAll("li").forEach((li,i)=>li.textContent=p.p[i]);
-  d.querySelector(".where").textContent=p.r==="flur"?"Überall im Haus — nach Feierabend":RAEUME[p.r];
+
+  const kopf=document.createElement("div");kopf.className="kopf";
+  const bild=PORTRAIT[p.k];
+  if(bild){
+    const im=document.createElement("img");
+    im.className="bild";im.src=bild;im.alt=p.n;im.loading="lazy";
+    kopf.appendChild(im);
+  }else{
+    const ini=document.createElement("div");
+    ini.className="bild ini";ini.textContent=initialen(p.n);
+    kopf.appendChild(ini);
+  }
+  const txt=document.createElement("div");
+  txt.innerHTML="<h3></h3><div class='role'></div>";
+  txt.querySelector("h3").textContent=p.n;
+  txt.querySelector(".role").textContent=p.a;
+  kopf.appendChild(txt);
+  d.appendChild(kopf);
+
+  const ul=document.createElement("ul");
+  p.p.forEach(t=>{const li=document.createElement("li");li.textContent=t;ul.appendChild(li);});
+  d.appendChild(ul);
+
+  const wo=document.createElement("div");
+  wo.className="where";
+  wo.textContent=(p.k==="nowak") ? "Lager und Kommissionierung" : (RAEUME[p.r]||"");
+  d.appendChild(wo);
+
+  const text=INTERVIEW[p.k];
+  if(text){
+    const btn=document.createElement("button");
+    btn.type="button";btn.className="ivbtn";
+    btn.textContent="Interview lesen";
+    btn.setAttribute("aria-expanded","false");
+    const box=document.createElement("div");
+    box.className="iv";box.hidden=true;
+    box.innerHTML="<div class='q'>Gespräch mit "+p.n+"</div>"+
+      text.split(/\n{2,}/).map(()=>"<p></p>").join("");
+    const abs=text.split(/\n{2,}/);
+    box.querySelectorAll("p").forEach((el,i)=>el.textContent=abs[i]);
+    btn.addEventListener("click",()=>{
+      const auf=box.hidden;
+      box.hidden=!auf;
+      btn.textContent=auf?"Interview zuklappen":"Interview lesen";
+      btn.setAttribute("aria-expanded",String(auf));
+    });
+    d.appendChild(btn);d.appendChild(box);
+  }
+
   leuteEl.appendChild(d);
 });
 
@@ -1276,69 +1300,11 @@ function baueCodes(){
 }
 baueCodes();
 
-/* ================= Punkteraster ================= */
-function ampel(p,max){if(p===""||p===null||p===undefined||isNaN(p))return"";
-  const q=Number(p)/max;return q>=0.65?"g":(q>=0.5?"y":"r");}
-function note(p,max){if(!max)return"—";const q=Math.round(Number(p)/max*100);
-  if(q>=95)return"1,0";if(q>=90)return"1,3";if(q>=85)return"1,7";if(q>=80)return"2,0";
-  if(q>=75)return"2,3";if(q>=70)return"2,7";if(q>=65)return"3,0";if(q>=60)return"3,3";
-  if(q>=55)return"3,7";if(q>=50)return"4,0";return"5,0";}
-function renderPunkte(){
-  const bis=S.woche,th=document.getElementById("thead"),tb=document.getElementById("tbody");
-  let h="<tr><th class='nm'>Teilnehmer / Team</th>";
-  for(let w=1;w<=bis;w++)h+="<th>"+w+"</th>";
-  h+="<th>Gesamt</th>"+(S.noten?"<th>Note</th>":"")+"</tr>";
-  th.innerHTML=h;tb.innerHTML="";
-  S.punkte.forEach((row,i)=>{
-    const tr=document.createElement("tr");
-    const tdn=document.createElement("td");tdn.className="nm";
-    const inp=document.createElement("input");inp.type="text";inp.placeholder="Name oder Team";
-    inp.value=row.name||"";
-    inp.addEventListener("input",()=>{S.punkte[i].name=inp.value;save();});
-    tdn.appendChild(inp);tr.appendChild(tdn);
-    for(let w=1;w<=bis;w++){
-      const td=document.createElement("td");td.className="wk";
-      const v=document.createElement("input");v.type="number";v.min="0";v.max="30";
-      const cur=(row.w&&row.w[w]!==undefined)?row.w[w]:"";
-      v.value=cur;v.className=ampel(cur,S.maxw);
-      v.addEventListener("input",()=>{
-        if(!S.punkte[i].w)S.punkte[i].w={};
-        if(v.value==="")delete S.punkte[i].w[w];else S.punkte[i].w[w]=v.value;
-        v.className=ampel(v.value,S.maxw);save();updateGes(tr,i,bis);});
-      td.appendChild(v);tr.appendChild(td);}
-    const tdg=document.createElement("td");tdg.className="ges";tr.appendChild(tdg);
-    if(S.noten){const t2=document.createElement("td");t2.className="note";tr.appendChild(t2);}
-    tb.appendChild(tr);updateGes(tr,i,bis);
-  });
-}
-function updateGes(tr,i,bis){
-  const row=S.punkte[i];let sum=0,gez=0;
-  for(let w=1;w<=bis;w++){const v=row.w&&row.w[w];
-    if(v!==undefined&&v!==""){sum+=Number(v)||0;gez++;}}
-  const tdg=tr.querySelector("td.ges"),maxges=gez*S.maxw;
-  tdg.textContent=gez?sum:"—";
-  tdg.className="ges "+(gez?ampel(sum,maxges||1):"");
-  const tdn=tr.querySelector("td.note");
-  if(tdn)tdn.textContent=gez?note(sum,maxges):"—";
-}
-document.getElementById("addrow").addEventListener("click",()=>{S.punkte.push({name:"",w:{}});save();renderPunkte();});
-document.getElementById("sortrow").addEventListener("click",()=>{
-  const sum=r=>Object.values(r.w||{}).reduce((a,b)=>a+(Number(b)||0),0);
-  S.punkte.sort((a,b)=>sum(b)-sum(a));save();renderPunkte();});
-document.getElementById("clearrow").addEventListener("click",()=>{
-  S.punkte=[{name:"",w:{}},{name:"",w:{}},{name:"",w:{}},{name:"",w:{}}];save();renderPunkte();});
-document.getElementById("maxw").addEventListener("input",e=>{
-  S.maxw=Math.max(1,Math.min(20,Number(e.target.value)||6));save();renderPunkte();});
-document.getElementById("notesbtn").addEventListener("click",e=>{
-  S.noten=!S.noten;e.target.textContent=S.noten?"Noten ausblenden":"Noten einblenden";save();renderPunkte();});
-
 /* ================= Tabs ================= */
-const TABS=["unit","plan","leute","fort","karten","punkte","codes"];
+const TABS=["unit","plan","leute","karten","codes"];
 function showTab(t){
   document.querySelectorAll("nav button").forEach(x=>x.setAttribute("aria-selected",x.dataset.t===t?"true":"false"));
   TABS.forEach(k=>{document.getElementById("p-"+k).hidden=(k!==t);});
-  if(t==="punkte")renderPunkte();
-  if(t==="fort")renderFort();
 }
 document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()=>showTab(b.dataset.t)));
 
@@ -1346,13 +1312,10 @@ document.querySelectorAll("nav button").forEach(b=>b.addEventListener("click",()
 function applyMode(){
   const doz=isDoz();
   document.getElementById("tab-karten").hidden=!doz;
-  document.getElementById("tab-punkte").hidden=!doz;
   document.getElementById("tab-codes").hidden=!doz;
   document.getElementById("unlockbox").hidden=doz;
   const bd=document.getElementById("modebadge");
   bd.textContent=doz?"Dozent":"Teilnehmer";bd.className="badge"+(doz?" doz":"");
-  document.getElementById("maxw").value=S.maxw;
-  document.getElementById("notesbtn").textContent=S.noten?"Noten ausblenden":"Noten einblenden";
   if(!doz)S.woche=Math.min(S.woche,S.frei);
 }
 function dozSetzen(o){
@@ -1392,14 +1355,55 @@ document.getElementById("dozfile").addEventListener("change",()=>{
 
 /* ================= v5: Abgaben, Fortschritt, wochen.json ================= */
 const $=i=>document.getElementById(i);
-const STAT=[{id:"offen",l:"offen",d:"d-offen"},{id:"arbeit",l:"in Arbeit",d:"d-arbeit"},
-            {id:"fertig",l:"abgegeben",d:"d-fertig"}];
-const statInfo=id=>STAT.find(s=>s.id===id)||STAT[0];
-function zeitTxt(iso){if(!iso)return"";
-  try{return new Date(iso).toLocaleString("de-DE",{day:"2-digit",month:"2-digit",
-    year:"numeric",hour:"2-digit",minute:"2-digit"});}catch(e){return iso;}}
-function kbTxt(b){if(b==null)return"";
-  return b<1048576?Math.max(1,Math.round(b/1024))+" KB":(b/1048576).toFixed(1).replace(".",",")+" MB";}
+
+/* ---------- v13: der Auftrag im festen Format ----------
+   Absatz 1 ist die Einfuehrung, danach die nummerierten Punkte,
+   der Absatz "Zeit · ..." wird zur Zeitleiste. Faellt eine dieser
+   Formen weg, wird der Text einfach als Absatz gezeigt. */
+function zeigeAuftrag(text){
+  const ziel = document.getElementById("i-auftrag");
+  ziel.innerHTML = "";
+  const bloecke = String(text||"").split(/\n\s*\n/).map(b=>b.trim()).filter(Boolean);
+  let liste = null;
+  bloecke.forEach(b => {
+    if(/^Zeit\s·/.test(b)){
+      const p = document.createElement("p"); p.className = "zeit";
+      const teile = b.replace(/^Zeit\s·\s*/,"").split(" · ");
+      teile.forEach((t,i) => {
+        const m = t.match(/^(\d+\s*Min)\s+(.*)$/);
+        if(i) ziel.lastChild && p.appendChild(document.createTextNode("  ·  "));
+        if(m){ const b2=document.createElement("b"); b2.textContent=m[1];
+               p.appendChild(b2); p.appendChild(document.createTextNode(" "+m[2])); }
+        else p.appendChild(document.createTextNode(t));
+      });
+      ziel.appendChild(p); liste = null; return;
+    }
+    const zeilen = b.split("\n").map(z=>z.trim()).filter(Boolean);
+    const nummeriert = zeilen.length && zeilen.every(z=>/^\d+\s/.test(z));
+    if(nummeriert){
+      if(!liste){ liste = document.createElement("ol"); ziel.appendChild(liste); }
+      zeilen.forEach(z => {
+        const li = document.createElement("li");
+        li.textContent = z.replace(/^\d+\s+/,"");
+        liste.appendChild(li);
+      });
+      return;
+    }
+    const p = document.createElement("p"); p.className = "einl";
+    p.textContent = b; ziel.appendChild(p); liste = null;
+  });
+}
+
+/* Das durchgehende Muster: eine gemeinsame Basis, je Team ein Teil des Bildes. */
+const MUSTER = {
+  2:"ein Betrieb, vier Menschen — je Team einer",
+  3:"ein Chef, vier Grundhaltungen — je Team eine",
+  4:"ein Betrieb, vier Geldquellen — je Team eine",
+  6:"ein Kennzahlenblatt, vier Blickwinkel — je Team einer"
+};
+
+/* Wohin die Vorlagen verlinken. Eine Zeile aendern, wenn der Ordner umzieht. */
+const TEAMS_VORLAGEN = "https://thorbenreimerfinanzcoaching-my.sharepoint.com/personal/kontakt_thorbenreimer_de/Documents/Coaching/Kunden/Kiedaisch/BGM/Unterlagen%20Pr%C3%A4senz";
 
 /* ---------- Wochenfelder in der Auftragskarte ---------- */
 function fuelleExtras(e){
@@ -1410,114 +1414,27 @@ function fuelleExtras(e){
   chip("Aufgabe "+e.n+" von "+EINHEITEN.length);
   const ms=msVon(e.n);
   if(ms)chip("zahlt auf Meilenstein "+ms.nr+" ein","ms");
-  if(e.dauer)chip(e.dauer+" Min Präsenz");
   $("i-ziel").textContent=e.ziel||"";$("i-ziel").hidden=!e.ziel;
   const bg=$("i-begriffe");bg.innerHTML="";
   (e.begriffe||[]).forEach(b=>{const s=document.createElement("span");s.textContent=b;bg.appendChild(s);});
   bg.hidden=!(e.begriffe&&e.begriffe.length);
-  const ml=$("i-material");ml.innerHTML="";
+  const ml=$("i-vorlagenliste");ml.innerHTML="";
   (e.material||[]).forEach(m=>{const li=document.createElement("li");li.textContent=m;ml.appendChild(li);});
-  $("i-matbox").hidden=!(e.material&&e.material.length);
-  $("i-eigen").textContent=e.eigen||"";$("i-eigenbox").hidden=!e.eigen;
-  if(e.dauer)$("i-zeit").textContent=e.dauer+" Minuten Präsenz, davon rund 50 in der Gruppe";
+  $("i-vorlagen").hidden=!(e.material&&e.material.length);
+  const tl=$("i-teams");
+  if(TEAMS_VORLAGEN){ tl.href=TEAMS_VORLAGEN; tl.removeAttribute("aria-disabled");
+    tl.lastChild.textContent="Vorlagen in Teams öffnen"; }
+  else { tl.removeAttribute("href"); tl.setAttribute("aria-disabled","true");
+    tl.lastChild.textContent="Vorlagen liegen in Teams · Ordner „Unterlagen Präsenz\u201c"; }
+  const mu=MUSTER[e.n];
+  $("i-muster").hidden=!mu;
+  if(mu)$("i-muster").innerHTML="<b>Eine Basis, vier Teile.</b> Aufgabe "+e.n+" · "+mu+
+    ". Das Ganze entsteht erst, wenn alle zugehört haben.";
+  const ms2=msVon(e.n);
+  $("i-heft").textContent = (e.eigen||"") +
+    (ms2 ? "  ·  Meilenstein "+ms2.nr+" — "+ms2.faellig+"." : "");
 }
 
-/* Wer diese Woche abgibt: bis Einheit 14 die Person, danach das Team. */
-function traeger(w){
-  if(w>=TEAM_AB) return S.team ? "Team "+S.team : "dein Pitch-Team";
-  return S.name || "deine Arbeitsdatei";
-}
-function abg(w){return S.abgaben[w]||(S.abgaben[w]={st:"offen",notiz:"",datei:null,zeit:null});}
-function abgLies(w){return S.abgaben[w]||{st:"offen",notiz:"",datei:null,zeit:null};}
-function fertigZahl(){return EINHEITEN.filter(e=>abgLies(e.n).st==="fertig").length;}
-
-/* ---------- Abgabe der laufenden Woche ---------- */
-function renderAbgabe(){
-  const a=abgLies(S.woche);
-  $("a-team").textContent=traeger(S.woche);
-  [...$("a-seg").children].forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.st===a.st)));
-  const n=$("a-notiz");if(document.activeElement!==n)n.value=a.notiz||"";
-  $("a-dname").textContent=a.datei?(a.datei.name+" · "+kbTxt(a.datei.size)):"";
-  $("a-dweg").hidden=!a.datei;
-  $("a-stamp").hidden=!a.zeit;
-  if(a.zeit)$("a-stamp").textContent="Abgegeben am "+zeitTxt(a.zeit);
-}
-[...$("a-seg").children].forEach(b=>b.addEventListener("click",()=>{
-  const r=abg(S.woche);
-  r.st=b.dataset.st;r.zeit=(r.st==="fertig")?new Date().toISOString():null;
-  save();renderAbgabe();}));
-$("a-notiz").addEventListener("input",()=>{abg(S.woche).notiz=$("a-notiz").value;save();});
-$("a-dbtn").addEventListener("click",()=>$("a-datei").click());
-$("a-datei").addEventListener("change",()=>{
-  const f=$("a-datei").files&&$("a-datei").files[0];if(!f)return;
-  abg(S.woche).datei={name:f.name,size:f.size};
-  save();renderAbgabe();$("a-datei").value="";});
-$("a-dweg").addEventListener("click",()=>{abg(S.woche).datei=null;save();renderAbgabe();});
-
-/* ---------- Mein Konto ---------- */
-function phasenListe(){
-  const o=[];EINHEITEN.forEach(e=>{const p=e.phase||"ohne Phase";
-    const l=o[o.length-1];if(l&&l.name===p)l.wo.push(e);else o.push({name:p,wo:[e]});});
-  return o;
-}
-function renderFort(){
-  const ges=EINHEITEN.length||1;
-  $("f-wer").textContent=S.name||"noch ohne Namen";
-
-  const teamZeit = S.woche>=TEAM_AB || S.frei>=TEAM_AB;
-  $("k-teambox").hidden=!teamZeit;
-  $("k-mitbox").hidden=!teamZeit;
-  if(document.activeElement!==$("k-name"))$("k-name").value=S.name||"";
-  if(document.activeElement!==$("k-team"))$("k-team").value=S.team||"";
-  if(document.activeElement!==$("k-mit"))$("k-mit").value=S.teamMit||"";
-
-  const bal=(l,f,g)=>'<div class="prow"><span class="l">'+l+'</span><span class="pbar"><i style="width:'+
-    (f/g*100).toFixed(1)+'%"></i></span><span class="n">'+f+"/"+g+"</span></div>";
-  let hb=bal("Gesamt",fertigZahl(),ges);
-
-  /* Der nächste Meilenstein ist der erste, der noch nicht vollständig
-     abgehakt ist — der bekommt den Rahmen. */
-  const stand = MEILENSTEINE.map(m=>{
-    const wo = EINHEITEN.filter(e=>e.n>=m.von && e.n<=m.bis);
-    return {m:m, wo:wo, fertig:wo.filter(e=>abgLies(e.n).st==="fertig").length};
-  });
-  const naechster = stand.find(s=>s.fertig < s.wo.length);
-
-  stand.forEach(s=>{
-    const jetzt = (naechster && s.m.nr===s.m.nr && naechster.m.nr===s.m.nr);
-    hb += '<div class="prow ms'+(jetzt?" jetzt":"")+'">'+
-          '<span class="l"><b>M'+s.m.nr+'</b>'+s.m.titel+
-            '<small>Aufgabe '+s.m.von+"–"+s.m.bis+" · "+s.m.faellig+
-            (jetzt?" · als Nächstes":"")+'</small></span>'+
-          '<span class="pbar"><i style="width:'+
-            (s.wo.length? (s.fertig/s.wo.length*100).toFixed(1) : 0)+'%"></i></span>'+
-          '<span class="n">'+s.fertig+"/"+s.wo.length+"</span></div>";
-  });
-  $("f-bars").innerHTML=hb;
-
-  const li=$("f-liste");li.innerHTML="";
-  EINHEITEN.forEach(e=>{
-    const si=statInfo(abgLies(e.n).st);
-    const zu=e.n>maxWeek();
-    const b=document.createElement("button");
-    b.type="button";
-    b.className="wz"+(e.n===S.woche?" jetzt":"");
-    b.disabled=zu;
-    b.innerHTML="<span class='d "+si.d+"'></span><span><small></small><b></b><i></i></span>";
-    b.querySelector("small").textContent="Aufgabe "+e.n+" · "+(e.phase||"")+" · M"+(msVon(e.n)||{nr:"—"}).nr;
-    b.querySelector("b").textContent=zu?"noch nicht freigeschaltet":e.t;
-    b.querySelector("i").textContent=zu?"":si.l+" · "+(e.b||"");
-    if(!zu)b.addEventListener("click",()=>{showTab("unit");gehZu(e.n);});
-    li.appendChild(b);
-  });
-}
-[["k-name","name"],["k-team","team"],["k-mit","teamMit"]].forEach(([id,feld])=>{
-  $(id).addEventListener("input",()=>{
-    S[feld]=$(id).value;save();
-    $("f-wer").textContent=S.name||"noch ohne Namen";
-    $("a-team").textContent=traeger(S.woche);
-  });
-});
 
 /* ---------- Inhalte: wochen.json ---------- */
 const PFLICHT=["woche","phase","titel","lernziel","kernbegriffe","input","spielzug",
@@ -1536,7 +1453,7 @@ function setzeWochen(d,quelle){
   $("jsoninfo").textContent=quelle==="json"
     ? "Inhalte aus wochen.json — "+EINHEITEN.length+" Aufgaben"
     : "Mitgelieferter Stand — "+EINHEITEN.length+" Aufgaben";
-  if($("gate").hidden){fuelleKarte();markiereRaum();renderPlan();renderFort();}
+  if($("gate").hidden){fuelleKarte();markiereRaum();renderPlan();}
 }
 $("btn-json").addEventListener("click",()=>$("jsonfile").click());
 $("jsonfile").addEventListener("change",()=>{
@@ -1552,45 +1469,6 @@ $("jsonfile").addEventListener("change",()=>{
   };
   fr.readAsText(f,"utf-8");
 });
-/* ---------- Stand sichern und laden ---------- */
-function standInfo(t){$("standinfo").textContent=t||"";}
-$("btn-save").addEventListener("click",()=>{
-  const paket={typ:"bgm-spielstand",gespeichert:new Date().toISOString(),stand:S};
-  const blob=new Blob([JSON.stringify(paket,null,2)],{type:"application/json"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="bgm-spielstand-"+new Date().toISOString().slice(0,10)+".json";
-  document.body.appendChild(a);a.click();a.remove();
-  setTimeout(()=>URL.revokeObjectURL(url),3000);
-  standInfo("Gesichert.");
-});
-$("btn-load").addEventListener("click",()=>$("standfile").click());
-$("standfile").addEventListener("change",()=>{
-  const f=$("standfile").files&&$("standfile").files[0];if(!f)return;
-  const fr=new FileReader();
-  fr.onload=()=>{
-    try{
-      const p=JSON.parse(fr.result);
-      const st=(p&&p.stand)?p.stand:p;
-      if(!st||typeof st!=="object"||!st.abgaben)
-        throw new Error("Das ist keine gesicherte Spielstandsdatei.");
-      if(!confirm("Der Stand auf diesem Gerät wird durch die Datei ersetzt. Fortfahren?"))return;
-      ["woche","frei","maxw"].forEach(k=>{if(typeof st[k]==="number")S[k]=st[k];});
-      ["name","team","teamMit"].forEach(k=>{if(typeof st[k]==="string")S[k]=st[k];});
-      S.abgaben=migriere(st.abgaben,st);
-      S.punkte=Array.isArray(st.punkte)?st.punkte:S.punkte;
-      S.karten=Array.isArray(st.karten)?st.karten:[];
-      save();
-      S.woche=Math.min(Math.max(1,S.woche),EINHEITEN.length);
-      fuelleKarte();markiereRaum();renderPlan();renderFort();renderAbgabe();
-      standInfo("Geladen — Stand vom "+((p&&p.gespeichert)?p.gespeichert.slice(0,10):"?")+".");
-    }catch(err){alert("Stand konnte nicht geladen werden:\n\n"+err.message);}
-    $("standfile").value="";
-  };
-  fr.readAsText(f,"utf-8");
-});
-
 $("btn-jsonweg").addEventListener("click",()=>{
   try{localStorage.removeItem(KEY+".wochen");}catch(e){}
   setzeWochen(WOCHEN_STD,"std");});
