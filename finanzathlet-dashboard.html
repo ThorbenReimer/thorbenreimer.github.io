@@ -202,6 +202,15 @@
   .ath-ex b { display: block; color: var(--tr-dark); font-size: 14px; margin-top: 6px; }
   .ath-ex span { color: var(--tr-muted); font-size: 12px; }
 
+  /* === Zahlweg-Panel === */
+  .zw-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .zw-table th { text-align: left; font-size: 11px; color: var(--tr-muted); text-transform: uppercase; padding: 6px 8px; border-bottom: 1px solid var(--tr-border); position: sticky; top: 0; background: #fff; }
+  .zw-table td { padding: 6px 8px; border-bottom: 1px solid var(--tr-border); }
+  .zw-table .num { text-align: right; }
+  .zw-btn { border: 1px solid var(--tr-border); background: #fff; color: var(--tr-muted); border-radius: 14px; padding: 3px 10px; font-size: 12px; cursor: pointer; }
+  .zw-btn.on.abbuchung { background: var(--tr-dark); color: #fff; border-color: var(--tr-dark); }
+  .zw-btn.on.konsum { background: #E08B54; color: #fff; border-color: #E08B54; }
+
   /* === Ampel-Anzeige Finanzfitnessgrad === */
   .ampel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
   .ampel {
@@ -649,6 +658,21 @@
   </div>
   <div id="reviewStats" class="stat-grid"></div>
 
+  <div class="card" id="zahlwegPanel" style="margin:14px 0;">
+    <h3 style="margin-top:0;">Beine &amp; Schuhe · Abbuchung oder Konsumkonto?</h3>
+    <p style="color:var(--tr-muted);font-size:12px;margin-top:-6px;">Je Empfänger festlegen: <strong>Abbuchung</strong> = läuft fix vom Hauptkonto (Finanzmanagement), z. B. PKV, Miete, Abos. <strong>Konsumkonto</strong> = wird im Alltag bezahlt, z. B. Tanken, Lebensmittel. Daraus ergibt sich der monatliche Übertrag aufs Konsumkonto. Vorbelegung automatisch (Lastschrift / Kartenzahlung / Kategorie).</p>
+    <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
+      <select id="zahlwegFilter" onchange="renderZahlweg()">
+        <option value="FIXKOSTEN">Nur Beine (Fixkosten)</option>
+        <option value="VARIABEL">Nur Schuhe (Konsum)</option>
+        <option value="all">Beine + Schuhe</option>
+      </select>
+      <button class="action secondary" onclick="resetZahlwegAuto()" style="padding:6px 10px;font-size:12px;">↺ Automatisch neu erkennen</button>
+    </div>
+    <div id="zahlwegStats" class="stat-grid"></div>
+    <div id="zahlwegList" style="max-height:420px;overflow:auto;margin-top:10px;"></div>
+  </div>
+
   <div class="card" style="margin:14px 0;">
     <h3 style="margin-top:0;">Weitere Einnahmen (nicht im Kontoauszug)</h3>
     <p style="color:var(--tr-muted);font-size:12px;margin-top:-6px;">Für Bareinnahmen oder Einnahmen über ein anderes, nicht importiertes Konto. Wird zusätzlich zu den Kontobuchungen in allen Berechnungen berücksichtigt.</p>
@@ -949,7 +973,7 @@
         <div class="field"><label>Nettoeinkommen / Monat (€)</label><input type="number" id="income" value="3000" oninput="FA_syncIncomeToKundeNetto(this.value); FA_Konten.update();"></div>
         <div class="field"><label>Überschuss / Monat (€)</label><input type="number" id="surplus" value="300" oninput="FA_Konten.update();"><div id="surplusSyncHint" style="font-size:10px;color:var(--muted);margin-top:3px;"></div></div>
         <div class="field"><label>Notfallfonds-Monate</label><input type="number" id="emm" value="4" min="1" max="12" oninput="FA_Konten.update();"></div>
-        <div class="field"><label>Laufende Kosten Girokonto (€)</label><input type="number" id="giroKosten" value="0" placeholder="z. B. 1500" oninput="FA_Konten.update();"></div>
+        <div class="field"><label>Laufende Kosten Girokonto (€)</label><input type="number" id="giroKosten" value="0" placeholder="z. B. 1500" oninput="FA_Konten.update();"><a href="#" onclick="FA_giroAusPruefung(); return false;" style="font-size:10px;">↻ aus Prüfung (Abbuchungen + Konsum-Übertrag)</a><div id="giroSplitHint" style="font-size:10px;color:var(--muted);margin-top:3px;"></div></div>
         <div class="field"><label>Sicherheitszuschlag Girokonto (€)</label><input type="number" id="giroZuschlag" value="0" placeholder="optional" oninput="FA_Konten.update();"></div>
       </div>
       <div style="font-size:10px;color:var(--muted);margin-top:8px;">Laufende Kosten leer/0 lassen, um die Girokonto-Überschuss-Erkennung zu deaktivieren.</div>
@@ -1916,12 +1940,13 @@ function renderReview() {
       <strong>Buchungsart:</strong> ${escapeHtml(t.bookingType || '–')} &nbsp;·&nbsp;
       <strong>Bank/Quelle:</strong> ${escapeHtml(t.bank || '–')} &nbsp;·&nbsp;
       <strong>Vollständiger Text:</strong> ${escapeHtml(t.raw || '–')} &nbsp;·&nbsp;
-      <label style="cursor:pointer;"><input type="checkbox" ${t.istDauerauftrag?'checked':''} onchange="toggleDauerauftrag('${t.id}',this.checked)" style="width:auto;vertical-align:middle;"> <strong>Dauerauftrag</strong> (relevant bei Variable Kosten – für die Konten-Story-Animation)</label>
+      <label style="cursor:pointer;"><input type="checkbox" ${zahlwegOf(t)==='abbuchung'?'checked':''} onchange="toggleDauerauftrag('${t.id}',this.checked)" style="width:auto;vertical-align:middle;"> <strong>Abbuchung vom Hauptkonto</strong> (sonst: läuft übers Konsumkonto)</label>
     </td></tr>`;
   });
   html += '</tbody></table>';
   if (filtered.length > 500) html += `<p style="color:var(--tr-muted)">Anzeige auf 500 begrenzt (von ${filtered.length}).</p>`;
   document.getElementById('reviewTableWrap').innerHTML = html;
+  try { renderZahlweg(); } catch (e) { console.warn(e); }
   updateBulkBar();
   renderGroupPendingPanel();
 }
@@ -1932,6 +1957,8 @@ function toggleTxDetail(id) {
 function toggleDauerauftrag(id, checked) {
   const t = TX.find(x => x.id === id); if (!t) return;
   t.istDauerauftrag = checked;
+  t.zahlweg = checked ? 'abbuchung' : 'konsum';
+  try { renderZahlweg(); } catch (e) {}
 }
 function changeCategory(id, cat) {
   const t = TX.find(x => x.id === id); if (!t) return;
@@ -2094,7 +2121,7 @@ function exportKundenakte() {
     transaktionen: TX.map(t => ({
       id: t.id, datum: t.date.toISOString(), betrag: t.amount,
       empfaenger: t.recipient, verwendungszweck: t.purpose, raw: t.raw,
-      kategorie: t.category, status: t.status, bank: t.bank, istDauerauftrag: t.istDauerauftrag
+      kategorie: t.category, status: t.status, bank: t.bank, istDauerauftrag: t.istDauerauftrag, zahlweg: t.zahlweg || null, buchungsart: t.bookingType || ''
     })),
     onepager: {
       values: getOpValues(),
@@ -2184,7 +2211,8 @@ function importKundenakte(file) {
           TX = akte.transaktionen.map(t => ({
             id: t.id, date: new Date(t.datum), amount: t.betrag,
             recipient: t.empfaenger, purpose: t.verwendungszweck, raw: t.raw,
-            category: t.kategorie, status: t.status, bank: t.bank, istDauerauftrag: t.istDauerauftrag || false
+            category: t.kategorie, status: t.status, bank: t.bank, istDauerauftrag: t.istDauerauftrag || false,
+            zahlweg: t.zahlweg || null, bookingType: t.buchungsart || ''
           }));
           SELECTED.clear();
           renderReview();
@@ -2406,16 +2434,101 @@ function computeEffectiveCashflow() {
   return { source: 'none', data: null };
 }
 
-function computeVariableSplit() {
-  // Trennt die VARIABEL-Kategorie in Dauerauftrag-Anteil (geht automatisiert vom Girokonto)
-  // und echten Alltags-Anteil (Tanken, Lebensmittel etc.) - für die Story-Animation.
-  if (!TX.length) return { dauerauftrag: 0, alltag: 0, monate: 1 };
-  const active = TX.filter(t => t.status !== 'ignore' && t.category === 'VARIABEL');
-  if (!active.length) return { dauerauftrag: 0, alltag: 0, monate: 1 };
+/* ===== Zahlweg: Abbuchung (Hauptkonto) oder Konsumkonto ===== */
+const ZAHLWEG_CATS = { FIXKOSTEN: 'Beine', VARIABEL: 'Schuhe' };
+function zahlwegAuto(t) {
+  const txt = ((t.bookingType || '') + ' ' + (t.raw || '') + ' ' + (t.recipient || '')).toLowerCase();
+  if (/lastschrift|dauerauftrag|abbuchung|einzug|standing order|direct debit|folgelastschrift/.test(txt)) return 'abbuchung';
+  if (/kartenzahlung|girocard|visa|mastercard|apple pay|google pay|kartenumsatz|\bpos\b|ec-karte|bargeld|geldautomat|\batm\b/.test(txt)) return 'konsum';
+  if (/aral|shell|esso|tankstelle|\bjet\b|totalenergies|agip|\bomv\b/.test(txt)) return 'konsum';
+  return t.category === 'FIXKOSTEN' ? 'abbuchung' : 'konsum';
+}
+function zahlwegOf(t) {
+  if (t.zahlweg === 'abbuchung' || t.zahlweg === 'konsum') return t.zahlweg;
+  if (t.istDauerauftrag) return 'abbuchung';
+  return zahlwegAuto(t);
+}
+function computeZahlwegSplit() {
+  const res = { beine: { abbuchung: 0, konsum: 0 }, schuhe: { abbuchung: 0, konsum: 0 }, schirm: 0, abbuchung: 0, konsum: 0, monate: 1 };
+  if (!TX.length) return res;
+  const active = TX.filter(t => t.status !== 'ignore' && t.category && t.category !== 'IGNORE');
+  if (!active.length) return res;
   const months = monthsInData(active);
-  let dauer = 0, alltag = 0;
-  active.forEach(t => { if (t.istDauerauftrag) dauer += Math.abs(t.amount); else alltag += Math.abs(t.amount); });
-  return { dauerauftrag: dauer / months, alltag: alltag / months, monate: months };
+  res.monate = months;
+  active.forEach(t => {
+    if (t.amount >= 0) return;
+    const v = Math.abs(t.amount) / months;
+    if (t.category === 'SCHUTZ') { res.schirm += v; return; }
+    const part = t.category === 'FIXKOSTEN' ? 'beine' : t.category === 'VARIABEL' ? 'schuhe' : null;
+    if (!part) return;
+    res[part][zahlwegOf(t)] += v;
+  });
+  res.abbuchung = res.beine.abbuchung + res.schuhe.abbuchung;
+  res.konsum = res.beine.konsum + res.schuhe.konsum;
+  return res;
+}
+function zahlwegGroupKey(t) {
+  return ((t.recipient || t.purpose || t.raw || 'Sonstiges') + '').trim().toLowerCase().slice(0, 60) + '|' + t.category;
+}
+function setZahlwegGroup(key, weg) {
+  TX.forEach(t => {
+    if (ZAHLWEG_CATS[t.category] && zahlwegGroupKey(t) === key) { t.zahlweg = weg; t.istDauerauftrag = (weg === 'abbuchung'); }
+  });
+  renderZahlweg();
+  try { renderFFG(); } catch (e) {}
+}
+function resetZahlwegAuto() {
+  if (!confirm('Alle manuellen Zuordnungen Abbuchung/Konsumkonto zurücksetzen und automatisch erkennen?')) return;
+  TX.forEach(t => { if (ZAHLWEG_CATS[t.category]) { t.zahlweg = null; t.istDauerauftrag = false; } });
+  renderZahlweg();
+}
+function renderZahlweg() {
+  const wrap = document.getElementById('zahlwegPanel');
+  if (!wrap) return;
+  const cards = document.getElementById('zahlwegStats');
+  const list = document.getElementById('zahlwegList');
+  if (!TX.length) { cards.innerHTML = ''; list.innerHTML = '<div class="empty-state">Noch keine Buchungen.</div>'; return; }
+  const filter = document.getElementById('zahlwegFilter').value;
+  const active = TX.filter(t => t.status !== 'ignore' && ZAHLWEG_CATS[t.category] && t.amount < 0);
+  const months = monthsInData(TX.filter(t => t.status !== 'ignore')) || 1;
+  const groups = {};
+  active.forEach(t => {
+    if (filter !== 'all' && t.category !== filter) return;
+    const k = zahlwegGroupKey(t);
+    if (!groups[k]) groups[k] = { key: k, name: (t.recipient || t.purpose || t.raw || 'Sonstiges').toString().slice(0, 60), cat: t.category, n: 0, sum: 0, ab: 0, ko: 0, manual: false };
+    const g = groups[k]; g.n++; g.sum += Math.abs(t.amount);
+    if (zahlwegOf(t) === 'abbuchung') g.ab++; else g.ko++;
+    if (t.zahlweg) g.manual = true;
+  });
+  const sp = computeZahlwegSplit();
+  const f = x => formatAmount(x);
+  cards.innerHTML = `
+    <div class="stat"><div class="label">Beine · Abbuchungen</div><div class="value">${f(sp.beine.abbuchung)}</div></div>
+    <div class="stat"><div class="label">Beine · über Konsumkonto</div><div class="value">${f(sp.beine.konsum)}</div></div>
+    <div class="stat"><div class="label">Schuhe · Abbuchungen (Abos …)</div><div class="value">${f(sp.schuhe.abbuchung)}</div></div>
+    <div class="stat"><div class="label">Schuhe · über Konsumkonto</div><div class="value">${f(sp.schuhe.konsum)}</div></div>
+    <div class="stat accent"><div class="label">Übertrag Konsumkonto / Monat</div><div class="value">${f(sp.konsum)}</div></div>
+    <div class="stat"><div class="label">Abbuchungen Hauptkonto / Monat</div><div class="value">${f(sp.abbuchung + sp.schirm)}</div><div class="label">inkl. Schirm ${f(sp.schirm)}</div></div>`;
+  const rows = Object.values(groups).sort((a, b) => b.sum - a.sum);
+  if (!rows.length) { list.innerHTML = '<div class="empty-state">Keine Kosten in dieser Auswahl.</div>'; return; }
+  const btn = (g, weg, label) => {
+    const on = weg === 'abbuchung' ? g.ab > 0 && g.ko === 0 : g.ko > 0 && g.ab === 0;
+    return `<button class="zw-btn ${on ? 'on ' + weg : ''}" onclick="setZahlwegGroup('${g.key.replace(/\\/g, '\\\\').replace(/'/g, "\\'")}','${weg}')">${label}</button>`;
+  };
+  list.innerHTML = `<table class="zw-table"><thead><tr><th>Empfänger</th><th>Körperteil</th><th class="num">Buchungen</th><th class="num">Ø / Monat</th><th>Zahlweg</th></tr></thead><tbody>` +
+    rows.map(g => `<tr>
+      <td>${escapeHtml(g.name)}${g.ab && g.ko ? ' <span style="color:#B07A1A;font-size:11px;">· gemischt</span>' : ''}</td>
+      <td>${ZAHLWEG_CATS[g.cat]}</td>
+      <td class="num">${g.n}</td>
+      <td class="num">${formatAmount(g.sum / months)}</td>
+      <td style="white-space:nowrap;">${btn(g, 'abbuchung', '🏦 Abbuchung')} ${btn(g, 'konsum', '🛒 Konsumkonto')} ${g.manual ? '' : '<span style="font-size:10px;color:var(--tr-muted);">auto</span>'}</td>
+    </tr>`).join('') + `</tbody></table>`;
+}
+
+function computeVariableSplit() {
+  // Übertrag aufs Konsumkonto (Beine + Schuhe mit Zahlweg "Konsumkonto") vs. Abbuchungen vom Hauptkonto
+  const sp = computeZahlwegSplit();
+  return { dauerauftrag: sp.konsum, alltag: sp.konsum, abbuchung: sp.abbuchung, monate: sp.monate };
 }
 
 function computeFirma() {
@@ -2723,6 +2836,11 @@ function renderFFG() {
           <div style="font-size:12px;color:var(--tr-muted);text-transform:uppercase;margin:4px 0 6px;">Balance-Check · wo ist der Athlet in Dysbalance?</div>
           ${athletBalanceHtml(a, false)}
           ${hints}
+          ${(() => { if (eff.source !== 'csv') return ''; const sp = computeZahlwegSplit(); if (!sp.abbuchung && !sp.konsum) return '';
+            return `<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="background:#fff;border:1px solid var(--tr-border);border-left:4px solid var(--tr-dark);border-radius:6px;padding:10px 12px;"><div style="font-size:11px;color:var(--tr-muted);text-transform:uppercase;">🏦 Hauptkonto · Abbuchungen</div><div style="font-family:Georgia,serif;font-size:20px;">${formatAmount(sp.abbuchung + sp.schirm)}</div><div style="font-size:11px;color:var(--tr-muted);">Beine ${formatAmount(sp.beine.abbuchung)} · Schuhe ${formatAmount(sp.schuhe.abbuchung)} · Schirm ${formatAmount(sp.schirm)}</div></div>
+              <div style="background:#fff;border:1px solid var(--tr-border);border-left:4px solid #E08B54;border-radius:6px;padding:10px 12px;"><div style="font-size:11px;color:var(--tr-muted);text-transform:uppercase;">🛒 Übertrag Konsumkonto / Monat</div><div style="font-family:Georgia,serif;font-size:20px;">${formatAmount(sp.konsum)}</div><div style="font-size:11px;color:var(--tr-muted);">Beine ${formatAmount(sp.beine.konsum)} · Schuhe ${formatAmount(sp.schuhe.konsum)}</div></div>
+            </div>`; })()}
         </div>
       </div>`;
 
@@ -3129,7 +3247,8 @@ function renderOnePager() {
     (ein > 0 ? `<div class="ein">Einkommen / Monat<b>${formatAmountSheet(ein)} €</b></div>` : `<div class="ein">Zahlen eintragen</div>`);
 
   document.getElementById('oSum').innerHTML = ein > 0
-    ? `Ausgaben gesamt: <b>${formatAmountSheet(a.summe)} €</b> · Frei verfügbar: <b style="color:${a.frei>=0?'#3FB67A':'#E0563B'}">${formatAmountSheet(a.frei)} €</b>`
+    ? `Ausgaben gesamt: <b>${formatAmountSheet(a.summe)} €</b> · Frei verfügbar: <b style="color:${a.frei>=0?'#3FB67A':'#E0563B'}">${formatAmountSheet(a.frei)} €</b>` +
+      ((() => { if (OP_SOURCE !== 'auto' || !TX.length) return ''; const sp = computeZahlwegSplit(); return sp.konsum ? `<br><span style="font-size:12px;color:#7A9CC0;">Konsumkonto-Übertrag: <b style="color:#E08B54">${formatAmountSheet(Math.round(sp.konsum))} € / Monat</b> · Abbuchungen Hauptkonto ${formatAmountSheet(Math.round(sp.abbuchung + sp.schirm))} €</span>` : ''; })())
     : `Trage Einnahmen und Körperteile ein.`;
 
   // Balance-Check als Ansatzpunkt
@@ -3838,49 +3957,84 @@ function storyWrap(inner,caption){
   return '<svg viewBox="0 0 480 230" style="width:100%;height:auto;max-width:760px;display:block;margin:0 auto;" xmlns="http://www.w3.org/2000/svg">'+inner+'</svg>'+cap;
 }
 
+function storyBox2(x,y,w,h,color,title,sub,opts){
+  opts=opts||{};
+  const op=opts.faded?'0.35':'0.92';
+  const dash=opts.dashed?' stroke="#fff" stroke-opacity=".5" stroke-dasharray="4,4" stroke-width="1.5"':'';
+  let t='<rect x="'+x+'" y="'+y+'" width="'+w+'" height="'+h+'" rx="10" fill="'+color+'" opacity="'+op+'"'+dash+'/>';
+  const cx=x+w/2;
+  if(sub){
+    t+='<text x="'+cx+'" y="'+(y+h/2-3)+'" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="bold" font-family="Calibri,sans-serif">'+title+'</text>';
+    t+='<text x="'+cx+'" y="'+(y+h/2+13)+'" text-anchor="middle" fill="#fff" fill-opacity=".85" font-size="11" font-family="Calibri,sans-serif">'+sub+'</text>';
+  } else {
+    t+='<text x="'+cx+'" y="'+(y+h/2+5)+'" text-anchor="middle" fill="#fff" font-size="12.5" font-weight="bold" font-family="Calibri,sans-serif">'+title+'</text>';
+  }
+  return t;
+}
+function storyArrow(x1,y1,x2,y2,color,dashed){ return storyLine(x1,y1,x2,y2,color,dashed,'',0); }
+function storyEur(v){ return v>0 ? Math.round(v).toLocaleString("de")+' €' : ''; }
+function storyData(){
+  const cf=typeof computeCashflowAvg==='function'?computeCashflowAvg():null;
+  const sp=typeof computeZahlwegSplit==='function'?computeZahlwegSplit():null;
+  const hasSp = sp && (sp.konsum>0 || sp.abbuchung>0);
+  return {
+    ein: cf?cf.einnahmen:0,
+    fix: cf?cf.fixGesamt:0,
+    var_: cf?cf.var_:0,
+    spar: cf?cf.spar:0,
+    konsum: hasSp?sp.konsum:(cf?cf.var_:0),
+    abbuchung: hasSp?(sp.abbuchung+sp.schirm+(cf?cf.av:0)):(cf?cf.fixGesamt:0)
+  };
+}
+const ST_C={ein:"#3FB67A",fix:"#5A7BA8",var:"#E0563B",konsum:"#E08B54",spar:"#7055C0",dauer:"#B8642E"};
+
 function storySlide1(){
+  const d=storyData();
   let s='';
-  s+=storyBox(185,95,110,50,LVLS[0].color,"💳","Girokonto");
-  s+=storyLine(240,20,240,95,"#3FB67A",false,"€ Einnahmen");
-  s+=storyLine(185,140,70,190,"#5A7BA8",false,"🏠 Fixkosten",-8);
-  s+=storyLine(240,145,240,200,"#E0563B",false,"🛒 Variable");
-  s+=storyLine(295,140,410,190,"#7055C0",false,"🎯 Sparversuch",8);
-  s+='<text x="410" y="70" text-anchor="middle" font-size="46" font-weight="bold" fill="rgba(255,255,255,.18)" font-family="Georgia,serif">?</text>';
-  return storyWrap(s,'');
+  s+=storyBox2(170,8,140,40,ST_C.ein,"💶 Einnahmen",storyEur(d.ein));
+  s+=storyArrow(240,48,240,80,ST_C.ein);
+  s+=storyBox2(170,82,140,46,LVLS[0].color,"💳 Girokonto","alles auf einem Konto");
+  s+=storyArrow(200,128,90,168,ST_C.fix);
+  s+=storyArrow(240,128,240,168,ST_C.var);
+  s+=storyArrow(280,128,390,168,ST_C.spar,true);
+  s+=storyBox2(20,170,140,46,ST_C.fix,"🏠 Fixkosten",storyEur(d.fix));
+  s+=storyBox2(170,170,140,46,ST_C.var,"🛒 Variable Kosten",storyEur(d.var_));
+  s+=storyBox2(320,170,140,46,ST_C.spar,"🎯 Sparen?","was übrig bleibt …",{faded:true,dashed:true});
+  return storyWrap(s,'Heute läuft alles über <strong style="color:var(--white);">ein Konto</strong>. Gespart wird, was am Monatsende übrig bleibt – meistens wenig.');
 }
 function storySlide2(){
+  const d=storyData();
   let s='';
-  s+=storyBox(50,95,120,50,LVLS[0].color,"💳","Girokonto");
-  s+=storyBox(310,95,120,50,"#E08B54","🛒","Konsumkonto");
-  s+=storyLine(110,20,110,95,"#3FB67A",false,"€ Einnahmen");
-  const vs=typeof computeVariableSplit==='function'?computeVariableSplit():null;
-  const dauerLabel = vs && vs.dauerauftrag>0
-    ? "Dauerauftrag: "+Math.round(vs.dauerauftrag).toLocaleString("de")+" € Variable Kosten"
-    : "Dauerauftrag: Variable Kosten";
-  s+=storyLine(170,120,310,120,"#E08B54",true,dauerLabel);
-  let cap='Einnahmen laufen jetzt ins neue <strong style="color:var(--white);">Girokonto</strong>. Ein Dauerauftrag schiebt die variablen Kosten automatisch aufs <strong style="color:var(--white);">Konsumkonto</strong>.';
-  if(vs && (vs.dauerauftrag>0||vs.alltag>0)){
-    cap+='<br><span style="font-size:11px;">Aus der Prüfung erkannt: '+Math.round(vs.dauerauftrag).toLocaleString("de")+' € echte Daueraufträge · '+Math.round(vs.alltag).toLocaleString("de")+' € Alltag (Tanken, Lebensmittel etc. – bleiben variabel im Konsumkonto)</span>';
-  }
-  return storyWrap(s,cap);
+  s+=storyBox2(20,8,140,40,ST_C.ein,"💶 Einnahmen",storyEur(d.ein));
+  s+=storyArrow(90,48,90,80,ST_C.ein);
+  s+=storyBox2(20,82,140,46,LVLS[0].color,"💳 Girokonto","Hauptkonto");
+  s+=storyBox2(320,82,140,46,ST_C.konsum,"🛒 Konsumkonto","Alltag mit Karte");
+  s+=storyArrow(160,105,180,105,ST_C.dauer);
+  s+=storyBox2(182,86,116,38,ST_C.dauer,"🔁 Dauerauftrag",d.konsum>0?storyEur(d.konsum)+' / Monat':'monatlich');
+  s+=storyArrow(298,105,318,105,ST_C.dauer);
+  s+=storyArrow(90,128,90,168,ST_C.fix);
+  s+=storyArrow(390,128,390,168,ST_C.var);
+  s+=storyBox2(20,170,140,46,ST_C.fix,"🏦 Abbuchungen",storyEur(d.abbuchung)||'Miete, PKV, Abos …');
+  s+=storyBox2(320,170,140,46,ST_C.var,"🛒 Alltag",storyEur(d.konsum)||'Tanken, Einkauf …');
+  return storyWrap(s,'Zwei Konten, klare Rollen: Abbuchungen bleiben auf dem <strong style="color:var(--white);">Hauptkonto</strong>. Ein <strong style="color:var(--white);">Dauerauftrag</strong> überträgt jeden Monat den festen Betrag für den Alltag aufs <strong style="color:var(--white);">Konsumkonto</strong>.');
 }
 function storySlide3(){
+  const d=storyData();
   let s='';
-  s+=storyBox(50,95,120,50,LVLS[0].color,"💳","Girokonto");
-  s+=storyBox(310,95,120,50,"#E08B54","🛒","Konsumkonto");
-  const vs=typeof computeVariableSplit==='function'?computeVariableSplit():null;
-  const cf=typeof computeCashflowAvg==='function'?computeCashflowAvg():null;
-  const dauerVar = vs && vs.dauerauftrag>0 ? Math.round(vs.dauerauftrag) : 0;
-  const dauerLabel = dauerVar>0 ? "Dauerauftrag: "+dauerVar.toLocaleString("de")+" € Variable" : "Dauerauftrag: Variable Kosten";
-  s+=storyLine(110,20,110,95,"#3FB67A",false,"€ Einnahmen");
-  s+=storyLine(170,110,310,110,"#E08B54",true,dauerLabel);
-  const fixLabel = cf && cf.fixGesamt>0 ? "🏠 Fixkosten "+Math.round(cf.fixGesamt).toLocaleString("de")+" €" : "🏠 Fixkosten";
-  const varLabel = dauerVar>0 ? "🛒 Variable "+dauerVar.toLocaleString("de")+" €" : "🛒 Variable Kosten";
-  const sparLabel = cf && cf.spar>0 ? "🎯 Sparen "+Math.round(cf.spar).toLocaleString("de")+" €" : "🎯 Sparen";
-  s+=storyLine(65,145,45,205,"#5A7BA8",true,fixLabel,-6);
-  s+=storyLine(110,145,110,205,"#E0563B",true,varLabel);
-  s+=storyLine(155,145,175,205,"#7055C0",true,sparLabel,6);
-  return storyWrap(s,'');
+  s+=storyBox2(20,8,140,40,ST_C.ein,"💶 Einnahmen",storyEur(d.ein));
+  s+=storyArrow(90,48,90,80,ST_C.ein);
+  s+=storyBox2(20,82,140,46,LVLS[0].color,"💳 Girokonto","Hauptkonto");
+  s+=storyBox2(320,82,140,46,ST_C.konsum,"🛒 Konsumkonto","Alltag mit Karte");
+  s+=storyArrow(160,105,180,105,ST_C.dauer);
+  s+=storyBox2(182,86,116,38,ST_C.dauer,"🔁 Dauerauftrag",d.konsum>0?storyEur(d.konsum)+' / Monat':'monatlich');
+  s+=storyArrow(298,105,318,105,ST_C.dauer);
+  s+=storyArrow(60,128,60,168,ST_C.fix);
+  s+=storyArrow(130,128,200,168,ST_C.spar);
+  s+=storyArrow(390,128,390,168,ST_C.var);
+  s+=storyBox2(8,170,112,46,ST_C.fix,"🏠 Fixkosten",storyEur(d.abbuchung)||'Abbuchungen');
+  s+=storyBox2(140,170,120,46,ST_C.spar,"🎯 Sparen",storyEur(d.spar)||'zuerst!');
+  s+=storyBox2(320,170,140,46,ST_C.var,"🛒 Variable",storyEur(d.konsum)||'Alltag');
+  return storyWrap(s,'Jetzt wird <strong style="color:var(--white);">zuerst gespart</strong> – direkt vom Hauptkonto, bevor der Alltag beginnt. Das Konsumkonto hat ein festes Budget.');
 }
 function storySlide4(){
   let s='';
@@ -4409,6 +4563,15 @@ function athletRumpfZiel() {
   let L = null; try { L = computeAVLuecke(); } catch (e) {}
   if (L && !L.unvollstaendig && L.quote > z) { z = Math.min(40, Math.ceil(L.quote)); quelle = 'Rentenlücke'; }
   return { z, quelle };
+}
+
+function FA_giroAusPruefung() {
+  const sp = computeZahlwegSplit();
+  if (!sp.abbuchung && !sp.konsum && !sp.schirm) { alert('Noch keine Beine/Schuhe-Buchungen in der Prüfung.'); return; }
+  const summe = Math.round(sp.abbuchung + sp.schirm + sp.konsum);
+  document.getElementById('giroKosten').value = summe;
+  document.getElementById('giroSplitHint').innerHTML = `Abbuchungen ${formatAmountSheet(Math.round(sp.abbuchung + sp.schirm))} € + Übertrag Konsumkonto ${formatAmountSheet(Math.round(sp.konsum))} €`;
+  FA_Konten.update();
 }
 
 function FA_computeAV(){
