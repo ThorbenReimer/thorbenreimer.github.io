@@ -659,13 +659,11 @@
   <div id="reviewStats" class="stat-grid"></div>
 
   <div class="card" id="zahlwegPanel" style="margin:14px 0;">
-    <h3 style="margin-top:0;">Beine &amp; Schuhe · Abbuchung oder Konsumkonto?</h3>
-    <p style="color:var(--tr-muted);font-size:12px;margin-top:-6px;">Je Empfänger festlegen: <strong>Abbuchung</strong> = läuft fix vom Hauptkonto (Finanzmanagement), z. B. PKV, Miete, Abos. <strong>Konsumkonto</strong> = wird im Alltag bezahlt, z. B. Tanken, Lebensmittel. Daraus ergibt sich der monatliche Übertrag aufs Konsumkonto. Vorbelegung automatisch (Lastschrift / Kartenzahlung / Kategorie).</p>
+    <h3 style="margin-top:0;">Schuhe · Abbuchung oder flexibel?</h3>
+    <p style="color:var(--tr-muted);font-size:12px;margin-top:-6px;">Die Beine (Fixkosten) laufen immer als Abbuchung vom Hauptkonto. Bei den Schuhen je Empfänger festlegen: <strong>Abbuchung</strong> = geht monatlich fix weg, z. B. Netflix, Handy, Fitnessstudio – bleibt auf dem Hauptkonto. <strong>Flexibel</strong> = wird im Alltag bezahlt, z. B. Tanken, Lebensmittel, Shopping – daraus ergibt sich der monatliche Übertrag aufs Konsumkonto. Vorbelegung automatisch (Lastschrift / Kartenzahlung).</p>
     <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:10px;">
-      <select id="zahlwegFilter" onchange="renderZahlweg()">
-        <option value="FIXKOSTEN">Nur Beine (Fixkosten)</option>
-        <option value="VARIABEL">Nur Schuhe (Konsum)</option>
-        <option value="all">Beine + Schuhe</option>
+      <select id="zahlwegFilter" onchange="renderZahlweg()" style="display:none;">
+        <option value="VARIABEL">Schuhe</option>
       </select>
       <button class="action secondary" onclick="resetZahlwegAuto()" style="padding:6px 10px;font-size:12px;">↺ Automatisch neu erkennen</button>
     </div>
@@ -1184,8 +1182,8 @@ const BASE_RULES = [
   { pat: 'netze bw', cat: 'FIXKOSTEN' }, { pat: '1komma5', cat: 'FIXKOSTEN' },
   { pat: 'telekom', cat: 'FIXKOSTEN' }, { pat: 'vodafone', cat: 'FIXKOSTEN' },
   { pat: 'o2', cat: 'FIXKOSTEN' }, { pat: '1und1', cat: 'FIXKOSTEN' }, { pat: '1&1', cat: 'FIXKOSTEN' },
-  { pat: 'aral', cat: 'FIXKOSTEN' }, { pat: 'shell', cat: 'FIXKOSTEN' }, { pat: 'esso', cat: 'FIXKOSTEN' },
-  { pat: 'tankstelle', cat: 'FIXKOSTEN' }, { pat: 'db vertrieb', cat: 'FIXKOSTEN' },
+  { pat: 'aral', cat: 'VARIABEL' }, { pat: 'shell', cat: 'VARIABEL' }, { pat: 'esso', cat: 'VARIABEL' },
+  { pat: 'tankstelle', cat: 'VARIABEL' }, { pat: 'db vertrieb', cat: 'FIXKOSTEN' },
   { pat: 'deutsche bahn', cat: 'FIXKOSTEN' }, { pat: 'vvs', cat: 'FIXKOSTEN' },
   { pat: 'kfz-steuer', cat: 'FIXKOSTEN' }, { pat: 'tuv', cat: 'FIXKOSTEN' }, { pat: 'tüv', cat: 'FIXKOSTEN' },
   { pat: 'dekra', cat: 'FIXKOSTEN' }, { pat: 'finanzamt', cat: 'FIXKOSTEN' },
@@ -1940,7 +1938,7 @@ function renderReview() {
       <strong>Buchungsart:</strong> ${escapeHtml(t.bookingType || '–')} &nbsp;·&nbsp;
       <strong>Bank/Quelle:</strong> ${escapeHtml(t.bank || '–')} &nbsp;·&nbsp;
       <strong>Vollständiger Text:</strong> ${escapeHtml(t.raw || '–')} &nbsp;·&nbsp;
-      <label style="cursor:pointer;"><input type="checkbox" ${zahlwegOf(t)==='abbuchung'?'checked':''} onchange="toggleDauerauftrag('${t.id}',this.checked)" style="width:auto;vertical-align:middle;"> <strong>Abbuchung vom Hauptkonto</strong> (sonst: läuft übers Konsumkonto)</label>
+      <label style="cursor:pointer;"><input type="checkbox" ${zahlwegOf(t)==='abbuchung'?'checked':''} onchange="toggleDauerauftrag('${t.id}',this.checked)" style="width:auto;vertical-align:middle;"> <strong>Abbuchung vom Hauptkonto</strong> (nur bei Schuhe relevant – sonst flexibel übers Konsumkonto)</label>
     </td></tr>`;
   });
   html += '</tbody></table>';
@@ -2435,7 +2433,7 @@ function computeEffectiveCashflow() {
 }
 
 /* ===== Zahlweg: Abbuchung (Hauptkonto) oder Konsumkonto ===== */
-const ZAHLWEG_CATS = { FIXKOSTEN: 'Beine', VARIABEL: 'Schuhe' };
+const ZAHLWEG_CATS = { VARIABEL: 'Schuhe' };
 function zahlwegAuto(t) {
   const txt = ((t.bookingType || '') + ' ' + (t.raw || '') + ' ' + (t.recipient || '')).toLowerCase();
   if (/lastschrift|dauerauftrag|abbuchung|einzug|standing order|direct debit|folgelastschrift/.test(txt)) return 'abbuchung';
@@ -2444,6 +2442,7 @@ function zahlwegAuto(t) {
   return t.category === 'FIXKOSTEN' ? 'abbuchung' : 'konsum';
 }
 function zahlwegOf(t) {
+  if (t.category === 'FIXKOSTEN') return 'abbuchung';   // Beine = Fixkosten, laufen immer vom Hauptkonto
   if (t.zahlweg === 'abbuchung' || t.zahlweg === 'konsum') return t.zahlweg;
   if (t.istDauerauftrag) return 'abbuchung';
   return zahlwegAuto(t);
@@ -2503,10 +2502,9 @@ function renderZahlweg() {
   const sp = computeZahlwegSplit();
   const f = x => formatAmount(x);
   cards.innerHTML = `
-    <div class="stat"><div class="label">Beine · Abbuchungen</div><div class="value">${f(sp.beine.abbuchung)}</div></div>
-    <div class="stat"><div class="label">Beine · über Konsumkonto</div><div class="value">${f(sp.beine.konsum)}</div></div>
-    <div class="stat"><div class="label">Schuhe · Abbuchungen (Abos …)</div><div class="value">${f(sp.schuhe.abbuchung)}</div></div>
-    <div class="stat"><div class="label">Schuhe · über Konsumkonto</div><div class="value">${f(sp.schuhe.konsum)}</div></div>
+    <div class="stat"><div class="label">Beine · Fixkosten (Abbuchung)</div><div class="value">${f(sp.beine.abbuchung)}</div></div>
+    <div class="stat"><div class="label">Schuhe · Abbuchungen (Abos, Handy …)</div><div class="value">${f(sp.schuhe.abbuchung)}</div></div>
+    <div class="stat"><div class="label">Schuhe · flexibel</div><div class="value">${f(sp.schuhe.konsum)}</div></div>
     <div class="stat accent"><div class="label">Übertrag Konsumkonto / Monat</div><div class="value">${f(sp.konsum)}</div></div>
     <div class="stat"><div class="label">Abbuchungen Hauptkonto / Monat</div><div class="value">${f(sp.abbuchung + sp.schirm)}</div><div class="label">inkl. Schirm ${f(sp.schirm)}</div></div>`;
   const rows = Object.values(groups).sort((a, b) => b.sum - a.sum);
@@ -2521,7 +2519,7 @@ function renderZahlweg() {
       <td>${ZAHLWEG_CATS[g.cat]}</td>
       <td class="num">${g.n}</td>
       <td class="num">${formatAmount(g.sum / months)}</td>
-      <td style="white-space:nowrap;">${btn(g, 'abbuchung', '🏦 Abbuchung')} ${btn(g, 'konsum', '🛒 Konsumkonto')} ${g.manual ? '' : '<span style="font-size:10px;color:var(--tr-muted);">auto</span>'}</td>
+      <td style="white-space:nowrap;">${btn(g, 'abbuchung', '🏦 Abbuchung')} ${btn(g, 'konsum', '🛒 Flexibel')} ${g.manual ? '' : '<span style="font-size:10px;color:var(--tr-muted);">auto</span>'}</td>
     </tr>`).join('') + `</tbody></table>`;
 }
 
@@ -2839,7 +2837,7 @@ function renderFFG() {
           ${(() => { if (eff.source !== 'csv') return ''; const sp = computeZahlwegSplit(); if (!sp.abbuchung && !sp.konsum) return '';
             return `<div style="margin-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;">
               <div style="background:#fff;border:1px solid var(--tr-border);border-left:4px solid var(--tr-dark);border-radius:6px;padding:10px 12px;"><div style="font-size:11px;color:var(--tr-muted);text-transform:uppercase;">🏦 Hauptkonto · Abbuchungen</div><div style="font-family:Georgia,serif;font-size:20px;">${formatAmount(sp.abbuchung + sp.schirm)}</div><div style="font-size:11px;color:var(--tr-muted);">Beine ${formatAmount(sp.beine.abbuchung)} · Schuhe ${formatAmount(sp.schuhe.abbuchung)} · Schirm ${formatAmount(sp.schirm)}</div></div>
-              <div style="background:#fff;border:1px solid var(--tr-border);border-left:4px solid #E08B54;border-radius:6px;padding:10px 12px;"><div style="font-size:11px;color:var(--tr-muted);text-transform:uppercase;">🛒 Übertrag Konsumkonto / Monat</div><div style="font-family:Georgia,serif;font-size:20px;">${formatAmount(sp.konsum)}</div><div style="font-size:11px;color:var(--tr-muted);">Beine ${formatAmount(sp.beine.konsum)} · Schuhe ${formatAmount(sp.schuhe.konsum)}</div></div>
+              <div style="background:#fff;border:1px solid var(--tr-border);border-left:4px solid #E08B54;border-radius:6px;padding:10px 12px;"><div style="font-size:11px;color:var(--tr-muted);text-transform:uppercase;">🛒 Übertrag Konsumkonto / Monat</div><div style="font-family:Georgia,serif;font-size:20px;">${formatAmount(sp.konsum)}</div><div style="font-size:11px;color:var(--tr-muted);">flexible Schuhe (Alltag, Tanken, Einkauf …)</div></div>
             </div>`; })()}
         </div>
       </div>`;
@@ -4013,9 +4011,7 @@ function storySlide2(){
   s+=storyBox2(182,86,116,38,ST_C.dauer,"🔁 Dauerauftrag",d.konsum>0?storyEur(d.konsum)+' / Monat':'monatlich');
   s+=storyArrow(298,105,318,105,ST_C.dauer);
   s+=storyArrow(90,128,90,168,ST_C.fix);
-  s+=storyArrow(390,128,390,168,ST_C.var);
   s+=storyBox2(20,170,140,46,ST_C.fix,"🏦 Abbuchungen",storyEur(d.abbuchung)||'Miete, PKV, Abos …');
-  s+=storyBox2(320,170,140,46,ST_C.var,"🛒 Alltag",storyEur(d.konsum)||'Tanken, Einkauf …');
   return storyWrap(s,'Zwei Konten, klare Rollen: Abbuchungen bleiben auf dem <strong style="color:var(--white);">Hauptkonto</strong>. Ein <strong style="color:var(--white);">Dauerauftrag</strong> überträgt jeden Monat den festen Betrag für den Alltag aufs <strong style="color:var(--white);">Konsumkonto</strong>.');
 }
 function storySlide3(){
@@ -4030,10 +4026,8 @@ function storySlide3(){
   s+=storyArrow(298,105,318,105,ST_C.dauer);
   s+=storyArrow(60,128,60,168,ST_C.fix);
   s+=storyArrow(130,128,200,168,ST_C.spar);
-  s+=storyArrow(390,128,390,168,ST_C.var);
   s+=storyBox2(8,170,112,46,ST_C.fix,"🏠 Fixkosten",storyEur(d.abbuchung)||'Abbuchungen');
   s+=storyBox2(140,170,120,46,ST_C.spar,"🎯 Sparen",storyEur(d.spar)||'zuerst!');
-  s+=storyBox2(320,170,140,46,ST_C.var,"🛒 Variable",storyEur(d.konsum)||'Alltag');
   return storyWrap(s,'Jetzt wird <strong style="color:var(--white);">zuerst gespart</strong> – direkt vom Hauptkonto, bevor der Alltag beginnt. Das Konsumkonto hat ein festes Budget.');
 }
 function storySlide4(){
