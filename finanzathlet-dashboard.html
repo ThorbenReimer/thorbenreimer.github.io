@@ -166,6 +166,31 @@
     text-transform: uppercase; font-size: 11px; letter-spacing: 0.5px;
   }
 
+
+  /* === Athlet-Erklärung (Mappe 0) === */
+  .ath-hero { background: #161E2E; border-radius: 12px; padding: 28px; color: #D0DCE8; }
+  .ath-eyebrow { color: #7AB8F5; font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
+  .ath-title { font-family: Georgia, serif; color: #fff; font-size: 30px; margin: 6px 0 4px; }
+  .ath-sub { color: #7A9CC0; margin: 0 0 18px; font-style: italic; }
+  .ath-grid { display: grid; grid-template-columns: minmax(200px, 280px) 1fr; gap: 28px; align-items: center; }
+  .ath-figure svg { width: 100%; height: auto; }
+  .ath-parts { display: grid; gap: 10px; }
+  .ath-part { background: #1E2D45; border-left: 4px solid #378ADD; border-radius: 8px; padding: 12px 14px; }
+  .ath-part .t { font-family: Georgia, serif; color: #fff; font-size: 17px; }
+  .ath-part .t span { font-family: inherit; font-size: 13px; color: #D0DCE8; margin-left: 6px; font-weight: 400; }
+  .ath-part .z { float: right; background: #378ADD; color: #fff; border-radius: 10px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+  .ath-part .d { color: #7A9CC0; font-size: 13px; margin-top: 4px; }
+  .ath-story { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+  .ath-story div { background: #fff; border: 1px solid var(--tr-border); border-radius: 8px; padding: 12px 14px; }
+  .ath-story b { display: block; font-family: Georgia, serif; color: var(--tr-dark); margin-bottom: 4px; }
+  .ath-story span { color: var(--tr-muted); font-size: 13px; }
+  .ath-examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
+  .ath-ex { background: #fff; border: 1px solid var(--tr-border); border-radius: 8px; padding: 12px; text-align: center; }
+  .ath-ex svg { width: 100%; max-width: 150px; height: auto; }
+  .ath-ex b { display: block; color: var(--tr-dark); font-size: 14px; margin-top: 6px; }
+  .ath-ex span { color: var(--tr-muted); font-size: 12px; }
+  @media (max-width: 760px) { .ath-grid { grid-template-columns: 1fr; } .ath-figure { max-width: 240px; margin: 0 auto; } }
+
   /* === Ampel-Anzeige Finanzfitnessgrad === */
   .ampel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
   .ampel {
@@ -487,7 +512,8 @@
 </header>
 
 <nav>
-  <button data-tab="import" class="active">1 · Import</button>
+  <button data-tab="athlet" class="active">0 · Dein Athlet</button>
+  <button data-tab="import">1 · Import</button>
   <button data-tab="review">2 · Prüfung</button>
   <button data-tab="budget">3 · Budget-Planer</button>
   <button data-tab="ffg">4 · Finanzfitnessgrad</button>
@@ -502,7 +528,40 @@
 <main>
 
 <!-- IMPORT -->
-<section class="tab active" id="tab-import">
+<!-- ATHLET-ERKLÄRUNG -->
+<section class="tab active" id="tab-athlet">
+  <div class="ath-hero">
+    <div class="ath-head">
+      <div class="ath-eyebrow">Finanzberatung · Das Modell</div>
+      <h2 class="ath-title">Dein Finanzathlet</h2>
+      <p class="ath-sub">Stark ist, wer im Gleichgewicht trainiert. Jeder Körperteil hat seine Aufgabe – und seinen Anteil am Einkommen.</p>
+    </div>
+    <div class="ath-grid">
+      <div class="ath-figure" id="athIdeal"></div>
+      <div class="ath-parts" id="athParts"></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:28px;">Die Story im Gespräch</h3>
+  <div class="ath-story">
+    <div><b>1 · Kopf</b><span>Wovon träumst du? Was willst du dir ermöglichen?</span></div>
+    <div><b>2 · Boden</b><span>Worauf stehst du? Was kommt monatlich rein – und wie sicher?</span></div>
+    <div><b>3 · Beine</b><span>Was muss jeden Monat sicher getragen werden?</span></div>
+    <div><b>4 · Schuhe</b><span>Womit bewegst du dich leicht durch den Alltag?</span></div>
+    <div><b>5 · Rumpf</b><span>Was hält dich langfristig stabil – auch im Alter?</span></div>
+    <div><b>6 · Schirm</b><span>Was passiert, wenn der Athlet ausfällt?</span></div>
+  </div>
+
+  <h3 style="margin-top:28px;">Wenn der Athlet aus dem Gleichgewicht kommt</h3>
+  <p style="color:var(--tr-muted);margin-top:-4px;">Der Körperbau zeigt die Verteilung: Was zu viel Geld bekommt, wird dicker – was zu wenig bekommt, schrumpft.</p>
+  <div class="ath-examples" id="athExamples"></div>
+
+  <div style="margin-top:28px;display:flex;gap:12px;flex-wrap:wrap;">
+    <button class="action" onclick="document.querySelector('nav button[data-tab=import]').click()">Los geht's mit deinen Zahlen → 1 · Import</button>
+  </div>
+</section>
+
+<section class="tab" id="tab-import">
   <h2>Kontoumsätze importieren</h2>
   <div class="help-box">
     <strong>CSV-Export aus dem Online-Banking</strong> für den gewünschten Zeitraum (idealerweise 12 Monate).
@@ -772,7 +831,7 @@
           <div class="donutbox athletbox" id="oAthlet"></div>
           <div class="istright">
             <div class="tiles" id="oTiles"></div>
-            <div class="optnote">Bezug: % der Nettoeinnahmen · Richtwerte: Beine (Fixkosten) max. 40 % · Schuhe (Konsum) 20–25 % · Schirm (Absicherung) 8–12 % · Rumpf (Vorsorge &amp; Vermögen) mind. 15 % · Kopf (Träume) 5–10 %</div>
+            <div class="optnote">Bezug: % der Nettoeinnahmen · Richtwerte: Beine (Fixkosten) max. 40 % · Schuhe (Konsum) 20–25 % · Schirm (Absicherung) ideal &lt; 8 %, max. 12 % · Rumpf (Vorsorge &amp; Vermögen) mind. 15 % · Kopf (Träume) 5–10 %</div>
             <div class="lever" id="oLever"></div>
             <div class="sumline" id="oSum"></div>
           </div>
@@ -1180,6 +1239,43 @@ function renderManualEinnahmen() {
     </div>
   `).join('');
 }
+
+
+/* ===== Mappe 0: Athlet-Erklärung rendern ===== */
+function renderAthletIntro() {
+  const fig = document.getElementById('athIdeal');
+  if (!fig) return;
+  fig.innerHTML = athletSVG(null, true, { ideal: true });
+  const desc = {
+    schirm: 'Schützt alles darunter: BU, Risikoleben, Haftpflicht, Unfall. Weniger Beitrag ist gut – solange das Existenzielle abgesichert ist.',
+    kopf:   'Träume und Ziele, für die Geld wieder ausgegeben wird: Reise, Auto, Auszeit. Gibt dem Sparen Sinn.',
+    rumpf:  'Der Core – hält langfristig stabil: Notgroschen, Altersvorsorge, Depot, Immobilie, Bausparen. Mehr Muskeln sind gut.',
+    beine:  'Tragen die Last: Miete bzw. Kreditrate, Nebenkosten, Auto, Kranken- und Sachversicherungen. Leichter ist besser.',
+    schuhe: 'Machen den Alltag leicht: Lebensmittel, Freizeit, Shopping, Abos. Schnellster Hebel – Schuhe kann man wechseln.'
+  };
+  const parts = ATHLET_PARTS.map(p => `
+    <div class="ath-part" style="border-left-color:${p.key === 'schuhe' ? '#7AB8F5' : p.dark}">
+      <span class="z" style="background:${p.key === 'schuhe' ? '#2A3A55' : p.dark};color:${['kopf', 'rumpf'].includes(p.key) ? '#161E2E' : '#fff'}">${p.ziel}</span>
+      <div class="t">${p.name}<span>· ${p.sub}</span></div>
+      <div class="d">${desc[p.key]}</div>
+    </div>`).join('') + `
+    <div class="ath-part" style="border-left-color:#378ADD">
+      <div class="t">Boden<span>· Einkommen</span></div>
+      <div class="d">Worauf der Athlet steht. Alle Prozentwerte beziehen sich auf das Nettoeinkommen.</div>
+    </div>`;
+  document.getElementById('athParts').innerHTML = parts;
+
+  const mk = (fix, var_, schutz, rumpf, ziele) => computeAthlet({ einnahmen: 100, fix, var_, schutz, av: rumpf, sparDepot: 0, ziele });
+  const ex = [
+    { a: mk(40, 22.5, 10, 17.5, 10), t: 'Im Gleichgewicht', d: 'Jeder Teil bekommt seinen Anteil' },
+    { a: mk(62, 22, 9, 5, 2),       t: 'Zu schwere Beine', d: 'Fixkosten tragen fast alles' },
+    { a: mk(38, 42, 9, 7, 4),       t: 'Zu große Schuhe', d: 'Konsum frisst den Aufbau' },
+    { a: mk(40, 25, 22, 8, 5),      t: 'Zu großer Schirm', d: 'Überversichert, Rumpf fehlt' },
+  ];
+  document.getElementById('athExamples').innerHTML = ex.map(e =>
+    `<div class="ath-ex">${athletSVG(e.a, false, { colors: 'ci' })}<b>${e.t}</b><span>${e.d}</span></div>`).join('');
+}
+setTimeout(() => { try { renderAthletIntro(); } catch (e) { console.warn('Athlet-Intro', e); } }, 0);
 
 /* ----- Tabs ----- */
 document.querySelectorAll('nav button').forEach(btn => {
@@ -2265,7 +2361,7 @@ function computeFirma() {
    Rumpf = Altersvorsorge + Vermögen · Kopf = Sparziele / Träume
    =========================================================== */
 const ATHLET_PARTS = [
-  { key:'schirm', name:'Schirm', sub:'Absicherung',         ziel:'8–12 %',     light:'#7A9CC0', dark:'#7A9CC0' },
+  { key:'schirm', name:'Schirm', sub:'Absicherung',         ziel:'ideal < 8 %, max. 12 %', light:'#7A9CC0', dark:'#7A9CC0' },
   { key:'kopf',   name:'Kopf',   sub:'Träume & Ziele',      ziel:'5–10 %',     light:'#161E2E', dark:'#D0DCE8' },
   { key:'rumpf',  name:'Rumpf',  sub:'Vorsorge & Vermögen', ziel:'mind. 15 %', light:'#7AB8F5', dark:'#7AB8F5' },
   { key:'beine',  name:'Beine',  sub:'Fixkosten',           ziel:'max. 40 %',  light:'#378ADD', dark:'#378ADD' },
@@ -2288,7 +2384,7 @@ function athletStatus(key, pct) {
   switch (key) {
     case 'beine':  return pct <= 40 ? 'green' : pct <= 45 ? 'yellow' : 'red';
     case 'schuhe': return pct <= 25 ? 'green' : pct <= 30 ? 'yellow' : 'red';
-    case 'schirm': return (pct >= 8 && pct <= 12) ? 'green' : (pct >= 5 && pct <= 15) ? 'yellow' : 'red';
+    case 'schirm': return pct < 8 ? 'green' : pct <= 12 ? 'yellow' : 'red';
     case 'rumpf':  return pct >= 20 ? 'green-star' : pct >= 15 ? 'green' : pct >= 10 ? 'yellow' : 'red';
     case 'kopf':   return (pct >= 5 && pct <= 10) ? 'green' : 'yellow';
   }
@@ -2318,34 +2414,65 @@ function computeAthlet(v) {
     schirm: ein > 0 && P.schirm.pct > 12,
   };
   const hints = [];
-  if (ein > 0 && P.schirm.pct < 8) hints.push('Schirm zu klein – Absicherung prüfen');
   if (ein > 0 && P.kopf.val <= 0) hints.push('Kopf ohne Ziele – wofür trainiert der Athlet?');
   if (ein > 0 && P.rumpf.pct < 15) hints.push('Rumpf stärken – Sparquote unter 15 %');
   const summe = parts.reduce((s, p) => s + p.val, 0);
   return { ein, parts, P, checks, hints, summe, frei: ein - summe };
 }
 
-function athletSVG(a, dark) {
+/* Referenzwerte für den Körperbau: bei diesen Anteilen ist der Athlet "ideal" gebaut */
+const ATHLET_REF = { beine: 40, schuhe: 22.5, rumpf: 17.5, schirm: 10 };
+function athletFactors(a) {
+  const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
+  if (!a || !a.ein) return { beine: 1, schuhe: 1, rumpf: 1, schirm: 1 };
+  const f = k => clamp(a.P[k].pct / ATHLET_REF[k], 0.35, 1.8);
+  return { beine: f('beine'), schuhe: f('schuhe'), rumpf: clamp(a.P.rumpf.pct / ATHLET_REF.rumpf, 0.35, 1.6), schirm: f('schirm') };
+}
+
+/* opts: { dark, ideal (Idealkörper, CI-Farben), colors: 'status'|'ci' } */
+function athletSVG(a, dark, opts) {
+  opts = opts || {};
+  const ideal = !!opts.ideal;
+  const F = ideal ? { beine: 1, schuhe: 1, rumpf: 1, schirm: 1 } : athletFactors(a);
+  const useStatus = !ideal && opts.colors !== 'ci';
+  const meta = {}; ATHLET_PARTS.forEach(p => meta[p.key] = p);
   const col = key => {
-    const p = a.P[key];
-    if (p && p.status) return ATHLET_ST[p.status].c;
-    return dark ? p.dark : p.light;
+    const p = a && a.P ? a.P[key] : null;
+    if (useStatus && p && p.status) return ATHLET_ST[p.status].c;
+    return dark ? meta[key].dark : meta[key].light;
   };
-  const ground = dark ? '#378ADD' : '#378ADD';
-  const pole = col('schirm');
+  const shoeStroke = dark ? '#7AB8F5' : '#7A9CC0';
+  // Schirm: Breite + Stärke von Stoff und Stock
+  const sw = 156 * (0.7 + 0.3 * F.schirm), sx0 = 100 - sw / 2, sx1 = 100 + sw / 2;
+  const depth = 8 + 6 * F.schirm;           // Bogenhöhe der Kante
+  const top = 80 - 80 * (0.75 + 0.25 * F.schirm);
+  const seg = sw / 4;
+  let d = `M${sx0} 80 Q100 ${top} ${sx1} 80`;
+  for (let i = 4; i > 0; i--) { const xa = sx0 + seg * i, xb = sx0 + seg * (i - 1); d += ` Q${(xa + xb) / 2} ${80 - depth} ${xb} 80`; }
+  d += ' Z';
+  const poleW = 1.2 + 2.6 * F.schirm;
+  // Rumpf
+  const tw = 60 * F.rumpf, tx = 100 - tw / 2, aw = 14 * (0.6 + 0.4 * F.rumpf);
+  // Beine
+  const lw = Math.min(42, 23 * F.beine), gap = 6;
+  const l1 = 100 - gap / 2 - lw, l2 = 100 + gap / 2;
+  // Schuhe (zentriert unter den Beinen)
+  const shw = Math.min(64, 33 * F.schuhe), shh = 12 * Math.sqrt(F.schuhe);
+  const c1 = l1 + lw / 2, c2 = l2 + lw / 2;
+  const shy = 318 - shh;
   return `<svg viewBox="0 0 200 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Finanzathlet">
-    <path d="M22 80 Q100 -6 178 80 Q158 70 139 80 Q119 70 100 80 Q81 70 61 80 Q42 70 22 80 Z" fill="${col('schirm')}"/>
-    <line x1="100" y1="14" x2="100" y2="28" stroke="${pole}" stroke-width="3" stroke-linecap="round"/>
-    <line x1="100" y1="78" x2="100" y2="98" stroke="${pole}" stroke-width="3" stroke-linecap="round"/>
+    <path d="${d}" fill="${col('schirm')}"/>
+    <line x1="100" y1="${(80 + top) / 2 - 12}" x2="100" y2="${(80 + top) / 2 + 1}" stroke="${col('schirm')}" stroke-width="${poleW}" stroke-linecap="round"/>
+    <line x1="100" y1="78" x2="100" y2="100" stroke="${col('schirm')}" stroke-width="${poleW}" stroke-linecap="round"/>
     <circle cx="100" cy="124" r="21" fill="${col('kopf')}"/>
-    <rect x="70" y="152" width="60" height="84" rx="14" fill="${col('rumpf')}"/>
-    <rect x="52" y="158" width="14" height="66" rx="7" fill="${col('rumpf')}"/>
-    <rect x="134" y="158" width="14" height="66" rx="7" fill="${col('rumpf')}"/>
-    <rect x="74" y="240" width="23" height="64" rx="9" fill="${col('beine')}"/>
-    <rect x="103" y="240" width="23" height="64" rx="9" fill="${col('beine')}"/>
-    <rect x="66" y="306" width="33" height="12" rx="6" fill="${col('schuhe')}" stroke="#7A9CC0" stroke-width="1"/>
-    <rect x="101" y="306" width="33" height="12" rx="6" fill="${col('schuhe')}" stroke="#7A9CC0" stroke-width="1"/>
-    <line x1="46" y1="324" x2="154" y2="324" stroke="${ground}" stroke-width="3" stroke-linecap="round"/>
+    <rect x="${tx}" y="152" width="${tw}" height="84" rx="${Math.min(14, tw / 3)}" fill="${col('rumpf')}"/>
+    <rect x="${tx - aw - 4}" y="158" width="${aw}" height="66" rx="${aw / 2}" fill="${col('rumpf')}"/>
+    <rect x="${tx + tw + 4}" y="158" width="${aw}" height="66" rx="${aw / 2}" fill="${col('rumpf')}"/>
+    <rect x="${l1}" y="240" width="${lw}" height="${shy - 242}" rx="${Math.min(9, lw / 2.5)}" fill="${col('beine')}"/>
+    <rect x="${l2}" y="240" width="${lw}" height="${shy - 242}" rx="${Math.min(9, lw / 2.5)}" fill="${col('beine')}"/>
+    <rect x="${c1 - shw / 2 - 3}" y="${shy}" width="${shw}" height="${shh}" rx="${shh / 2}" fill="${col('schuhe')}" stroke="${shoeStroke}" stroke-width="1"/>
+    <rect x="${c2 - shw / 2 + 3}" y="${shy}" width="${shw}" height="${shh}" rx="${shh / 2}" fill="${col('schuhe')}" stroke="${shoeStroke}" stroke-width="1"/>
+    <line x1="30" y1="324" x2="170" y2="324" stroke="#378ADD" stroke-width="3" stroke-linecap="round"/>
   </svg>`;
 }
 
@@ -2487,8 +2614,10 @@ function renderFFG() {
       ? `<div style="margin-top:10px;font-size:12px;color:#B07A1A;">⚠ ${a.hints.join(' · ')}</div>` : '';
     grid.innerHTML = `
       <div style="grid-column:1/-1;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
-        <div style="flex:0 0 190px;background:#fff;border:1px solid var(--tr-border);border-radius:8px;padding:12px;">${athletSVG(a, false)}
-          <div style="text-align:center;font-size:11px;color:var(--tr-muted);margin-top:4px;">Boden · Einkommen ${formatAmount(a.ein)}</div>
+        <div style="flex:0 0 330px;background:#fff;border:1px solid var(--tr-border);border-radius:8px;padding:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div><div style="text-align:center;font-size:11px;color:var(--tr-muted);text-transform:uppercase;margin-bottom:4px;">Ideal</div>${athletSVG(a, false, { ideal: true })}</div>
+          <div><div style="text-align:center;font-size:11px;color:var(--tr-text);text-transform:uppercase;font-weight:700;margin-bottom:4px;">Dein Athlet</div>${athletSVG(a, false)}</div>
+          <div style="grid-column:1/-1;text-align:center;font-size:11px;color:var(--tr-muted);">Boden · Einkommen ${formatAmount(a.ein)} · Körperbau = Ist-Anteile, Farbe = Ampel</div>
         </div>
         <div style="flex:1 1 420px;min-width:0;">
           <div class="ampel-grid" style="margin:0 0 12px;">${cards}</div>
