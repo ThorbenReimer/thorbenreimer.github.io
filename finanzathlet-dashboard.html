@@ -268,6 +268,9 @@
   }
   .sheet .istwrap { display: grid; grid-template-columns: 220px 1fr; gap: 18px; align-items: start; }
   .sheet .donutbox { position: relative; width: 220px; height: 220px; }
+  .sheet .donutbox.athletbox { height: auto; }
+  .sheet .athletbox .ein { text-align:center; color:#7A9CC0; font-size:11px; letter-spacing:1px; text-transform:uppercase; margin-top:6px; }
+  .sheet .athletbox .ein b { display:block; font-family: Georgia, serif; font-size:18px; color:#fff; letter-spacing:0; text-transform:none; }
   .sheet .donutbox svg { width: 100%; height: 100%; }
   .sheet .dcenter {
     position: absolute; inset: 0;
@@ -543,6 +546,16 @@
     <p>Mehrere Dateien möglich · sie werden zusammengeführt</p>
     <input type="file" id="fileInput" accept=".csv,.txt" multiple style="display:none">
   </div>
+
+  <div class="flex" style="margin-top:12px;align-items:center;gap:16px;">
+    <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer;">
+      <input type="checkbox" id="importReplaceMode" style="width:auto;">
+      Beim Import <strong>alle bisherigen Bankdaten ersetzen</strong>
+    </label>
+    <button class="action secondary" onclick="clearBankData()" style="padding:6px 12px;font-size:12px;">🗑 Alle Bankdaten löschen</button>
+    <span style="font-size:11px;color:var(--tr-muted);">Stammdaten, Vermögen, gelernte Regeln und Snapshots bleiben erhalten.</span>
+  </div>
+
   <div id="importLog" style="margin-top:16px;"></div>
 </section>
 
@@ -550,9 +563,21 @@
 <section class="tab" id="tab-review">
   <h2>Prüfung &amp; Kategorisierung</h2>
   <div class="help-box">
-    <strong>Tipp bei Daueraufträgen:</strong> Sobald du eine Buchung manuell zuordnest, werden alle weiteren Buchungen mit demselben Empfänger automatisch gleich kategorisiert. Du musst also nur <em>einmal</em> pro Empfänger entscheiden.
+    <strong>Tipp bei Daueraufträgen:</strong> Sobald du eine Buchung manuell zuordnest, schlägt dir das Tool alle weiteren Buchungen mit gleichem/ähnlichem Empfänger zur Übernahme vor – du kannst einzelne davon vor dem Übernehmen abwählen (z.B. wenn der gleiche Empfänger einmal anders verbucht werden soll). Du musst also nur <em>einmal</em> pro Empfänger entscheiden.
   </div>
   <div id="reviewStats" class="stat-grid"></div>
+
+  <div class="card" style="margin:14px 0;">
+    <h3 style="margin-top:0;">Weitere Einnahmen (nicht im Kontoauszug)</h3>
+    <p style="color:var(--tr-muted);font-size:12px;margin-top:-6px;">Für Bareinnahmen oder Einnahmen über ein anderes, nicht importiertes Konto. Wird zusätzlich zu den Kontobuchungen in allen Berechnungen berücksichtigt.</p>
+    <div id="manualEinnahmenList" style="margin-bottom:10px;"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <input type="text" id="meName" placeholder="Bezeichnung (z.B. Bareinnahme, Nebenjob)" style="flex:1;min-width:220px;">
+      <input type="number" id="meBetrag" placeholder="€ / Monat" step="0.01" style="width:140px;">
+      <button class="action" onclick="addManualEinnahme()">+ Hinzufügen</button>
+    </div>
+  </div>
+
   <div class="flex" style="margin:12px 0;">
     <select id="filterStatus">
       <option value="review" selected>Nur unsichere</option>
@@ -578,11 +603,12 @@
     <select id="bulkCategory" style="color:var(--tr-text);">
       <option value="">— Kategorie wählen —</option>
       <option value="EINNAHMEN">Einnahmen</option>
-      <option value="FIXKOSTEN">Fixkosten – Grundkosten</option>
-      <option value="AV">Fixkosten – Altersvorsorge</option>
-      <option value="SCHUTZ">Fixkosten – Absicherung</option>
-      <option value="VARIABEL">Variable Kosten</option>
-      <option value="SPAREN">Sparen (Sparziele / Depot)</option>
+      <option value="FIXKOSTEN">Beine · Fixkosten</option>
+      <option value="AV">Rumpf · Altersvorsorge</option>
+      <option value="SCHUTZ">Schirm · Absicherung</option>
+      <option value="VARIABEL">Schuhe · Konsum &amp; Alltag</option>
+      <option value="SPAREN">Rumpf · Sparen / Depot</option>
+      <option value="ZIELE">Kopf · Sparziele / Träume</option>
       <option value="EINNAHMEN_FIRMA">Firma – Einnahmen</option>
       <option value="FIXKOSTEN_FIRMA">Firma – Fixkosten</option>
       <option value="VARIABEL_FIRMA">Firma – Variable Kosten</option>
@@ -591,6 +617,8 @@
     <button class="action" onclick="applyBulk()">Anwenden</button>
     <button class="action secondary" onclick="clearSelection()" style="color:#fff;background:transparent;border-color:var(--tr-light-acc);">Auswahl aufheben</button>
   </div>
+
+  <div id="groupConfirmPanel" class="hidden" style="position:sticky;top:8px;z-index:99;background:var(--tr-mid,#1E2D45);color:#fff;padding:14px 16px;border-radius:6px;margin-bottom:12px;box-shadow:0 4px 16px rgba(0,0,0,0.2);border-left:3px solid var(--tr-accent);"></div>
 
   <div id="reviewTableWrap"><div class="empty-state">Noch keine Daten – bitte zuerst CSV importieren.</div></div>
 </section>
@@ -638,9 +666,9 @@
 <!-- FFG -->
 <section class="tab" id="tab-ffg">
   <h2>Finanzfitnessgrad</h2>
-  <p style="color:var(--tr-muted);">Tagesform: Cashflow-Ampeln, % der Einnahmen. Die Vermögensstufen findest du jetzt im Tab <strong>4 · Vermögen</strong>.</p>
+  <p style="color:var(--tr-muted);">Tagesform im Finanzathlet-Modell: % der Nettoeinnahmen je Körperteil. Die Vermögensstufen findest du im Tab <strong>5 · Vermögen</strong>.</p>
 
-  <h3>Tagesform · Cashflow-Ampeln</h3>
+  <h3>Tagesform · Dein Finanzathlet</h3>
   <div id="ffgSourceHint" style="display:none;font-size:12px;color:var(--tr-muted);margin-bottom:10px;"></div>
   <div id="firmaBlock"></div>
   <div class="ampel-grid" id="ampelGrid"></div>
@@ -705,11 +733,12 @@
       <div class="grp" id="opManualBlock">
         <div class="grp-label">Ist-Bild · monatlich</div>
         <div class="field"><label>Einnahmen netto</label><input type="number" id="opEinnahmen" placeholder="0"></div>
-        <div class="field"><label>Fixkosten (Grundkosten)</label><input type="number" id="opFix" placeholder="0"></div>
-        <div class="field"><label>Fixkosten – Altersvorsorge</label><input type="number" id="opAV" placeholder="0"></div>
-        <div class="field"><label>Fixkosten – Absicherung</label><input type="number" id="opSchutz" placeholder="0"></div>
-        <div class="field"><label>Variable Kosten</label><input type="number" id="opVar" placeholder="0"></div>
-        <div class="field"><label>Sparen</label><input type="number" id="opSpar" placeholder="0"></div>
+        <div class="field"><label>Beine · Fixkosten (inkl. KV, Kfz, Wohnen)</label><input type="number" id="opFix" placeholder="0"></div>
+        <div class="field"><label>Schuhe · Konsum &amp; Alltag</label><input type="number" id="opVar" placeholder="0"></div>
+        <div class="field"><label>Schirm · Absicherung</label><input type="number" id="opSchutz" placeholder="0"></div>
+        <div class="field"><label>Rumpf · Altersvorsorge</label><input type="number" id="opAV" placeholder="0"></div>
+        <div class="field"><label>Rumpf · Sparen / Depot</label><input type="number" id="opSpar" placeholder="0"></div>
+        <div class="field"><label>Kopf · Sparziele / Träume</label><input type="number" id="opZiele" placeholder="0"></div>
       </div>
 
       <div class="grp">
@@ -738,15 +767,12 @@
           </div>
         </div>
 
-        <div class="eyebrow">1 · Mein Ist-Bild — wohin mein Geld monatlich fließt</div>
+        <div class="eyebrow">1 · Mein Finanzathlet — wie mein Geld monatlich trainiert</div>
         <div class="istwrap">
-          <div class="donutbox">
-            <svg id="oDonut" viewBox="0 0 200 200"></svg>
-            <div class="dcenter" id="oCenter"></div>
-          </div>
+          <div class="donutbox athletbox" id="oAthlet"></div>
           <div class="istright">
             <div class="tiles" id="oTiles"></div>
-            <div class="optnote">Bezug: % der Einnahmen · Ziel-Korridore (50-30-20): Fixkosten gesamt ≤ 50 % (davon Grundkosten + Altersvorsorge + Absicherung) · Variabel ≤ 30 % · Sparen ≥ 15 % (★ ≥ 20 %)</div>
+            <div class="optnote">Bezug: % der Nettoeinnahmen · Richtwerte: Beine (Fixkosten) max. 40 % · Schuhe (Konsum) 20–25 % · Schirm (Absicherung) 8–12 % · Rumpf (Vorsorge &amp; Vermögen) mind. 15 % · Kopf (Träume) 5–10 %</div>
             <div class="lever" id="oLever"></div>
             <div class="sumline" id="oSum"></div>
           </div>
@@ -979,11 +1005,12 @@
 
 const CATEGORIES = {
   EINNAHMEN: { label: 'Einnahmen' },
-  FIXKOSTEN: { label: 'Fixkosten – Grundkosten' },
-  AV: { label: 'Fixkosten – Altersvorsorge' },
-  SCHUTZ: { label: 'Fixkosten – Absicherung' },
-  VARIABEL: { label: 'Variable Kosten' },
-  SPAREN: { label: 'Sparen (Sparziele / Depot)' },
+  FIXKOSTEN: { label: 'Beine · Fixkosten' },
+  AV: { label: 'Rumpf · Altersvorsorge' },
+  SCHUTZ: { label: 'Schirm · Absicherung' },
+  VARIABEL: { label: 'Schuhe · Konsum & Alltag' },
+  SPAREN: { label: 'Rumpf · Sparen / Depot' },
+  ZIELE: { label: 'Kopf · Sparziele / Träume' },
   EINNAHMEN_FIRMA: { label: 'Firma – Einnahmen' },
   FIXKOSTEN_FIRMA: { label: 'Firma – Fixkosten' },
   VARIABEL_FIRMA: { label: 'Firma – Variable Kosten' },
@@ -1054,17 +1081,20 @@ const BASE_RULES = [
   { pat: 'generali leben', cat: 'AV' }, { pat: 'generali rente', cat: 'AV' },
   { pat: 'allianz leben', cat: 'AV' }, { pat: 'allianz lv', cat: 'AV' },
   // SCHUTZ
-  { pat: 'haftpflicht', cat: 'SCHUTZ' }, { pat: 'hausratversicherung', cat: 'SCHUTZ' },
-  { pat: 'hausrat', cat: 'SCHUTZ' }, { pat: 'rechtsschutz', cat: 'SCHUTZ' },
+  { pat: 'haftpflicht', cat: 'SCHUTZ' }, { pat: 'hausratversicherung', cat: 'FIXKOSTEN' },
+  { pat: 'hausrat', cat: 'FIXKOSTEN' }, { pat: 'rechtsschutz', cat: 'SCHUTZ' },
   { pat: 'advocard', cat: 'SCHUTZ' }, { pat: 'arag', cat: 'SCHUTZ' },
-  { pat: 'kfz-versicherung', cat: 'SCHUTZ' }, { pat: 'kfz versicherung', cat: 'SCHUTZ' },
-  { pat: 'huk-coburg', cat: 'SCHUTZ' }, { pat: 'huk coburg', cat: 'SCHUTZ' },
+  { pat: 'kfz-versicherung', cat: 'FIXKOSTEN' }, { pat: 'kfz versicherung', cat: 'FIXKOSTEN' },
+  { pat: 'huk-coburg', cat: 'FIXKOSTEN' }, { pat: 'huk coburg', cat: 'FIXKOSTEN' },
   { pat: 'berufsunfaehigkeit', cat: 'SCHUTZ' }, { pat: 'berufsunfähigkeit', cat: 'SCHUTZ' },
   { pat: 'bu-versicherung', cat: 'SCHUTZ' }, { pat: 'unfallversicherung', cat: 'SCHUTZ' },
   { pat: 'risiko-lv', cat: 'SCHUTZ' }, { pat: 'risiko lebensversicherung', cat: 'SCHUTZ' },
-  { pat: 'krankenversicherung', cat: 'SCHUTZ' }, { pat: 'pkv', cat: 'SCHUTZ' },
-  { pat: 'tk-krankenkasse', cat: 'SCHUTZ' }, { pat: 'aok ', cat: 'SCHUTZ' }, { pat: 'barmer', cat: 'SCHUTZ' },
-  { pat: 'gebaeudeversicherung', cat: 'SCHUTZ' }, { pat: 'gebäudeversicherung', cat: 'SCHUTZ' },
+  { pat: 'krankenversicherung', cat: 'FIXKOSTEN' }, { pat: 'pkv', cat: 'FIXKOSTEN' },
+  { pat: 'tk-krankenkasse', cat: 'FIXKOSTEN' }, { pat: 'aok ', cat: 'FIXKOSTEN' }, { pat: 'barmer', cat: 'FIXKOSTEN' },
+  { pat: 'gebaeudeversicherung', cat: 'FIXKOSTEN' }, { pat: 'gebäudeversicherung', cat: 'FIXKOSTEN' },
+  // ZIELE (Kopf: Sparziele / Träume)
+  { pat: 'sparziel', cat: 'ZIELE' }, { pat: 'urlaubskasse', cat: 'ZIELE' },
+  { pat: 'wunschkonto', cat: 'ZIELE' }, { pat: 'traumkonto', cat: 'ZIELE' },
   // IGNORE
   { pat: 'umbuchung', cat: 'IGNORE' }, { pat: 'eigene ueberweisung', cat: 'IGNORE' },
   { pat: 'eigene überweisung', cat: 'IGNORE' }, { pat: 'sparen tagesgeld', cat: 'IGNORE' },
@@ -1081,6 +1111,8 @@ let OP_SOURCE = 'auto';     // 'auto' (aus Erstanalyse) | 'manual'
 let OP_GOALS_COUNT = 3;
 let STUFE_OVERRIDE = null;   // {stufe, kommentar} oder null
 let SELECTED = new Set();    // Bulk-Selektion im Review-Tab
+let MANUAL_EINNAHMEN = [];   // Zusätzliche Einnahmen, die nicht im Kontoauszug stehen (Bar, anderes Konto, …)
+let GROUP_PENDING = null;    // {source:t, matches:[...]} - offener Gruppierungsvorschlag zur Bestätigung
 
 /* ----- Persistenz ----- */
 function loadAll() {
@@ -1088,16 +1120,66 @@ function loadAll() {
   try { VERMOEGEN = JSON.parse(localStorage.getItem('fa_vermoegen') || '{"aktiva":[],"passiva":[]}'); } catch(e){ VERMOEGEN = { aktiva:[], passiva:[]}; }
   try { SNAPSHOTS = JSON.parse(localStorage.getItem('fa_snapshots') || '[]'); } catch(e){ SNAPSHOTS = []; }
   try { STUFE_OVERRIDE = JSON.parse(localStorage.getItem('fa_override') || 'null'); } catch(e){ STUFE_OVERRIDE = null; }
+  try { MANUAL_EINNAHMEN = JSON.parse(localStorage.getItem('fa_manual_einnahmen') || '[]'); } catch(e){ MANUAL_EINNAHMEN = []; }
   updateRulesCount();
   renderVermoegen();
   renderVerlauf();
   renderOverrideUI();
+  renderManualEinnahmen();
 }
 function saveLearned() { localStorage.setItem('fa_learned', JSON.stringify(LEARNED)); updateRulesCount(); }
 function saveVermoegen() { localStorage.setItem('fa_vermoegen', JSON.stringify(VERMOEGEN)); }
 function saveSnapshots() { localStorage.setItem('fa_snapshots', JSON.stringify(SNAPSHOTS)); }
 function saveOverrideState() { localStorage.setItem('fa_override', JSON.stringify(STUFE_OVERRIDE)); }
+function saveManualEinnahmen() { localStorage.setItem('fa_manual_einnahmen', JSON.stringify(MANUAL_EINNAHMEN)); }
 function updateRulesCount() { const el=document.getElementById('rulesCount'); if(el) el.textContent = Object.keys(LEARNED).length; }
+
+/* ----- Weitere Einnahmen (nicht im Kontoauszug, z.B. Bar oder anderes Konto) ----- */
+function sumManualEinnahmenMonthly() {
+  return MANUAL_EINNAHMEN.filter(e => e.aktiv !== false).reduce((s, e) => s + (parseFloat(e.betrag) || 0), 0);
+}
+function addManualEinnahme() {
+  const nameEl = document.getElementById('meName');
+  const betragEl = document.getElementById('meBetrag');
+  const name = (nameEl.value || '').trim();
+  const betrag = parseFloat(betragEl.value);
+  if (!name) { showToast('Bitte eine Bezeichnung eintragen.'); return; }
+  if (!betrag || betrag <= 0) { showToast('Bitte einen Betrag > 0 eintragen.'); return; }
+  MANUAL_EINNAHMEN.push({ id: 'me_' + Date.now() + '_' + Math.random().toString(36).slice(2,7), name, betrag, aktiv: true });
+  saveManualEinnahmen();
+  nameEl.value = ''; betragEl.value = '';
+  renderManualEinnahmen();
+  afterBankDataChange();
+  showToast('Einnahme hinzugefügt.');
+}
+function removeManualEinnahme(id) {
+  MANUAL_EINNAHMEN = MANUAL_EINNAHMEN.filter(e => e.id !== id);
+  saveManualEinnahmen();
+  renderManualEinnahmen();
+  afterBankDataChange();
+}
+function toggleManualEinnahme(id, checked) {
+  const e = MANUAL_EINNAHMEN.find(x => x.id === id); if (!e) return;
+  e.aktiv = checked;
+  saveManualEinnahmen();
+  afterBankDataChange();
+}
+function renderManualEinnahmen() {
+  const wrap = document.getElementById('manualEinnahmenList');
+  if (!wrap) return;
+  if (!MANUAL_EINNAHMEN.length) {
+    wrap.innerHTML = '<div style="color:var(--tr-muted);font-size:12px;">Noch keine zusätzlichen Einnahmen erfasst.</div>';
+    return;
+  }
+  wrap.innerHTML = MANUAL_EINNAHMEN.map(e => `
+    <div style="display:flex;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid var(--tr-sep,#2A3A55);font-size:13px;">
+      <input type="checkbox" ${e.aktiv !== false ? 'checked' : ''} onchange="toggleManualEinnahme('${e.id}', this.checked)" style="width:auto;">
+      <span style="flex:1;${e.aktiv === false ? 'color:var(--tr-muted);text-decoration:line-through;' : ''}">${escapeHtml(e.name)}</span>
+      <span class="amount in" style="${e.aktiv === false ? 'color:var(--tr-muted);' : ''}">${formatAmount(e.betrag)} / Monat</span>
+      <button class="action secondary" style="padding:2px 8px;font-size:12px;" onclick="removeManualEinnahme('${e.id}')">✕</button>
+    </div>
+  `).join('');
+}
 
 /* ----- Tabs ----- */
 document.querySelectorAll('nav button').forEach(btn => {
@@ -1126,27 +1208,112 @@ dropZone.addEventListener('drop', e => {
 });
 fileInput.addEventListener('change', e => handleFiles(e.target.files));
 
+/* Merkt sich die eingelesenen Dateien, damit die Spalten-Zuordnung
+   nachträglich korrigiert und die Datei neu eingelesen werden kann. */
+const CSV_SOURCES = {};
+
 function handleFiles(files) {
-  const log = document.getElementById('importLog');
-  log.innerHTML = '';
+  const replaceCb = document.getElementById('importReplaceMode');
+  if (replaceCb && replaceCb.checked && TX.length) {
+    if (!confirm(`Alle bisherigen Bankdaten (${TX.length} Buchungen) werden durch den neuen Import ersetzt. Fortfahren?`)) {
+      document.getElementById('fileInput').value = '';
+      return;
+    }
+    TX = [];
+    Object.keys(CSV_SOURCES).forEach(k => delete CSV_SOURCES[k]);
+    SELECTED.clear();
+  }
   Array.from(files).forEach(f => {
     const reader = new FileReader();
     reader.onload = ev => {
-      const result = parseCSV(ev.target.result, f.name);
-      log.innerHTML += `<div class="card"><strong>${f.name}</strong> – Bank: <em>${result.bank}</em> · ${result.tx.length} Buchungen</div>`;
-      TX = TX.concat(result.tx);
-      TX.forEach(t => categorize(t));
-      // Auto-Cluster: Buchungen mit identischem Empfänger erben den Status, sofern eine schon eine eindeutige Kategorie hat
-      clusterByRecipient();
-      document.getElementById('kundenstamm').classList.remove('hidden');
-      if (!document.getElementById('kundeJahr').value) {
-        const years = TX.map(t => t.date.getFullYear()).filter(y => !isNaN(y));
-        if (years.length) document.getElementById('kundeJahr').value = Math.max(...years);
-      }
-      renderImportSummary();
+      // Umlaut-Rettung: viele Banken exportieren ISO-8859-1 / Windows-1252 statt UTF-8
+      const buf = new Uint8Array(ev.target.result);
+      const utf8 = new TextDecoder('utf-8').decode(buf);
+      const text = /�/.test(utf8.substring(0, 20000))
+        ? new TextDecoder('windows-1252').decode(buf)
+        : utf8;
+      ingestCsvText(text.replace(/^﻿/, ''), f.name);
     };
-    reader.readAsText(f, 'utf-8');
+    reader.readAsArrayBuffer(f);
   });
+}
+
+function ingestCsvText(text, filename) {
+  const result = parseCSV(text, filename);
+  CSV_SOURCES[filename] = { text, headers: result.headers, map: result.map, bank: result.bank, count: result.tx.length };
+  TX = TX.filter(t => t.srcFile !== filename).concat(result.tx);
+  TX.forEach(t => categorize(t));
+  // Auto-Cluster: Buchungen mit identischem Empfänger erben den Status, sofern eine schon eine eindeutige Kategorie hat
+  clusterByRecipient();
+  document.getElementById('kundenstamm').classList.remove('hidden');
+  if (!document.getElementById('kundeJahr').value) {
+    const years = TX.map(t => t.date.getFullYear()).filter(y => !isNaN(y));
+    if (years.length) document.getElementById('kundeJahr').value = Math.max(...years);
+  }
+  renderImportSummary();
+}
+
+/* ----- Bankdaten löschen / ersetzen ----- */
+function clearBankData() {
+  if (!TX.length && !Object.keys(CSV_SOURCES).length) { showToast('Es sind keine Bankdaten geladen.'); return; }
+  if (!confirm(`Alle geladenen Bankdaten löschen (${TX.length} Buchungen aus ${Object.keys(CSV_SOURCES).length} Datei(en))?\n\nStammdaten, Vermögen, gelernte Regeln und Snapshots bleiben erhalten.`)) return;
+  TX = [];
+  Object.keys(CSV_SOURCES).forEach(k => delete CSV_SOURCES[k]);
+  SELECTED.clear();
+  afterBankDataChange();
+  showToast('Bankdaten gelöscht – du kannst jetzt neue CSV-Dateien importieren.');
+}
+
+function removeCsvFile(filename) {
+  const src = CSV_SOURCES[filename];
+  if (!src) return;
+  const n = TX.filter(t => t.srcFile === filename).length;
+  if (!confirm(`"${filename}" mit ${n} Buchungen entfernen?`)) return;
+  TX = TX.filter(t => t.srcFile !== filename);
+  delete CSV_SOURCES[filename];
+  SELECTED.clear();
+  afterBankDataChange();
+  showToast(`${filename} entfernt.`);
+}
+
+/* Nach dem Löschen/Ersetzen alle abhängigen Ansichten neu aufbauen */
+function afterBankDataChange() {
+  const fi = document.getElementById('fileInput');
+  if (fi) fi.value = '';
+  renderImportSummary();
+  try { if (typeof renderReview === 'function') renderReview(); } catch (e) {}
+  try { if (typeof renderFFG === 'function') renderFFG(); } catch (e) {}
+  try { if (typeof renderOnePager === 'function') renderOnePager(); } catch (e) {}
+}
+
+/* Spalten-Zuordnung nach dem Import korrigieren und Datei neu einlesen */
+function remapCsv(filename) {
+  const src = CSV_SOURCES[filename];
+  if (!src) return;
+  const pick = id => {
+    const el = document.getElementById(id + '__' + cssId(filename));
+    return el ? parseInt(el.value, 10) : -1;
+  };
+  const overrides = {
+    date: pick('mapDate'), amount: pick('mapAmount'),
+    purpose: pick('mapPurpose'), recipient: pick('mapRecipient'),
+    bookingType: pick('mapBooking')
+  };
+  const result = parseCSV(src.text, filename, overrides);
+  CSV_SOURCES[filename] = { text: src.text, headers: result.headers, map: result.map, bank: result.bank, count: result.tx.length };
+  TX = TX.filter(t => t.srcFile !== filename).concat(result.tx);
+  TX.forEach(t => categorize(t));
+  clusterByRecipient();
+  renderImportSummary();
+  showToast(`${filename} mit neuer Spalten-Zuordnung eingelesen (${result.tx.length} Buchungen).`);
+}
+
+function cssId(s) { return s.replace(/[^a-z0-9]/gi, '_'); }
+
+function mapSelect(id, filename, headers, selected) {
+  const opts = ['<option value="-1">— keine —</option>']
+    .concat(headers.map((h, i) => `<option value="${i}" ${i === selected ? 'selected' : ''}>${escapeHtml(h)}</option>`));
+  return `<select id="${id}__${cssId(filename)}" style="max-width:210px;">${opts.join('')}</select>`;
 }
 
 function clusterByRecipient() {
@@ -1176,6 +1343,49 @@ function clusterByRecipient() {
 
 function renderImportSummary() {
   const log = document.getElementById('importLog');
+  log.innerHTML = '';
+
+  // Pro Datei: Bank, Anzahl, erkannte Spalten + Korrekturmöglichkeit
+  Object.keys(CSV_SOURCES).forEach(name => {
+    const s = CSV_SOURCES[name];
+    const h = s.headers || [];
+    const nm = i => (i >= 0 && h[i] !== undefined) ? h[i] : '— nicht erkannt —';
+    const warn = (s.map.recipient < 0 || s.map.purpose < 0);
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:12px;">
+        <div><strong>${escapeHtml(name)}</strong> – Bank: <em>${escapeHtml(s.bank)}</em> · ${s.count} Buchungen</div>
+        <button class="action secondary" onclick="removeCsvFile('${name.replace(/'/g, "\\'")}')" style="padding:4px 10px;font-size:12px;white-space:nowrap;">🗑 entfernen</button>
+      </div>
+      <div style="font-size:12px;color:var(--tr-muted);margin-top:6px;">
+        Datum: <strong>${escapeHtml(nm(s.map.date))}</strong> ·
+        Empfänger: <strong style="${warn?'color:#B07A1A':''}">${escapeHtml(nm(s.map.recipient))}</strong> ·
+        Verwendungszweck: <strong style="${warn?'color:#B07A1A':''}">${escapeHtml(nm(s.map.purpose))}</strong> ·
+        Betrag: <strong>${escapeHtml(nm(s.map.amount))}</strong>
+        ${s.map.bookingType >= 0 ? ' · Buchungsart: <strong>' + escapeHtml(nm(s.map.bookingType)) + '</strong>' : ''}
+      </div>
+      <details style="margin-top:8px;">
+        <summary style="cursor:pointer;font-size:12px;color:var(--tr-accent);">Spalten-Zuordnung anpassen</summary>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:10px;font-size:12px;align-items:flex-end;">
+          <label>Datum<br>${mapSelect('mapDate', name, h, s.map.date)}</label>
+          <label>Empfänger<br>${mapSelect('mapRecipient', name, h, s.map.recipient)}</label>
+          <label>Verwendungszweck<br>${mapSelect('mapPurpose', name, h, s.map.purpose)}</label>
+          <label>Betrag<br>${mapSelect('mapAmount', name, h, s.map.amount)}</label>
+          <label>Buchungsart<br>${mapSelect('mapBooking', name, h, s.map.bookingType)}</label>
+          <button class="action secondary" onclick="remapCsv('${name.replace(/'/g, "\\'")}')">Neu einlesen</button>
+        </div>
+        <p style="font-size:11px;color:var(--tr-muted);margin:8px 0 0;">Achtung: Beim Neu-Einlesen gehen manuell gesetzte Kategorien dieser Datei verloren (gelernte Regeln greifen wieder automatisch).</p>
+      </details>
+    `;
+    log.appendChild(card);
+  });
+
+  if (!TX.length && !Object.keys(CSV_SOURCES).length) {
+    log.innerHTML = '<div class="empty-state">Keine Bankdaten geladen – CSV oben hineinziehen.</div>';
+    return;
+  }
+
   const reviewCount = TX.filter(t => t.status === 'review').length;
   const summary = document.createElement('div');
   summary.className = 'card';
@@ -1188,7 +1398,36 @@ function renderImportSummary() {
   log.appendChild(summary);
 }
 
-function parseCSV(text, filename) {
+/* Spalten-Erkennung nach Priorität: das erste Muster gewinnt, egal an welcher
+   Position es steht. Spalten des EIGENEN Kontos (Auftragskonto, Bankname …)
+   werden ausgeschlossen – sonst landet "VOLKSBANK MITTLERER NECKAR" im
+   Empfänger-Feld und "Basislastschrift" im Verwendungszweck. */
+const OWN_ACCOUNT_COLS = ['auftragskonto', 'auftraggeberkonto', 'eigenes konto', 'eigenkonto', 'bankname', 'bezeichnung auftragskonto'];
+
+function pickColumn(headers, patterns, exclude) {
+  exclude = exclude || [];
+  for (const p of patterns) {
+    for (let i = 0; i < headers.length; i++) {
+      const h = headers[i];
+      if (!h) continue;
+      if (exclude.some(x => h.includes(x))) continue;
+      if (p instanceof RegExp ? p.test(h) : h.includes(p)) return i;
+    }
+  }
+  return -1;
+}
+
+/* Technischen SEPA-Ballast (EREF/MREF/CRED/IBAN/BIC …) für die Anzeige abschneiden.
+   Der vollständige Text bleibt in t.purposeFull / t.raw erhalten. */
+function cleanPurpose(s) {
+  if (!s) return '';
+  const cut = s.search(/\s(EREF|MREF|CRED|KREF|MDAT|DEBT|COAM|OAMT|SVWZ|ABWA|ABWE|ANAM|IBAN|BIC)\s*[:+]/i);
+  let out = cut > 0 ? s.slice(0, cut) : s;
+  out = out.replace(/\s{2,}/g, ' ').trim();
+  return out || s.replace(/\s{2,}/g, ' ').trim();
+}
+
+function parseCSV(text, filename, overrides) {
   const lower = text.toLowerCase();
   let bank = 'Unbekannt';
   if (lower.includes('umsatzart') && lower.includes('beguenstigter')) bank = 'Deutsche Bank';
@@ -1209,32 +1448,82 @@ function parseCSV(text, filename) {
   let headerIdx = lines.findIndex(l => /buchung|datum|date|betrag|umsatz/i.test(l));
   if (headerIdx < 0) headerIdx = 0;
 
-  const headers = splitCsvLine(lines[headerIdx], sep).map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
-  const colDate = headers.findIndex(h => /buchungstag|buchung\b|datum|date/.test(h));
-  const colAmount = headers.findIndex(h => /^betrag|^umsatz$|^amount|soll\/haben|umsatz in eur/.test(h) || (h.includes('betrag') && !h.includes('umsatzart')));
-  const colPurpose = headers.findIndex(h => /verwendungszweck|verwendung|description|buchungstext|umsatzart/.test(h));
-  const colRecipient = headers.findIndex(h => /beguenstigter|empfaenger|empfänger|begünstigter|auftraggeber|zahlungsempf|zahlungspflichtiger|kontoinhaber|name\b|gegenseite|partner/.test(h));
+  const headersRaw = splitCsvLine(lines[headerIdx], sep).map(h => h.replace(/^"|"$/g, '').replace(/^﻿/, '').trim());
+  const headers = headersRaw.map(h => h.toLowerCase());
+
+  const ov = overrides || {};
+  const has = v => typeof v === 'number' && !isNaN(v);
+
+  const colDate = has(ov.date) ? ov.date : pickColumn(headers, [
+    /^buchungstag/, /^buchungsdatum/, /^datum/, /^date/, /buchungstag/, /buchungsdatum/,
+    /^valuta/, /valutadatum|wertstellung/, /datum/, /date/
+  ]);
+
+  const colAmount = has(ov.amount) ? ov.amount : pickColumn(headers, [
+    /^betrag/, /^umsatz in eur/, /^amount/, /betrag/, /^umsatz$/
+  ], ['saldo', 'währung', 'waehrung', 'currency']);
+
+  // Empfänger: Gegenseite der Buchung – NICHT das eigene Konto
+  const colRecipient = has(ov.recipient) ? ov.recipient : pickColumn(headers, [
+    /name zahlungsbeteiligter/, /zahlungsbeteiligter/,
+    /beguenstigter|begünstigter/, /empfaenger|empfänger/, /zahlungsempf/,
+    /auftraggeber/, /zahlungspflichtiger/, /beteiligter/,
+    /gegenseite|partner|gegenkonto.*name/, /^name$/, /\bname\b/
+  ], OWN_ACCOUNT_COLS.concat(['iban', 'bic', 'swift', 'blz', 'kontonummer']));
+
+  // Verwendungszweck hat IMMER Vorrang vor Buchungstext ("Basislastschrift" ist keine Beschreibung)
+  const colPurpose = has(ov.purpose) ? ov.purpose : pickColumn(headers, [
+    /verwendungszweck/, /^verwendung/, /svwz/, /description/, /^referenz/,
+    /^buchungstext$/, /buchungstext/, /umsatzart/
+  ]);
+
+  // Buchungsart separat (Basislastschrift / Dauerauftrag / Überweisung …)
+  let colBooking = has(ov.bookingType) ? ov.bookingType : pickColumn(headers, [
+    /^buchungstext$/, /buchungstext/, /umsatzart/, /^art$/, /transaktionstyp|vorgang/
+  ]);
+  if (colBooking === colPurpose) colBooking = -1;
+
+  // Optionale Soll/Haben-Kennzeichen-Spalte (z.B. Sparkasse-Exporte mit positiven Beträgen)
+  const colSH = pickColumn(headers, [/soll.?\/?.?haben/, /^s\/h$/, /haben.?kennz/]);
+
+  const map = { date: colDate, amount: colAmount, purpose: colPurpose, recipient: colRecipient, bookingType: colBooking };
+
+  // Wenn die Datei den Banknamen des eigenen Kontos mitliefert, ist der genauer als die Heuristik
+  const colBankName = pickColumn(headers, [/bankname/]);
+  if (colBankName >= 0 && lines[headerIdx + 1]) {
+    const v = (splitCsvLine(lines[headerIdx + 1], sep)[colBankName] || '').replace(/^"|"$/g, '').trim();
+    if (v.length > 2) bank = v;
+  }
 
   const tx = [];
   for (let i = headerIdx + 1; i < lines.length; i++) {
     const cells = splitCsvLine(lines[i], sep).map(c => c.replace(/^"|"$/g, '').trim());
     if (cells.length < 2) continue;
-    const dateStr = cells[colDate] || '';
-    const amountStr = cells[colAmount] || '';
-    const purpose = cells[colPurpose] || '';
-    const recipient = colRecipient >= 0 ? cells[colRecipient] : '';
+    const dateStr = colDate >= 0 ? (cells[colDate] || '') : '';
+    const amountStr = colAmount >= 0 ? (cells[colAmount] || '') : '';
+    const purposeFull = colPurpose >= 0 ? (cells[colPurpose] || '') : '';
+    const recipient = colRecipient >= 0 ? (cells[colRecipient] || '') : '';
+    const bookingType = colBooking >= 0 ? (cells[colBooking] || '') : '';
     const date = parseGermanDate(dateStr);
-    const amount = parseGermanAmount(amountStr);
+    let amount = parseGermanAmount(amountStr);
+    if (colSH >= 0 && !isNaN(amount)) {
+      const sh = (cells[colSH] || '').trim().toUpperCase();
+      if (sh === 'S' || sh === 'SOLL' || sh === 'D') amount = -Math.abs(amount);
+      else if (sh === 'H' || sh === 'HABEN' || sh === 'C') amount = Math.abs(amount);
+    }
     if (!date || isNaN(amount) || amount === 0) continue;
+    const raw = [recipient, purposeFull, bookingType].filter(Boolean).join(' ').trim();
     tx.push({
       id: 't_' + Math.random().toString(36).slice(2, 10),
-      date, amount, purpose, recipient,
-      raw: (recipient + ' ' + purpose).trim(),
-      category: null, status: null, bank,
-      istDauerauftrag: /dauerauftrag/i.test(recipient + ' ' + purpose)
+      date, amount,
+      purpose: cleanPurpose(purposeFull),
+      purposeFull, recipient, bookingType,
+      raw,
+      category: null, status: null, bank, srcFile: filename,
+      istDauerauftrag: /dauerauftrag|standing order/i.test(raw)
     });
   }
-  return { bank, tx };
+  return { bank, tx, headers: headersRaw, map };
 }
 
 function splitCsvLine(line, sep) {
@@ -1303,88 +1592,80 @@ function categorize(t) {
   // 5. Default: nichts vorbelegen, zur Prüfung
   t.category = null; t.status = 'review';
 }
-function learnFromTransaction(t) {
-  if (!t.category) return 0;
+const LEARN_STOP = new Set(['gmbh','mbh','ag','kg','co','und','der','die','das','von','zur','zum','ggf','eur','euro','sepa','lastschrift','dauerauftrag','ueberweisung','überweisung','tan','vwz','svwz','ref','ende','iban','bic']);
 
-  const STOP = new Set(['gmbh','mbh','ag','kg','co','und','der','die','das','von','zur','zum','ggf','eur','euro','sepa','lastschrift','dauerauftrag','ueberweisung','überweisung','tan','vwz','svwz','ref','ende','iban','bic']);
-
+/* Leitet aus einer Buchung den "Lern-Schlüssel" ab (für LEARNED-Regeln UND für die
+   Ähnlichkeitssuche unten) - rein lesend, keine Seiteneffekte. */
+function deriveLearnKey(t) {
   const recipient = (t.recipient || '').toLowerCase().trim();
-  const direction = t.amount >= 0 ? 'in' : 'out';
-
-  // Schlüssel aus Empfänger ableiten
   let key = '';
   if (recipient.length >= 3) {
     const words = recipient
       .split(/[^a-zäöüß0-9]+/i)
-      .filter(w => w.length >= 3 && !STOP.has(w.toLowerCase()))
+      .filter(w => w.length >= 3 && !LEARN_STOP.has(w.toLowerCase()))
       .slice(0, 3);
     key = words.join(' ');
   }
   if (!key || key.length < 4) {
     const text = (t.raw || (recipient + ' ' + (t.purpose || ''))).toLowerCase();
     const words = text.split(/[^a-zäöüß0-9]+/i)
-      .filter(w => w.length >= 4 && !STOP.has(w))
+      .filter(w => w.length >= 4 && !LEARN_STOP.has(w))
       .slice(0, 2);
     key = words.join(' ');
   }
+  return { recipient, key };
+}
 
-  // Lerne den Key mit Richtungs-Suffix
+/* Speichert nur die LEARNED-Regel (für künftige Importe) - verändert KEINE anderen Buchungen. */
+function learnRuleFromTransaction(t) {
+  if (!t.category) return;
+  const direction = t.amount >= 0 ? 'in' : 'out';
+  const { key } = deriveLearnKey(t);
   if (key) {
     const compoundKey = key + '|' + direction;
     LEARNED[compoundKey] = { cat: t.category, count: (LEARNED[compoundKey]?.count || 0) + 1 };
     saveLearned();
   }
+}
 
-  // Trenne exakte Empfänger-Treffer von Fuzzy-Treffern
-  const exactMatches = [];
-  const fuzzyMatches = [];
+/* Findet andere Buchungen, die zu t "passen" (gleicher Empfänger = exakt, sonst ähnlicher Text
+   = fuzzy) - rein lesend, verändert nichts. status 'manual' wird ausgeschlossen, weil diese Buchungen
+   bereits bewusst einzeln einer (ggf. abweichenden) Kategorie zugeordnet wurden. */
+function findGroupCandidates(t) {
+  const direction = t.amount >= 0 ? 'in' : 'out';
+  const { recipient, key } = deriveLearnKey(t);
+  const exactMatches = [], fuzzyMatches = [];
   TX.forEach(other => {
     if (other.id === t.id) return;
     if (other.status === 'manual') return;
     const otherDir = other.amount >= 0 ? 'in' : 'out';
-    if (otherDir !== direction) return; // Richtung muss stimmen
+    if (otherDir !== direction) return;
     const orec = (other.recipient || '').toLowerCase().trim();
-
-    // Priorität 1: identischer Empfänger
-    if (recipient && orec === recipient) {
-      exactMatches.push(other);
-      return;
-    }
-    // Priorität 2: Substring-Match auf Schlüssel
+    if (recipient && orec === recipient) { exactMatches.push(other); return; }
     if (key) {
       const otext = (other.raw || '').toLowerCase();
-      if (otext.includes(key) || orec.includes(key)) {
-        fuzzyMatches.push(other);
-      }
+      if (otext.includes(key) || orec.includes(key)) fuzzyMatches.push(other);
     }
   });
+  return { exactMatches, fuzzyMatches };
+}
 
-  // Exakte Treffer: immer übernehmen
-  exactMatches.forEach(o => {
-    o.category = t.category;
-    o.status = t.category === 'IGNORE' ? 'ignore' : 'learned';
-  });
+/* Wendet eine Kategorie auf eine Liste bestehender Buchungen an (Status -> 'learned'). */
+function applyCategoryTo(list, cat) {
+  list.forEach(o => { o.category = cat; o.status = cat === 'IGNORE' ? 'ignore' : 'learned'; });
+  return list.length;
+}
 
-  // Fuzzy-Treffer: bei vielen Treffern nachfragen, sonst still übernehmen
-  let fuzzyApplied = 0;
-  if (fuzzyMatches.length > 10) {
-    const ok = confirm(`Außerdem ${fuzzyMatches.length} ähnliche Buchungen gefunden (kein exakter Empfänger-Match). Auch als „${CATEGORIES[t.category].label}" markieren?`);
-    if (ok) {
-      fuzzyMatches.forEach(o => {
-        o.category = t.category;
-        o.status = t.category === 'IGNORE' ? 'ignore' : 'learned';
-      });
-      fuzzyApplied = fuzzyMatches.length;
-    }
-  } else {
-    fuzzyMatches.forEach(o => {
-      o.category = t.category;
-      o.status = t.category === 'IGNORE' ? 'ignore' : 'learned';
-    });
-    fuzzyApplied = fuzzyMatches.length;
-  }
-
-  return exactMatches.length + fuzzyApplied;
+/* Rückwärtskompatibel für applyBulk: lernt die Regel UND übernimmt alle passenden
+   Buchungen direkt (ohne Bestätigungs-Dialog), weil applyBulk nur auf der Buchungsmenge
+   arbeitet, die der Berater zuvor bewusst über die Checkboxen ausgewählt hat. */
+function learnFromTransaction(t) {
+  if (!t.category) return 0;
+  learnRuleFromTransaction(t);
+  const { exactMatches, fuzzyMatches } = findGroupCandidates(t);
+  const n1 = applyCategoryTo(exactMatches, t.category);
+  const n2 = applyCategoryTo(fuzzyMatches, t.category);
+  return n1 + n2;
 }
 
 /* ----- Review-Tab ----- */
@@ -1446,7 +1727,8 @@ function renderReview() {
     </tr>
     <tr id="txDetail_${t.id}" class="hidden"><td></td><td colspan="5" style="background:var(--tr-bg);font-size:12px;padding:10px 14px;">
       <strong>Empfänger:</strong> ${t.recipient ? escapeHtml(t.recipient) : '<em style="color:var(--tr-muted);">kein separates Empfänger-Feld in der CSV – Name steckt vermutlich im Verwendungszweck (bei SEPA-Überweisungen üblich)</em>'} &nbsp;·&nbsp;
-      <strong>Verwendungszweck:</strong> ${escapeHtml(t.purpose || '–')} &nbsp;·&nbsp;
+      <strong>Verwendungszweck:</strong> ${escapeHtml(t.purposeFull || t.purpose || '–')} &nbsp;·&nbsp;
+      <strong>Buchungsart:</strong> ${escapeHtml(t.bookingType || '–')} &nbsp;·&nbsp;
       <strong>Bank/Quelle:</strong> ${escapeHtml(t.bank || '–')} &nbsp;·&nbsp;
       <strong>Vollständiger Text:</strong> ${escapeHtml(t.raw || '–')} &nbsp;·&nbsp;
       <label style="cursor:pointer;"><input type="checkbox" ${t.istDauerauftrag?'checked':''} onchange="toggleDauerauftrag('${t.id}',this.checked)" style="width:auto;vertical-align:middle;"> <strong>Dauerauftrag</strong> (relevant bei Variable Kosten – für die Konten-Story-Animation)</label>
@@ -1456,6 +1738,7 @@ function renderReview() {
   if (filtered.length > 500) html += `<p style="color:var(--tr-muted)">Anzeige auf 500 begrenzt (von ${filtered.length}).</p>`;
   document.getElementById('reviewTableWrap').innerHTML = html;
   updateBulkBar();
+  renderGroupPendingPanel();
 }
 function toggleTxDetail(id) {
   const row = document.getElementById('txDetail_' + id);
@@ -1470,21 +1753,92 @@ function changeCategory(id, cat) {
   if (!cat) {
     t.category = null;
     t.status = 'review';
+    GROUP_PENDING = null;
     renderReview();
     return;
   }
   t.category = cat;
   t.status = cat === 'IGNORE' ? 'ignore' : 'manual';
+  learnRuleFromTransaction(t);
+
   const grouping = document.getElementById('groupingEnabled');
   const groupingOn = !grouping || grouping.checked;
-  if (groupingOn) {
-    const n = learnFromTransaction(t);
-    renderReview();
-    if (n > 0) showToast(`+ ${n} ähnliche Buchung${n===1?'':'en'} automatisch zugeordnet`);
-  } else {
+  if (!groupingOn) {
+    GROUP_PENDING = null;
     renderReview();
     showToast('Nur diese eine Buchung zugeordnet (Gruppierung ausgeschaltet).');
+    return;
   }
+
+  const { exactMatches, fuzzyMatches } = findGroupCandidates(t);
+  const all = exactMatches.map(o => ({ tx: o, exact: true })).concat(fuzzyMatches.map(o => ({ tx: o, exact: false })));
+  if (!all.length) {
+    GROUP_PENDING = null;
+    renderReview();
+    return;
+  }
+  // Vorbelegung: exakte Empfänger-Treffer an, unsichere Fuzzy-Treffer nur an, wenn es wenige sind
+  const checked = new Set(
+    all.filter(m => m.exact || fuzzyMatches.length <= 10).map(m => m.tx.id)
+  );
+  GROUP_PENDING = { source: t, candidates: all, checked };
+  renderReview();
+}
+
+function toggleGroupCandidate(txId, checked) {
+  if (!GROUP_PENDING) return;
+  if (checked) GROUP_PENDING.checked.add(txId);
+  else GROUP_PENDING.checked.delete(txId);
+  renderGroupPendingPanel();
+}
+function setAllGroupCandidates(checked) {
+  if (!GROUP_PENDING) return;
+  GROUP_PENDING.checked = checked ? new Set(GROUP_PENDING.candidates.map(m => m.tx.id)) : new Set();
+  renderGroupPendingPanel();
+}
+function confirmGroupPending() {
+  if (!GROUP_PENDING) return;
+  const { source, candidates, checked } = GROUP_PENDING;
+  const toApply = candidates.filter(m => checked.has(m.tx.id)).map(m => m.tx);
+  const n = applyCategoryTo(toApply, source.category);
+  const skipped = candidates.length - n;
+  GROUP_PENDING = null;
+  renderReview();
+  const extra = skipped > 0 ? ` · ${skipped} bewusst nicht mit übernommen` : '';
+  showToast(n > 0 ? `+ ${n} ähnliche Buchung${n===1?'':'en'} übernommen${extra}` : `Nur diese eine Buchung zugeordnet${extra}.`);
+}
+function cancelGroupPending() {
+  GROUP_PENDING = null;
+  renderReview();
+  showToast('Nur diese eine Buchung zugeordnet.');
+}
+function renderGroupPendingPanel() {
+  const wrap = document.getElementById('groupConfirmPanel');
+  if (!wrap) return;
+  if (!GROUP_PENDING) { wrap.classList.add('hidden'); wrap.innerHTML = ''; return; }
+  const { source, candidates, checked } = GROUP_PENDING;
+  wrap.classList.remove('hidden');
+  wrap.innerHTML = `
+    <div style="margin-bottom:8px;">
+      <strong>${escapeHtml(source.recipient || source.purpose || 'Buchung')}</strong> wurde auf „${CATEGORIES[source.category] ? CATEGORIES[source.category].label : source.category}" gesetzt.
+      ${candidates.length} weitere Buchung${candidates.length===1?'':'en'} mit gleichem/ähnlichem Empfänger gefunden – bitte prüfen und ggf. einzeln abwählen, bevor du übernimmst:
+    </div>
+    <div style="max-height:220px;overflow-y:auto;background:rgba(255,255,255,0.06);border-radius:6px;padding:6px 10px;margin-bottom:10px;">
+      ${candidates.map(m => `
+        <label style="display:flex;align-items:center;gap:8px;padding:4px 0;font-size:13px;cursor:pointer;">
+          <input type="checkbox" ${checked.has(m.tx.id)?'checked':''} onchange="toggleGroupCandidate('${m.tx.id}', this.checked)" style="width:auto;">
+          <span style="flex:1;">${escapeHtml(m.tx.recipient || m.tx.purpose || '(keine Angabe)')}${m.exact?'':' <em style="opacity:.7;">(ähnlich)</em>'}</span>
+          <span class="amount ${m.tx.amount>=0?'in':'out'}">${formatAmount(m.tx.amount)}</span>
+        </label>
+      `).join('')}
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;">
+      <button class="action" onclick="confirmGroupPending()">Übernehmen (${checked.size})</button>
+      <button class="action secondary" onclick="setAllGroupCandidates(true)" style="color:#fff;background:transparent;border-color:var(--tr-light-acc);">Alle auswählen</button>
+      <button class="action secondary" onclick="setAllGroupCandidates(false)" style="color:#fff;background:transparent;border-color:var(--tr-light-acc);">Alle abwählen</button>
+      <button class="action secondary" onclick="cancelGroupPending()" style="color:#fff;background:transparent;border-color:var(--tr-light-acc);">Nur diese eine Buchung</button>
+    </div>
+  `;
 }
 
 function showToast(msg) {
@@ -1548,6 +1902,7 @@ function exportKundenakte() {
       haushalt: parseInt(document.getElementById('kundeHaushalt').value) || 1
     },
     vermoegen: JSON.parse(JSON.stringify(VERMOEGEN)),
+    manuelleEinnahmen: JSON.parse(JSON.stringify(MANUAL_EINNAHMEN)),
     snapshots: SNAPSHOTS.filter(s => s.kunde === kunde),
     transaktionen: TX.map(t => ({
       id: t.id, datum: t.date.toISOString(), betrag: t.amount,
@@ -1588,6 +1943,11 @@ function importKundenakte(file) {
         saveVermoegen();
         renderVermoegen();
       }
+      if (Array.isArray(akte.manuelleEinnahmen)) {
+        MANUAL_EINNAHMEN = akte.manuelleEinnahmen;
+        saveManualEinnahmen();
+        renderManualEinnahmen();
+      }
       // Snapshots: vorhandene des gleichen Kunden ersetzen, andere behalten
       if (Array.isArray(akte.snapshots)) {
         const kn = akte.kunde?.name;
@@ -1604,7 +1964,9 @@ function importKundenakte(file) {
         if (ov.fix) document.getElementById('opFix').value = ov.fix;
         if (ov.av) document.getElementById('opAV').value = ov.av;
         if (ov.var_) document.getElementById('opVar').value = ov.var_;
-        if (ov.spar) document.getElementById('opSpar').value = ov.spar;
+        if (ov.sparDepot !== undefined) document.getElementById('opSpar').value = ov.sparDepot;
+        else if (ov.spar) document.getElementById('opSpar').value = ov.spar;
+        if (ov.ziele) document.getElementById('opZiele').value = ov.ziele;
         if (ov.schutz) document.getElementById('opSchutz').value = ov.schutz;
       }
       // Ziele
@@ -1656,6 +2018,18 @@ function toggleSelection(id, checked) {
   const t = TX.find(x => x.id === id);
   if (!t) return;
 
+  // Abwählen betrifft IMMER nur genau diese eine Buchung - keine Kaskade.
+  // So kann man aus einer per Gruppen-Klick entstandenen Auswahl gezielt
+  // einzelne "Ausreißer" (z.B. gleicher Empfänger, aber anderer Betrag/andere
+  // Kategorie) wieder herausnehmen, ohne die restliche Gruppe zu verlieren.
+  if (!checked) {
+    SELECTED.delete(id);
+    const cb = document.querySelector(`.tx-checkbox[data-id="${id}"]`);
+    if (cb) { cb.checked = false; cb.closest('tr').style.background = ''; }
+    updateBulkBar();
+    return;
+  }
+
   const recipient = (t.recipient || '').toLowerCase().trim();
   const direction = t.amount >= 0 ? 'in' : 'out';
 
@@ -1678,17 +2052,16 @@ function toggleSelection(id, checked) {
   }
 
   targetIds.forEach(tid => {
-    if (checked) SELECTED.add(tid);
-    else SELECTED.delete(tid);
+    SELECTED.add(tid);
     const cb = document.querySelector(`.tx-checkbox[data-id="${tid}"]`);
     if (cb) {
-      cb.checked = checked;
-      cb.closest('tr').style.background = checked ? '#EDF3FB' : '';
+      cb.checked = true;
+      cb.closest('tr').style.background = '#EDF3FB';
     }
   });
   updateBulkBar();
-  if (checked && targetIds.length > 1) {
-    showToast(`${targetIds.length} Buchungen mit gleichem Empfänger ausgewählt`);
+  if (targetIds.length > 1) {
+    showToast(`${targetIds.length} Buchungen mit gleichem Empfänger ausgewählt – einzelne kannst du oben wieder abwählen.`);
   }
 }
 
@@ -1728,6 +2101,11 @@ function applyBulk() {
   const seenRecipients = new Set();
   // Snapshot der IDs, weil renderReview SELECTED zurücksetzen könnte
   const ids = Array.from(SELECTED);
+  // Sichtbare, aber NICHT ausgewählte Buchungen wurden bewusst abgewählt (z.B. gleicher
+  // Empfänger, aber anderer Betrag/andere Kategorie) - die dürfen von der Gruppierung
+  // nicht mit erfasst werden, sonst hebelt applyBulk die manuelle Abwahl wieder aus.
+  const visibleIds = new Set(Array.from(document.querySelectorAll('.tx-checkbox')).map(cb => cb.dataset.id));
+  const deselectedVisible = new Set(Array.from(visibleIds).filter(vid => !ids.includes(vid)));
 
   ids.forEach(id => {
     const t = TX.find(x => x.id === id);
@@ -1741,7 +2119,10 @@ function applyBulk() {
     const rkey = (t.recipient || '').toLowerCase().trim() || (t.raw || '').toLowerCase().slice(0, 30);
     if (rkey && !seenRecipients.has(rkey)) {
       seenRecipients.add(rkey);
-      propagatedTotal += learnFromTransaction(t);
+      learnRuleFromTransaction(t);
+      const { exactMatches, fuzzyMatches } = findGroupCandidates(t);
+      const candidates = exactMatches.concat(fuzzyMatches).filter(o => !deselectedVisible.has(o.id));
+      propagatedTotal += applyCategoryTo(candidates, t.category);
     }
   });
 
@@ -1761,12 +2142,20 @@ document.getElementById('filterSearch').addEventListener('input', renderReview);
 
 function computeCashflowAvg() {
   /* Liefert {einnahmen, fix, av, schutz, fixGesamt, var_, spar, monate, sums} Ø/Monat aus TX
-     fixGesamt = fix + av + schutz  -> das ist die "50%"-Fixkosten-Klammer im 50-30-20-Modell */
-  if (!TX.length) return null;
+     fixGesamt = fix + av + schutz  -> das ist die "50%"-Fixkosten-Klammer im 50-30-20-Modell
+     einnahmen enthält zusätzlich etwaige "Weitere Einnahmen" (MANUAL_EINNAHMEN, z.B. Bar) */
+  const manuellEinnahmen = sumManualEinnahmenMonthly();
+  if (!TX.length) {
+    if (!manuellEinnahmen) return null;
+    return { einnahmen: manuellEinnahmen, fix: 0, av: 0, schutz: 0, fixGesamt: 0, var_: 0, spar: 0, sparDepot: 0, ziele: 0, monate: 1, sums: {} };
+  }
   const active = TX.filter(t => t.status !== 'ignore');
-  if (!active.length) return null;
+  if (!active.length) {
+    if (!manuellEinnahmen) return null;
+    return { einnahmen: manuellEinnahmen, fix: 0, av: 0, schutz: 0, fixGesamt: 0, var_: 0, spar: 0, sparDepot: 0, ziele: 0, monate: 1, sums: {} };
+  }
   const months = monthsInData(active);
-  const sums = { EINNAHMEN:0, FIXKOSTEN:0, AV:0, VARIABEL:0, SPAREN:0, SCHUTZ:0, EINNAHMEN_FIRMA:0, FIXKOSTEN_FIRMA:0, VARIABEL_FIRMA:0 };
+  const sums = { EINNAHMEN:0, FIXKOSTEN:0, AV:0, VARIABEL:0, SPAREN:0, ZIELE:0, SCHUTZ:0, EINNAHMEN_FIRMA:0, FIXKOSTEN_FIRMA:0, VARIABEL_FIRMA:0 };
   active.forEach(t => {
     if (t.category && t.category !== 'IGNORE') {
       sums[t.category] = (sums[t.category] || 0) + t.amount;
@@ -1776,13 +2165,15 @@ function computeCashflowAvg() {
   const av = Math.abs(sums.AV) / months;
   const schutz = Math.abs(sums.SCHUTZ) / months;
   return {
-    einnahmen: (sums.EINNAHMEN || 0) / months,
+    einnahmen: (sums.EINNAHMEN || 0) / months + manuellEinnahmen,
     fix: fix,
     av: av,
     schutz: schutz,
     fixGesamt: fix + av + schutz,
     var_: Math.abs(sums.VARIABEL) / months,
-    spar: Math.abs(sums.SPAREN) / months,
+    spar: (Math.abs(sums.SPAREN) + Math.abs(sums.ZIELE)) / months,
+    sparDepot: Math.abs(sums.SPAREN) / months,
+    ziele: Math.abs(sums.ZIELE) / months,
     monate: months,
     sums: sums
   };
@@ -1792,7 +2183,7 @@ function computeBudgetCashflowAvg() {
   /* Gleiche Rückgabe-Struktur wie computeCashflowAvg(), nur aus dem Budget-Planer (Excel-Import)
      statt aus TX. Nutzt bewusst BUDGET.original (die reale Datengrundlage), nicht die Simulation. */
   if (typeof BUDGET === 'undefined' || !BUDGET.original) return null;
-  const sums = { EINNAHMEN:0, FIXKOSTEN:0, AV:0, VARIABEL:0, SPAREN:0, SCHUTZ:0 };
+  const sums = { EINNAHMEN:0, FIXKOSTEN:0, AV:0, VARIABEL:0, SPAREN:0, ZIELE:0, SCHUTZ:0 };
   BUDGET.original.sections.forEach(sec => {
     sec.rows.forEach(row => {
       if (row.active === false) return;
@@ -1800,14 +2191,17 @@ function computeBudgetCashflowAvg() {
       if (sums.hasOwnProperty(sec.category)) sums[sec.category] += avg;
     });
   });
-  if (sums.EINNAHMEN <= 0) return null;
+  const manuellEinnahmen = sumManualEinnahmenMonthly();
+  if (sums.EINNAHMEN <= 0 && !manuellEinnahmen) return null;
   const fix = sums.FIXKOSTEN, av = sums.AV, schutz = sums.SCHUTZ;
   return {
-    einnahmen: sums.EINNAHMEN,
+    einnahmen: sums.EINNAHMEN + manuellEinnahmen,
     fix: fix, av: av, schutz: schutz,
     fixGesamt: fix + av + schutz,
     var_: sums.VARIABEL,
-    spar: sums.SPAREN,
+    spar: sums.SPAREN + sums.ZIELE,
+    sparDepot: sums.SPAREN,
+    ziele: sums.ZIELE,
     monate: 12,
     sums: sums
   };
@@ -1863,6 +2257,111 @@ function computeFirma() {
   const negativeMonate = monthKeys.filter(k => byMonth[k] < 0).map(k => ({ monat: k, betrag: byMonth[k] }));
 
   return { einnahmen, fix, var_, ueberschuss, monate: months, monateGesamt: monthKeys.length, negativeMonate };
+}
+
+/* ===========================================================
+   FINANZATHLET-MODELL (ersetzt 50-30-20)
+   Beine = Fixkosten · Schuhe = Konsum · Schirm = Absicherung
+   Rumpf = Altersvorsorge + Vermögen · Kopf = Sparziele / Träume
+   =========================================================== */
+const ATHLET_PARTS = [
+  { key:'schirm', name:'Schirm', sub:'Absicherung',         ziel:'8–12 %',     light:'#7A9CC0', dark:'#7A9CC0' },
+  { key:'kopf',   name:'Kopf',   sub:'Träume & Ziele',      ziel:'5–10 %',     light:'#161E2E', dark:'#D0DCE8' },
+  { key:'rumpf',  name:'Rumpf',  sub:'Vorsorge & Vermögen', ziel:'mind. 15 %', light:'#7AB8F5', dark:'#7AB8F5' },
+  { key:'beine',  name:'Beine',  sub:'Fixkosten',           ziel:'max. 40 %',  light:'#378ADD', dark:'#378ADD' },
+  { key:'schuhe', name:'Schuhe', sub:'Konsum & Alltag',     ziel:'20–25 %',    light:'#D0DCE8', dark:'#2A3A55' },
+];
+const ATHLET_ST = {
+  'green-star': { c:'#3FB67A', s:'★', t:'#0c2418' },
+  'green':      { c:'#3FB67A', s:'✓', t:'#0c2418' },
+  'yellow':     { c:'#E8B84B', s:'!', t:'#3a2d08' },
+  'red':        { c:'#E0563B', s:'✗', t:'#fff' }
+};
+const ATHLET_CHECKS = [
+  { key:'beine',  t:'Zu schwere Beine', d:'Fixkosten über 40 %' },
+  { key:'schuhe', t:'Zu viel Schuhe',   d:'Konsum frisst den Aufbau' },
+  { key:'rumpf',  t:'Zu viel Rumpf',    d:'Spart alles, lebt nicht' },
+  { key:'schirm', t:'Zu großer Schirm', d:'Überversichert' },
+];
+
+function athletStatus(key, pct) {
+  switch (key) {
+    case 'beine':  return pct <= 40 ? 'green' : pct <= 45 ? 'yellow' : 'red';
+    case 'schuhe': return pct <= 25 ? 'green' : pct <= 30 ? 'yellow' : 'red';
+    case 'schirm': return (pct >= 8 && pct <= 12) ? 'green' : (pct >= 5 && pct <= 15) ? 'yellow' : 'red';
+    case 'rumpf':  return pct >= 20 ? 'green-star' : pct >= 15 ? 'green' : pct >= 10 ? 'yellow' : 'red';
+    case 'kopf':   return (pct >= 5 && pct <= 10) ? 'green' : 'yellow';
+  }
+  return null;
+}
+
+function computeAthlet(v) {
+  /* v: {einnahmen, fix, av, schutz, var_, sparDepot, ziele} (spar als Fallback für alte Daten) */
+  const ein = v.einnahmen || 0;
+  const sparDepot = (v.sparDepot !== undefined && v.sparDepot !== null) ? v.sparDepot : (v.spar || 0);
+  const vals = {
+    schirm: v.schutz || 0,
+    kopf:   v.ziele || 0,
+    rumpf:  (v.av || 0) + sparDepot,
+    beine:  v.fix || 0,
+    schuhe: v.var_ || 0,
+  };
+  const parts = ATHLET_PARTS.map(p => {
+    const pct = ein > 0 ? vals[p.key] / ein * 100 : 0;
+    return { ...p, val: vals[p.key], pct, status: ein > 0 ? athletStatus(p.key, pct) : null };
+  });
+  const P = {}; parts.forEach(p => P[p.key] = p);
+  const checks = {
+    beine:  ein > 0 && P.beine.pct > 40,
+    schuhe: ein > 0 && P.schuhe.pct > 25,
+    rumpf:  ein > 0 && (P.rumpf.pct + P.kopf.pct) > 35 && P.schuhe.pct < 10,
+    schirm: ein > 0 && P.schirm.pct > 12,
+  };
+  const hints = [];
+  if (ein > 0 && P.schirm.pct < 8) hints.push('Schirm zu klein – Absicherung prüfen');
+  if (ein > 0 && P.kopf.val <= 0) hints.push('Kopf ohne Ziele – wofür trainiert der Athlet?');
+  if (ein > 0 && P.rumpf.pct < 15) hints.push('Rumpf stärken – Sparquote unter 15 %');
+  const summe = parts.reduce((s, p) => s + p.val, 0);
+  return { ein, parts, P, checks, hints, summe, frei: ein - summe };
+}
+
+function athletSVG(a, dark) {
+  const col = key => {
+    const p = a.P[key];
+    if (p && p.status) return ATHLET_ST[p.status].c;
+    return dark ? p.dark : p.light;
+  };
+  const ground = dark ? '#378ADD' : '#378ADD';
+  const pole = col('schirm');
+  return `<svg viewBox="0 0 200 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Finanzathlet">
+    <path d="M22 80 Q100 -6 178 80 Q158 70 139 80 Q119 70 100 80 Q81 70 61 80 Q42 70 22 80 Z" fill="${col('schirm')}"/>
+    <line x1="100" y1="14" x2="100" y2="28" stroke="${pole}" stroke-width="3" stroke-linecap="round"/>
+    <line x1="100" y1="78" x2="100" y2="98" stroke="${pole}" stroke-width="3" stroke-linecap="round"/>
+    <circle cx="100" cy="124" r="21" fill="${col('kopf')}"/>
+    <rect x="70" y="152" width="60" height="84" rx="14" fill="${col('rumpf')}"/>
+    <rect x="52" y="158" width="14" height="66" rx="7" fill="${col('rumpf')}"/>
+    <rect x="134" y="158" width="14" height="66" rx="7" fill="${col('rumpf')}"/>
+    <rect x="74" y="240" width="23" height="64" rx="9" fill="${col('beine')}"/>
+    <rect x="103" y="240" width="23" height="64" rx="9" fill="${col('beine')}"/>
+    <rect x="66" y="306" width="33" height="12" rx="6" fill="${col('schuhe')}" stroke="#7A9CC0" stroke-width="1"/>
+    <rect x="101" y="306" width="33" height="12" rx="6" fill="${col('schuhe')}" stroke="#7A9CC0" stroke-width="1"/>
+    <line x1="46" y1="324" x2="154" y2="324" stroke="${ground}" stroke-width="3" stroke-linecap="round"/>
+  </svg>`;
+}
+
+function athletBalanceHtml(a, dark) {
+  const txt = dark ? '#D0DCE8' : 'var(--tr-text)';
+  const mut = dark ? '#7A9CC0' : 'var(--tr-muted)';
+  const bg  = dark ? '#1E2D45' : '#fff';
+  const brd = dark ? '#2A3A55' : 'var(--tr-border)';
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;">` +
+    ATHLET_CHECKS.map(c => {
+      const on = a.checks[c.key];
+      return `<div style="background:${on ? 'rgba(224,86,59,.12)' : bg};border:1px solid ${on ? '#E0563B' : brd};border-radius:6px;padding:8px 10px;display:flex;gap:8px;align-items:flex-start;">
+        <span style="flex:0 0 16px;height:16px;border-radius:3px;border:1.5px solid ${on ? '#E0563B' : mut};background:${on ? '#E0563B' : 'transparent'};color:#fff;font-size:11px;line-height:14px;text-align:center;">${on ? '✓' : ''}</span>
+        <span><b style="color:${txt};font-size:12px;">${c.t}</b><br><span style="color:${mut};font-size:11px;">${c.d}</span></span>
+      </div>`;
+    }).join('') + `</div>`;
 }
 
 function statusOf(topf, pct) {
@@ -1974,37 +2473,36 @@ function renderFFG() {
     grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;">Noch keine privaten Einnahmen erkannt.</div>';
     stats.innerHTML = '';
   } else {
-    const cfFixGesamt = cf ? cf.fixGesamt : 0, cfFix = cf ? cf.fix : 0, cfAv = cf ? cf.av : 0, cfSchutz = cf ? cf.schutz : 0;
-    const cfVar = cf ? cf.var_ : 0, cfSpar = cf ? cf.spar : 0;
-    const toepfe = [
-      { key:'fix', label:'Fixkosten gesamt', val:cfFixGesamt, ziel:'≤ 50 %' },
-      { key:'var_', label:'Variable Kosten', val:cfVar, ziel:'≤ 30 %' },
-      { key:'spar', label:'Sparen', val:cfSpar, ziel:'≥ 15 % (★ ≥ 20 %)' },
-    ];
-    grid.innerHTML = toepfe.map(t => {
-      const pct = t.val / einnahmenEffektiv * 100;
-      const s = statusOf(t.key, pct);
-      const cl = statusClass(s);
-      const fixDrill = t.key === 'fix'
-        ? ` · davon Grundkosten ${formatAmount(cfFix)} · AV ${formatAmount(cfAv)} · Absicherung ${formatAmount(cfSchutz)}`
-        : '';
-      const schutzWarn = (t.key === 'fix' && einnahmenEffektiv > 0 && (cfSchutz / einnahmenEffektiv * 100) < 5)
-        ? ' · <span style="color:#B07A1A;font-weight:600;">Absicherung prüfen</span>'
-        : '';
+    const a = computeAthlet({ ...(cf || {}), einnahmen: einnahmenEffektiv });
+    const cards = a.parts.map(p => {
+      const cl = p.status ? statusClass(p.status) : '';
       return `<div class="ampel ${cl}">
-        <div class="badge-icon">${statusIcon(s)}</div>
-        <div class="label">${t.label}</div>
-        <div class="pct">${pct.toFixed(1)} %</div>
-        <div class="gap">${formatAmount(t.val)} / Monat · Ziel ${t.ziel}${fixDrill}${schutzWarn}</div>
+        ${p.status ? `<div class="badge-icon">${statusIcon(p.status)}</div>` : ''}
+        <div class="label"><span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${p.light};border:1px solid #7A9CC0;margin-right:6px;"></span>${p.name} · ${p.sub}</div>
+        <div class="pct">${p.pct.toFixed(1)} %</div>
+        <div class="gap">${formatAmount(p.val)} / Monat · Richtwert ${p.ziel}</div>
       </div>`;
     }).join('');
+    const hints = a.hints.length
+      ? `<div style="margin-top:10px;font-size:12px;color:#B07A1A;">⚠ ${a.hints.join(' · ')}</div>` : '';
+    grid.innerHTML = `
+      <div style="grid-column:1/-1;display:flex;gap:24px;flex-wrap:wrap;align-items:flex-start;">
+        <div style="flex:0 0 190px;background:#fff;border:1px solid var(--tr-border);border-radius:8px;padding:12px;">${athletSVG(a, false)}
+          <div style="text-align:center;font-size:11px;color:var(--tr-muted);margin-top:4px;">Boden · Einkommen ${formatAmount(a.ein)}</div>
+        </div>
+        <div style="flex:1 1 420px;min-width:0;">
+          <div class="ampel-grid" style="margin:0 0 12px;">${cards}</div>
+          <div style="font-size:12px;color:var(--tr-muted);text-transform:uppercase;margin:4px 0 6px;">Balance-Check · wo ist der Athlet in Dysbalance?</div>
+          ${athletBalanceHtml(a, false)}
+          ${hints}
+        </div>
+      </div>`;
 
-    const puffer = einnahmenEffektiv - cfFixGesamt - cfVar - cfSpar;
     stats.innerHTML = `
       <div class="stat accent"><div class="label">${firma?'Verfügbar (Firma-Überschuss) Ø/Monat':'Einnahmen Ø/Monat'}</div><div class="value">${formatAmount(einnahmenEffektiv)}</div></div>
-      <div class="stat"><div class="label">Frei verfügbar</div><div class="value" style="color:${puffer>=0?'var(--tr-success)':'var(--tr-danger)'}">${formatAmount(puffer)}</div></div>
-      <div class="stat"><div class="label">Sparquote</div><div class="value">${(cfSpar/einnahmenEffektiv*100).toFixed(1)} %</div></div>
-      <div class="stat"><div class="label">Fixkostenquote</div><div class="value">${(cfFixGesamt/einnahmenEffektiv*100).toFixed(1)} %</div></div>
+      <div class="stat"><div class="label">Frei verfügbar</div><div class="value" style="color:${a.frei>=0?'var(--tr-success)':'var(--tr-danger)'}">${formatAmount(a.frei)}</div></div>
+      <div class="stat"><div class="label">Aufbauquote (Rumpf + Kopf)</div><div class="value">${(a.P.rumpf.pct + a.P.kopf.pct).toFixed(1)} %</div></div>
+      <div class="stat"><div class="label">Beine (Fixkosten)</div><div class="value">${a.P.beine.pct.toFixed(1)} %</div></div>
     `;
   }
 
@@ -2326,7 +2824,7 @@ function setOpSource(src) {
   document.getElementById('srcAuto').classList.toggle('active', src === 'auto');
   document.getElementById('srcManual').classList.toggle('active', src === 'manual');
   document.getElementById('opManualBlock').style.opacity = src === 'auto' ? '0.5' : '1';
-  ['opEinnahmen','opFix','opAV','opSchutz','opVar','opSpar'].forEach(id => {
+  ['opEinnahmen','opFix','opAV','opSchutz','opVar','opSpar','opZiele'].forEach(id => {
     document.getElementById(id).disabled = (src === 'auto');
   });
   syncOnePagerFromAnalysis();
@@ -2341,7 +2839,8 @@ function syncOnePagerFromAnalysis() {
   document.getElementById('opFix').value = Math.round(cf.fix);
   document.getElementById('opAV').value = Math.round(cf.av);
   document.getElementById('opVar').value = Math.round(cf.var_);
-  document.getElementById('opSpar').value = Math.round(cf.spar);
+  document.getElementById('opSpar').value = Math.round(cf.sparDepot !== undefined ? cf.sparDepot : cf.spar);
+  document.getElementById('opZiele').value = Math.round(cf.ziele || 0);
   document.getElementById('opSchutz').value = Math.round(cf.schutz);
   if (!document.getElementById('opName').value) {
     document.getElementById('opName').value = document.getElementById('kundeName').value || '';
@@ -2361,7 +2860,9 @@ function getOpValues() {
     schutz: schutz,
     fixGesamt: fix + av + schutz,
     var_: parseFloat(document.getElementById('opVar').value) || 0,
-    spar: parseFloat(document.getElementById('opSpar').value) || 0,
+    sparDepot: parseFloat(document.getElementById('opSpar').value) || 0,
+    ziele: parseFloat(document.getElementById('opZiele').value) || 0,
+    spar: (parseFloat(document.getElementById('opSpar').value) || 0) + (parseFloat(document.getElementById('opZiele').value) || 0),
   };
 }
 
@@ -2373,107 +2874,49 @@ function renderOnePager() {
     : '—';
 
   const ein = v.einnahmen;
-  const buckets = [
-    { key:'fix', label:'Fixkosten gesamt', val:v.fixGesamt, color:'#5A7BA8', ziel:'≤ 50 %' },
-    { key:'var_', label:'Variable Kosten', val:v.var_, color:'#1E6FB8', ziel:'≤ 30 %' },
-    { key:'spar', label:'Sparen', val:v.spar, color:'#378ADD', ziel:'≥ 15 % (★ ≥ 20 %)' },
-  ];
+  const a = computeAthlet(v);
 
-  // Tiles
-  const tiles = document.getElementById('oTiles');
-  const ST = {
-    'green-star':{c:'#3FB67A',s:'★',t:'#0c2418'},
-    'green':{c:'#3FB67A',s:'✓',t:'#0c2418'},
-    'yellow':{c:'#E8B84B',s:'!',t:'#3a2d08'},
-    'red':{c:'#E0563B',s:'✗',t:'#fff'}
-  };
-  const statuses = {};
-  let tilesHtml = '';
-  buckets.forEach(b => {
-    const pct = ein > 0 ? b.val/ein*100 : 0;
-    const st = ein > 0 ? statusOf(b.key, pct) : null;
-    statuses[b.key] = st;
-    const badge = st ? `<span class="badge-s" style="background:${ST[st].c};color:${ST[st].t}">${ST[st].s}</span>` : '';
-    const drill = b.key === 'fix'
-      ? `<div class="p" style="opacity:.8;">davon Grundkosten ${formatAmountSheet(v.fix)} € · AV ${formatAmountSheet(v.av)} € · Absicherung ${formatAmountSheet(v.schutz)} €</div>`
-      : '';
-    tilesHtml += `
-      <div class="tile" style="border-left-color:${b.color}">
+  // Tiles je Körperteil + Boden
+  let tilesHtml = a.parts.map(p => {
+    const st = p.status ? ATHLET_ST[p.status] : null;
+    const badge = st ? `<span class="badge-s" style="background:${st.c};color:${st.t}">${st.s}</span>` : '';
+    return `
+      <div class="tile" style="border-left-color:${p.dark === '#2A3A55' ? '#7AB8F5' : p.dark}">
         ${badge}
-        <div class="k"><span class="dot" style="background:${b.color}"></span>${b.label}</div>
-        <div class="v">${formatAmountSheet(b.val)} €</div>
-        <div class="p">${ein>0?pct.toFixed(1):0} % der Einnahmen</div>
-        <div class="gap-line" style="color:${ein>0 && st ? ST[st].c : '#7A9CC0'}">Ziel ${b.ziel}</div>
-        ${drill}
+        <div class="k"><span class="dot" style="background:${p.dark};border:1px solid #7A9CC0"></span>${p.name} · ${p.sub}</div>
+        <div class="v">${formatAmountSheet(p.val)} €</div>
+        <div class="p">${ein>0?p.pct.toFixed(1):0} % der Einnahmen</div>
+        <div class="gap-line" style="color:${st ? st.c : '#7A9CC0'}">Richtwert ${p.ziel}</div>
       </div>`;
-  });
-  tiles.innerHTML = tilesHtml;
+  }).join('');
+  tilesHtml += `
+      <div class="tile" style="border-left-color:#378ADD">
+        <div class="k"><span class="dot" style="background:#378ADD"></span>Boden · Einkommen</div>
+        <div class="v">${formatAmountSheet(ein)} €</div>
+        <div class="p">netto pro Monat</div>
+      </div>`;
+  document.getElementById('oTiles').innerHTML = tilesHtml;
 
-  // Donut: 3 Segmente (Fixkosten gesamt, Variabel, Sparen) – kein separater Schutz-Ring mehr,
-  // Absicherung/AV stecken jetzt in "Fixkosten gesamt" (siehe Drilldown in den Tiles)
-  const NS = 'http://www.w3.org/2000/svg';
-  const svg = document.getElementById('oDonut');
-  svg.innerHTML = '';
-  const cx=100, cy=100, rPie=76;
-  const polar = (r, deg) => { const a=(deg-90)*Math.PI/180; return [cx+r*Math.cos(a), cy+r*Math.sin(a)]; };
-  const add = (tag, attrs) => { const e=document.createElementNS(NS,tag); for (const k in attrs) e.setAttribute(k, attrs[k]); svg.appendChild(e); return e; };
+  document.getElementById('oAthlet').innerHTML = athletSVG(a, true) +
+    (ein > 0 ? `<div class="ein">Einkommen / Monat<b>${formatAmountSheet(ein)} €</b></div>` : `<div class="ein">Zahlen eintragen</div>`);
 
-  const inner = [
-    { v: v.fixGesamt, c: '#5A7BA8' },
-    { v: v.var_, c: '#1E6FB8' },
-    { v: v.spar, c: '#378ADD' }
-  ];
-  const innerSum = inner.reduce((s,x)=>s+x.v,0);
-  if (innerSum > 0) {
-    let ang = 0;
-    inner.forEach(s => {
-      if (s.v > 0) {
-        const frac = s.v/innerSum, a1 = ang + frac*360;
-        const [x0,y0] = polar(rPie, ang), [x1,y1] = polar(rPie, a1);
-        const large = (a1-ang) > 180 ? 1 : 0;
-        add('path', { d:`M${cx},${cy} L${x0},${y0} A${rPie},${rPie} 0 ${large} 1 ${x1},${y1} Z`, fill: s.c });
-        ang = a1;
-      }
-    });
-  } else {
-    add('circle', { cx, cy, r:rPie, fill:'#1E2D45' });
-  }
-
-  const total = v.fixGesamt + v.var_ + v.spar;
-  document.getElementById('oCenter').innerHTML = ein > 0
-    ? `<div class="dv">${formatAmountSheet(ein)} €</div><div class="dl">Einnahmen / Monat</div>`
-    : `<div class="dl">Zahlen eintragen</div>`;
-
-  const puffer = ein - total;
   document.getElementById('oSum').innerHTML = ein > 0
-    ? `Ausgaben gesamt: <b>${formatAmountSheet(total)} €</b> · Frei verfügbar: <b style="color:${puffer>=0?'#3FB67A':'#E0563B'}">${formatAmountSheet(puffer)} €</b>`
-    : `Trage Einnahmen und Töpfe ein.`;
+    ? `Ausgaben gesamt: <b>${formatAmountSheet(a.summe)} €</b> · Frei verfügbar: <b style="color:${a.frei>=0?'#3FB67A':'#E0563B'}">${formatAmountSheet(a.frei)} €</b>`
+    : `Trage Einnahmen und Körperteile ein.`;
 
-  // Ansatzpunkt
+  // Balance-Check als Ansatzpunkt
   const lever = document.getElementById('oLever');
   if (ein > 0) {
-    const order = ['fix','var_','spar'];
-    const nameMap = { fix:'Fixkosten gesamt', var_:'Variable Kosten', spar:'Sparquote' };
-    const reds = order.filter(k => statuses[k] === 'red');
-    const yellows = order.filter(k => statuses[k] === 'yellow');
-    const pick = [...reds, ...yellows].slice(0, 2);
-
-    // Zusatz: sehr niedrige Absicherung (< 5 % der Einnahmen) trotz grünem Fixkosten-Status → prüfen
-    const schutzPct = v.schutz / ein * 100;
-    const schutzPruefen = schutzPct < 5 && !pick.includes('fix');
-
-    if (pick.length || schutzPruefen) {
-      lever.style.display = 'block';
+    const items = ATHLET_CHECKS.filter(c => a.checks[c.key]).map(c => c.t).concat(a.hints);
+    lever.style.display = 'block';
+    if (items.length) {
       lever.style.borderLeftColor = '#E8B84B';
       lever.style.background = 'rgba(232,184,75,.1)';
-      const items = pick.map(k => nameMap[k]);
-      if (schutzPruefen) items.push('Absicherung prüfen');
-      lever.innerHTML = `<b>Erster Ansatzpunkt:</b> ${items.join(' · ')}`;
+      lever.innerHTML = `<b>Balance-Check · erster Ansatzpunkt:</b> ${items.slice(0, 3).join(' · ')}`;
     } else {
-      lever.style.display = 'block';
       lever.style.borderLeftColor = '#3FB67A';
       lever.style.background = 'rgba(63,182,122,.1)';
-      lever.innerHTML = `<b style="color:#3FB67A">Gute Basis:</b> alle Werte im grünen Bereich.`;
+      lever.innerHTML = `<b style="color:#3FB67A">Athlet im Gleichgewicht:</b> alle Körperteile im Richtwert.`;
     }
   } else { lever.style.display = 'none'; }
 
@@ -2585,7 +3028,7 @@ function exportExcel() {
       rows.push(row);
     });
     rows.push([], ['— Gesamt-Übersicht —']);
-    const monthlyTotals = { EINNAHMEN:[], FIXKOSTEN:[], AV:[], SCHUTZ:[], VARIABEL:[], SPAREN:[] };
+    const monthlyTotals = { EINNAHMEN:[], FIXKOSTEN:[], AV:[], SCHUTZ:[], VARIABEL:[], SPAREN:[], ZIELE:[] };
     months.forEach(m => {
       Object.keys(monthlyTotals).forEach(k => monthlyTotals[k].push(matrix[k]?.[m] || 0));
     });
@@ -2611,6 +3054,10 @@ function exportExcel() {
       ['  davon Absicherung', round2(cf?cf.schutz:0)],
       ['Variable Ø/Monat', round2(cf?cf.var_:0), cf&&cf.einnahmen>0?`${(cf.var_/cf.einnahmen*100).toFixed(1)} %`:''],
       ['Sparen Ø/Monat', round2(cf?cf.spar:0), cf&&cf.einnahmen>0?`${(cf.spar/cf.einnahmen*100).toFixed(1)} %`:''],
+      ['  davon Sparziele / Träume (Kopf)', round2(cf?(cf.ziele||0):0)],
+      [],
+      ['Finanzathlet', 'Ø/Monat', '% der Einnahmen', 'Richtwert'],
+      ...(cf ? computeAthlet(cf).parts.map(p => [p.name + ' · ' + p.sub, round2(p.val), cf.einnahmen>0?`${p.pct.toFixed(1)} %`:'', p.ziel]) : []),
       [],
       ['Reinvermögen', round2(stufeInfo.reinvermoegen)],
       ['Netto-Einkommen', round2(stufeInfo.netto)],
@@ -2678,6 +3125,7 @@ function rulesReset() {
 function dataReset() {
   if (!confirm('Aktuelle Analyse-Daten zurücksetzen?')) return;
   TX = []; VERMOEGEN = { aktiva:[], passiva:[]};
+  Object.keys(CSV_SOURCES).forEach(k => delete CSV_SOURCES[k]);
   saveVermoegen(); renderVermoegen();
   document.getElementById('importLog').innerHTML = '';
   renderReview(); renderFFG();
@@ -3669,6 +4117,9 @@ const BUDGET_CATEGORY_PREFIXES = [
   ['altersversorgung', 'AV'],
   ['leben', 'VARIABEL'],
   ['abbuchung', 'VARIABEL'],
+  ['sparziel', 'ZIELE'],
+  ['träume', 'ZIELE'],
+  ['wünsche', 'ZIELE'],
   ['sparen', 'SPAREN'],
   ['einnahmen', 'EINNAHMEN'],
   ['fixkosten', null]
@@ -3859,7 +4310,7 @@ function budgetDiscardSimulation() {
 function budgetRenderSummary() {
   const data = budgetCurrentData();
   if (!data) return;
-  const sums = { FIXKOSTEN:0, SCHUTZ:0, AV:0, VARIABEL:0, SPAREN:0, EINNAHMEN:0 };
+  const sums = { FIXKOSTEN:0, SCHUTZ:0, AV:0, VARIABEL:0, SPAREN:0, ZIELE:0, EINNAHMEN:0 };
   data.sections.forEach(sec => {
     sec.rows.forEach(row => {
       if (row.active === false) return;
@@ -3867,17 +4318,14 @@ function budgetRenderSummary() {
       sums[sec.category] = (sums[sec.category]||0) + total/12;
     });
   });
-  const fixGesamt = sums.FIXKOSTEN + sums.SCHUTZ + sums.AV;
   const einnahmen = sums.EINNAHMEN;
-  const puffer = einnahmen - fixGesamt - sums.VARIABEL - sums.SPAREN;
+  const a = computeAthlet({ einnahmen, fix: sums.FIXKOSTEN, av: sums.AV, schutz: sums.SCHUTZ, var_: sums.VARIABEL, sparDepot: sums.SPAREN, ziele: sums.ZIELE });
   document.getElementById('budgetSummaryLabel').textContent = BUDGET.view === 'simulation' ? 'Simulation' : 'Original';
-  const pct = v => einnahmen > 0 ? (v/einnahmen*100).toFixed(1)+' %' : '–';
+  const col = p => p.status ? ATHLET_ST[p.status].c : 'var(--tr-muted)';
   document.getElementById('budgetSummaryStats').innerHTML = `
     <div class="stat accent"><div class="label">Einnahmen Ø/Monat</div><div class="value">${formatAmount(einnahmen)}</div></div>
-    <div class="stat"><div class="label">Fixkosten gesamt</div><div class="value">${formatAmount(fixGesamt)}</div><div class="label">${pct(fixGesamt)}</div></div>
-    <div class="stat"><div class="label">Variable Kosten</div><div class="value">${formatAmount(sums.VARIABEL)}</div><div class="label">${pct(sums.VARIABEL)}</div></div>
-    <div class="stat"><div class="label">Sparen</div><div class="value">${formatAmount(sums.SPAREN)}</div><div class="label">${pct(sums.SPAREN)}</div></div>
-    <div class="stat" style="color:${puffer>=0?'var(--tr-success)':'var(--tr-danger)'}"><div class="label">Frei verfügbar</div><div class="value">${formatAmount(puffer)}</div></div>
+    ${a.parts.map(p => `<div class="stat" style="border-top:3px solid ${col(p)};"><div class="label">${p.name} · ${p.sub}</div><div class="value">${formatAmount(p.val)}</div><div class="label">${einnahmen>0?p.pct.toFixed(1)+' %':'–'} · Richtwert ${p.ziel}</div></div>`).join('')}
+    <div class="stat" style="color:${a.frei>=0?'var(--tr-success)':'var(--tr-danger)'}"><div class="label">Frei verfügbar</div><div class="value">${formatAmount(a.frei)}</div></div>
   `;
 }
 
@@ -3886,11 +4334,11 @@ function budgetImportFromTX() {
   const active = TX.filter(t => t.status !== 'ignore' && t.category && t.category !== 'IGNORE');
   if (!active.length) { alert('Keine kategorisierten Buchungen gefunden – bitte zuerst in der Prüfung kategorisieren.'); return; }
 
-  const catOrder = ['FIXKOSTEN','SCHUTZ','AV','VARIABEL','SPAREN','EINNAHMEN'];
+  const catOrder = ['FIXKOSTEN','SCHUTZ','AV','VARIABEL','SPAREN','ZIELE','EINNAHMEN'];
   const catTitles = {
     FIXKOSTEN:'Fixkosten (aus Kontoauszügen)', SCHUTZ:'Absicherung (aus Kontoauszügen)',
     AV:'Altersversorgung (aus Kontoauszügen)', VARIABEL:'Variable Kosten (aus Kontoauszügen)',
-    SPAREN:'Sparen (aus Kontoauszügen)', EINNAHMEN:'Einnahmen (aus Kontoauszügen)'
+    SPAREN:'Sparen (aus Kontoauszügen)', ZIELE:'Sparziele / Träume (aus Kontoauszügen)', EINNAHMEN:'Einnahmen (aus Kontoauszügen)'
   };
   const groups = {};
   catOrder.forEach(c => groups[c] = {});
@@ -3993,7 +4441,7 @@ function budgetRemoveRow(si, ri) {
   budgetRenderGrid();
 }
 
-const BUDGET_CAT_LABELS = { FIXKOSTEN:'Fixkosten', SCHUTZ:'Absicherung', AV:'Altersversorgung', VARIABEL:'Variable Kosten', SPAREN:'Sparen', EINNAHMEN:'Einnahmen' };
+const BUDGET_CAT_LABELS = { FIXKOSTEN:'Beine · Fixkosten', SCHUTZ:'Schirm · Absicherung', AV:'Rumpf · Altersversorgung', VARIABEL:'Schuhe · Konsum', SPAREN:'Rumpf · Sparen / Depot', ZIELE:'Kopf · Sparziele / Träume', EINNAHMEN:'Einnahmen' };
 
 function budgetAddSection() {
   const data = budgetCurrentData();
