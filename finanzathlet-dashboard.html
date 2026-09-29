@@ -605,6 +605,7 @@
       <div><label style="font-size:12px;color:var(--tr-muted);">Kunde</label><br><input type="text" id="kundeName" placeholder="z. B. Mustermann" style="width:260px;"></div>
       <div><label style="font-size:12px;color:var(--tr-muted);">Analysejahr</label><br><input type="number" id="kundeJahr" min="2015" max="2099" style="width:120px;"></div>
       <div><label style="font-size:12px;color:var(--tr-muted);">Haushaltsgröße</label><br><input type="number" id="kundeHaushalt" min="1" max="10" value="1" style="width:120px;"></div>
+      <div><label style="font-size:12px;color:var(--tr-muted);">Alter</label><br><input type="number" id="kundeAlter" min="16" max="90" placeholder="z. B. 52" style="width:100px;" oninput="FA_onAlterChange(this.value, 'kunde')"></div>
       <div>
         <label style="font-size:12px;color:var(--tr-muted);">Netto Ø/Monat €</label><br>
         <input type="number" id="kundeNetto" placeholder="z. B. 3500" style="width:160px;">
@@ -617,7 +618,7 @@
           <input type="checkbox" id="kundeSelbststaendig" onchange="renderFFG(); renderOnePager();" style="width:auto;">
           Kunde ist selbstständig / Freiberufler
         </label>
-        <div style="font-size:11px;color:var(--tr-muted);margin-top:4px;">Blendet Firma-Kategorien getrennt vom privaten 50-30-20-Modell ein.</div>
+        <div style="font-size:11px;color:var(--tr-muted);margin-top:4px;">Blendet Firma-Kategorien getrennt vom privaten Athlet-Modell ein.</div>
       </div>
     </div>
   </div>
@@ -958,7 +959,29 @@
       <div class="params-grid">
         <div class="field"><label>Bruttoeinkommen / Monat (€)</label><input type="number" id="avBrutto" value="0" oninput="FA_computeAV()"></div>
         <div class="field"><label>BBG Rentenversicherung (€/Monat)</label><input type="number" id="avBBG" value="8450" oninput="FA_computeAV()"></div>
-        <div class="field"><label>Basis-Sparquote (%)</label><input type="number" id="avBasisPct" value="10" oninput="FA_computeAV()"></div>
+        <div class="field"><label>Alter</label><input type="number" id="avAlter" placeholder="z. B. 52" oninput="FA_onAlterChange(this.value, 'av')"></div>
+        <div class="field"><label>Basis-Sparquote (%) <span id="avStaffelHint" style="font-weight:400;color:var(--muted);"></span></label>
+          <input type="number" id="avBasisPct" value="10" oninput="this.dataset.manual='1'; FA_computeAV(); FA_refreshAthlet();">
+          <a href="#" onclick="FA_resetStaffel(); return false;" style="font-size:10px;">↺ Staffel nach Alter</a></div>
+      </div>
+      <div style="font-size:10px;color:var(--muted);margin-top:6px;">Staffel: bis 35 J. 10 % · 36–45 J. 15 % · 46–55 J. 20 % · ab 56 J. 25 %</div>
+
+      <label style="display:flex;align-items:center;gap:8px;margin-top:14px;font-size:13px;cursor:pointer;">
+        <input type="checkbox" id="avLueckeAktiv" style="width:auto;" onchange="FA_toggleLuecke()"> <strong>Rentenlücken-Rechnung</strong> (empfohlen ab ca. 45 J., Werte aus der Renteninformation)
+      </label>
+      <div id="avLueckeBlock" style="display:none;margin-top:10px;">
+        <div class="params-grid">
+          <div class="field"><label>Wunschrente heute (€/Monat netto)</label><input type="number" id="avWunsch" value="0" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Gesetzl. Rente laut Renteninfo (€/Monat)</label><input type="number" id="avGRV" value="0" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Weitere Renten (bAV, Rürup … €/Monat)</label><input type="number" id="avWeitere" value="0" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Renteneintritt (Alter)</label><input type="number" id="avRentenalter" value="67" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Rentenbezug (Jahre)</label><input type="number" id="avDauer" value="25" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Vorhandenes AV-Kapital (€)</label><input type="number" id="avVorhanden" value="0" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Inflation (% p. a.)</label><input type="number" id="avInfl" value="2" step="0.1" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Rendite Ansparen (% p. a.)</label><input type="number" id="avRA" value="5" step="0.1" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+          <div class="field"><label>Rendite Auszahlung (% p. a.)</label><input type="number" id="avRE" value="3" step="0.1" oninput="FA_computeAV(); FA_refreshAthlet();"></div>
+        </div>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px;">Vereinfachung: Lücke = Wunschrente − gesetzl. − weitere Renten (heutige Kaufkraft), mit Inflation hochgerechnet; Kapitalbedarf als Entnahmeplan über die Bezugsdauer; vorhandenes Kapital wird mit der Ansparrendite fortgeschrieben. Steuern und KV in der Rente nicht berücksichtigt.</div>
       </div>
       <div style="font-size:10px;color:var(--muted);margin-top:10px;">
         Formel: <strong>Basis</strong> = Basis-Sparquote × Nettoeinkommen (Parameter oben) &nbsp;+&nbsp;
@@ -1331,7 +1354,7 @@ function renderAthletIntro() {
       </div></div>`;
   }).join('');
 
-  const mk = (fix, var_, schutz, rumpf, ziele) => computeAthlet({ einnahmen: 100, fix, var_, schutz, av: rumpf, sparDepot: 0, ziele });
+  const mk = (fix, var_, schutz, rumpf, ziele) => { const a = computeAthlet({ einnahmen: 100, fix, var_, schutz, av: rumpf, sparDepot: 0, ziele }); a.rumpfZiel = 15; return a; };
   const ex = [
     { a: mk(40, 22.5, 10, 17.5, 10), t: 'Im Gleichgewicht', d: 'Jeder Teil bekommt seinen Anteil' },
     { a: mk(62, 22, 9, 5, 2),       t: 'Zu schwere Beine', d: 'Fixkosten tragen fast alles' },
@@ -2061,8 +2084,10 @@ function exportKundenakte() {
       name: kunde,
       jahr,
       netto: parseFloat(document.getElementById('kundeNetto').value) || 0,
-      haushalt: parseInt(document.getElementById('kundeHaushalt').value) || 1
+      haushalt: parseInt(document.getElementById('kundeHaushalt').value) || 1,
+      alter: parseInt(document.getElementById('kundeAlter').value) || null
     },
+    avLuecke: FA_getAVLueckeParams(),
     vermoegen: JSON.parse(JSON.stringify(VERMOEGEN)),
     manuelleEinnahmen: JSON.parse(JSON.stringify(MANUAL_EINNAHMEN)),
     snapshots: SNAPSHOTS.filter(s => s.kunde === kunde),
@@ -2099,6 +2124,9 @@ function importKundenakte(file) {
       document.getElementById('kundeJahr').value = akte.kunde?.jahr || new Date().getFullYear();
       document.getElementById('kundeNetto').value = akte.kunde?.netto || '';
       document.getElementById('kundeHaushalt').value = akte.kunde?.haushalt || 1;
+      document.getElementById('kundeAlter').value = akte.kunde?.alter || '';
+      FA_onAlterChange(akte.kunde?.alter || '', 'kunde');
+      if (akte.avLuecke) FA_setAVLueckeParams(akte.avLuecke);
       // Vermögen ersetzen
       if (akte.vermoegen) {
         VERMOEGEN = akte.vermoegen;
@@ -2446,12 +2474,13 @@ const ATHLET_CHECKS = [
   { key:'schirm', t:'Zu großer Schirm', d:'Überversichert' },
 ];
 
-function athletStatus(key, pct) {
+function athletStatus(key, pct, rz) {
+  rz = rz || 15;
   switch (key) {
     case 'beine':  return pct <= 40 ? 'green' : pct <= 45 ? 'yellow' : 'red';
     case 'schuhe': return pct <= 25 ? 'green' : pct <= 30 ? 'yellow' : 'red';
     case 'schirm': return pct < 8 ? 'green' : pct <= 12 ? 'yellow' : 'red';
-    case 'rumpf':  return pct >= 20 ? 'green-star' : pct >= 15 ? 'green' : pct >= 10 ? 'yellow' : 'red';
+    case 'rumpf':  return pct >= rz + 5 ? 'green-star' : pct >= rz ? 'green' : pct >= rz - 5 ? 'yellow' : 'red';
     case 'kopf':   return (pct >= 5 && pct <= 10) ? 'green' : 'yellow';
   }
   return null;
@@ -2468,9 +2497,12 @@ function computeAthlet(v) {
     beine:  v.fix || 0,
     schuhe: v.var_ || 0,
   };
+  let RZ = { z: 15, quelle: 'Standard' };
+  try { if (typeof athletRumpfZiel === 'function') RZ = athletRumpfZiel(); } catch (e) {}
   const parts = ATHLET_PARTS.map(p => {
     const pct = ein > 0 ? vals[p.key] / ein * 100 : 0;
-    return { ...p, val: vals[p.key], pct, status: ein > 0 ? athletStatus(p.key, pct) : null };
+    const ziel = p.key === 'rumpf' ? `mind. ${RZ.z} %` + (RZ.quelle !== 'Standard' ? ` (${RZ.quelle})` : '') : p.ziel;
+    return { ...p, ziel, val: vals[p.key], pct, status: ein > 0 ? athletStatus(p.key, pct, RZ.z) : null };
   });
   const P = {}; parts.forEach(p => P[p.key] = p);
   const checks = {
@@ -2481,9 +2513,9 @@ function computeAthlet(v) {
   };
   const hints = [];
   if (ein > 0 && P.kopf.val <= 0) hints.push('Kopf ohne Ziele – wofür trainiert der Athlet?');
-  if (ein > 0 && P.rumpf.pct < 15) hints.push('Rumpf stärken – Sparquote unter 15 %');
+  if (ein > 0 && P.rumpf.pct < RZ.z) hints.push(`Rumpf stärken – unter ${RZ.z} %`);
   const summe = parts.reduce((s, p) => s + p.val, 0);
-  return { ein, parts, P, checks, hints, summe, frei: ein - summe };
+  return { ein, parts, P, checks, hints, summe, frei: ein - summe, rumpfZiel: RZ.z };
 }
 
 /* Referenzwerte für den Körperbau: bei diesen Anteilen ist der Athlet "ideal" gebaut */
@@ -2492,7 +2524,8 @@ function athletFactors(a) {
   const clamp = (x, lo, hi) => Math.max(lo, Math.min(hi, x));
   if (!a || !a.ein) return { beine: 1, schuhe: 1, rumpf: 1, schirm: 1 };
   const f = k => clamp(a.P[k].pct / ATHLET_REF[k], 0.35, 1.8);
-  return { beine: f('beine'), schuhe: f('schuhe'), rumpf: clamp(a.P.rumpf.pct / ATHLET_REF.rumpf, 0.35, 1.6), schirm: f('schirm') };
+  const rRef = (a.rumpfZiel || 15) + 2.5;
+  return { beine: f('beine'), schuhe: f('schuhe'), rumpf: clamp(a.P.rumpf.pct / rRef, 0.35, 1.6), schirm: f('schirm') };
 }
 
 /* opts: { dark, ideal (Idealkörper, CI-Farben), colors: 'status'|'ci' } */
@@ -3432,7 +3465,7 @@ document.getElementById('opDate').valueAsDate = new Date();
 setOpSource('auto');
 renderOnePager();
 // Netto-Eingabe live in Stufen-Anzeige übernehmen
-document.getElementById('kundeNetto').addEventListener('input', () => { renderStufen(); renderOnePager(); });
+document.getElementById('kundeNetto').addEventListener('input', () => { renderStufen(); renderOnePager(); try { FA_computeAV(); } catch (e) {} });
 document.getElementById('kundeName').addEventListener('input', () => { if (!document.getElementById('opName').value) { document.getElementById('opName').value = document.getElementById('kundeName').value; renderOnePager(); } });
 document.getElementById('opName').addEventListener('input', () => { if (!document.getElementById('kundeName').value) { document.getElementById('kundeName').value = document.getElementById('opName').value; } });
 
@@ -4294,32 +4327,131 @@ function FA_syncIncomeToKundeNetto(val){
   renderOnePager();
 }
 
+function avStaffelPct(alter) {
+  alter = parseInt(alter);
+  if (!alter) return 10;
+  if (alter <= 35) return 10;
+  if (alter <= 45) return 15;
+  if (alter <= 55) return 20;
+  return 25;
+}
+function FA_onAlterChange(val, src) {
+  const k = document.getElementById('kundeAlter'), a = document.getElementById('avAlter');
+  if (src !== 'kunde' && k) k.value = val;
+  if (src !== 'av' && a) a.value = val;
+  const b = document.getElementById('avBasisPct');
+  if (b && !b.dataset.manual) b.value = avStaffelPct(val);
+  const alter = parseInt(val);
+  const cb = document.getElementById('avLueckeAktiv');
+  if (cb && alter >= 45 && !cb.dataset.touched && !cb.checked) { cb.checked = true; FA_toggleLuecke(true); }
+  FA_computeAV();
+  FA_refreshAthlet();
+}
+function FA_resetStaffel() {
+  const b = document.getElementById('avBasisPct');
+  delete b.dataset.manual;
+  b.value = avStaffelPct(document.getElementById('kundeAlter').value);
+  FA_computeAV(); FA_refreshAthlet();
+}
+function FA_toggleLuecke(auto) {
+  const cb = document.getElementById('avLueckeAktiv');
+  if (auto !== true) cb.dataset.touched = '1';
+  document.getElementById('avLueckeBlock').style.display = cb.checked ? 'block' : 'none';
+  FA_computeAV(); FA_refreshAthlet();
+}
+function FA_refreshAthlet() {
+  try { renderFFG(); } catch (e) {}
+  try { renderOnePager(); } catch (e) {}
+}
+function FA_getAVLueckeParams() {
+  const n = id => { const el = document.getElementById(id); return el ? (parseFloat(el.value) || 0) : 0; };
+  const cb = document.getElementById('avLueckeAktiv');
+  const b = document.getElementById('avBasisPct');
+  return { aktiv: !!(cb && cb.checked), wunsch: n('avWunsch'), grv: n('avGRV'), weitere: n('avWeitere'),
+    rentenalter: n('avRentenalter') || 67, dauer: n('avDauer') || 25, vorhanden: n('avVorhanden'),
+    infl: n('avInfl'), rA: n('avRA'), rE: n('avRE'),
+    basisPct: b ? parseFloat(b.value) || 0 : 10, basisManuell: !!(b && b.dataset.manual) };
+}
+function FA_setAVLueckeParams(p) {
+  const set = (id, v) => { const el = document.getElementById(id); if (el && v !== undefined && v !== null) el.value = v; };
+  set('avWunsch', p.wunsch); set('avGRV', p.grv); set('avWeitere', p.weitere); set('avRentenalter', p.rentenalter);
+  set('avDauer', p.dauer); set('avVorhanden', p.vorhanden); set('avInfl', p.infl); set('avRA', p.rA); set('avRE', p.rE);
+  const b = document.getElementById('avBasisPct');
+  if (b && p.basisManuell) { b.value = p.basisPct; b.dataset.manual = '1'; }
+  const cb = document.getElementById('avLueckeAktiv');
+  if (cb) { cb.checked = !!p.aktiv; cb.dataset.touched = '1'; document.getElementById('avLueckeBlock').style.display = cb.checked ? 'block' : 'none'; }
+  FA_computeAV(); FA_refreshAthlet();
+}
+function computeAVLuecke() {
+  /* Liefert null, wenn die Lücken-Rechnung nicht aktiv ist oder Angaben fehlen */
+  const cb = document.getElementById('avLueckeAktiv');
+  if (!cb || !cb.checked) return null;
+  const p = FA_getAVLueckeParams();
+  const alter = parseInt(document.getElementById('kundeAlter').value) || 0;
+  const netto = parseFloat(document.getElementById('income').value) || parseFloat(document.getElementById('kundeNetto').value) || 0;
+  if (!alter || !p.wunsch) return { unvollstaendig: true };
+  const jahre = Math.max(1, p.rentenalter - alter);
+  const luecke = Math.max(0, p.wunsch - p.grv - p.weitere);
+  const lueckeZukunft = luecke * Math.pow(1 + p.infl / 100, jahre);
+  const iE = p.rE / 100 / 12, nE = p.dauer * 12;
+  const kapital = iE > 0 ? lueckeZukunft * (1 - Math.pow(1 + iE, -nE)) / iE : lueckeZukunft * nE;
+  const vorhandenFV = p.vorhanden * Math.pow(1 + p.rA / 100, jahre);
+  const fehlt = Math.max(0, kapital - vorhandenFV);
+  const iA = p.rA / 100 / 12, nA = jahre * 12;
+  const rate = iA > 0 ? fehlt * iA / (Math.pow(1 + iA, nA) - 1) : fehlt / nA;
+  return { jahre, luecke, lueckeZukunft, kapital, vorhandenFV, fehlt, rate, quote: netto > 0 ? rate / netto * 100 : 0, netto };
+}
+function athletRumpfZiel() {
+  /* Richtwert Rumpf in % vom Netto: mind. 15 %, mit Alter gestaffelt, bei Lücken-Rechnung mind. deren Quote */
+  const alter = parseInt((document.getElementById('kundeAlter') || {}).value) || 0;
+  let z = 15, quelle = 'Standard';
+  if (alter) { const st = avStaffelPct(alter); if (st > z) { z = st; quelle = 'Alter ' + alter; } }
+  let L = null; try { L = computeAVLuecke(); } catch (e) {}
+  if (L && !L.unvollstaendig && L.quote > z) { z = Math.min(40, Math.ceil(L.quote)); quelle = 'Rentenlücke'; }
+  return { z, quelle };
+}
+
 function FA_computeAV(){
   const netto = parseFloat(document.getElementById('income').value) || 0;
   const brutto = parseFloat(document.getElementById('avBrutto').value) || 0;
   const bbg = parseFloat(document.getElementById('avBBG').value) || 0;
   const basisPct = parseFloat(document.getElementById('avBasisPct').value) || 0;
+  const alter = parseInt((document.getElementById('kundeAlter') || {}).value) || 0;
+  const hint = document.getElementById('avStaffelHint');
+  if (hint) hint.textContent = alter ? `· Staffel ${alter} J.: ${avStaffelPct(alter)} %` : '· Alter eintragen für Staffel';
 
   const basis = netto * (basisPct / 100);
   const bruttoUeberschuss = Math.max(0, brutto - bbg);
   const bbgSpiegel = bruttoUeberschuss * 0.186;
-  const gesamt = basis + bbgSpiegel;
+  const gesamtA = basis + bbgSpiegel;
+  const L = computeAVLuecke();
+  const useL = L && !L.unvollstaendig;
+  const gesamt = useL ? L.rate : gesamtA;
   const quote = netto > 0 ? (gesamt / netto * 100) : 0;
+  const f = x => formatAmountSheet(Math.round(x));
+  const row = (l, v, strong) => `<div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;${strong ? 'color:var(--body);font-weight:600;' : ''}"><span>${l}</span><span>${v}</span></div>`;
 
   const el = document.getElementById('avResult');
   if (!el) return;
-  el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:4px;">
-      <span>Basis (${basisPct.toFixed(0)} % von ${formatAmountSheet(netto)} € netto)</span><span>${formatAmountSheet(Math.round(basis))} €</span>
+  let html = `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:6px;">A · Faustregel ${useL ? '(zum Vergleich)' : ''}</div>`
+    + row(`Basis (${basisPct.toFixed(0)} % von ${f(netto)} € netto)`, `${f(basis)} €`)
+    + row(`BBG-Spiegel (18,6 % von ${f(bruttoUeberschuss)} € Brutto-Überschuss)`, `${f(bbgSpiegel)} €`)
+    + row('Summe A', `${f(gesamtA)} € / Monat`, true);
+  if (L && L.unvollstaendig) {
+    html += `<div style="margin-top:10px;font-size:12px;color:#B07A1A;">B · Rentenlücke: bitte Alter und Wunschrente eintragen.</div>`;
+  } else if (useL) {
+    html += `<div style="font-size:11px;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin:12px 0 6px;">B · Rentenlücke (${L.jahre} Jahre bis Rente)</div>`
+      + row('Lücke heute', `${f(L.luecke)} € / Monat`)
+      + row(`Lücke bei Rentenbeginn (inkl. Inflation)`, `${f(L.lueckeZukunft)} € / Monat`)
+      + row('Kapitalbedarf zum Rentenbeginn', `${f(L.kapital)} €`)
+      + row('Vorhandenes Kapital (fortgeschrieben)', `− ${f(L.vorhandenFV)} €`)
+      + row('Noch aufzubauen', `${f(L.fehlt)} €`, true);
+  }
+  html += `<div style="display:flex;justify-content:space-between;font-family:Georgia,serif;font-size:16px;font-weight:bold;color:var(--accent);border-top:1px solid var(--sep);padding-top:8px;margin-top:8px;">
+      <span>AV-Betrag gesamt ${useL ? '(B)' : '(A)'}</span><span>${f(gesamt)} € / Monat</span>
     </div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--muted);margin-bottom:8px;">
-      <span>BBG-Spiegel (18,6 % von ${formatAmountSheet(Math.round(bruttoUeberschuss))} € Brutto-Überschuss)</span><span>${formatAmountSheet(Math.round(bbgSpiegel))} €</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-family:Georgia,serif;font-size:16px;font-weight:bold;color:var(--accent);border-top:1px solid var(--sep);padding-top:8px;">
-      <span>AV-Betrag gesamt</span><span>${formatAmountSheet(Math.round(gesamt))} € / Monat</span>
-    </div>
-    <div style="font-size:11px;color:var(--muted);margin-top:4px;">≈ ${quote.toFixed(1)} % vom Nettoeinkommen</div>
-  `;
+    <div style="font-size:11px;color:var(--muted);margin-top:4px;">≈ ${quote.toFixed(1)} % vom Nettoeinkommen · Richtwert Rumpf im Athlet: mind. ${athletRumpfZiel().z} %</div>`;
+  el.innerHTML = html;
   return Math.round(gesamt);
 }
 function FA_applyAVAsGoal(){
