@@ -172,24 +172,35 @@
   .ath-eyebrow { color: #7AB8F5; font-size: 11px; letter-spacing: 1.4px; text-transform: uppercase; font-weight: 700; }
   .ath-title { font-family: Georgia, serif; color: #fff; font-size: 30px; margin: 6px 0 4px; }
   .ath-sub { color: #7A9CC0; margin: 0 0 18px; font-style: italic; }
-  .ath-grid { display: grid; grid-template-columns: minmax(200px, 280px) 1fr; gap: 28px; align-items: center; }
+  .ath-stage { display: grid; justify-items: center; gap: 18px; }
+  .ath-figure { width: 100%; max-width: 300px; }
   .ath-figure svg { width: 100%; height: auto; }
-  .ath-parts { display: grid; gap: 10px; }
-  .ath-part { background: #1E2D45; border-left: 4px solid #378ADD; border-radius: 8px; padding: 12px 14px; }
-  .ath-part .t { font-family: Georgia, serif; color: #fff; font-size: 17px; }
-  .ath-part .t span { font-family: inherit; font-size: 13px; color: #D0DCE8; margin-left: 6px; font-weight: 400; }
-  .ath-part .z { float: right; background: #378ADD; color: #fff; border-radius: 10px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
-  .ath-part .d { color: #7A9CC0; font-size: 13px; margin-top: 4px; }
-  .ath-story { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
-  .ath-story div { background: #fff; border: 1px solid var(--tr-border); border-radius: 8px; padding: 12px 14px; }
-  .ath-story b { display: block; font-family: Georgia, serif; color: var(--tr-dark); margin-bottom: 4px; }
-  .ath-story span { color: var(--tr-muted); font-size: 13px; }
+  .ath-figure svg [class^="ap-"] { transition: opacity .25s; }
+  .ath-figure[data-focus] svg [class^="ap-"] { opacity: .18; }
+  .ath-figure[data-focus="kopf"] svg .ap-kopf, .ath-figure[data-focus="boden"] svg .ap-boden,
+  .ath-figure[data-focus="beine"] svg .ap-beine, .ath-figure[data-focus="schuhe"] svg .ap-schuhe,
+  .ath-figure[data-focus="rumpf"] svg .ap-rumpf, .ath-figure[data-focus="schirm"] svg .ap-schirm { opacity: 1; }
+  .ath-cards { width: 100%; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .ath-card { perspective: 900px; height: 132px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .ath-card .in { position: relative; width: 100%; height: 100%; transition: transform .5s; transform-style: preserve-3d; }
+  .ath-card.flip .in { transform: rotateY(180deg); }
+  .ath-card .fc, .ath-card .bc { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 10px; padding: 14px 16px; background: #1E2D45; border-left: 4px solid #378ADD; }
+  .ath-card .bc { transform: rotateY(180deg); background: #22344F; }
+  .ath-card .n { color: #7AB8F5; font-size: 11px; letter-spacing: 1.2px; text-transform: uppercase; font-weight: 700; }
+  .ath-card .t { font-family: Georgia, serif; color: #fff; font-size: 20px; margin: 4px 0 6px; }
+  .ath-card .q { color: #D0DCE8; font-size: 14px; font-style: italic; }
+  .ath-card .bt { font-family: Georgia, serif; color: #fff; font-size: 16px; }
+  .ath-card .bt span { font-size: 13px; color: #D0DCE8; margin-left: 4px; }
+  .ath-card .z { float: right; border-radius: 10px; padding: 2px 10px; font-size: 12px; font-weight: 700; }
+  .ath-card .d { color: #D0DCE8; font-size: 12.5px; margin-top: 6px; line-height: 1.4; }
+  .ath-tip { color: #7A9CC0; font-size: 12px; }
+  @media (max-width: 760px) { .ath-cards { grid-template-columns: 1fr 1fr; } .ath-card { height: 150px; } }
   .ath-examples { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; }
   .ath-ex { background: #fff; border: 1px solid var(--tr-border); border-radius: 8px; padding: 12px; text-align: center; }
   .ath-ex svg { width: 100%; max-width: 150px; height: auto; }
   .ath-ex b { display: block; color: var(--tr-dark); font-size: 14px; margin-top: 6px; }
   .ath-ex span { color: var(--tr-muted); font-size: 12px; }
-  @media (max-width: 760px) { .ath-grid { grid-template-columns: 1fr; } .ath-figure { max-width: 240px; margin: 0 auto; } }
 
   /* === Ampel-Anzeige Finanzfitnessgrad === */
   .ampel-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin: 16px 0; }
@@ -352,6 +363,23 @@
     border-radius: 6px; text-align: center; font-size: 12px;
   }
 
+  /* OnePager Seite 2 · Vermögensbilanz */
+  .sheet-p2 { margin-top: 16px !important; min-height: auto; }
+  .sheet .bil-sum { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 14px; }
+  .sheet .bil-sum div { background: #1E2D45; border-radius: 6px; padding: 10px 12px; }
+  .sheet .bil-sum .k { color: #7A9CC0; font-size: 10px; letter-spacing: 1px; text-transform: uppercase; }
+  .sheet .bil-sum .v { font-family: Georgia, serif; color: #fff; font-size: 18px; margin-top: 3px; }
+  .sheet .bil-bar { display: flex; height: 12px; border-radius: 6px; overflow: hidden; background: #2A3A55; margin: 4px 0 16px; }
+  .sheet .bil-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .sheet .bil-cols h4 { font-size: 14px; margin-bottom: 6px; }
+  .sheet table.bil { width: 100%; border-collapse: collapse; font-size: 11.5px; background: transparent !important; }
+  .sheet table.bil tr, .sheet table.bil th, .sheet table.bil td { background: transparent !important; }
+  .sheet table.bil th { text-align: left; color: #7A9CC0; font-weight: 600; font-size: 10px; text-transform: uppercase; letter-spacing: .8px; padding: 4px 6px; border-bottom: 1px solid #2A3A55; }
+  .sheet table.bil td { color: #D0DCE8; padding: 5px 6px; border-bottom: 1px solid #1E2D45; }
+  .sheet table.bil td.num, .sheet table.bil th.num { text-align: right; white-space: nowrap; }
+  .sheet table.bil tr.tot td { color: #fff; font-weight: 700; border-top: 1px solid #2A3A55; }
+  .sheet .bil-note { color: #7A9CC0; font-size: 11px; margin-top: 12px; }
+
   /* Stufen-Anzeige im OnePager */
   .sheet .stufe-section { background: #1E2D45; border-radius: 8px; padding: 12px 14px; margin-top: 10px; }
   .sheet .stufe-current {
@@ -375,6 +403,9 @@
     .sheet-frame { display: block !important; background: none; padding: 0; overflow: visible !important; height: auto !important; }
     .sheet-scale-wrap { transform: none !important; height: auto !important; }
     .sheet { box-shadow: none; border-radius: 0; max-width: none; margin: 0; }
+    #tab-onepager > h2, #tab-onepager > p { display: none !important; }
+    .sheet-p2 { break-before: page; page-break-before: always; margin-top: 0 !important; min-height: 297mm; }
+    .sheet-p2.empty { display: none !important; }
   }
 
 /* ===========================================================
@@ -536,20 +567,11 @@
       <h2 class="ath-title">Dein Finanzathlet</h2>
       <p class="ath-sub">Stark ist, wer im Gleichgewicht trainiert. Jeder Körperteil hat seine Aufgabe – und seinen Anteil am Einkommen.</p>
     </div>
-    <div class="ath-grid">
+    <div class="ath-stage">
       <div class="ath-figure" id="athIdeal"></div>
-      <div class="ath-parts" id="athParts"></div>
+      <div class="ath-cards" id="athCards"></div>
+      <div class="ath-tip">Karte antippen zum Umdrehen · der passende Körperteil leuchtet auf</div>
     </div>
-  </div>
-
-  <h3 style="margin-top:28px;">Die Story im Gespräch</h3>
-  <div class="ath-story">
-    <div><b>1 · Kopf</b><span>Wovon träumst du? Was willst du dir ermöglichen?</span></div>
-    <div><b>2 · Boden</b><span>Worauf stehst du? Was kommt monatlich rein – und wie sicher?</span></div>
-    <div><b>3 · Beine</b><span>Was muss jeden Monat sicher getragen werden?</span></div>
-    <div><b>4 · Schuhe</b><span>Womit bewegst du dich leicht durch den Alltag?</span></div>
-    <div><b>5 · Rumpf</b><span>Was hält dich langfristig stabil – auch im Alter?</span></div>
-    <div><b>6 · Schirm</b><span>Was passiert, wenn der Athlet ausfällt?</span></div>
   </div>
 
   <h3 style="margin-top:28px;">Wenn der Athlet aus dem Gleichgewicht kommt</h3>
@@ -843,6 +865,27 @@
         <div class="eyebrow">3 · Wohin die Reise geht — und warum</div>
         <div class="goals" id="oGoals"></div>
 
+        <div class="foot">
+          <span>Thorben Reimer · Firmenkundenberater &amp; Performance Coach · 0151 56 165 578 · kontakt@thorbenreimer.de</span>
+          <span>@coachthorben</span>
+        </div>
+      </div>
+      <div class="sheet sheet-p2" id="opSheet2">
+        <div class="head">
+          <div class="l">
+            <div class="mono">TR</div>
+            <div>
+              <div class="name" id="oName2">Kundenname</div>
+              <div class="role">Finanz-Analyse</div>
+            </div>
+          </div>
+          <div class="r">
+            <div class="t">Meine Vermögensbilanz</div>
+            <div class="d" id="oDate2">—</div>
+          </div>
+        </div>
+        <div class="eyebrow">4 · Was ich habe — und was ich schulde</div>
+        <div id="oBilanz"></div>
         <div class="foot">
           <span>Thorben Reimer · Firmenkundenberater &amp; Performance Coach · 0151 56 165 578 · kontakt@thorbenreimer.de</span>
           <span>@coachthorben</span>
@@ -1242,28 +1285,51 @@ function renderManualEinnahmen() {
 
 
 /* ===== Mappe 0: Athlet-Erklärung rendern ===== */
+function athletFlip(el) {
+  const fig = document.getElementById('athIdeal');
+  const wasFlipped = el.classList.contains('flip');
+  document.querySelectorAll('.ath-card.flip').forEach(c => { if (c !== el) c.classList.remove('flip'); });
+  el.classList.toggle('flip', !wasFlipped);
+  if (!wasFlipped) fig.setAttribute('data-focus', el.dataset.k); else fig.removeAttribute('data-focus');
+}
+
 function renderAthletIntro() {
   const fig = document.getElementById('athIdeal');
   if (!fig) return;
   fig.innerHTML = athletSVG(null, true, { ideal: true });
-  const desc = {
-    schirm: 'Schützt alles darunter: BU, Risikoleben, Haftpflicht, Unfall. Weniger Beitrag ist gut – solange das Existenzielle abgesichert ist.',
-    kopf:   'Träume und Ziele, für die Geld wieder ausgegeben wird: Reise, Auto, Auszeit. Gibt dem Sparen Sinn.',
-    rumpf:  'Der Core – hält langfristig stabil: Notgroschen, Altersvorsorge, Depot, Immobilie, Bausparen. Mehr Muskeln sind gut.',
-    beine:  'Tragen die Last: Miete bzw. Kreditrate, Nebenkosten, Auto, Kranken- und Sachversicherungen. Leichter ist besser.',
-    schuhe: 'Machen den Alltag leicht: Lebensmittel, Freizeit, Shopping, Abos. Schnellster Hebel – Schuhe kann man wechseln.'
-  };
-  const parts = ATHLET_PARTS.map(p => `
-    <div class="ath-part" style="border-left-color:${p.key === 'schuhe' ? '#7AB8F5' : p.dark}">
-      <span class="z" style="background:${p.key === 'schuhe' ? '#2A3A55' : p.dark};color:${['kopf', 'rumpf'].includes(p.key) ? '#161E2E' : '#fff'}">${p.ziel}</span>
-      <div class="t">${p.name}<span>· ${p.sub}</span></div>
-      <div class="d">${desc[p.key]}</div>
-    </div>`).join('') + `
-    <div class="ath-part" style="border-left-color:#378ADD">
-      <div class="t">Boden<span>· Einkommen</span></div>
-      <div class="d">Worauf der Athlet steht. Alle Prozentwerte beziehen sich auf das Nettoeinkommen.</div>
-    </div>`;
-  document.getElementById('athParts').innerHTML = parts;
+  const meta = {}; ATHLET_PARTS.forEach(p => meta[p.key] = p);
+  const cards = [
+    { k:'kopf',   n:1, q:'Wovon träumst du? Was willst du dir ermöglichen?',
+      d:'Träume und Ziele, für die Geld wieder ausgegeben wird: Reise, Auto, Auszeit. Gibt dem Sparen Sinn.' },
+    { k:'boden',  n:2, q:'Worauf stehst du? Was kommt monatlich rein – und wie sicher?',
+      d:'Das Nettoeinkommen trägt den ganzen Athleten. Alle Prozentwerte beziehen sich darauf.' },
+    { k:'beine',  n:3, q:'Was muss jeden Monat sicher getragen werden?',
+      d:'Miete bzw. Kreditrate, Nebenkosten, Auto, Kranken- und Sachversicherungen. Leichter ist besser.' },
+    { k:'schuhe', n:4, q:'Womit bewegst du dich leicht durch den Alltag?',
+      d:'Lebensmittel, Freizeit, Shopping, Abos. Schnellster Hebel – Schuhe kann man wechseln.' },
+    { k:'rumpf',  n:5, q:'Was hält dich langfristig stabil – auch im Alter?',
+      d:'Notgroschen, Altersvorsorge, Depot, Immobilie, Bausparen. Mehr Muskeln sind gut.' },
+    { k:'schirm', n:6, q:'Was passiert, wenn der Athlet ausfällt?',
+      d:'BU, Risikoleben, Haftpflicht, Unfall. Weniger Beitrag ist gut – solange das Existenzielle geschützt ist.' },
+  ];
+  const look = k => k === 'boden'
+    ? { name:'Boden', sub:'Einkommen', ziel:'100 %', bar:'#378ADD', bg:'#378ADD', fg:'#fff' }
+    : { name: meta[k].name, sub: meta[k].sub, ziel: meta[k].ziel,
+        bar: k === 'schuhe' ? '#7AB8F5' : meta[k].dark,
+        bg: k === 'schuhe' ? '#2A3A55' : meta[k].dark,
+        fg: ['kopf','rumpf'].includes(k) ? '#161E2E' : '#fff' };
+  document.getElementById('athCards').innerHTML = cards.map(c => {
+    const L = look(c.k);
+    return `<div class="ath-card" data-k="${c.k}" onclick="athletFlip(this)">
+      <div class="in">
+        <div class="fc" style="border-left-color:${L.bar}"><div class="n">Schritt ${c.n}</div><div class="t">${L.name}</div><div class="q">${c.q}</div></div>
+        <div class="bc" style="border-left-color:${L.bar}">
+          <span class="z" style="background:${L.bg};color:${L.fg}">${L.ziel}</span>
+          <div class="bt">${L.name}<span>= ${L.sub}</span></div>
+          <div class="d">${c.d}</div>
+        </div>
+      </div></div>`;
+  }).join('');
 
   const mk = (fix, var_, schutz, rumpf, ziele) => computeAthlet({ einnahmen: 100, fix, var_, schutz, av: rumpf, sparDepot: 0, ziele });
   const ex = [
@@ -2461,18 +2527,18 @@ function athletSVG(a, dark, opts) {
   const c1 = l1 + lw / 2, c2 = l2 + lw / 2;
   const shy = 318 - shh;
   return `<svg viewBox="0 0 200 330" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Finanzathlet">
-    <path d="${d}" fill="${col('schirm')}"/>
+    <g class="ap-schirm"><path d="${d}" fill="${col('schirm')}"/>
     <line x1="100" y1="${(80 + top) / 2 - 12}" x2="100" y2="${(80 + top) / 2 + 1}" stroke="${col('schirm')}" stroke-width="${poleW}" stroke-linecap="round"/>
-    <line x1="100" y1="78" x2="100" y2="100" stroke="${col('schirm')}" stroke-width="${poleW}" stroke-linecap="round"/>
-    <circle cx="100" cy="124" r="21" fill="${col('kopf')}"/>
-    <rect x="${tx}" y="152" width="${tw}" height="84" rx="${Math.min(14, tw / 3)}" fill="${col('rumpf')}"/>
+    <line x1="100" y1="78" x2="100" y2="100" stroke="${col('schirm')}" stroke-width="${poleW}" stroke-linecap="round"/></g>
+    <circle class="ap-kopf" cx="100" cy="124" r="21" fill="${col('kopf')}"/>
+    <g class="ap-rumpf"><rect x="${tx}" y="152" width="${tw}" height="84" rx="${Math.min(14, tw / 3)}" fill="${col('rumpf')}"/>
     <rect x="${tx - aw - 4}" y="158" width="${aw}" height="66" rx="${aw / 2}" fill="${col('rumpf')}"/>
-    <rect x="${tx + tw + 4}" y="158" width="${aw}" height="66" rx="${aw / 2}" fill="${col('rumpf')}"/>
-    <rect x="${l1}" y="240" width="${lw}" height="${shy - 242}" rx="${Math.min(9, lw / 2.5)}" fill="${col('beine')}"/>
-    <rect x="${l2}" y="240" width="${lw}" height="${shy - 242}" rx="${Math.min(9, lw / 2.5)}" fill="${col('beine')}"/>
-    <rect x="${c1 - shw / 2 - 3}" y="${shy}" width="${shw}" height="${shh}" rx="${shh / 2}" fill="${col('schuhe')}" stroke="${shoeStroke}" stroke-width="1"/>
-    <rect x="${c2 - shw / 2 + 3}" y="${shy}" width="${shw}" height="${shh}" rx="${shh / 2}" fill="${col('schuhe')}" stroke="${shoeStroke}" stroke-width="1"/>
-    <line x1="30" y1="324" x2="170" y2="324" stroke="#378ADD" stroke-width="3" stroke-linecap="round"/>
+    <rect x="${tx + tw + 4}" y="158" width="${aw}" height="66" rx="${aw / 2}" fill="${col('rumpf')}"/></g>
+    <g class="ap-beine"><rect x="${l1}" y="240" width="${lw}" height="${shy - 242}" rx="${Math.min(9, lw / 2.5)}" fill="${col('beine')}"/>
+    <rect x="${l2}" y="240" width="${lw}" height="${shy - 242}" rx="${Math.min(9, lw / 2.5)}" fill="${col('beine')}"/></g>
+    <g class="ap-schuhe"><rect x="${c1 - shw / 2 - 3}" y="${shy}" width="${shw}" height="${shh}" rx="${shh / 2}" fill="${col('schuhe')}" stroke="${shoeStroke}" stroke-width="1"/>
+    <rect x="${c2 - shw / 2 + 3}" y="${shy}" width="${shw}" height="${shh}" rx="${shh / 2}" fill="${col('schuhe')}" stroke="${shoeStroke}" stroke-width="1"/></g>
+    <line class="ap-boden" x1="30" y1="324" x2="170" y2="324" stroke="#378ADD" stroke-width="3" stroke-linecap="round"/>
   </svg>`;
 }
 
@@ -3049,6 +3115,8 @@ function renderOnePager() {
     }
   } else { lever.style.display = 'none'; }
 
+  renderBilanzSheet(v);
+
   // Stufe-Section im OnePager
   const stufeEl = document.getElementById('oStufe');
   const stufeData = computeStufe();
@@ -3102,13 +3170,67 @@ function onePagerFitToScreen() {
   const availableHeight = Math.max(560, window.innerHeight - 220);
   const scale = Math.min(1, availableHeight / naturalHeight);
   scaleWrap.style.transform = `scale(${scale})`;
-  scaleWrap.style.height = (naturalHeight * scale) + 'px';
+  scaleWrap.style.height = (scaleWrap.scrollHeight * scale) + 'px';
 }
 window.addEventListener('resize', () => {
   if (document.getElementById('tab-onepager') && document.getElementById('tab-onepager').classList.contains('active')) {
     onePagerFitToScreen();
   }
 });
+
+
+function renderBilanzSheet(v) {
+  const el = document.getElementById('oBilanz');
+  if (!el) return;
+  document.getElementById('oName2').textContent = v.name;
+  document.getElementById('oDate2').textContent = document.getElementById('oDate').textContent;
+  const A = (VERMOEGEN.aktiva || []).filter(r => r.bezeichnung || r.wert);
+  const P = (VERMOEGEN.passiva || []).filter(r => r.bezeichnung || r.wert);
+  const sheet2 = document.getElementById('opSheet2');
+  sheet2.classList.toggle('empty', !A.length && !P.length);
+  if (!A.length && !P.length) {
+    el.innerHTML = '<div class="empty-goals">Noch keine Aktiva/Passiva erfasst (Tab 5 · Vermögen). Diese Seite wird dann nicht mitgedruckt.</div>';
+    return;
+  }
+  const sum = arr => arr.reduce((s, r) => s + (parseFloat(r.wert) || 0), 0);
+  const akt = sum(A), pas = sum(P), rein = akt - pas;
+  const liq = A.filter(r => r.liquide).reduce((s, r) => s + (parseFloat(r.wert) || 0), 0);
+  const raten = P.reduce((s, r) => s + (parseFloat(r.monatsrate) || 0), 0);
+  const st = computeStufe();
+  const esc = t => escapeHtml(t || '');
+  const f = x => formatAmountSheet(x) + ' €';
+  const total = Math.max(akt, 1);
+  el.innerHTML = `
+    <div class="bil-sum">
+      <div><div class="k">Aktiva</div><div class="v">${f(akt)}</div></div>
+      <div><div class="k">Passiva</div><div class="v">${f(pas)}</div></div>
+      <div><div class="k">Reinvermögen</div><div class="v" style="color:${rein >= 0 ? '#3FB67A' : '#E0563B'}">${f(rein)}</div></div>
+      <div><div class="k">Sofort liquide</div><div class="v">${f(liq)}</div></div>
+    </div>
+    <div class="bil-bar" title="Anteil Schulden an den Aktiva">
+      <div style="width:${Math.min(100, Math.max(0, rein) / total * 100)}%;background:#378ADD"></div>
+      <div style="width:${Math.min(100, pas / total * 100)}%;background:#E0563B"></div>
+    </div>
+    <div class="bil-cols">
+      <div>
+        <h4>Aktiva · was ich habe</h4>
+        <table class="bil"><tr><th>Bezeichnung</th><th>Kategorie</th><th class="num">Wert</th></tr>
+          ${A.map(r => `<tr><td>${esc(r.bezeichnung)}${r.liquide ? ' <span style="color:#7AB8F5">· liquide</span>' : ''}</td><td>${esc(r.kategorie)}</td><td class="num">${f(parseFloat(r.wert) || 0)}</td></tr>`).join('')}
+          <tr class="tot"><td colspan="2">Summe Aktiva</td><td class="num">${f(akt)}</td></tr>
+        </table>
+      </div>
+      <div>
+        <h4>Passiva · was ich schulde</h4>
+        ${P.length ? `<table class="bil"><tr><th>Bezeichnung</th><th class="num">Zins</th><th class="num">Rate/Mon.</th><th class="num">Restschuld</th></tr>
+          ${P.map(r => `<tr><td>${esc(r.bezeichnung)}${r.kategorie ? ` <span style="color:#7A9CC0">· ${esc(r.kategorie)}</span>` : ''}${r.laufzeitBis ? `<br><span style="color:#7A9CC0;font-size:10px;">bis ${esc(r.laufzeitBis)}</span>` : ''}</td><td class="num">${r.zinssatz ? String(r.zinssatz).replace('.', ',') + ' %' : '–'}</td><td class="num">${r.monatsrate ? f(parseFloat(r.monatsrate)) : '–'}</td><td class="num">${f(parseFloat(r.wert) || 0)}</td></tr>`).join('')}
+          <tr class="tot"><td>Summe Passiva</td><td></td><td class="num">${raten ? f(raten) : ''}</td><td class="num">${f(pas)}</td></tr>
+        </table>` : '<div class="empty-goals">Keine Verbindlichkeiten – stark!</div>'}
+      </div>
+    </div>
+    <div class="bil-note">
+      ${st.netto > 0 ? `Vermögensstufe: <b style="color:#7AB8F5">${st.namen[st.stufe]}</b> · Notgroschen ${st.notgroschenOk ? 'erfüllt' : 'offen'} (${esc(st.notgroschenStatus)})` : 'Für die Vermögensstufe bitte das Netto-Einkommen erfassen.'}
+    </div>`;
+}
 
 function printOnePager() {
   document.querySelectorAll('.tab').forEach(t => t.classList.remove('print-target'));
@@ -3117,7 +3239,7 @@ function printOnePager() {
 }
 
 // OnePager-Inputs auf Live-Re-Render binden
-['opName','opDate','opEinnahmen','opFix','opVar','opSpar','opSchutz'].forEach(id => {
+['opName','opDate','opEinnahmen','opFix','opVar','opSpar','opSchutz','opAV','opZiele'].forEach(id => {
   document.getElementById(id).addEventListener('input', renderOnePager);
 });
 document.getElementById('opGoalInputs').addEventListener('input', renderOnePager);
